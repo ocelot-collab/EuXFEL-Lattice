@@ -7,7 +7,7 @@ SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
 i1_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=3, pos_stop=145, sbend_l_corr=False)
 lattice = MagneticLattice(i1_cell)
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid, Hcor, Vcor, Sextupole, Cavity, TDCavity],
-       remaining_elems=['STSEC.23.I1', 'MATCH.37.I1', 'OTRC.55.I1', 'OTRC.56.I1', 'OTRC.58.I1', 'OTRC.59.I1', 'STSUB.62.I1'], init_energy=0.005)
+       remaining_elems=['STSEC.23.I1', 'MATCH.37.I1', "STLAT.47.I1", 'OTRC.55.I1', 'OTRC.56.I1', 'OTRC.58.I1', 'OTRC.59.I1', 'STSUB.62.I1'], init_energy=0.005)
 
 # for elem in lattice.sequence:
 #      if elem.__class__ == Undulator:
