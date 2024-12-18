@@ -2,27 +2,27 @@ from ocelot import *
 
 #Initial Twiss parameters
 tws0 = Twiss()
-tws0.beta_x = 12.958162568054922
-tws0.beta_y = 42.969888945121845
-tws0.alpha_x = 1.3088879823896227
-tws0.alpha_y = 0.9334000934857891
+tws0.beta_x = 53.015297404432516
+tws0.beta_y = 79.56279633228925
+tws0.alpha_x = 0.8005655864098374
+tws0.alpha_y = 5.39236677329033
 tws0.E = 14
-tws0.s = 2152.0090710000186
+tws0.s = 2198.0091950000196
 
 # Drifts
-id_6001301_ = Drift(l=0.29272, eid='ID_6001301_')
-id_61060562_ = Drift(l=0.025, eid='ID_61060562_')
+id_28719425_ = Drift(l=0.29272, eid='ID_28719425_')
+id_47191600_ = Drift(l=0.025, eid='ID_47191600_')
 d_4 = Drift(l=0.07278, eid='D_4')
 d_5 = Drift(l=0.0717, eid='D_5')
 d_6 = Drift(l=0.2973, eid='D_6')
 d_7 = Drift(l=0.18665, eid='D_7')
-id_28120785_ = Drift(l=0.35787, eid='ID_28120785_')
-id_82512098_ = Drift(l=0.57915, eid='ID_82512098_')
-id_99805086_ = Drift(l=1.2375, eid='ID_99805086_')
+id_38157055_ = Drift(l=0.35787, eid='ID_38157055_')
+id_85793463_ = Drift(l=0.57915, eid='ID_85793463_')
+id_22381713_ = Drift(l=1.2375, eid='ID_22381713_')
 d_53 = Drift(l=0.29, eid='D_53')
 d_54 = Drift(l=0.735, eid='D_54')
 d_56 = Drift(l=0.5205, eid='D_56')
-id_59449715_ = Drift(l=0.04015, eid='ID_59449715_')
+id_94962024_ = Drift(l=0.04015, eid='ID_94962024_')
 
 # Quadrupoles
 qa_2203_sa2 = Quadrupole(l=0.1137, k1=-0.5620550638962181, eid='QA.2203.SA2')
@@ -306,52 +306,52 @@ match_2197_sa2 = Marker(eid='MATCH.2197.SA2')
 ensec_2423_sa2 = Marker(eid='ENSEC.2423.SA2')
 
 # Lattice 
-cell = (id_6001301_, match_2197_sa2, id_61060562_, cax_2198_sa2, cay_2198_sa2, d_4, u40_2200_sa2, d_5, cbx_2203_sa2, 
-cby_2203_sa2, d_6, bpme_2203_sa2, d_7, qa_2203_sa2, id_28120785_, cax_2204_sa2, cay_2204_sa2, d_4, u40_2206_sa2, 
-d_5, cbx_2209_sa2, cby_2209_sa2, d_6, bpme_2209_sa2, d_7, qa_2209_sa2, id_28120785_, cax_2210_sa2, cay_2210_sa2, 
-d_4, u40_2212_sa2, d_5, cbx_2215_sa2, cby_2215_sa2, d_6, bpme_2215_sa2, d_7, qa_2215_sa2, id_28120785_, 
+cell = (id_28719425_, match_2197_sa2, id_47191600_, cax_2198_sa2, cay_2198_sa2, d_4, u40_2200_sa2, d_5, cbx_2203_sa2, 
+cby_2203_sa2, d_6, bpme_2203_sa2, d_7, qa_2203_sa2, id_38157055_, cax_2204_sa2, cay_2204_sa2, d_4, u40_2206_sa2, 
+d_5, cbx_2209_sa2, cby_2209_sa2, d_6, bpme_2209_sa2, d_7, qa_2209_sa2, id_38157055_, cax_2210_sa2, cay_2210_sa2, 
+d_4, u40_2212_sa2, d_5, cbx_2215_sa2, cby_2215_sa2, d_6, bpme_2215_sa2, d_7, qa_2215_sa2, id_38157055_, 
 cax_2216_sa2, cay_2216_sa2, d_4, u40_2218_sa2, d_5, cbx_2221_sa2, cby_2221_sa2, d_6, bpme_2221_sa2, d_7, 
-qa_2221_sa2, id_28120785_, cax_2222_sa2, cay_2222_sa2, d_4, u40_2224_sa2, d_5, cbx_2227_sa2, cby_2227_sa2, d_6, 
-bpme_2227_sa2, d_7, qa_2227_sa2, id_28120785_, cax_2228_sa2, cay_2228_sa2, d_4, u40_2230_sa2, d_5, cbx_2233_sa2, 
-cby_2233_sa2, d_6, bpme_2233_sa2, d_7, qa_2234_sa2, id_28120785_, cax_2234_sa2, cay_2234_sa2, d_4, u40_2237_sa2, 
-d_5, cbx_2239_sa2, cby_2239_sa2, d_6, bpme_2239_sa2, d_7, qa_2240_sa2, id_28120785_, cax_2241_sa2, cay_2241_sa2, 
-d_4, u40_2243_sa2, d_5, cbx_2245_sa2, cby_2245_sa2, d_6, bpme_2245_sa2, d_7, qa_2246_sa2, id_82512098_, 
-bs_2247_sa2, id_99805086_, bs_2248_sa2, cbs_2248_sa2, d_53, bpmh_2249_sa2, d_54, bs_2249_sa2, cbs_2249_sa2, id_99805086_, 
-bs_2251_sa2, cbs_2251_sa2, d_56, bpme_2252_sa2, d_7, qa_2252_sa2, id_28120785_, cax_2253_sa2, cay_2253_sa2, d_4, 
-u40_2255_sa2, d_5, cbx_2257_sa2, cby_2257_sa2, d_6, bpme_2258_sa2, d_7, qa_2258_sa2, id_28120785_, cax_2259_sa2, 
+qa_2221_sa2, id_38157055_, cax_2222_sa2, cay_2222_sa2, d_4, u40_2224_sa2, d_5, cbx_2227_sa2, cby_2227_sa2, d_6, 
+bpme_2227_sa2, d_7, qa_2227_sa2, id_38157055_, cax_2228_sa2, cay_2228_sa2, d_4, u40_2230_sa2, d_5, cbx_2233_sa2, 
+cby_2233_sa2, d_6, bpme_2233_sa2, d_7, qa_2234_sa2, id_38157055_, cax_2234_sa2, cay_2234_sa2, d_4, u40_2237_sa2, 
+d_5, cbx_2239_sa2, cby_2239_sa2, d_6, bpme_2239_sa2, d_7, qa_2240_sa2, id_38157055_, cax_2241_sa2, cay_2241_sa2, 
+d_4, u40_2243_sa2, d_5, cbx_2245_sa2, cby_2245_sa2, d_6, bpme_2245_sa2, d_7, qa_2246_sa2, id_85793463_, 
+bs_2247_sa2, id_22381713_, bs_2248_sa2, cbs_2248_sa2, d_53, bpmh_2249_sa2, d_54, bs_2249_sa2, cbs_2249_sa2, id_22381713_, 
+bs_2251_sa2, cbs_2251_sa2, d_56, bpme_2252_sa2, d_7, qa_2252_sa2, id_38157055_, cax_2253_sa2, cay_2253_sa2, d_4, 
+u40_2255_sa2, d_5, cbx_2257_sa2, cby_2257_sa2, d_6, bpme_2258_sa2, d_7, qa_2258_sa2, id_38157055_, cax_2259_sa2, 
 cay_2259_sa2, d_4, u40_2261_sa2, d_5, cbx_2263_sa2, cby_2263_sa2, d_6, bpme_2264_sa2, d_7, qa_2264_sa2, 
-id_28120785_, cax_2265_sa2, cay_2265_sa2, d_4, u40_2267_sa2, d_5, cbx_2270_sa2, cby_2270_sa2, d_6, bpme_2270_sa2, 
-d_7, qa_2270_sa2, id_28120785_, cax_2271_sa2, cay_2271_sa2, d_4, u40_2273_sa2, d_5, cbx_2276_sa2, cby_2276_sa2, 
-d_6, bpme_2276_sa2, d_7, qa_2276_sa2, id_28120785_, cax_2277_sa2, cay_2277_sa2, d_4, u40_2279_sa2, d_5, 
-cbx_2282_sa2, cby_2282_sa2, d_6, bpme_2282_sa2, d_7, qa_2282_sa2, id_28120785_, cax_2283_sa2, cay_2283_sa2, d_4, 
-u40_2285_sa2, d_5, cbx_2288_sa2, cby_2288_sa2, d_6, bpme_2288_sa2, d_7, qa_2288_sa2, id_28120785_, cax_2289_sa2, 
+id_38157055_, cax_2265_sa2, cay_2265_sa2, d_4, u40_2267_sa2, d_5, cbx_2270_sa2, cby_2270_sa2, d_6, bpme_2270_sa2, 
+d_7, qa_2270_sa2, id_38157055_, cax_2271_sa2, cay_2271_sa2, d_4, u40_2273_sa2, d_5, cbx_2276_sa2, cby_2276_sa2, 
+d_6, bpme_2276_sa2, d_7, qa_2276_sa2, id_38157055_, cax_2277_sa2, cay_2277_sa2, d_4, u40_2279_sa2, d_5, 
+cbx_2282_sa2, cby_2282_sa2, d_6, bpme_2282_sa2, d_7, qa_2282_sa2, id_38157055_, cax_2283_sa2, cay_2283_sa2, d_4, 
+u40_2285_sa2, d_5, cbx_2288_sa2, cby_2288_sa2, d_6, bpme_2288_sa2, d_7, qa_2288_sa2, id_38157055_, cax_2289_sa2, 
 cay_2289_sa2, d_4, u40_2291_sa2, d_5, cbx_2294_sa2, cby_2294_sa2, d_6, bpme_2294_sa2, d_7, qa_2295_sa2, 
-id_28120785_, cax_2295_sa2, cay_2295_sa2, d_4, u40_2297_sa2, d_5, cbx_2300_sa2, cby_2300_sa2, d_6, bpme_2300_sa2, 
-d_7, qa_2301_sa2, id_82512098_, bs_2301_sa2, id_99805086_, bs_2303_sa2, cbs_2303_sa2, d_53, bpmh_2303_sa2, d_54, 
-bs_2304_sa2, cbs_2304_sa2, id_99805086_, bs_2306_sa2, cbs_2306_sa2, d_56, bpme_2306_sa2, d_7, qa_2307_sa2, id_28120785_, 
+id_38157055_, cax_2295_sa2, cay_2295_sa2, d_4, u40_2297_sa2, d_5, cbx_2300_sa2, cby_2300_sa2, d_6, bpme_2300_sa2, 
+d_7, qa_2301_sa2, id_85793463_, bs_2301_sa2, id_22381713_, bs_2303_sa2, cbs_2303_sa2, d_53, bpmh_2303_sa2, d_54, 
+bs_2304_sa2, cbs_2304_sa2, id_22381713_, bs_2306_sa2, cbs_2306_sa2, d_56, bpme_2306_sa2, d_7, qa_2307_sa2, id_38157055_, 
 cax_2308_sa2, cay_2308_sa2, d_4, u40_2310_sa2, d_5, cbx_2312_sa2, cby_2312_sa2, d_6, bpme_2313_sa2, d_7, 
-qa_2313_sa2, id_28120785_, cax_2314_sa2, cay_2314_sa2, d_4, u40_2316_sa2, d_5, cbx_2318_sa2, cby_2318_sa2, d_6, 
-bpme_2319_sa2, d_7, qa_2319_sa2, id_28120785_, cax_2320_sa2, cay_2320_sa2, d_4, u40_2322_sa2, d_5, cbx_2324_sa2, 
-cby_2324_sa2, d_6, bpme_2325_sa2, d_7, qa_2325_sa2, id_28120785_, cax_2326_sa2, cay_2326_sa2, d_4, u40_2328_sa2, 
-d_5, cbx_2331_sa2, cby_2331_sa2, d_6, bpme_2331_sa2, d_7, qa_2331_sa2, id_28120785_, cax_2332_sa2, cay_2332_sa2, 
-d_4, u40_2334_sa2, d_5, cbx_2337_sa2, cby_2337_sa2, d_6, bpme_2337_sa2, d_7, qa_2337_sa2, id_28120785_, 
+qa_2313_sa2, id_38157055_, cax_2314_sa2, cay_2314_sa2, d_4, u40_2316_sa2, d_5, cbx_2318_sa2, cby_2318_sa2, d_6, 
+bpme_2319_sa2, d_7, qa_2319_sa2, id_38157055_, cax_2320_sa2, cay_2320_sa2, d_4, u40_2322_sa2, d_5, cbx_2324_sa2, 
+cby_2324_sa2, d_6, bpme_2325_sa2, d_7, qa_2325_sa2, id_38157055_, cax_2326_sa2, cay_2326_sa2, d_4, u40_2328_sa2, 
+d_5, cbx_2331_sa2, cby_2331_sa2, d_6, bpme_2331_sa2, d_7, qa_2331_sa2, id_38157055_, cax_2332_sa2, cay_2332_sa2, 
+d_4, u40_2334_sa2, d_5, cbx_2337_sa2, cby_2337_sa2, d_6, bpme_2337_sa2, d_7, qa_2337_sa2, id_38157055_, 
 cax_2338_sa2, cay_2338_sa2, d_4, u40_2340_sa2, d_5, cbx_2343_sa2, cby_2343_sa2, d_6, bpme_2343_sa2, d_7, 
-qa_2343_sa2, id_28120785_, cax_2344_sa2, cay_2344_sa2, d_4, u40_2346_sa2, d_5, cbx_2349_sa2, cby_2349_sa2, d_6, 
-bpme_2349_sa2, d_7, qa_2349_sa2, id_28120785_, cax_2350_sa2, cay_2350_sa2, d_4, u40_2352_sa2, d_5, cbx_2355_sa2, 
-cby_2355_sa2, d_6, bpme_2355_sa2, d_7, qa_2355_sa2, id_28120785_, cax_2356_sa2, cay_2356_sa2, d_4, u40_2358_sa2, 
-d_5, cbx_2361_sa2, cby_2361_sa2, d_6, bpme_2361_sa2, d_7, qa_2362_sa2, id_28120785_, cax_2362_sa2, cay_2362_sa2, 
-d_4, u40_2365_sa2, d_5, cbx_2367_sa2, cby_2367_sa2, d_6, bpme_2367_sa2, d_7, qa_2368_sa2, id_28120785_, 
+qa_2343_sa2, id_38157055_, cax_2344_sa2, cay_2344_sa2, d_4, u40_2346_sa2, d_5, cbx_2349_sa2, cby_2349_sa2, d_6, 
+bpme_2349_sa2, d_7, qa_2349_sa2, id_38157055_, cax_2350_sa2, cay_2350_sa2, d_4, u40_2352_sa2, d_5, cbx_2355_sa2, 
+cby_2355_sa2, d_6, bpme_2355_sa2, d_7, qa_2355_sa2, id_38157055_, cax_2356_sa2, cay_2356_sa2, d_4, u40_2358_sa2, 
+d_5, cbx_2361_sa2, cby_2361_sa2, d_6, bpme_2361_sa2, d_7, qa_2362_sa2, id_38157055_, cax_2362_sa2, cay_2362_sa2, 
+d_4, u40_2365_sa2, d_5, cbx_2367_sa2, cby_2367_sa2, d_6, bpme_2367_sa2, d_7, qa_2368_sa2, id_38157055_, 
 cax_2369_sa2, cay_2369_sa2, d_4, u40_2371_sa2, d_5, cbx_2373_sa2, cby_2373_sa2, d_6, bpme_2373_sa2, d_7, 
-qa_2374_sa2, id_28120785_, cax_2375_sa2, cay_2375_sa2, d_4, u40_2377_sa2, d_5, cbx_2379_sa2, cby_2379_sa2, d_6, 
-bpme_2380_sa2, d_7, qa_2380_sa2, id_28120785_, cax_2381_sa2, cay_2381_sa2, d_4, u40_2383_sa2, d_5, cbx_2385_sa2, 
-cby_2385_sa2, d_6, bpme_2386_sa2, d_7, qa_2386_sa2, id_28120785_, cax_2387_sa2, cay_2387_sa2, d_4, u40_2389_sa2, 
-d_5, cbx_2391_sa2, cby_2391_sa2, d_6, bpme_2392_sa2, d_7, qa_2392_sa2, id_28120785_, cax_2393_sa2, cay_2393_sa2, 
-d_4, u40_2395_sa2, d_5, cbx_2398_sa2, cby_2398_sa2, d_6, bpme_2398_sa2, d_7, qa_2398_sa2, id_28120785_, 
+qa_2374_sa2, id_38157055_, cax_2375_sa2, cay_2375_sa2, d_4, u40_2377_sa2, d_5, cbx_2379_sa2, cby_2379_sa2, d_6, 
+bpme_2380_sa2, d_7, qa_2380_sa2, id_38157055_, cax_2381_sa2, cay_2381_sa2, d_4, u40_2383_sa2, d_5, cbx_2385_sa2, 
+cby_2385_sa2, d_6, bpme_2386_sa2, d_7, qa_2386_sa2, id_38157055_, cax_2387_sa2, cay_2387_sa2, d_4, u40_2389_sa2, 
+d_5, cbx_2391_sa2, cby_2391_sa2, d_6, bpme_2392_sa2, d_7, qa_2392_sa2, id_38157055_, cax_2393_sa2, cay_2393_sa2, 
+d_4, u40_2395_sa2, d_5, cbx_2398_sa2, cby_2398_sa2, d_6, bpme_2398_sa2, d_7, qa_2398_sa2, id_38157055_, 
 cax_2399_sa2, cay_2399_sa2, d_4, u40_2401_sa2, d_5, cbx_2404_sa2, cby_2404_sa2, d_6, bpme_2404_sa2, d_7, 
-qa_2404_sa2, id_28120785_, cax_2405_sa2, cay_2405_sa2, d_4, u40_2407_sa2, d_5, cbx_2410_sa2, cby_2410_sa2, d_6, 
-bpme_2410_sa2, d_7, qa_2410_sa2, id_28120785_, cax_2411_sa2, cay_2411_sa2, d_4, u40_2413_sa2, d_5, cbx_2416_sa2, 
-cby_2416_sa2, d_6, bpme_2416_sa2, d_7, qa_2416_sa2, id_28120785_, cax_2417_sa2, cay_2417_sa2, d_4, u40_2419_sa2, 
-d_5, cbx_2422_sa2, cby_2422_sa2, d_6, bpme_2422_sa2, d_7, qa_2422_sa2, id_59449715_, ensec_2423_sa2)
+qa_2404_sa2, id_38157055_, cax_2405_sa2, cay_2405_sa2, d_4, u40_2407_sa2, d_5, cbx_2410_sa2, cby_2410_sa2, d_6, 
+bpme_2410_sa2, d_7, qa_2410_sa2, id_38157055_, cax_2411_sa2, cay_2411_sa2, d_4, u40_2413_sa2, d_5, cbx_2416_sa2, 
+cby_2416_sa2, d_6, bpme_2416_sa2, d_7, qa_2416_sa2, id_38157055_, cax_2417_sa2, cay_2417_sa2, d_4, u40_2419_sa2, 
+d_5, cbx_2422_sa2, cby_2422_sa2, d_6, bpme_2422_sa2, d_7, qa_2422_sa2, id_94962024_, ensec_2423_sa2)
 
 # power supplies 
 

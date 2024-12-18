@@ -1,7 +1,7 @@
 from ocelot import *
 from ocelot.gui import *
 import i1 as i1
-import l1, l2, l3, cl, t34_sa2, t1,  sase2 , t3, t5, t5d
+import l1, l2, l3, cl, t34_sa2, sase1, t4, t1,  sase2 , t3, t5, t5d
 
 
 ## I1 check
@@ -23,9 +23,9 @@ import l1, l2, l3, cl, t34_sa2, t1,  sase2 , t3, t5, t5d
 
 # L2 check
 
-lat = MagneticLattice(l2.cell)
+lat = MagneticLattice(sase2.cell)
 
-tws = twiss(lat, l2.tws0)
+tws = twiss(lat, sase2.tws0)
 print(tws[-1])
 plot_opt_func(lat, tws)
 plt.show()

@@ -18,13 +18,13 @@ d_8 = Drift(l=0.13628, eid='D_8')
 d_9 = Drift(l=0.18, eid='D_9')
 d_10 = Drift(l=0.2, eid='D_10')
 d_11 = Drift(l=0.98395, eid='D_11')
-id_65722724_ = Drift(l=0.8553999999999999, eid='ID_65722724_')
+id_51925089_ = Drift(l=0.8553999999999999, eid='ID_51925089_')
 d_14 = Drift(l=0.516377, eid='D_14')
 d_15 = Drift(l=0.16902, eid='D_15')
 d_16 = Drift(l=0.25898, eid='D_16')
 d_17 = Drift(l=0.2249, eid='D_17')
 d_18 = Drift(l=0.23402, eid='D_18')
-id_66860752_ = Drift(l=1.01368, eid='ID_66860752_')
+id_53307113_ = Drift(l=1.01368, eid='ID_53307113_')
 d_21 = Drift(l=1.01327, eid='D_21')
 
 # Quadrupoles
@@ -35,7 +35,6 @@ qf_476_b2d = Quadrupole(l=0.5321, k1=3.1309789299999995, eid='QF.476.B2D')
 qf_477_b2d = Quadrupole(l=0.5321, k1=0.7703645572993798, eid='QF.477.B2D')
 
 # SBends
-bg_467_b2d = SBend(l=1.5971, angle=0.2094395102, tilt=1.570796327, eid='BG.467.B2D')
 bg_474_b2d = SBend(l=1.5971, angle=-0.2094395102, tilt=1.570796327, eid='BG.474.B2D')
 
 # Hcors
@@ -57,10 +56,10 @@ bpmd_479_b2d = Monitor(eid='BPMD.479.B2D')
 ensec_480_b2d = Marker(eid='ENSEC.480.B2D')
 
 # Lattice 
-cell = (bg_467_b2d, d_4, cfy_468_b2d, d_5, qf_469_b2d, d_6, bpma_469_b2d, d_7, cfx_470_b2d, 
-d_8, qe_471_b2d, d_9, bpma_471_b2d, d_10, cfy_471_b2d, d_11, qf_472_b2d, id_65722724_, bg_474_b2d, 
-d_14, cfy_476_b2d, d_15, qf_476_b2d, d_16, bpma_477_b2d, d_17, cfx_477_b2d, d_18, qf_477_b2d, 
-id_66860752_, bpmd_479_b2d, d_21, ensec_480_b2d)
+cell = (d_4, cfy_468_b2d, d_5, qf_469_b2d, d_6, bpma_469_b2d, d_7, cfx_470_b2d, d_8, 
+qe_471_b2d, d_9, bpma_471_b2d, d_10, cfy_471_b2d, d_11, qf_472_b2d, id_51925089_, bg_474_b2d, d_14, 
+cfy_476_b2d, d_15, qf_476_b2d, d_16, bpma_477_b2d, d_17, cfx_477_b2d, d_18, qf_477_b2d, id_53307113_, 
+bpmd_479_b2d, d_21, ensec_480_b2d)
 
 # power supplies 
 
@@ -78,5 +77,4 @@ qf_477_b2d.ps_id = 'QF.35.B2D'
 #  
 
 #  
-bg_467_b2d.ps_id = 'BG.1.B2D'
 bg_474_b2d.ps_id = 'BG.1.B2D'
