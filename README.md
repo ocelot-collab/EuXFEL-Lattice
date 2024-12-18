@@ -25,3 +25,18 @@ Lattice files -
 6. gun to b2d: i1, l1, l2, b2d
 
 Note : To generate files ... 
+
+### NOTE:
+1. LH undulator.
+   - The length of 0.74 m is the iron length.
+   - The model of natural focusing has been created using measured field profiles which are longer (0.918 m).
+
+2. Natural focusing
+   - In the design optics the natural undulator focusing is not taking into account (drift).
+   - To take into account the natural focusing you have
+     to set up the beam parameters (energy) and the undulator setup (gap).
+     The natural focusing effect (matrices) is then calculated using analytical formulas. One example can be found in the file:
+     SET_LHund_closed_130MeV_42mm.txm
+   - If the natural focusing is taken into account, it needs to rematch the beam in the injector.
+
+3. Coupler kick in all RF cavities are off.

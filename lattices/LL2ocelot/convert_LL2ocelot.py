@@ -1,7 +1,7 @@
 from ocelot.adaptors.longlist2ocelot import *
 
 folder = "C:/Users/veglia/Desktop/EuXFEL-Lattice/lattices/longlist_2024_07_04/"
-
+folder = "/Users/tomins/Nextcloud/DESY/repository/EuXFEL-Lattice/lattices/longlist_2024_07_04/"
 # INJECTOR START ********
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
@@ -44,7 +44,7 @@ tws.alpha_x = 18.1886
 tws.alpha_y = 18.1886
 tws.s = 23.2
 
-lattice.save_as_py_file(folder + "i1_bis.py", tws0=tws, power_supply=True)
+#lattice.save_as_py_file(folder + "i1_bis.py", tws0=tws, power_supply=True)
 
 # INJECTOR END ********
 
@@ -60,16 +60,16 @@ lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupo
        remaining_elems=['STSUB.62.I1', 'MATCH.73.I1', 'STLAT.73.I1', 'MATCH.104.I1', 'MATCH.174.L1', 'MATCH.202.B1', 
                         'MATCH.207.B1', 'MATCH.218.B1', 'ENSUB.229.B1'], init_energy=0.13)
 
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
+# for elem in lattice.sequence:
+#     if elem.__class__ == Cavity:
+#         elem.vx_up=(-5.6813e-05+1.0751e-05j)
+#         elem.vy_up=(-4.1091e-05+5.739e-07j)
+#         elem.vxx_up=(0.00099943-0.00081401j)
+#         elem.vxy_up=(0.0034065-0.0004146j)
+#         elem.vx_down=(-2.4014e-05+1.2492e-05j)
+#         elem.vy_down=(3.6481e-05+7.9888e-06j)
+#         elem.vxx_down=(-0.004057-0.0001369j)
+#         elem.vxy_down=(0.0029243-1.2891e-05j)
 
 tws = Twiss()
 tws.beta_x  = 2.6096907242276925
@@ -95,16 +95,16 @@ lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupo
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
        remaining_elems=['ENSUB.229.B1', 'MATCH.414.B2', 'MATCH.428.B2','MATCH.446.B2', 'ENSUB.466.B2'], init_energy=0.7)
 
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
+# for elem in lattice.sequence:
+#     if elem.__class__ == Cavity:
+#         elem.vx_up=(-5.6813e-05+1.0751e-05j)
+#         elem.vy_up=(-4.1091e-05+5.739e-07j)
+#         elem.vxx_up=(0.00099943-0.00081401j)
+#         elem.vxy_up=(0.0034065-0.0004146j)
+#         elem.vx_down=(-2.4014e-05+1.2492e-05j)
+#         elem.vy_down=(3.6481e-05+7.9888e-06j)
+#         elem.vxx_down=(-0.004057-0.0001369j)
+#         elem.vxy_down=(0.0029243-1.2891e-05j)
 
 tws = Twiss()
 
@@ -132,16 +132,16 @@ lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupo
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
        remaining_elems=['ENSUB.466.B2','MATCH.525.L3','ENSEC.1652.L3'], init_energy=2.4)
 
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
+# for elem in lattice.sequence:
+#     if elem.__class__ == Cavity:
+#         elem.vx_up=(-5.6813e-05+1.0751e-05j)
+#         elem.vy_up=(-4.1091e-05+5.739e-07j)
+#         elem.vxx_up=(0.00099943-0.00081401j)
+#         elem.vxy_up=(0.0034065-0.0004146j)
+#         elem.vx_down=(-2.4014e-05+1.2492e-05j)
+#         elem.vy_down=(3.6481e-05+7.9888e-06j)
+#         elem.vxx_down=(-0.004057-0.0001369j)
+#         elem.vxy_down=(0.0029243-1.2891e-05j)
 
 tws = Twiss()
 tws.beta_x  = 29.41686175122868
@@ -334,7 +334,7 @@ t34_sa2_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_
 lattice = MagneticLattice(t34_sa2_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
-                                           Hcor, Vcor, Sextupole, Cavity, TDCavity],
+                                           Hcor, Vcor, Sextupole, Cavity, Octupole, TDCavity],
        remaining_elems=['ENSUB.1980.TL', 'ENSUB.2025.TL'], init_energy=14)
 
 tws = Twiss()
@@ -358,7 +358,7 @@ t1_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start
 lattice = MagneticLattice(t1_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
-                                           Hcor, Vcor, Sextupole, Cavity, TDCavity],
+                                           Hcor, Vcor, Sextupole, Cavity, Octupole, TDCavity],
        remaining_elems=['STSEC.2025.T1','ENSEC.2197.T1'], init_energy=14)
 
 tws = Twiss()

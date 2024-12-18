@@ -31,15 +31,21 @@ id_79622812_ = Drift(l=2.06072, eid='ID_79622812_')
 # Quadrupoles
 qk_1982_tl = Quadrupole(l=1.0552, k1=0.09035960007960576, eid='QK.1982.TL')
 qf_1997_tl = Quadrupole(l=0.5321, k1=-0.17919084760007517, eid='QF.1997.TL')
-qf_2012_tl = Quadrupole(l=0.5321, k1=0.17919084760007517, eid='QF.2012.TL')
+# Quad QF.2012.TL replace with combine function SBEND since beam has displacement 0.00581165 m
+dy = 0.0059940
+qf_2012_tl = SBend(l=0.5321, angle=-0.5321*0.1791908476*dy, k1=-0.1791908476, e1=+1.444493782e-04,  e2=+7.159698661e-04, tilt=1.570796, eid='QF.2012.TL')
+angle_n = -5.715204879e-04
+qf_2012_tl = SBend(l=0.5321, angle=angle_n, k1=-0.1791908476, e1=+1.444493782E-04, e2=+7.159698661E-04, tilt=1.570796, eid='QF.2012.TL')
 
-# RBends
-kl_1998_tl = RBend(l=0.93, tilt=1.570796327, eid='KL.1998.TL')
-kl_1999_tl = RBend(l=0.93, tilt=1.570796327, eid='KL.1999.TL')
-kl_2000_tl = RBend(l=0.93, tilt=1.570796327, eid='KL.2000.TL')
-kl_2001_tl = RBend(l=0.93, tilt=1.570796327, eid='KL.2001.TL')
-kl_2002_tl = RBend(l=0.93, tilt=1.570796327, eid='KL.2002.TL')
-kl_2003_tl = RBend(l=0.93, tilt=1.570796327, eid='KL.2003.TL')
+# bending magnets: KL kickers have to be ON to transport beam to SA2 branch
+alpha=-0.0001019145217
+kl_1998_tl = SBend(l=0.93, angle=alpha, e1=0,        e2=alpha, tilt=1.570796, eid="KL.1998.TL")
+kl_1999_tl = SBend(l=0.93, angle=alpha, e1=-alpha,   e2=2*alpha,  tilt=1.570796, eid="KL.1999.TL")
+kl_2000_tl = SBend(l=0.93, angle=alpha, e1=-2*alpha, e2=3*alpha,  tilt=1.570796, eid="KL.2000.TL")
+kl_2001_tl = SBend(l=0.93, angle=alpha, e1=-3*alpha, e2=4*alpha,  tilt=1.570796, eid="KL.2001.TL")
+kl_2002_tl = SBend(l=0.93, angle=alpha, e1=-4*alpha, e2=5*alpha,  tilt=1.570796, eid="KL.2002.TL")
+kl_2003_tl = SBend(l=0.93, angle=0, tilt=1.570796, eid="KL.2003.TL")
+
 
 # Hcors
 chx_2012_tl = Hcor(l=0.2, eid='CHX.2012.TL')
