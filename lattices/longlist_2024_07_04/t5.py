@@ -10,7 +10,7 @@ tws0.E = 14
 tws0.s = 2743.9245999999944
 
 # Drifts
-id_62636867_ = Drift(l=12.39, eid='ID_62636867_')
+id_71329109_ = Drift(l=12.39, eid='ID_71329109_')
 d_3 = Drift(l=0.205, eid='D_3')
 d_4 = Drift(l=0.14, eid='D_4')
 d_5 = Drift(l=9.315, eid='D_5')
@@ -22,7 +22,7 @@ d_20 = Drift(l=9.06, eid='D_20')
 d_21 = Drift(l=0.185, eid='D_21')
 d_22 = Drift(l=0.182, eid='D_22')
 d_23 = Drift(l=0.21845, eid='D_23')
-id_57033544_ = Drift(l=0.385465, eid='ID_57033544_')
+id_73522913_ = Drift(l=0.385465, eid='ID_73522913_')
 d_26 = Drift(l=1.070165, eid='D_26')
 d_27 = Drift(l=3.59515, eid='D_27')
 d_28 = Drift(l=0.34515, eid='D_28')
@@ -37,7 +37,7 @@ d_39 = Drift(l=0.875015, eid='D_39')
 d_42 = Drift(l=9.835, eid='D_42')
 d_48 = Drift(l=18.61, eid='D_48')
 d_51 = Drift(l=21.065, eid='D_51')
-id_39025563_ = Drift(l=19.38726, eid='ID_39025563_')
+id_90455966_ = Drift(l=19.38726, eid='ID_90455966_')
 d_73 = Drift(l=9.676, eid='D_73')
 
 # Quadrupoles
@@ -122,25 +122,24 @@ bpma_3007_un2 = Monitor(eid='BPMA.3007.UN2')
 bpma_3028_un2 = Monitor(eid='BPMA.3028.UN2')
 
 # Markers
-ensec_2743_un1 = Marker(eid='ENSEC.2743.UN1')
 ensec_3039_un2 = Marker(eid='ENSEC.3039.UN2')
 
 # Lattice 
-cell = (ensec_2743_un1, id_62636867_, bpma_2756_t5, d_3, qe_2756_t5, d_4, cey_2756_t5, d_5, bpma_2766_t5, 
-d_3, qe_2766_t5, d_4, cex_2766_t5, d_5, bpma_2776_t5, d_3, qe_2776_t5, d_4, cex_2776_t5, 
-d_5, bpma_2786_t5, d_3, qe_2786_t5, d_4, cey_2786_t5, d_14, bpma_2804_t5, d_15, qh_2804_t5, 
-d_16, chx_2805_t5, d_17, bpma_2807_t5, d_15, qh_2807_t5, d_16, chy_2808_t5, d_20, chx_2817_t5, 
-d_21, chy_2818_t5, d_22, bpma_2818_t5, d_23, qh_2819_t5, id_57033544_, be_2821_t5, d_26, qm_2824_t5, 
-d_27, bpma_2828_t5, d_28, qm_2829_t5, d_29, chx_2830_t5, d_30, saox_2831_t5, d_31, bpma_2833_t5, 
-d_28, qm_2834_t5, d_29, chy_2835_t5, d_34, sao_2836_t5, d_35, chx_2838_t5, d_36, bpma_2838_t5, 
-d_28, qm_2839_t5, d_38, be_2841_t5, d_39, bpma_2843_t5, d_15, qh_2844_t5, d_16, chy_2845_t5, 
-d_42, bpma_2855_t5, d_15, qh_2855_t5, d_16, chx_2856_t5, d_17, bpma_2858_t5, d_15, qh_2858_t5, 
-d_16, chy_2859_t5, d_48, bpma_2878_t5, d_3, qe_2878_t5, d_4, cex_2879_t5, d_51, bpma_2900_t5, 
-d_3, qe_2900_t5, d_4, cey_2900_t5, d_51, bpma_2921_t5, d_3, qe_2922_t5, d_4, cex_2922_t5, 
-d_51, bpma_2943_t5, d_3, qe_2943_t5, d_4, cey_2944_t5, d_51, bpma_2965_t5, d_3, qe_2965_t5, 
-d_4, cex_2966_t5, id_39025563_, bpma_2985_un2, d_3, qe_2985_un2, d_4, cey_2986_un2, d_51, bpma_3007_un2, 
-d_3, qe_3007_un2, d_4, cex_3007_un2, d_51, bpma_3028_un2, d_3, qe_3029_un2, d_4, cey_3029_un2, 
-d_73, ensec_3039_un2)
+cell = (id_71329109_, bpma_2756_t5, d_3, qe_2756_t5, d_4, cey_2756_t5, d_5, bpma_2766_t5, d_3, 
+qe_2766_t5, d_4, cex_2766_t5, d_5, bpma_2776_t5, d_3, qe_2776_t5, d_4, cex_2776_t5, d_5, 
+bpma_2786_t5, d_3, qe_2786_t5, d_4, cey_2786_t5, d_14, bpma_2804_t5, d_15, qh_2804_t5, d_16, 
+chx_2805_t5, d_17, bpma_2807_t5, d_15, qh_2807_t5, d_16, chy_2808_t5, d_20, chx_2817_t5, d_21, 
+chy_2818_t5, d_22, bpma_2818_t5, d_23, qh_2819_t5, id_73522913_, be_2821_t5, d_26, qm_2824_t5, d_27, 
+bpma_2828_t5, d_28, qm_2829_t5, d_29, chx_2830_t5, d_30, saox_2831_t5, d_31, bpma_2833_t5, d_28, 
+qm_2834_t5, d_29, chy_2835_t5, d_34, sao_2836_t5, d_35, chx_2838_t5, d_36, bpma_2838_t5, d_28, 
+qm_2839_t5, d_38, be_2841_t5, d_39, bpma_2843_t5, d_15, qh_2844_t5, d_16, chy_2845_t5, d_42, 
+bpma_2855_t5, d_15, qh_2855_t5, d_16, chx_2856_t5, d_17, bpma_2858_t5, d_15, qh_2858_t5, d_16, 
+chy_2859_t5, d_48, bpma_2878_t5, d_3, qe_2878_t5, d_4, cex_2879_t5, d_51, bpma_2900_t5, d_3, 
+qe_2900_t5, d_4, cey_2900_t5, d_51, bpma_2921_t5, d_3, qe_2922_t5, d_4, cex_2922_t5, d_51, 
+bpma_2943_t5, d_3, qe_2943_t5, d_4, cey_2944_t5, d_51, bpma_2965_t5, d_3, qe_2965_t5, d_4, 
+cex_2966_t5, id_90455966_, bpma_2985_un2, d_3, qe_2985_un2, d_4, cey_2986_un2, d_51, bpma_3007_un2, d_3, 
+qe_3007_un2, d_4, cex_3007_un2, d_51, bpma_3028_un2, d_3, qe_3029_un2, d_4, cey_3029_un2, d_73, 
+ensec_3039_un2)
 
 # power supplies 
 

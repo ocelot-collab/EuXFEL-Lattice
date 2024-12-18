@@ -8,7 +8,8 @@ SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
 i1_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=3, pos_stop=145, sbend_l_corr=False)
 lattice = MagneticLattice(i1_cell)
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid, Hcor, Vcor, Sextupole, Cavity, TDCavity],
-       remaining_elems=['STSEC.23.I1', 'MATCH.37.I1', "STLAT.47.I1", 'OTRC.55.I1', 'OTRC.56.I1', 'OTRC.58.I1', 'OTRC.59.I1', 'STSUB.62.I1'], init_energy=0.005)
+       remaining_elems=['STSEC.23.I1', 'MATCH.37.I1', "STLAT.47.I1", 'MATCH.52.I1','MATCH.55.I1', 
+                        'OTRC.55.I1', 'OTRC.56.I1', 'OTRC.58.I1', 'OTRC.59.I1', 'STSUB.62.I1'], init_energy=0.005)
 
 # for elem in lattice.sequence:
 #      if elem.__class__ == Undulator:
@@ -43,7 +44,7 @@ tws.alpha_x = 18.1886
 tws.alpha_y = 18.1886
 tws.s = 23.2
 
-#lattice.save_as_py_file(folder + "i1.py", tws0=tws, power_supply=True)
+lattice.save_as_py_file(folder + "i1_bis.py", tws0=tws, power_supply=True)
 
 # INJECTOR END ********
 
@@ -51,15 +52,13 @@ tws.s = 23.2
 # L1 START ********
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-i1_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=145, pos_stop=579, sbend_l_corr=False)
-
-lattice = MagneticLattice(i1_cell)
-
+l1_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=145, pos_stop=579, sbend_l_corr=False)
+lattice = MagneticLattice(l1_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
-       remaining_elems=['STSUB.62.I1', 'MATCH.174.L1', 'MATCH.202.B1', 'ENSUB.229.B1'], init_energy=0.13)
-
+       remaining_elems=['STSUB.62.I1', 'MATCH.73.I1', 'STLAT.73.I1', 'MATCH.104.I1', 'MATCH.174.L1', 'MATCH.202.B1', 
+                        'MATCH.207.B1', 'MATCH.218.B1', 'ENSUB.229.B1'], init_energy=0.13)
 
 for elem in lattice.sequence:
     if elem.__class__ == Cavity:
@@ -71,6 +70,7 @@ for elem in lattice.sequence:
         elem.vy_down=(3.6481e-05+7.9888e-06j)
         elem.vxx_down=(-0.004057-0.0001369j)
         elem.vxy_down=(0.0029243-1.2891e-05j)
+
 tws = Twiss()
 tws.beta_x  = 2.6096907242276925
 tws.beta_y  = 7.150678422205259
@@ -91,11 +91,9 @@ l2_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start
 
 lattice = MagneticLattice(l2_cell)
 
-
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
        remaining_elems=['ENSUB.229.B1', 'MATCH.414.B2', 'MATCH.428.B2','MATCH.446.B2', 'ENSUB.466.B2'], init_energy=0.7)
-
 
 for elem in lattice.sequence:
     if elem.__class__ == Cavity:
@@ -110,17 +108,10 @@ for elem in lattice.sequence:
 
 tws = Twiss()
 
-tws.beta_x  = 7.622631562086844
-tws.beta_y  = 9.26531262686501
-tws.alpha_x = -0.883149418027471
-tws.alpha_y = -1.4181947820106364
-tws.E = 0.7
-
-tws = Twiss()
-tws.beta_x  = 7.4846
-tws.beta_y  = 8.6992
-tws.alpha_x = -0.6959
-tws.alpha_y = -1.2903
+tws.beta_x  = 7.865550253394325
+tws.beta_y  = 8.698292442670796
+tws.alpha_x = -1.0418290882386196
+tws.alpha_y = -1.2234476587083056
 tws.E = 0.7
 tws.s = 229.3007540000002
 
@@ -129,6 +120,7 @@ lattice.sequence = lattice.sequence[2:]
 
 # L2 END ********
 
+
 # L3 START ********
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
@@ -136,11 +128,9 @@ l3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start
 
 lattice = MagneticLattice(l3_cell)
 
-
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
        remaining_elems=['ENSUB.466.B2','MATCH.525.L3','ENSEC.1652.L3'], init_energy=2.4)
-
 
 for elem in lattice.sequence:
     if elem.__class__ == Cavity:
@@ -152,7 +142,6 @@ for elem in lattice.sequence:
         elem.vy_down=(3.6481e-05+7.9888e-06j)
         elem.vxx_down=(-0.004057-0.0001369j)
         elem.vxy_down=(0.0029243-1.2891e-05j)
-
 
 tws = Twiss()
 tws.beta_x  = 29.41686175122868
@@ -162,36 +151,22 @@ tws.alpha_y = -1.253808202141189
 tws.E = 2.4
 tws.s = 466.82
 
-
 lattice.sequence = lattice.sequence[2:]
 #lattice.save_as_py_file(folder + "l3.py", tws0=tws, power_supply=True)
 
-# L3 END ********
+# L3 END *******************
 
-# CL START ********
+
+# CL START *********************
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-l3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=2095, pos_stop=2427, sbend_l_corr=False)
+cl_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=2095, pos_stop=2427, sbend_l_corr=False)
 
-lattice = MagneticLattice(l3_cell)
-
+lattice = MagneticLattice(cl_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
        remaining_elems=['ENSEC.1652.L3', 'MATCH.1673.CL','ENSUB.1980.TL'], init_energy=14)
-
-
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
-
 
 tws = Twiss()
 tws.beta_x  = 41.66496631816343
@@ -201,37 +176,22 @@ tws.alpha_y = 2.004822139010063
 tws.E = 14
 tws.s = 1652.902800000028
 
-
 lattice.sequence = lattice.sequence[2:]
 #lattice.save_as_py_file(folder + "cl.py", tws0=tws, power_supply=True)
 
-# CL END ********
+# CL END ***************************
 
 
-# TLD START ********
+# TLD START ************************
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-l3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=2427, pos_stop=2488, sbend_l_corr=False)
-
-lattice = MagneticLattice(l3_cell)
-
+tld_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=4530, pos_stop=4672, sbend_l_corr=False)
+# In the longlist Excel file the TLD section is way down the order
+lattice = MagneticLattice(tld_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
-       remaining_elems=['ENSUB.1980.TL','STSUB.1980.TL','ENSUB.2130.T2' ], init_energy=14)
-
-
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
-
+       remaining_elems=['STSEC.1980.TLD', 'OTRC.1995.TLD','ENSEC.2130.TLD'], init_energy=14)
 
 tws = Twiss()
 tws.beta_x  = 43.11647525647555
@@ -240,38 +200,23 @@ tws.alpha_x = -2.1790120506947406
 tws.alpha_y = 0.6184659724795544
 tws.E = 14
 tws.s = 1980.3864730000207
-
 
 lattice.sequence = lattice.sequence[2:]
 #lattice.save_as_py_file(folder + "tld.py", tws0=tws, power_supply=True)
 
-# TLD END ********
+# TLD END ***************************
 
 
-# TL34 START ********
+# TL34 START ************************
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-l3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=2488, pos_stop=2587, sbend_l_corr=False)
+tl34_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=2427, pos_stop=2458, sbend_l_corr=False)
 
-lattice = MagneticLattice(l3_cell)
-
+lattice = MagneticLattice(tl34_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
-       remaining_elems=['ENSUB.1980.TL', 'STSUB.2025.TL' ], init_energy=14)
-
-
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
-
+       remaining_elems=['ENSUB.1980.TL', 'ENSUB.2025.TL'], init_energy=14)
 
 tws = Twiss()
 tws.beta_x  = 43.11647525647555
@@ -281,36 +226,21 @@ tws.alpha_y = 0.6184659724795544
 tws.E = 14
 tws.s = 1980.3864730000207
 
-
 lattice.sequence = lattice.sequence[2:]
-#lattice.save_as_py_file(folder + "tl34.py", tws0=tws, power_supply=True)
+lattice.save_as_py_file(folder + "tl34.py", tws0=tws, power_supply=True)
 # TL34 END ********
 
 
 # sase1 START ********
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-l3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=2587, pos_stop=3069, sbend_l_corr=False)
+l3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=2458, pos_stop=3069, sbend_l_corr=False)
 
 lattice = MagneticLattice(l3_cell)
 
-
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
-       remaining_elems=['STSUB.2025.TL','MATCH.2248.SA1','ENSEC.2461.SA1' ], init_energy=14)
-
-
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
-
+       remaining_elems=['ENSUB.2025.TL','MATCH.2248.SA1','ENSEC.2461.SA1' ], init_energy=14)
 
 tws = Twiss()
 tws.beta_x  = 10.776023018690426
@@ -320,7 +250,6 @@ tws.alpha_y = -2.0320682898456615
 tws.E = 14
 tws.s = 2025.3865970000204
 
-
 lattice.sequence = lattice.sequence[2:]
 #lattice.save_as_py_file(folder + "sase1.py", tws0=tws, power_supply=True)
 
@@ -329,27 +258,13 @@ lattice.sequence = lattice.sequence[2:]
 # T4 START ********
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-l3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=3069, pos_stop=3191, sbend_l_corr=False)
+t4_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=3069, pos_stop=3191, sbend_l_corr=False)
 
-lattice = MagneticLattice(l3_cell)
-
+lattice = MagneticLattice(t4_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
-       remaining_elems=['ENSEC.2461.SA1', 'STSUB.2583.T4', 'ENSEC.2800.T4'], init_energy=14)
-
-
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
-
+       remaining_elems=['ENSEC.2461.SA1', 'ENSEC.2800.T4'], init_energy=14)
 
 tws = Twiss()
 tws.beta_x  = 25.263665891080947
@@ -359,45 +274,27 @@ tws.alpha_y = 1.26958806877402
 tws.E = 14
 tws.s = 2461.7178630000176
 
-
 lattice.sequence = lattice.sequence[2:]
 #lattice.save_as_py_file(folder + "t4.py", tws0=tws, power_supply=True)
 
 # T4 END ********
 
 # sase3 START ********
-#SC = StructureConverter()
-#SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-#l3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=3191, pos_stop=3554, sbend_l_corr=False)
-
-#lattice = MagneticLattice(l3_cell)
-
-
+SC = StructureConverter()
+SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
+#sase3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=3191, pos_stop=3554, sbend_l_corr=False)
+#lattice = MagneticLattice(sase3_cell)
 #lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
 #                                           Hcor, Vcor, Sextupole, Cavity, TDCavity],
 #       remaining_elems=['ENSEC.2800.T4','MATCH.2813.SA3','ENSEC.2955.SA3'], init_energy=14)
 
-
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
-
-
-#tws = Twiss()
-#tws.beta_x  = 22.071972008019717
-#tws.beta_y  = 10.22271243325217
-#tws.alpha_x = 1.5225255474012378
-#tws.alpha_y = -0.7348186593318795
-#tws.E = 14
-#tws.s = 2801.0155910000135
-
+tws = Twiss()
+tws.beta_x  = 22.071972008019717
+tws.beta_y  = 10.22271243325217
+tws.alpha_x = 1.5225255474012378
+tws.alpha_y = -0.7348186593318795
+tws.E = 14
+tws.s = 2801.0155910000135
 
 #lattice.sequence = lattice.sequence[2:]
 #lattice.save_as_py_file(folder + "sase3.py", tws0=tws, power_supply=True)
@@ -405,38 +302,23 @@ for elem in lattice.sequence:
 # sase3 END ********
 
 # T4D START ********
-#SC = StructureConverter()
-#SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-#l3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=3554, pos_stop=3634, sbend_l_corr=False)
-#
-#lattice = MagneticLattice(l3_cell)
-#
-#
-#lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
-#                                           Hcor, Vcor, Sextupole, Cavity, TDCavity],
-#       remaining_elems=['ENSEC.2955.SA3','ENSEC.3106.T4D'], init_energy=14)
-#
-#
-#for elem in lattice.sequence:
-#    if elem.__class__ == Cavity:
-#        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-#        elem.vy_up=(-4.1091e-05+5.739e-07j)
-#        elem.vxx_up=(0.00099943-0.00081401j)
-#        elem.vxy_up=(0.0034065-0.0004146j)
-#        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-#        elem.vy_down=(3.6481e-05+7.9888e-06j)
-#        elem.vxx_down=(-0.004057-0.0001369j)
-#        elem.vxy_down=(0.0029243-1.2891e-05j)
-#
-#
-#tws = Twiss()
-#tws.beta_x  = 9.429026330526568
-#tws.beta_y  = 22.189275259818615
-#tws.alpha_x = -0.6621363588705478
-#tws.alpha_y = 1.509023055887539
-#tws.E = 14
-#tws.s = 2956
+SC = StructureConverter()
+SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
+t4d_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=3554, pos_stop=3634, sbend_l_corr=False)
 
+lattice = MagneticLattice(t4d_cell)
+
+lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
+                                           Hcor, Vcor, Sextupole, Cavity, TDCavity],
+       remaining_elems=['ENSEC.2955.SA3','ENSEC.3106.T4D'], init_energy=14)
+
+tws = Twiss()
+tws.beta_x  = 9.429026330526568
+tws.beta_y  = 22.189275259818615
+tws.alpha_x = -0.6621363588705478
+tws.alpha_y = 1.509023055887539
+tws.E = 14
+tws.s = 2956
 
 #lattice.sequence = lattice.sequence[2:]
 #lattice.save_as_py_file(folder + "t4d.py", tws0=tws, power_supply=True)
@@ -444,27 +326,16 @@ for elem in lattice.sequence:
 # T4D END ********
 
 
-# T34_sa2 START ********
+# TL34_sa2 START ********
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-l3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=2428, pos_stop=2458, sbend_l_corr=False)
+t34_sa2_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=2427, pos_stop=2458, sbend_l_corr=False)
 
-lattice = MagneticLattice(l3_cell)
+lattice = MagneticLattice(t34_sa2_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
-       remaining_elems=['STSUB.1980.TL','ENSUB.2025.TL'], init_energy=14)
-
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
+       remaining_elems=['ENSUB.1980.TL', 'ENSUB.2025.TL'], init_energy=14)
 
 tws = Twiss()
 tws.beta_x  = 43.11647525647555
@@ -475,42 +346,31 @@ tws.E = 14
 tws.s = 1980.3864730000207
 
 lattice.sequence = lattice.sequence[2:]
-#lattice.save_as_py_file(folder + "t34_sa2.py", tws0=tws, power_supply=True)
-# T34_sa2 END ********
+lattice.save_as_py_file(folder + "tl34_sa2.py", tws0=tws, power_supply=True)
+# TL34_sa2 END ********
 
 
 # T1 START ********
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-l3_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=3634, pos_stop=3770, sbend_l_corr=False)
+t1_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=3635, pos_stop=3770, sbend_l_corr=False)
 
-lattice = MagneticLattice(l3_cell)
+lattice = MagneticLattice(t1_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
        remaining_elems=['STSEC.2025.T1','ENSEC.2197.T1'], init_energy=14)
 
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
-
 tws = Twiss()
-tws.beta_x  = 43.11647525647555
-tws.beta_y  = 10.860573729512675
-tws.alpha_x = -2.1790120506947406
-tws.alpha_y = 0.6184659724795544
+tws.beta_x  = 10.776023018690426
+tws.beta_y  = 39.48730762141566
+tws.alpha_x = 0.6698245190372976
+tws.alpha_y = -2.0320682898456615
 tws.E = 14
-tws.s = 2025
+tws.s = 2025.3865970000204
 
 lattice.sequence = lattice.sequence[2:]
-#lattice.save_as_py_file(folder + "t1.py", tws0=tws, power_supply=True)
+lattice.save_as_py_file(folder + "t1.py", tws0=tws, power_supply=True)
 
 # T1 END ********
 
@@ -525,27 +385,16 @@ lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupo
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
        remaining_elems=['ENSEC.2197.T1', 'MATCH.2197.SA2','ENSEC.2423.SA2' ], init_energy=14)
 
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
-
 tws = Twiss()
-tws.beta_x  = 12.958162568054922
-tws.beta_y  = 42.969888945121845
-tws.alpha_x = 1.3088879823896227
-tws.alpha_y = 0.9334000934857891
+tws.beta_x  = 53.015297404432516
+tws.beta_y  = 79.56279633228925
+tws.alpha_x = 0.8005655864098374
+tws.alpha_y = 5.39236677329033
 tws.E = 14
-tws.s = 2152.0090710000186
+tws.s = 2198.0091950000196
 
 lattice.sequence = lattice.sequence[2:]
-#lattice.save_as_py_file(folder + "sase2.py", tws0=tws, power_supply=True)
+lattice.save_as_py_file(folder + "sase2.py", tws0=tws, power_supply=True)
 
 # sase2 END ********
 
@@ -560,27 +409,16 @@ lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupo
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
        remaining_elems=['ENSEC.2423.SA2','ENSEC.2743.UN1'], init_energy=14)
 
-for elem in lattice.sequence:
-    if elem.__class__ == Cavity:
-        elem.vx_up=(-5.6813e-05+1.0751e-05j)
-        elem.vy_up=(-4.1091e-05+5.739e-07j)
-        elem.vxx_up=(0.00099943-0.00081401j)
-        elem.vxy_up=(0.0034065-0.0004146j)
-        elem.vx_down=(-2.4014e-05+1.2492e-05j)
-        elem.vy_down=(3.6481e-05+7.9888e-06j)
-        elem.vxx_down=(-0.004057-0.0001369j)
-        elem.vxy_down=(0.0029243-1.2891e-05j)
-
 tws = Twiss()
-tws.beta_x  = 26.108255539772447
-tws.beta_y  = 37.7162592662484
-tws.alpha_x = -0.8360736180096779
-tws.alpha_y = 1.1812735424648375
+tws.beta_x  = 56.797212917921975
+tws.beta_y  = 262.99048996645803
+tws.alpha_x = -1.517388900059324
+tws.alpha_y = -2.4145325077606694
 tws.E = 14
-tws.s = 2423
+tws.s = 2423.709195000019
 
-lattice.sequence = lattice.sequence[1:]
-#lattice.save_as_py_file(folder + "t3.py", tws0=tws, power_supply=True)
+lattice.sequence = lattice.sequence[2:]
+lattice.save_as_py_file(folder + "t3.py", tws0=tws, power_supply=True)
 # T3 END ********
 
 
@@ -603,12 +441,13 @@ tws.alpha_y = -1.1037998266496247
 tws.E = 14
 tws.s = 2743.9245999999944
 
-lattice.sequence = lattice.sequence[1:]
+lattice.sequence = lattice.sequence[2:]
 lattice.save_as_py_file(folder + "t5.py", tws0=tws, power_supply=True)
 
-# T5 END ********
+# T5 END ************************
 
-# T5d START ********
+
+# T5d START *********************
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
 t5_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=4454, pos_stop=4529, sbend_l_corr=False)
@@ -627,17 +466,18 @@ tws.alpha_y = 1.3083708330446713
 tws.E = 14
 tws.s = 3039.372919999988
 
-lattice.sequence = lattice.sequence[1:]
-#lattice.save_as_py_file(folder + "t5d.py", tws0=tws, power_supply=True)
+lattice.sequence = lattice.sequence[2:]
+lattice.save_as_py_file(folder + "t5d.py", tws0=tws, power_supply=True)
 
-# T5d END ********
+# T5d END ******************************
 
-# i1d START ********
+
+# i1d START ****************************
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-t5_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=4684, pos_stop=4703, sbend_l_corr=False)
+i1d_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=4684, pos_stop=4703, sbend_l_corr=False)
 
-lattice = MagneticLattice(t5_cell)
+lattice = MagneticLattice(i1d_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
@@ -651,7 +491,7 @@ tws.alpha_y = -2.1828482259048667
 tws.E = 0.12999999999999998
 tws.s = 62.08900499999993
 
-lattice.sequence = lattice.sequence[1:]
+lattice.sequence = lattice.sequence[2:]
 lattice.save_as_py_file(folder + "i1d.py", tws0=tws, power_supply=True)
 
 # i1d END ********
@@ -659,9 +499,9 @@ lattice.save_as_py_file(folder + "i1d.py", tws0=tws, power_supply=True)
 # b1d START ********
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-t5_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=4703, pos_stop=4722, sbend_l_corr=False)
+b1d_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=4703, pos_stop=4722, sbend_l_corr=False)
 
-lattice = MagneticLattice(t5_cell)
+lattice = MagneticLattice(b1d_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
@@ -675,17 +515,18 @@ tws.alpha_y = -1.2234476587083056
 tws.E = 0.7000000007706801
 tws.s = 229.3007540000002
 
-#lattice.sequence = lattice.sequence[1:]
+#lattice.sequence = lattice.sequence[2:]
 #lattice.save_as_py_file(folder + "b1d.py", tws0=tws, power_supply=True)
 
-# b1d END ********
+# b1d END *******************
 
-# b2d START ********
+
+# b2d START ****************
 SC = StructureConverter()
 SC.types = ["HKIC", "VKIC", "MONI", "MARK", "INSTR"]
-t5_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=4722, pos_stop=4755, sbend_l_corr=False)
+b2d_cell = SC.Longlist2Ocelot(folder + 'component_list_2024.07.04.xls', pos_start=4722, pos_stop=4755, sbend_l_corr=False)
 
-lattice = MagneticLattice(t5_cell)
+lattice = MagneticLattice(b2d_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
@@ -699,7 +540,7 @@ tws.alpha_y = -1.253808202141189
 tws.E = 2.399999999680003
 tws.s = 466.8192259999962
 
-lattice.sequence = lattice.sequence[1:]
+lattice.sequence = lattice.sequence[2:]
 lattice.save_as_py_file(folder + "b2d.py", tws0=tws, power_supply=True)
 
-# b2d END ********
+# b2d END ********************
