@@ -9,7 +9,7 @@ from ocelot.gui import *
 import i1, l1, l2, l3, cl, tld
 
 # calculate twiss functions with ocelot
-lat = MagneticLattice(i1.cell + l1.cell + l2.cell + l3.cell + cl.cell )
+lat = MagneticLattice(i1.cell + l1.cell + l2.cell + l3.cell + cl.cell + tld.cell)
 tws = twiss(lat, i1.tws0)
 
 
@@ -44,12 +44,19 @@ df_tl = df[df["SECTION"] == "TL"]
 df_tl = df_tl[df_tl["SUBSECTION"] != "TL3"]
 df_tl = df_tl[df_tl["SUBSECTION"] != "TL4"]
 df_tl = df_tl[df_tl["SUBSECTION"] != "TL5"]
-
+# TLD
+df_tld = df[df["SECTION"] == "TLD"]
 # concatenate sections
-s = np.concatenate((df_i1["S"].to_numpy() , df_l1["S"].to_numpy(),df_b1["S"].to_numpy(),  df_l2["S"].to_numpy(), df_b2["S"].to_numpy(), df_l3["S"].to_numpy(), df_cl["S"].to_numpy(), df_tl["S"].to_numpy()))+23.2
-beta_x = np.concatenate((df_i1["BETX"].to_numpy() , df_l1["BETX"].to_numpy(),df_b1["BETX"].to_numpy(),  df_l2["BETX"].to_numpy(), df_b2["BETX"].to_numpy(), df_l3["BETX"].to_numpy(), df_cl["BETX"].to_numpy(), df_tl["BETX"].to_numpy()))
-beta_y = np.concatenate((df_i1["BETY"].to_numpy() , df_l1["BETY"].to_numpy(),df_b1["BETY"].to_numpy(),  df_l2["BETY"].to_numpy(), df_b2["BETY"].to_numpy(), df_l3["BETY"].to_numpy(), df_cl["BETY"].to_numpy(), df_tl["BETY"].to_numpy()))
-
+s = np.concatenate((df_i1["S"].to_numpy() , df_l1["S"].to_numpy(),df_b1["S"].to_numpy(),  df_l2["S"].to_numpy(), 
+                    df_b2["S"].to_numpy(), df_l3["S"].to_numpy(), df_cl["S"].to_numpy(), df_tl["S"].to_numpy(), df_tld["S"].to_numpy()))+23.2
+beta_x = np.concatenate((df_i1["BETX"].to_numpy() , df_l1["BETX"].to_numpy(),df_b1["BETX"].to_numpy(),  df_l2["BETX"].to_numpy(), 
+                         df_b2["BETX"].to_numpy(), df_l3["BETX"].to_numpy(), df_cl["BETX"].to_numpy(), df_tl["BETX"].to_numpy(), df_tld["BETX"].to_numpy()))
+beta_y = np.concatenate((df_i1["BETY"].to_numpy() , df_l1["BETY"].to_numpy(),df_b1["BETY"].to_numpy(),  df_l2["BETY"].to_numpy(), 
+                         df_b2["BETY"].to_numpy(), df_l3["BETY"].to_numpy(), df_cl["BETY"].to_numpy(), df_tl["BETY"].to_numpy(), df_tld["BETY"].to_numpy()))
+D_x = np.concatenate((df_i1["DX"].to_numpy(), df_l1["DX"].to_numpy(), df_b1["DX"].to_numpy(), df_l2["DX"].to_numpy(), df_b2["DX"].to_numpy(), 
+                      df_l3["DX"].to_numpy(), df_cl["DX"].to_numpy(), df_tl["DX"].to_numpy(), df_tld["DX"].to_numpy()))
+D_y = np.concatenate((df_i1["DY"].to_numpy(), df_l1["DY"].to_numpy(), df_b1["DY"].to_numpy(), df_l2["DY"].to_numpy(), df_b2["DY"].to_numpy(), 
+                      df_l3["DY"].to_numpy(), df_cl["DY"].to_numpy(), df_tl["DY"].to_numpy(), df_tld["DY"].to_numpy()))
 
 plt.figure(1)
 plt.title("BETA_X")
@@ -57,7 +64,7 @@ plt.plot(s, beta_x, label="beta_x, mad8")
 s_ocl = [tw.s for tw in tws]
 beta_x_ocl = [tw.beta_x for tw in tws]
 beta_y_ocl = [tw.beta_y for tw in tws]
-plt.plot(s_ocl, beta_x_ocl, label="beta_x, ocelot")
+plt.plot(s_ocl, beta_x_ocl, '--', label="beta_x, ocelot")
 plt.ylabel(r"$\beta_x$ [m]")
 plt.xlabel("s [m]")
 plt.legend()
@@ -65,8 +72,28 @@ plt.legend()
 plt.figure(2)
 plt.title("BETA_Y")
 plt.plot(s, beta_y, label="beta_y, mad8")
-plt.plot(s_ocl, beta_y_ocl, label="beta_y, ocelot")
+plt.plot(s_ocl, beta_y_ocl, '--', label="beta_y, ocelot")
 plt.xlabel("s [m]")
 plt.ylabel(r"$\beta_y$ [m]")
 plt.legend()
+
+d_x_ocl = [tw.Dx for tw in tws]
+d_y_ocl = [tw.Dy for tw in tws]
+
+plt.figure(3)
+plt.title("D_X")
+plt.plot(s, D_x, label="D_x, mad8")
+plt.plot(s_ocl, d_x_ocl, "--", label="D_x, ocelot")
+plt.xlabel("s [m]")
+plt.ylabel(r"$D_x$ [m]")
+plt.legend()
+
+plt.figure(4)
+plt.title("D_Y")
+plt.plot(s, D_y, label="D_y, mad8")
+plt.plot(s_ocl, d_y_ocl, "--", label="D_y, ocelot")
+plt.xlabel("s [m]")
+plt.ylabel(r"$D_x$ [m]")
+plt.legend()
+
 plt.show()

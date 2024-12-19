@@ -505,7 +505,7 @@ lattice = MagneticLattice(b1d_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, TDCavity],
-       remaining_elems=['STSEC.229.B1D','DUFLANGE.237.B1D','DUABSORB.237.B1D','ENSEC.66.I1D','ENSEC.237.B1D'], init_energy=0.7)
+       remaining_elems=['STSEC.229.B1D','DUFLANGE.237.B1D','DUABSORB.237.B1D','ENSEC.237.B1D'], init_energy=0.7)
 
 tws = Twiss()
 tws.beta_x  = 7.865550253394325
