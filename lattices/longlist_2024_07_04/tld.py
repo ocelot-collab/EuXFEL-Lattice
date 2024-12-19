@@ -10,7 +10,7 @@ tws0.E = 14
 tws0.s = 1980.3864730000207
 
 # Drifts
-d_2 = Drift(l=2.000002, eid='D_2')
+#d_2 = Drift(l=2.000002, eid='D_2')
 d_3 = Drift(l=0.5, eid='D_3')
 d_5 = Drift(l=8.050009, eid='D_5')
 d_6 = Drift(l=0.3026, eid='D_6')
@@ -136,8 +136,14 @@ bpmw_2126_tld = Monitor(eid='BPMW.2126.TLD')
 otrc_1995_tld = Marker(eid='OTRC.1995.TLD')
 ensec_2130_tld = Marker(eid='ENSEC.2130.TLD')
 
+qk_1982_tl = Quadrupole(l=1.0552, k1=0.09035960007960576, eid='QK.1982.TL')
+x_bend = Bend(l=0.005276, angle = +1.180477777265855e-05, k1 = +0.090359600075815)
+y_bend = Bend(l=0.005276, angle = -7.780804909999998e-05, k1 = -0.090359600075815, tilt=np.pi/2)
+QK = ([x_bend] * 19 + [y_bend])*10
+
+qk_drift = (Drift(l=0.4724), QK, Drift(l=2.000002 - 0.4724 - 1.0552))
 # Lattice 
-cell = (bz_1980_tld, d_2, bz_1983_tld, d_3, bz_1985_tld, d_3, bz_1986_tld, d_5, otrc_1995_tld, 
+cell = (bz_1980_tld, qk_drift, bz_1983_tld, d_3, bz_1985_tld, d_3, bz_1986_tld, d_5, otrc_1995_tld,
 d_6, bpma_1995_tld, d_7, qf_1996_tld, d_8, cfy_2000_tld, d_9, cfx_2000_tld, d_10, bd_2005_tld, 
 d_11, bd_2006_tld, d_11, bd_2008_tld, d_13, bpma_2008_tld, d_14, qf_2009_tld, d_15, cfx_2009_tld, 
 d_16, sa_2016_tld, d_17, bpma_2016_tld, d_14, qf_2016_tld, d_15, cfy_2017_tld, d_20, bpma_2021_tld, 
