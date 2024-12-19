@@ -50,7 +50,7 @@ df_tl34 = df[df["SECTION"] == "TL"]
 df_tl34 = df_tl34[df_tl34["SUBSECTION"] != "TL1"]
 df_tl34 = df_tl34[df_tl34["SUBSECTION"] != "TL2"]
 df_tl34 = df_tl34[df_tl34["SUBSECTION"] != "TL5"]
-print(df_tl34)
+
 # T1
 df_t1 = df[df["SECTION"] == "T1"]
 # SASE2
@@ -61,6 +61,9 @@ df_t3 = df[df["SECTION"] == "T3"]
 df_un1 = df[df["SECTION"] == "UN1"]
 # T5
 df_t5 = df[df["SECTION"] == "T5"]
+# UN2
+df_un2 = df[df["SECTION"] == "UN2"]
+
 
 
 # concatenate sections
@@ -71,28 +74,31 @@ s = np.concatenate((df_i1["S"].to_numpy() , df_l1["S"].to_numpy(),df_b1["S"].to_
                     df_sa2["S"].to_numpy(),
                     df_t3["S"].to_numpy(),
                     df_un1["S"].to_numpy(),
-                    df_t5["S"].to_numpy()
+                    df_t5["S"].to_numpy(),
+                    df_un2["S"].to_numpy()
                     ))+23.2
+
 beta_x = np.concatenate((df_i1["BETX"].to_numpy() , df_l1["BETX"].to_numpy(),df_b1["BETX"].to_numpy(),  df_l2["BETX"].to_numpy(), df_b2["BETX"].to_numpy(), df_l3["BETX"].to_numpy(),
                          df_cl["BETX"].to_numpy(), df_tl["BETX"].to_numpy(),
                          df_tl34["BETX"].to_numpy(),
                          df_t1["BETX"].to_numpy(),
                          df_sa2["BETX"].to_numpy(),
                          df_t3["BETX"].to_numpy(),
-                        df_un1["BETX"].to_numpy(),
+                         df_un1["BETX"].to_numpy(),
                          df_t5["BETX"].to_numpy(),
+                         df_un2["BETX"].to_numpy()
                          ))
+
 beta_y = np.concatenate((df_i1["BETY"].to_numpy() , df_l1["BETY"].to_numpy(),df_b1["BETY"].to_numpy(),  df_l2["BETY"].to_numpy(), df_b2["BETY"].to_numpy(),
                          df_l3["BETY"].to_numpy(), df_cl["BETY"].to_numpy(), df_tl["BETY"].to_numpy(),
                          df_tl34["BETY"].to_numpy(),
                          df_t1["BETY"].to_numpy(),
                          df_sa2["BETY"].to_numpy(),
-
-                        df_t3["BETY"].to_numpy(),
-                        df_un1["BETY"].to_numpy(),
-                        df_t5["BETY"].to_numpy()
+                         df_t3["BETY"].to_numpy(),
+                         df_un1["BETY"].to_numpy(),
+                         df_t5["BETY"].to_numpy(),
+                         df_un2["BETY"].to_numpy()
                          ))
-
 
 D_x = np.concatenate((df_i1["DX"].to_numpy() , df_l1["DX"].to_numpy(),df_b1["DX"].to_numpy(),  df_l2["DX"].to_numpy(), df_b2["DX"].to_numpy(), df_l3["DX"].to_numpy(),
                          df_cl["DX"].to_numpy(), df_tl["DX"].to_numpy(),
@@ -100,8 +106,9 @@ D_x = np.concatenate((df_i1["DX"].to_numpy() , df_l1["DX"].to_numpy(),df_b1["DX"
                          df_t1["DX"].to_numpy(),
                          df_sa2["DX"].to_numpy(),
                          df_t3["DX"].to_numpy(),
-                        df_un1["DX"].to_numpy(),
+                         df_un1["DX"].to_numpy(),
                          df_t5["DX"].to_numpy(),
+                         df_un2["DX"].to_numpy(),
                          ))
 
 D_y = np.concatenate((df_i1["DY"].to_numpy() , df_l1["DY"].to_numpy(),df_b1["DY"].to_numpy(),  df_l2["DY"].to_numpy(), df_b2["DY"].to_numpy(),
@@ -109,10 +116,10 @@ D_y = np.concatenate((df_i1["DY"].to_numpy() , df_l1["DY"].to_numpy(),df_b1["DY"
                          df_tl34["DY"].to_numpy(),
                          df_t1["DY"].to_numpy(),
                          df_sa2["DY"].to_numpy(),
-
-                        df_t3["DY"].to_numpy(),
-                        df_un1["DY"].to_numpy(),
-                        df_t5["DY"].to_numpy()
+                         df_t3["DY"].to_numpy(),
+                         df_un1["DY"].to_numpy(),
+                         df_t5["DY"].to_numpy(),
+                         df_un2["DY"].to_numpy()
                          ))
 
 plt.figure(1)
