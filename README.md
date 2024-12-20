@@ -24,7 +24,14 @@ Lattice files -
 5. gun to b1d: i1, l1, b1d
 6. gun to b2d: i1, l1, l2, b2d
 
-Note : To generate files ... 
+######  IMPORTANT ######
+In the distribution section two beams (straight and kicked) are going through the same quadrupoles and hence see the different magnetic fields:
+          • straight beam only quadrupole component
+          • kicked beam - main quadrupole component and additional dipole components
+The model of the magnets for the kicked beams needs to take into account these components.
+
+
+
 
 ### NOTE:
 1. LH undulator.

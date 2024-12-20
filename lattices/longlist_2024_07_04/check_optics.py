@@ -1,7 +1,7 @@
 from ocelot import *
 from ocelot.gui import *
 import i1 as i1
-import l1, l2, l3, cl, t34_sa2, sase1, t4, t1,  sase2 , t3, t5, t5d, tl34
+import l1, l2, l3, cl, tl34_sa2, sase1, t4, t1,  sase2 , t3, t5, t5d, tl34
 
 
 ## I1 check

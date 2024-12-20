@@ -43,11 +43,11 @@ df_b2 = df_b2[df_b2["SUBSECTION"] != "B2"]
 df_b2d = df[df["SECTION"] == "B2D"]
 
 # concatenate sections
-s = np.concatenate((df_i1["S"].to_numpy(), df_l1["S"].to_numpy(),df_b1["S"].to_numpy(), df_l2["S"].to_numpy(), df_b2d["S"].to_numpy()))+23.2
-beta_x = np.concatenate((df_i1["BETX"].to_numpy(), df_l1["BETX"].to_numpy(), df_b1["BETX"].to_numpy(), df_l2["BETX"].to_numpy(), df_b2d["BETX"].to_numpy()))
-beta_y = np.concatenate((df_i1["BETY"].to_numpy(), df_l1["BETY"].to_numpy(), df_b1["BETY"].to_numpy(), df_l2["BETY"].to_numpy(), df_b2d["BETY"].to_numpy()))
-D_x = np.concatenate((df_i1["DX"].to_numpy(), df_l1["DX"].to_numpy(), df_b1["DX"].to_numpy(), df_l2["DX"].to_numpy(), df_b2d["DX"].to_numpy()))
-D_y = np.concatenate((df_i1["DY"].to_numpy(), df_l1["DY"].to_numpy(), df_b1["DY"].to_numpy(), df_l2["DY"].to_numpy(), df_b2d["DY"].to_numpy()))
+s = np.concatenate((df_i1["S"].to_numpy(), df_l1["S"].to_numpy(),df_b1["S"].to_numpy(), df_l2["S"].to_numpy(), df_b2["S"].to_numpy(), df_b2d["S"].to_numpy()))+23.2
+beta_x = np.concatenate((df_i1["BETX"].to_numpy(), df_l1["BETX"].to_numpy(), df_b1["BETX"].to_numpy(), df_l2["BETX"].to_numpy(), df_b2["BETX"].to_numpy(), df_b2d["BETX"].to_numpy()))
+beta_y = np.concatenate((df_i1["BETY"].to_numpy(), df_l1["BETY"].to_numpy(), df_b1["BETY"].to_numpy(), df_l2["BETY"].to_numpy(), df_b2["BETY"].to_numpy(), df_b2d["BETY"].to_numpy()))
+D_x = np.concatenate((df_i1["DX"].to_numpy(), df_l1["DX"].to_numpy(), df_b1["DX"].to_numpy(), df_l2["DX"].to_numpy(), df_b2["DX"].to_numpy(), df_b2d["DX"].to_numpy()))
+D_y = np.concatenate((df_i1["DY"].to_numpy(), df_l1["DY"].to_numpy(), df_b1["DY"].to_numpy(), df_l2["DY"].to_numpy(), df_b2["DY"].to_numpy(), df_b2d["DY"].to_numpy()))
 
 plt.figure(1)
 plt.title("BETA_X")
