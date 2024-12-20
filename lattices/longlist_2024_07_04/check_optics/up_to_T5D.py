@@ -4,10 +4,10 @@ sys.path.insert(1, "../")
 import pandas as pd
 from ocelot import *
 from ocelot.gui import *
-import i1, l1, l2, l3, cl, t34_sa2, t1, sase2, t3, t5, t5d
+import i1, l1, l2, l3, cl, tl2, tl34_sa2, t1, sase2, t3, t5, t5d
 
 # calculate twiss functions with ocelot
-lat = MagneticLattice(i1.cell + l1.cell + l2.cell + l3.cell + cl.cell + t34_sa2.cell +  t1.cell+ sase2.cell + t3.cell + t5.cell)
+lat = MagneticLattice(i1.cell + l1.cell + l2.cell + l3.cell + cl.cell + tl2.cell + tl34_sa2.cell +  t1.cell+ sase2.cell + t3.cell + t5.cell + t5d.cell)
 tws = twiss(lat, i1.tws0)
 
 
@@ -42,15 +42,11 @@ df_tl = df[df["SECTION"] == "TL"]
 df_tl = df_tl[df_tl["SUBSECTION"] != "TL3"]
 df_tl = df_tl[df_tl["SUBSECTION"] != "TL4"]
 df_tl = df_tl[df_tl["SUBSECTION"] != "TL5"]
-
 # TL3 and TL4
-
-# TL1 and TL2
 df_tl34 = df[df["SECTION"] == "TL"]
 df_tl34 = df_tl34[df_tl34["SUBSECTION"] != "TL1"]
 df_tl34 = df_tl34[df_tl34["SUBSECTION"] != "TL2"]
 df_tl34 = df_tl34[df_tl34["SUBSECTION"] != "TL5"]
-
 # T1
 df_t1 = df[df["SECTION"] == "T1"]
 # SASE2
@@ -63,6 +59,8 @@ df_un1 = df[df["SECTION"] == "UN1"]
 df_t5 = df[df["SECTION"] == "T5"]
 # UN2
 df_un2 = df[df["SECTION"] == "UN2"]
+# T5D
+df_un2 = df[df["SECTION"] == "T5D"]
 
 
 
