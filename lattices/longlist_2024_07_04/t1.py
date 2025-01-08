@@ -139,8 +139,6 @@ stsub_2025_t1 = Marker(eid='STSUB.2025.T1')
 ensec_2197_t1 = Marker(eid='ENSEC.2197.T1')
 
 
-# XYQuadrupoles
-#qk_2027_tl = XYQuadrupole(l=1.0552, x_offs=0.0081538, y_offs=0.02356075, k1=-0.09035541, eid='QK.2027.TL')
 xBend = Bend(l=0.005276, angle= -7.791933105545399e-05, k1=-0.090359600075815)
 yBend = Bend(l=0.005276, angle= 1.181521439452105e-05, k1=0.090359600075815, tilt=np.pi/2)
 qk_2027_tl = ([yBend]*19 + [xBend]) * 10
