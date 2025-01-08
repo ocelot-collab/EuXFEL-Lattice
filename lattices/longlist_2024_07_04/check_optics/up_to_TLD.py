@@ -62,7 +62,6 @@ plt.figure(1)
 plt.title("BETA_X")
 plt.plot(s, beta_x, label="beta_x, mad8")
 s_ocl = [tw.s for tw in tws]
-print(s_ocl[-1])
 beta_x_ocl = [tw.beta_x for tw in tws]
 beta_y_ocl = [tw.beta_y for tw in tws]
 plt.plot(s_ocl, beta_x_ocl, '--', label="beta_x, ocelot")
