@@ -5,9 +5,11 @@ Lattice files based on MS Excel "LongList" https://xfel.desy.de/operation/compon
 
 Repository structure:
 * Lattices - lattice files in ocelot format
-  * LL2ocelot - script to generate ocelot lattice files from MS Excel LongList 
+  * LL2ocelot - scripts to generate ocelot lattice files from MS Excel LongList 
   * longlist_2024_07_04
-  * etc
+    * check_optics - comparison scripts for plotting the beta functions and dispersions calculated with Ocelot and read from the longlist (obtained with Mad8)
+    * ocelot lattice files for each section of the machine (building up s2e-lines as explained in the list below)
+    * readme.txt lists the modifications done to the excel file or to the generated python lattice files in order to accurately model all the elements
 * s2e_sections - EuXFEL accelerator section descriptions 
 * wakes - database of wakefield files (cavities, collimators, dechirpers etc)
 * beam_files - particle distributions 
@@ -27,9 +29,10 @@ Lattice files -
 ######  IMPORTANT ######
 In the distribution section two beams (straight and kicked) are going through the same quadrupoles and hence see the different magnetic fields:
           • straight beam only quadrupole component
-          • kicked beam - main quadrupole component and additional dipole components
+          • kicked beam - main quadrupole component and additional dipole components. 
 The model of the magnets for the kicked beams needs to take into account these components.
 
+Specifically, the extraction to T5D and the extraction to TLD lines have offsets on bot horizontal and vertical planes. The magnet needs to be split into N slices: sequence of horizontal and vertical combine function magnets.
 
 
 
@@ -47,4 +50,5 @@ The model of the magnets for the kicked beams needs to take into account these c
    - If the natural focusing is taken into account, it needs to rematch the beam in the injector.
 
 3. Coupler kick in all RF cavities are off.
+
 

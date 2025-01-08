@@ -28,6 +28,7 @@ and all QP quads which are used only for alignment
 # SA3	UE90	XTD4_003	QP.2943.SA3	QP.CELL24.SA3	PMAGNET	QUAD	QP
 # SA3	UE90	XTD4_004	QP.2951.SA3	QP.CELL26.SA3	PMAGNET	QUAD	QP
 
+*****************************
 In t34_sa2.py
 we introduced following changes:
 
@@ -43,4 +44,31 @@ kl_2000_tl = SBend(l=0.93, angle=alpha, e1=-2*alpha, e2=3*alpha,  tilt=1.570796,
 kl_2001_tl = SBend(l=0.93, angle=alpha, e1=-3*alpha, e2=4*alpha,  tilt=1.570796, eid="KL.2001.TL")
 kl_2002_tl = SBend(l=0.93, angle=alpha, e1=-4*alpha, e2=5*alpha,  tilt=1.570796, eid="KL.2002.TL")
 kl_2003_tl = SBend(l=0.93, angle=0, tilt=1.570796, eid="KL.2003.TL")
+**************************************************
+In tl2_tld.py the following changes were introduced:
+
+# Extraction to TLD: KS kicker setup   
+# RBends
+kspos_1941_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSPOS.1941.TL')
+ksneg_1941_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSNEG.1941.TL')
+kspos_1943_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSPOS.1943.TL')
+ksneg_1943_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSNEG.1943.TL')
+kspos_1945_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSPOS.1945.TL')
+ksneg_1945_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSNEG.1945.TL')
+kspos_1948_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSPOS.1948.TL')
+ksneg_1948_tl = RBend(l=1.0, angle=-3.025448745461549e-05,eid='KSNEG.1948.TL')
+kspos_1950_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSPOS.1950.TL')
+ksneg_1950_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSNEG.1950.TL')
+kspos_1953_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSPOS.1953.TL')
+ksneg_1953_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSNEG.1953.TL')
+kspos_1955_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSPOS.1955.TL')
+ksneg_1955_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSNEG.1955.TL')
+kspos_1958_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSPOS.1958.TL')
+ksneg_1958_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSNEG.1958.TL')
+kspos_1960_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSPOS.1960.TL')
+ksneg_1960_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSNEG.1960.TL')
+kspos_1962_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSPOS.1962.TL')
+ksneg_1962_tl = RBend(l=1.0, angle=-3.025448745461549e-05, eid='KSNEG.1962.TL')
+
+QF.1952.TL: Combine function magnet in TLD line (quadrupole and horizontal dipole components)
 
