@@ -10,11 +10,11 @@ tws0.E = 14
 tws0.s = 1980.3864730000207
 
 # Drifts
-id_41005768_ = Drift(l=1.472401, eid='ID_41005768_')
+id_71245096_ = Drift(l=1.472401, eid='ID_71245096_')
 d_3 = Drift(l=13.047401, eid='D_3')
 d_4 = Drift(l=1.15895, eid='D_4')
 d_5 = Drift(l=0.15395, eid='D_5')
-id_96688345_ = Drift(l=0.16, eid='ID_96688345_')
+id_78997358_ = Drift(l=0.16, eid='ID_78997358_')
 d_7 = Drift(l=0.07, eid='D_7')
 d_9 = Drift(l=0.28, eid='D_9')
 d_12 = Drift(l=0.205, eid='D_12')
@@ -26,7 +26,7 @@ d_17 = Drift(l=0.2, eid='D_17')
 d_18 = Drift(l=7.7847, eid='D_18')
 d_19 = Drift(l=0.1, eid='D_19')
 d_20 = Drift(l=1.4347, eid='D_20')
-id_45527021_ = Drift(l=2.06072, eid='ID_45527021_')
+id_20182002_ = Drift(l=2.06072, eid='ID_20182002_')
 
 # Quadrupoles
 qk_1982_tl = Quadrupole(l=1.0552, k1=0.09035960007960576, eid='QK.1982.TL')
@@ -61,10 +61,10 @@ bpmd_2022_tl = Monitor(eid='BPMD.2022.TL')
 ensub_2025_tl = Marker(eid='ENSUB.2025.TL')
 
 # Lattice 
-cell = (id_41005768_, qk_1982_tl, d_3, bpma_1995_tl, d_4, qf_1997_tl, d_5, chy_1997_tl, id_96688345_, 
+cell = (id_71245096_, qk_1982_tl, d_3, bpma_1995_tl, d_4, qf_1997_tl, d_5, chy_1997_tl, id_78997358_, 
 kl_1998_tl, d_7, kl_1999_tl, d_7, kl_2000_tl, d_9, kl_2001_tl, d_7, kl_2002_tl, d_7, 
 kl_2003_tl, d_12, chy_2004_tl, d_13, cfy_2010_tl, d_14, bpma_2011_tl, d_15, qf_2012_tl, d_16, 
-chx_2012_tl, d_17, chy_2012_tl, d_18, cnx_2021_tl, d_19, cny_2021_tl, d_20, bpmd_2022_tl, id_45527021_, 
+chx_2012_tl, d_17, chy_2012_tl, d_18, cnx_2021_tl, d_19, cny_2021_tl, d_20, bpmd_2022_tl, id_20182002_, 
 ensub_2025_tl)
 
 # power supplies 
