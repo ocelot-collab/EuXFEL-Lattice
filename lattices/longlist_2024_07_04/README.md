@@ -1,3 +1,4 @@
+# Changes in the LongList
 ## Renamed:
 - SECTION CL to TL which affect this marker ENBLOCK.1891.CL
 - SUBSECTION TL to TL5 which affect this marker ENSEC.2058.TL
@@ -25,6 +26,25 @@ SA3	UE90	XTD4_004	QP.2947.SA3	QP.CELL25.SA3	PMAGNET	QUAD	QP
 SA3	UE90	XTD4_003	QP.2943.SA3	QP.CELL24.SA3	PMAGNET	QUAD	QP
 SA3	UE90	XTD4_004	QP.2951.SA3	QP.CELL26.SA3	PMAGNET	QUAD	QP
 ```
+# Changes in lattice files
+## i1.py (only markers for S2E)
+```python
+# Markers added manually
+d_8_1 = Drift(l=0.5776, eid='D_12')
+start_sim = Marker(eid="START_SIM")
+d_8_2 = Drift(l=id_79148922_.l - d_8_1.l)
+d_8_n = (d_8_1, start_sim, d_8_2)
+
+a1_sim_stop = Marker()
+a1_1_stop = Marker()
+
+tds_start = Marker()
+tds_stop = Marker()
+
+lh_start = Marker()
+lh_stop = Marker()
+```
+
 ## In t34_sa2.py
 we introduced following changes:
 
