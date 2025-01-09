@@ -53,12 +53,12 @@ df_sa3 = df[df["SECTION"] == "SA3"]
 # T4D
 df_t4d = df[df["SECTION"] == "T4D"]
 
-df_t2["S"].to_numpy(),df_sa1["S"].to_numpy(),df_t4["S"].to_numpy(),df_sa3["S"].to_numpy(),df_t4d["S"].to_numpy()
 # concatenate sections
 s = np.concatenate((df_i1["S"].to_numpy() , df_l1["S"].to_numpy(),df_b1["S"].to_numpy(),  df_l2["S"].to_numpy(), df_b2["S"].to_numpy(), 
                     df_l3["S"].to_numpy(), df_cl["S"].to_numpy(), df_tl["S"].to_numpy(),
                     df_t2["S"].to_numpy(),df_sa1["S"].to_numpy(),df_t4["S"].to_numpy(),
                     df_sa3["S"].to_numpy(),df_t4d["S"].to_numpy()))+23.2
+
 beta_x = np.concatenate((df_i1["BETX"].to_numpy() , df_l1["BETX"].to_numpy(),df_b1["BETX"].to_numpy(),  df_l2["BETX"].to_numpy(), 
                          df_b2["BETX"].to_numpy(), df_l3["BETX"].to_numpy(), df_cl["BETX"].to_numpy(), df_tl["BETX"].to_numpy(),
                          df_t2["BETX"].to_numpy(),df_sa1["BETX"].to_numpy(),df_t4["BETX"].to_numpy(),
