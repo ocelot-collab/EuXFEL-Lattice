@@ -436,14 +436,6 @@ class L3(SectionTrack):
         acc6t26_stop = cl.match_1673_cl
         # init tracking lattice
         self.lattice = MagneticLattice(l2.cell + l3.cell + cl.cell, start=bc2_stop, stop=acc6t26_stop, method=self.method)
-        #self.cav_list = [".A23.", ".A22.", ".A21.", ".A20.", ".A19.", ".A18.", ".A17.", ".A16."]
-        #for elem in self.lattice.sequence:
-        #    if elem.__class__ == Cavity:
-        #        for cav_num in self.cav_list:
-        #            if cav_num in elem.id:
-        #                print(elem.id)
-        #                elem.v = 0.
-        #self.lattice.update_transfer_maps()
 
         # init physics processes
         smooth = SmoothBeam()
@@ -452,7 +444,7 @@ class L3(SectionTrack):
         sc = SpaceCharge()
         sc.step = 1
         sc.nmesh_xyz = SCmesh
-        sc.random_mesh =
+        sc.random_mesh = bool_sc_rand_mesh
 
         wake = Wake()
         wake.wake_table = WakeTable('../wakes/RF/wake_table_A1.dat')
