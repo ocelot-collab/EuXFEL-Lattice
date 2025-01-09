@@ -12,7 +12,7 @@ lattice = MagneticLattice(t1_cell)
 
 lattice = merger(lattice, remaining_types=[SBend, RBend, Bend, Monitor, Quadrupole, Undulator, Solenoid,
                                            Hcor, Vcor, Sextupole, Cavity, Octupole, TDCavity],
-       remaining_elems=['STSEC.1652.CL','ENSEC.1854.CL'], init_energy=14)
+       remaining_elems=['STSEC.1652.CL','MATCH.1673.CL','ENSEC.1854.CL'], init_energy=14)
 
 tws = Twiss()
 tws.beta_x  = 41.66496631816343
@@ -23,6 +23,6 @@ tws.E = 14
 tws.s = 1652.902800000028
 
 lattice.sequence = lattice.sequence[2:]
-lattice.save_as_py_file(folder + "cl_tmp.py", tws0=tws, power_supply=True)
+lattice.save_as_py_file(folder + "cl.py", tws0=tws, power_supply=True)
 
 
