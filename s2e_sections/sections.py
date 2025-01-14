@@ -684,7 +684,7 @@ class TL(SectionTrack):
         collimator3_stop = cl.bpma_1853_cl
         stN10_stop = sase1.bpme_2235_t2
         # init tracking lattice
-        self.lattice = MagneticLattice(cl.cell + tl34.cell + sase1.cell, start=collimator3_stop, stop=stN10_stop, method=self.method)
+        self.lattice = MagneticLattice(cl.cell + tl2.cell + tl34.cell + sase1.cell, start=collimator3_stop, stop=stN10_stop, method=self.method)
 
         # init physics processes
 

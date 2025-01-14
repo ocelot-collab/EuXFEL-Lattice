@@ -92,9 +92,10 @@ config = {
     SASE2: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
 }
 
-p_array = load_particle_array(data_dir + "gun/gun.npz")
+p_array = load_particle_array(data_dir + "gun/gun_2019.npz")
 show_e_beam(p_array)
 plt.show()
+exit()
 p_array = section_lat.track_sections(sections=sections, p_array=p_array, config=config, force_ext_p_array=True,
                                      coupler_kick=coupler_kick_exec)
 

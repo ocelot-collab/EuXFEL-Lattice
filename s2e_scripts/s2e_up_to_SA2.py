@@ -3,7 +3,6 @@ import sys
 
 #sys.path.append(ocelot_dir)
 sys.path.insert(1, "../")
-print(sys.path)
 from s2e_sections.sections import *
 from ocelot.utils.section_track import *
 from ocelot.gui.accelerator import *
@@ -24,7 +23,7 @@ coupler_kick_exec = False  # coupler effect in RF modules, quadrupole and dipole
 
 
 # all sections which can be potentially used in s2e
-all_sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL, SASE2]
+all_sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, T1, SASE2]
 
 ######################### Initial Twiss paramters for design optics ##################
 tws0 = Twiss()
@@ -60,7 +59,7 @@ plot_opt_func(lat, section_lat.tws)
 plt.show()
 
 # sequence of sections for tracking.
-sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL, SASE2]
+sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, T1, SASE2]
 
 config = {
     A1: {"phi": phi1, "v": v11 / 8.,
