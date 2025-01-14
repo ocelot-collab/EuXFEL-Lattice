@@ -106,7 +106,7 @@ class AH1(SectionTrack):
         sc.nmesh_xyz = SCmesh
         sc.random_mesh = bool_sc_rand_mesh
         wake = Wake()
-        wake.wake_table = WakeTable('..\wakes\RF\mod_THIRD_HARMONIC_SECTION_WAKE_TAYLOR.dat') ######### ********* wake_table_A1.dat')
+        wake.wake_table = WakeTable('../wakes/RF/mod_THIRD_HARMONIC_SECTION_WAKE_TAYLOR.dat') ######### ********* wake_table_A1.dat')
         wake.factor = 2 ####### ******
         wake.step = 50 ###### ******10
         wake.w_sampling = WakeSampling
@@ -123,7 +123,6 @@ class AH1(SectionTrack):
         self.add_physics_process(sc, start=acc1_stop, stop=acc39_stop)
         self.add_physics_process(wake, start=i1.c3_ah1_1_1_i1, stop= acc39_stop)
         self.add_physics_process(wake_add, start=i1.stlat_47_i1, stop=i1.stlat_47_i1) ############# should be added?? 
-
 
 
 class LH(SectionTrack):
@@ -225,11 +224,6 @@ class I1D(SectionTrack):
         csr.sigma_min = Sig_Z[0]*CSRSigmaFactor
         csr.traj_step = 0.0005
         csr.apply_step = 0.005
-        wake_add = Wake()
-        wake_add.wake_table = WakeTable('../wakes/mod_wake_0070.030_0073.450_MONO.dat')
-        wake_add.factor = 1
-        wake_add.w_sampling = WakeSampling
-        wake_add.filter_order = WakeFilterOrder
 
         sc = SpaceCharge()
         sc.step = 25
@@ -237,7 +231,6 @@ class I1D(SectionTrack):
         sc.random_mesh = bool_sc_rand_mesh
         #self.add_physics_process(csr, start=st2_stop, stop=dogleg_stop)
         self.add_physics_process(sc, start=st2_stop, stop=dogleg_stop)
-        self.add_physics_process(wake_add, start=dogleg_stop, stop=dogleg_stop)
 
 class BC0(SectionTrack):
 
