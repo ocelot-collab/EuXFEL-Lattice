@@ -24,7 +24,7 @@ coupler_kick_exec = False  # coupler effect in RF modules, quadrupole and dipole
 
 
 # all sections which can be potentially used in s2e
-all_sections = [A1, AH1, LH, DL_I1D]#, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL]  # , L3, CL1, CL2, CL3, STN10]#, SASE1, T4, SASE3, T4D]
+all_sections = [A1, AH1, LH, I1D]#, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL]  # , L3, CL1, CL2, CL3, STN10]#, SASE1, T4, SASE3, T4D]
 
 ######################### Initial Twiss paramters for design optics ##################
 tws0 = Twiss()
@@ -60,7 +60,7 @@ plot_opt_func(lat, section_lat.tws)
 plt.show()
 
 # sequence of sections for tracking.
-sections = [A1, AH1, LH, DL_I1D]#, BC0, L1, BC1, L2, BC2]
+sections = [A1, AH1, LH, I1D]#, BC0, L1, BC1, L2, BC2]
 
 config = {
     A1: {"phi": phi1, "v": v11 / 8.,
@@ -69,7 +69,7 @@ config = {
           "match": False, "bounds": [-5, 5], "SC": SC_exec, "wake": wake_exec},
     LH: {"SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec, "match": match_exec},
     DL: {"match": False, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    DL_I1D: {"match": False, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
+    I1D: {"match": False, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
     BC0: {"rho": r1,
           "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
     L1: {"phi": phi21, "v": v21 / 32, "match": False,
@@ -95,7 +95,7 @@ config = {
 p_array = load_particle_array(data_dir + "gun/gun_2019.npz")
 show_e_beam(p_array)
 plt.show()
-exit()
+
 p_array = section_lat.track_sections(sections=sections, p_array=p_array, config=config, force_ext_p_array=True,
                                      coupler_kick=coupler_kick_exec)
 
