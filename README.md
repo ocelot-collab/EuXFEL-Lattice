@@ -33,7 +33,7 @@ In the distribution section two beams (straight and kicked) are going through th
 The model of the magnets for the kicked beams needs to take into account these components.
 
 Specifically, the extraction to T5D and the extraction to TLD lines have offsets on bot horizontal and vertical planes. The magnet needs to be split into N slices: sequence of horizontal and vertical combine function magnets.
-
+More details about the modelling of the magnetic elements for the kicked beams can be found in [ this presentation ](NewModel_T1_TLD_Jan2025.pdf), courtesy of *Nina Golubeva*.
 
 
 ### NOTE:
