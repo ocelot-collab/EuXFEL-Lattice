@@ -205,15 +205,15 @@ class DL(SectionTrack):
         self.add_physics_process(sc, start=st2_stop, stop=dogleg_stop)
         self.add_physics_process(wake_add, start=dogleg_stop, stop=dogleg_stop)
 
-class DL_I1D(SectionTrack):
+class I1D(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir)
         # setting parameters
         self.lattice_name = 'DOGLEG_I1D'
         self.unit_step = 0.02
         self.input_beam_file = self.particle_dir + 'section_LH.npz'
-        self.output_beam_file = self.particle_dir + 'section_DL_I1D.npz'
-        self.tws_file = self.tws_dir + "tws_section_DL_I1D.npz"
+        self.output_beam_file = self.particle_dir + 'section_I1D.npz'
+        self.tws_file = self.tws_dir + "tws_section_I1D.npz"
 
         # init tracking lattice
         st2_stop = i1.stsub_62_i1
