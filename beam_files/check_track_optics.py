@@ -1,6 +1,8 @@
 #ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
 import sys
 
+import matplotlib.pyplot as plt
+
 #sys.path.append(ocelot_dir)
 sys.path.insert(1, "../")
 
@@ -88,51 +90,13 @@ phi41 = 0
 section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
 # plot twiss parameters
 lat = MagneticLattice(section_lat.elem_seq)
-plot_opt_func(lat, section_lat.tws)
-plt.show()
-
-# sequence of sections for tracking.
-sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2,L3, CL1, CL2, CL3, TL]
-
-config = {
-    A1:    {"phi": phi11 / grad, "v": v11 / 8 * 1e-3,
-           "SC": SC_exec, "smooth": True, "wake": wake_exec},
-    AH1:   {"phi": phi13 / grad, "v": v13 / 8 * 1e-3,
-           "match": False, "SC": SC_exec, "wake": wake_exec}, ######### ************ "bounds": [-5, 5], 
-    LH:    {"SC": SC_exec, "CSR": False, "wake": wake_exec, "match": match_exec},
-    DL:    {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    BC0:   {"rho": r1,
-           "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    L1:    {"phi": phi21 / grad, "v": v21 / 32 * 1e-3, "match": match_exec,
-           "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
-    BC1:   {"rho": r2,
-           "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    L2:    {"phi": phi31/ grad, "v": v31 / 96 * 1e-3, "match": False,
-            "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
-    BC2:   {"rho": r3,
-            "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    L3:    {"phi": phi41 / grad, "v": v41 / 640 * 1e-3,
-            "match": match_exec, "bounds":[-1,1],
-            "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
-    CL1:   {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    CL2:   {"match": match_exec}, ####### ******, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    CL3:   {"SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    TL:    {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
-    SASE1: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
-    T4:    {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
-    T1:    {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
-    T3:    {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
-    SASE2: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
-}
-
-p_array = load_particle_array(data_dir + "gun/gun_2019.npz")
-show_e_beam(p_array)
-plt.show()
-
-p_array = section_lat.track_sections(sections=sections, p_array=p_array, config=config, force_ext_p_array=True,
-                                     coupler_kick=coupler_kick_exec)
+#plot_opt_func(lat, section_lat.tws)
+#plt.show()
 
 
-show_e_beam(p_array)
-
+sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2]
+s, bx, by = section_lat.load_twiss_track(sections)
+plt.plot(s, bx, label = "beta_x")
+plt.plot(s, by, label = "beta_y")
+plt.legend()
 plt.show()
