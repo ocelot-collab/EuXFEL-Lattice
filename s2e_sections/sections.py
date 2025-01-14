@@ -4,6 +4,7 @@ import os
 from ocelot.utils.section_track import *
 
 import lattices.longlist_2024_07_04.i1 as i1
+import lattices.longlist_2024_07_04.i1d as i1d
 import lattices.longlist_2024_07_04.l1 as l1
 import lattices.longlist_2024_07_04.l2 as l2
 import lattices.longlist_2024_07_04.l3 as l3
@@ -34,10 +35,10 @@ Sig_Z=(0.0018761888067590127, 0.0006359220169656093, 9.204477386791353e-05, 7.03
 
 # Global parameters for various Physics processes
 SmoothPar=1000
-# LHE=0*5000e-9  # GeV for article about LPS dynamics
-LHE=0.*10000e-9 # GeV
-WakeSampling=1000
-WakeFilterOrder=10
+LHE=11000e-9 *0.74/0.8# GeV
+#LHE=0.*10000e-9 # GeV
+WakeSampling=500   #######***** 1000
+WakeFilterOrder=20 #######***** 10
 CSRBin = 400
 CSRSigmaFactor=0.1
 SCmesh = [63, 63, 63]
@@ -65,14 +66,14 @@ class A1(SectionTrack):
         sc.random_mesh = bool_sc_rand_mesh
 
         sc2 = SpaceCharge()
-        sc2.step = 2
+        sc2.step = 1 ####### ******* 2
         sc2.nmesh_xyz = SCmesh
         sc2.random_mesh = bool_sc_rand_mesh
 
         wake = Wake()
-        wake.wake_table = WakeTable('../wakes/RF/wake_table_A1.dat')
+        wake.wake_table = WakeTable('../wakes/RF/mod_TESLA_MODULE_WAKE_TAYLOR.dat') ######*****wake_table_A1.dat')
         wake.factor = 1
-        wake.step = 10
+        wake.step = 50 ####### ******
         wake.w_sampling = WakeSampling
         wake.filter_order = WakeFilterOrder
 
@@ -105,14 +106,24 @@ class AH1(SectionTrack):
         sc.nmesh_xyz = SCmesh
         sc.random_mesh = bool_sc_rand_mesh
         wake = Wake()
-        wake.wake_table = WakeTable('../wakes/RF/wake_table_A1.dat')
-        wake.factor = 1
-        wake.step = 10
+        wake.wake_table = WakeTable('..\wakes\RF\mod_THIRD_HARMONIC_SECTION_WAKE_TAYLOR.dat') ######### ********* wake_table_A1.dat')
+        wake.factor = 2 ####### ******
+        wake.step = 50 ###### ******10
         wake.w_sampling = WakeSampling
         wake.filter_order = WakeFilterOrder
+
+        wake_add = Wake()
+        wake_add.wake_table = WakeTable('../wakes/mod_wake_0002.700_0024.770_MONO.dat')
+        wake_add.factor = 1
+        wake_add.w_sampling = WakeSampling
+        wake_add.filter_order = WakeFilterOrder
+
         # adding physics processes
+       
         self.add_physics_process(sc, start=acc1_stop, stop=acc39_stop)
         self.add_physics_process(wake, start=i1.c3_ah1_1_1_i1, stop= acc39_stop)
+        self.add_physics_process(wake_add, start=i1.stlat_47_i1, stop=i1.stlat_47_i1) ############# should be added?? 
+
 
 
 class LH(SectionTrack):
@@ -131,16 +142,16 @@ class LH(SectionTrack):
         # init physics processes
         csr = CSR()
         csr.rk_traj = True
-        csr.energy = 0.13
+        #csr.energy = 0.13
         csr.sigma_min = Sig_Z[0] * CSRSigmaFactor
         csr.traj_step = 0.0005
         csr.apply_step = 0.005
         sc = SpaceCharge()
-        sc.step = 5
+        sc.step = 50 ######### **************5
         sc.nmesh_xyz = SCmesh
         sc.random_mesh = bool_sc_rand_mesh
         wake = Wake()
-        wake.wake_table = WakeTable('../wakes/RF/wake_table_A1.dat')
+        wake.wake_table = WakeTable('../wakes/mod_wake_0027.390_0050.080_MONO.dat') ########*********wake_table_A1.dat')
         wake.factor = 1
         wake.step = 10
         wake.w_sampling = WakeSampling
@@ -178,10 +189,10 @@ class DL(SectionTrack):
         csr = CSR()
         csr.n_bin = CSRBin
         csr.sigma_min = Sig_Z[0]*CSRSigmaFactor
-        #csr.traj_step = 0.0005
-        #csr.apply_step = 0.005
+        csr.traj_step = 0.0005
+        csr.apply_step = 0.005
         wake_add = Wake()
-        wake_add.wake_table = WakeTable('../wakes/RF/wake_table_A1.dat')
+        wake_add.wake_table = WakeTable('../wakes/mod_wake_0070.030_0073.450_MONO.dat')
         wake_add.factor = 1
         wake_add.w_sampling = WakeSampling
         wake_add.filter_order = WakeFilterOrder
@@ -191,10 +202,42 @@ class DL(SectionTrack):
         sc.nmesh_xyz = SCmesh
         sc.random_mesh = bool_sc_rand_mesh
         self.add_physics_process(csr, start=st2_stop, stop=dogleg_stop)
-        #self.add_physics_process(sc, start=st2_stop, stop=dogleg_stop)
+        self.add_physics_process(sc, start=st2_stop, stop=dogleg_stop)
         self.add_physics_process(wake_add, start=dogleg_stop, stop=dogleg_stop)
 
+class DL_I1D(SectionTrack):
+    def __init__(self, data_dir, *args, **kwargs):
+        super().__init__(data_dir)
+        # setting parameters
+        self.lattice_name = 'DOGLEG_I1D'
+        self.unit_step = 0.02
+        self.input_beam_file = self.particle_dir + 'section_LH.npz'
+        self.output_beam_file = self.particle_dir + 'section_DL_I1D.npz'
+        self.tws_file = self.tws_dir + "tws_section_DL_I1D.npz"
 
+        # init tracking lattice
+        st2_stop = i1.stsub_62_i1
+        dogleg_stop = i1d.otrc_64_i1d
+        self.lattice = MagneticLattice(i1.cell + i1d.cell, start=st2_stop, stop=dogleg_stop, method=self.method)
+        # init physics processes
+        csr = CSR()
+        csr.n_bin = CSRBin
+        csr.sigma_min = Sig_Z[0]*CSRSigmaFactor
+        csr.traj_step = 0.0005
+        csr.apply_step = 0.005
+        wake_add = Wake()
+        wake_add.wake_table = WakeTable('../wakes/mod_wake_0070.030_0073.450_MONO.dat')
+        wake_add.factor = 1
+        wake_add.w_sampling = WakeSampling
+        wake_add.filter_order = WakeFilterOrder
+
+        sc = SpaceCharge()
+        sc.step = 25
+        sc.nmesh_xyz = SCmesh
+        sc.random_mesh = bool_sc_rand_mesh
+        #self.add_physics_process(csr, start=st2_stop, stop=dogleg_stop)
+        self.add_physics_process(sc, start=st2_stop, stop=dogleg_stop)
+        self.add_physics_process(wake_add, start=dogleg_stop, stop=dogleg_stop)
 
 class BC0(SectionTrack):
 
@@ -216,21 +259,19 @@ class BC0(SectionTrack):
         self.lattice = MagneticLattice(l1.cell, start=st4_stop, stop=bc0_stop, method=self.method)
 
         # init physics processes
-
-        # init physics processes
         csr = CSR()
         csr.step = 1
         csr.n_bin = CSRBin
         csr.sigma_min = Sig_Z[1]*CSRSigmaFactor
-        #csr.traj_step = 0.0005
-        #csr.apply_step = 0.001
+        csr.traj_step = 0.0005
+        csr.apply_step = 0.001
 
         sc = SpaceCharge()
         sc.step = 40
         sc.nmesh_xyz = SCmesh
         sc.random_mesh = bool_sc_rand_mesh
         match_bc0 = st4_stop
-        #self.add_physics_process(sc, start=match_bc0, stop=bc0_stop)
+        self.add_physics_process(sc, start=match_bc0, stop=bc0_stop)
         self.add_physics_process(csr, start=match_bc0, stop=bc0_stop)
         self.dipoles = [l1.bb_96_i1, l1.bb_98_i1, l1.bb_100_i1, l1.bb_101_i1]
         self.dipole_len = 0.5
@@ -270,13 +311,13 @@ class L1(SectionTrack):
         sc.nmesh_xyz = SCmesh
         sc.random_mesh = bool_sc_rand_mesh
         wake = Wake()
-        wake.wake_table = WakeTable('../wakes/RF/wake_table_A1.dat')
+        wake.wake_table = WakeTable('../wakes/RF/mod_TESLA_MODULE_WAKE_TAYLOR.dat') ###### ************ /wake_table_A1.dat')
         wake.factor = 4
         wake.step = 100
         wake.w_sampling = WakeSampling
         wake.filter_order = WakeFilterOrder
         wake_add = Wake()
-        wake_add.wake_table = WakeTable('../wakes/RF/wake_table_A1.dat')
+        wake_add.wake_table = WakeTable('../wakes/mod_wake_0078.970_0159.280_MONO.dat') ######### ************ RF/wake_table_A1.dat')
         wake_add.factor = 1
         wake_add.w_sampling = WakeSampling
         wake_add.filter_order = WakeFilterOrder
@@ -325,7 +366,7 @@ class BC1(SectionTrack):
 
         match_bc1 = acc2_stop
         self.add_physics_process(csr, start=match_bc1, stop=bc1_stop)
-        #self.add_physics_process(sc, start=match_bc1, stop=bc1_stop)
+        self.add_physics_process(sc, start=match_bc1, stop=bc1_stop)
         self.dipoles = [l1.bb_182_b1, l1.bb_191_b1, l1.bb_193_b1, l1.bb_202_b1]
         self.dipole_len = 0.5
         self.bc_gap=8.5
@@ -365,11 +406,11 @@ class L2(SectionTrack):
         sc.random_mesh = bool_sc_rand_mesh
 
         wake = Wake()
-        wake.wake_table = WakeTable('../wakes/RF/wake_table_A1.dat')
+        wake.wake_table = WakeTable('../wakes/RF/mod_TESLA_MODULE_WAKE_TAYLOR.dat') ####### ********* wake_table_A1.dat')
         wake.factor = 4 * 3
         wake.step = 200
         wake_add = Wake()
-        wake_add.wake_table = WakeTable('../wakes/RF/wake_table_A1.dat')
+        wake_add.wake_table = WakeTable('../wakes/mod_wake_0179.810_0370.840_MONO.dat') ########## ******** RF/wake_table_A1.dat')
         wake_add.factor = 1
         self.add_physics_process(smooth, start=bc1_stop, stop=bc1_stop)
         self.add_physics_process(sc, start=bc1_stop, stop=acc3t5_stop)
@@ -415,7 +456,7 @@ class BC2(SectionTrack):
 
 
         self.add_physics_process(csr, start=acc3t5_stop, stop=bc2_stop)
-        #self.add_physics_process(sc, start=acc3t5_stop, stop=bc2_stop)
+        self.add_physics_process(sc, start=acc3t5_stop, stop=bc2_stop)
 
 
 class L3(SectionTrack):
@@ -425,7 +466,7 @@ class L3(SectionTrack):
 
         # setting parameters
         self.lattice_name = 'L3'
-        self.unit_step = 5.0
+        self.unit_step = 0.2 ########### ************ 5.0
 
 
         self.input_beam_file = self.particle_dir + 'section_BC2.npz'
@@ -442,21 +483,22 @@ class L3(SectionTrack):
         smooth.mslice = SmoothPar
 
         sc = SpaceCharge()
-        sc.step = 1
+        sc.step = 5 ################ **********1
         sc.nmesh_xyz = SCmesh
         sc.random_mesh = bool_sc_rand_mesh
 
         wake = Wake()
-        wake.wake_table = WakeTable('../wakes/RF/wake_table_A1.dat')
+        wake.wake_table = WakeTable('../wakes/RF/mod_TESLA_MODULE_WAKE_TAYLOR.dat') ##### ******wake_table_A1.dat')
         wake.factor = 4 * 21
-        wake.step = 2
+        wake.step = 10 ########### ************** 2
+        wake.w_sampling = 1000
         wake_add = Wake()
-        wake_add.wake_table = WakeTable('../wakes/RF/wake_table_A1.dat')
+        wake_add.wake_table = WakeTable('../wakes/mod_wake_0391.350_1629.700_MONO.dat') ############# ************** RF/wake_table_A1.dat')
         wake_add.factor = 1
 
         app = PhaseSpaceAperture()
         app.taumin = -5
-        app.taumaxmax = 4
+        app.taumax = 3 ########### *********** app.taumaxmax = 4
 
         self.add_physics_process(app, start=bc2_stop, stop=bc2_stop)
         self.add_physics_process(smooth, start=bc2_stop, stop=bc2_stop)
@@ -494,12 +536,36 @@ class CL1(SectionTrack):
         csr = CSR()
         csr.traj_step = 0.0005
         csr.apply_step = 0.005
-        csr.n_bin = 300
-        csr.sigma_min = Sig_Z[3]*0.1
+        csr.n_bin = CSRBin ########### ************ 300
+        csr.sigma_min = Sig_Z[3]*CSRSigmaFactor
 
         self.add_physics_process(csr, start=acc6t26_stop, stop=collimator1_stop)
-        self.add_physics_process(sc, start=acc6t26_stop, stop=collimator1_stop)
 
+    #    if bISR:
+    #        LD = cl.be_1678_cl.l;  teta = cl.be_1678_cl.angle; ro = LD / np.sin(teta);
+    #        sre1 = SpontanRadEffects(); sre1.radius = ro;  sre1.type = 'dipole';
+    #        self.add_physics_process(sre1, cl.M1be_1678_cl, cl.M2be_1678_cl)
+    #        LD = cl.bl_1688_cl.l;        teta = cl.bl_1688_cl.angle;        ro = LD / np.sin(teta);
+    #        sre2 = SpontanRadEffects();        sre2.radius = ro;        sre2.type = 'dipole';
+    #        self.add_physics_process(sre2, cl.M1be_1688_cl, cl.M2be_1688_cl)
+    #        LD = cl.bl_1695_cl.l;        teta = cl.bl_1695_cl.angle;        ro = LD / np.sin(teta);
+    #        sre3 = SpontanRadEffects();        sre3.radius = ro;        sre3.type = 'dipole';
+    #        self.add_physics_process(sre3, cl.M1be_1695_cl, cl.M2be_1695_cl)
+    #        LD = cl.be_1705_cl.l;        teta = cl.be_1705_cl.angle;        ro = LD / np.sin(teta);
+    #        sre4 = SpontanRadEffects();        sre4.radius = ro;        sre4.type = 'dipole';
+    #        self.add_physics_process(sre4, cl.M1be_1705_cl, cl.M2be_1705_cl)
+    #        LD = cl.be_1714_cl.l;  teta = cl.be_1714_cl.angle; ro = LD / np.sin(teta);
+    #        sre5 = SpontanRadEffects(); sre5.radius = ro;  sre5.type = 'dipole';
+    #        self.add_physics_process(sre5, cl.M1be_1714_cl, cl.M2be_1714_cl)
+    #        LD = cl.bl_1724_cl.l;        teta = cl.bl_1724_cl.angle;        ro = LD / np.sin(teta);
+    #        sre6 = SpontanRadEffects();        sre6.radius = ro;        sre6.type = 'dipole';
+    #        self.add_physics_process(sre6, cl.M1be_1724_cl, cl.M2be_1724_cl)
+    #        LD = cl.bl_1731_cl.l;        teta = cl.bl_1731_cl.angle;        ro = LD / np.sin(teta);
+    #        sre7 = SpontanRadEffects();        sre7.radius = ro;        sre7.type = 'dipole';
+    #        self.add_physics_process(sre7, cl.M1be_1731_cl, cl.M2be_1731_cl)
+    #        LD = cl.be_1741_cl.l;  teta = cl.be_1741_cl.angle; ro = LD / np.sin(teta);
+    #        sre8 = SpontanRadEffects(); sre8.radius = ro;  sre8.type = 'dipole';
+    #        self.add_physics_process(sre8, cl.M1be_1741_cl, cl.M2be_1741_cl)
 
 class CL2(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
@@ -523,7 +589,7 @@ class CL2(SectionTrack):
 
         sc = SpaceCharge()
         sc.step = 1
-        sc.nmesh_xyz = [31, 31, 31]
+        sc.nmesh_xyz = SCmesh ############ ************* [31, 31, 31]
         sc.low_order_kick = False
         sc.random_mesh = bool_sc_rand_mesh
         self.add_physics_process(sc, start=collimator1_stop, stop=collimator2_stop)
@@ -559,15 +625,15 @@ class CL3(SectionTrack):
 
         sc = SpaceCharge()
         sc.step = 10
-        sc.nmesh_xyz = [31, 31, 31]
+        sc.nmesh_xyz = SCmesh ############ ************* [31, 31, 31]
         sc.low_order_kick = False
         sc.random_mesh = bool_sc_rand_mesh
 
         csr = CSR()
         csr.traj_step = 0.0005
         csr.apply_step = 0.005
-        csr.n_bin = 300
-        csr.sigma_min = Sig_Z[3]*0.1
+        csr.n_bin = CSRBin ######## ********** 300
+        csr.sigma_min = Sig_Z[3]*CSRSigmaFactor
 
         wake_add = Wake()
         wake_add.wake_table = WakeTable('../wakes/mod_wake_1629.700_1831.200_MONO.dat')
@@ -577,13 +643,38 @@ class CL3(SectionTrack):
         self.add_physics_process(sc, start=collimator2_stop, stop=collimator3_stop)
         self.add_physics_process(wake_add, start=collimator3_stop, stop=collimator3_stop)
 
+    #    if bISR:
+    #        LD = cl.be_1786_cl.l;  teta = cl.be_1786_cl.angle; ro = LD / np.sin(teta);
+    #        sre1 = SpontanRadEffects(); sre1.radius = ro;  sre1.type = 'dipole';
+    #        self.add_physics_process(sre1, cl.M1be_1786_cl, cl.M2be_1786_cl)
+    #        LD = cl.bl_1796_cl.l;        teta = cl.bl_1796_cl.angle;        ro = LD / np.sin(teta);
+    #        sre2 = SpontanRadEffects();        sre2.radius = ro;        sre2.type = 'dipole';
+    #        self.add_physics_process(sre2, cl.M1be_1796_cl, cl.M2be_1796_cl)
+    #        LD = cl.bl_1803_cl.l;        teta = cl.bl_1803_cl.angle;        ro = LD / np.sin(teta);
+    #        sre3 = SpontanRadEffects();        sre3.radius = ro;        sre3.type = 'dipole';
+    #        self.add_physics_process(sre3, cl.M1be_1803_cl, cl.M2be_1803_cl)
+    #        LD = cl.be_1813_cl.l;        teta = cl.be_1813_cl.angle;        ro = LD / np.sin(teta);
+    #        sre4 = SpontanRadEffects();        sre4.radius = ro;        sre4.type = 'dipole';
+    #        self.add_physics_process(sre4, cl.M1be_1813_cl, cl.M2be_1813_cl)
+    #        LD = cl.be_1822_cl.l;  teta = cl.be_1822_cl.angle; ro = LD / np.sin(teta);
+    #        sre5 = SpontanRadEffects(); sre5.radius = ro;  sre5.type = 'dipole';
+    #        self.add_physics_process(sre5, cl.M1be_1822_cl, cl.M2be_1822_cl)
+    #        LD = cl.bl_1832_cl.l;        teta = cl.bl_1832_cl.angle;        ro = LD / np.sin(teta);
+    #        sre6 = SpontanRadEffects();        sre6.radius = ro;        sre6.type = 'dipole';
+    #        self.add_physics_process(sre6, cl.M1be_1832_cl, cl.M2be_1832_cl)
+    #        LD = cl.bl_1839_cl.l;        teta = cl.bl_1839_cl.angle;        ro = LD / np.sin(teta);
+    #        sre7 = SpontanRadEffects();        sre7.radius = ro;        sre7.type = 'dipole';
+    #        self.add_physics_process(sre7, cl.M1be_1839_cl, cl.M2be_1839_cl)
+    #        LD = cl.be_1849_cl.l;  teta = cl.be_1849_cl.angle; ro = LD / np.sin(teta);
+    #        sre8 = SpontanRadEffects(); sre8.radius = ro;  sre8.type = 'dipole';
+    #        self.add_physics_process(sre8, cl.M1be_1849_cl, cl.M2be_1849_cl)
 
-class STN10(SectionTrack):
+class TL(SectionTrack):
     def __init__(self, data_dir):
         super().__init__(data_dir)
 
         # setting parameters
-        self.lattice_name = 'ST10'
+        self.lattice_name = 'TL'
         self.unit_step = 10
 
         self.input_beam_file = self.particle_dir + 'section_CL3.npz'
@@ -599,8 +690,8 @@ class STN10(SectionTrack):
 
         sc = SpaceCharge()
         sc.step = 1
-        sc.nmesh_xyz = [31, 31, 31]
-        sc.low_order_kick = False
+        sc.nmesh_xyz = SCmesh ########### *************** [31, 31, 31]
+        #sc.low_order_kick = False
         sc.random_mesh = bool_sc_rand_mesh
 
         wake_add = Wake()
@@ -634,14 +725,22 @@ class SASE1(SectionTrack):
         # init physics processes
         wake = Wake()
         wake.wake_table = WakeTable('../wakes/Undulator/wake_undulator_OCELOT.txt')
-        wake.step = 15
-        wake.w_sampling = 500
+        wake.step = 10 ############ *************15
+        wake.w_sampling = WakeSampling ############ *************500
+        wake.factor = 35 * 6.1
         sc = SpaceCharge()
         sc.step = 1
-        sc.nmesh_xyz = [31, 31, 31]
-        sc.low_order_kick = False
+        sc.nmesh_xyz = SCmesh
+        sc.random_mesh = bool_sc_rand_mesh ############ *************[31, 31, 31]
+        
+        sre = SpontanRadEffects()
+        sre.K = 3.9
+        sre.lperiod = 0.04
+        sre.filling_coeff = 5 / 6.1
+
         self.add_physics_process(wake, start=sase1.match_2247_sa1,stop=sase1_stop)
         self.add_physics_process(sc, start=stN10_stop, stop=sase1_stop)
+        self.add_physics_process(sre, start=stN10_stop, stop=sase1_stop)
 
 
 class T4(SectionTrack):
@@ -666,18 +765,19 @@ class T4(SectionTrack):
 
         sc = SpaceCharge()
         sc.step = 25
-        sc.nmesh_xyz = [31, 31, 31]
+        sc.nmesh_xyz = SCmesh ########### ********** [31, 31, 31]
+        sc.random_mesh = bool_sc_rand_mesh
 
         csr = CSR()
         csr.traj_step = 0.0005
         csr.apply_step = 0.005
-        csr.n_bin = 300
-        csr.sigma_min = Sig_Z[3]*0.1
+        csr.n_bin = CSRBin ########### ********** 300
+        csr.sigma_min = Sig_Z[3]*CSRSigmaFactor
 
         sc2 = SpaceCharge()
         sc2.step = 25
         sc2.nmesh_xyz = [31, 31, 31]
-
+        sc2.random_mesh = bool_sc_rand_mesh
 
         # creation of wake object with parameters
         wake = Wake()
@@ -698,9 +798,7 @@ class T4(SectionTrack):
         wake_vert.w_sampling = 500
         wake_vert.step = 1  # step in Navigator.unit_step, dz = Navigator.unit_step * wake.step [m]
 
-
-
-
+        
         self.add_physics_process(wake, start=t4.wake_start, stop=t4.m_tds)
 
         svb4 = SaveBeam(filename=self.particle_dir + "before_structure.npz")
