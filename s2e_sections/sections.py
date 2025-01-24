@@ -3,28 +3,41 @@ from ocelot.cpbd.physics_proc import *
 import os
 from ocelot.utils.section_track import *
 
-import lattices.longlist_2024_07_04.i1 as i1
-import lattices.longlist_2024_07_04.i1d as i1d
-import lattices.longlist_2024_07_04.l1 as l1
-import lattices.longlist_2024_07_04.l2 as l2
-import lattices.longlist_2024_07_04.l3 as l3
-import lattices.longlist_2024_07_04.cl as cl
-import lattices.longlist_2024_07_04.tl2 as tl2
-import lattices.longlist_2024_07_04.tl2_tld as tl2_tld
-import lattices.longlist_2024_07_04.tl34 as tl34
-import lattices.longlist_2024_07_04.tl34_sa2 as tl34_sa2
-import lattices.longlist_2024_07_04.sase1 as sase1
-import lattices.longlist_2024_07_04.t4 as t4
-import lattices.longlist_2024_07_04.sase3 as sase3
-import lattices.longlist_2024_07_04.t4d as t4d
-
-import lattices.longlist_2024_07_04.t1 as t1
-import lattices.longlist_2024_07_04.t3 as t3
-import lattices.longlist_2024_07_04.t5 as t5
-import lattices.longlist_2024_07_04.sase2 as sase2
-import lattices.longlist_2024_07_04.t5d as t5d
-
-
+#import lattices.longlist_2024_07_04.i1 as i1
+#import lattices.longlist_2024_07_04.i1d as i1d
+#import lattices.longlist_2024_07_04.l1 as l1
+#import lattices.longlist_2024_07_04.l2 as l2
+#import lattices.longlist_2024_07_04.l3 as l3
+#import lattices.longlist_2024_07_04.cl_new as cl
+#import lattices.longlist_2024_07_04.tl2 as tl2
+#import lattices.longlist_2024_07_04.tl2_tld as tl2_tld
+#import lattices.longlist_2024_07_04.tl34 as tl34
+#import lattices.longlist_2024_07_04.tl34_sa2 as tl34_sa2
+#import lattices.longlist_2024_07_04.sase1 as sase1
+#import lattices.longlist_2024_07_04.t4 as t4
+#import lattices.longlist_2024_07_04.sase3 as sase3
+#import lattices.longlist_2024_07_04.t4d as t4d
+#
+#import lattices.longlist_2024_07_04.t1 as t1
+#import lattices.longlist_2024_07_04.t3 as t3
+#import lattices.longlist_2024_07_04.t5 as t5
+#import lattices.longlist_2024_07_04.sase2 as sase2
+#import lattices.longlist_2024_07_04.t5d as t5d
+#
+import lattices.from2019.i1 as i1
+import lattices.from2019.i1d as i1d
+import lattices.from2019.l1 as l1
+import lattices.from2019.l2 as l2
+import lattices.from2019.l3 as l3
+import lattices.from2019.cl as cl
+#import lattices.from2019.tl2 as tl2
+#import lattices.from2019.tl2_tld as tl2_tld
+import lattices.from2019.tl34 as tl34
+import lattices.from2019.tl34_sase1 as tl34_sase1
+import lattices.from2019.sase1 as sase1
+import lattices.from2019.t4 as t4
+import lattices.from2019.t4d as t4d
+import lattices.from2019.sase3 as sase3
 
 # GLOBAL parameters
 
@@ -52,12 +65,14 @@ class A1(SectionTrack):
         # setting parameters
         self.lattice_name = 'A1'
         self.unit_step = 0.02
-        self.input_beam_file = self.particle_dir + "gun/gun.npz"
+        self.input_beam_file = self.particle_dir + "gun/gun_2019.npz"
         self.output_beam_file = self.particle_dir + 'section_A1.npz'
         self.tws_file = self.tws_dir + "tws_section_A1.npz"
         # init tracking lattice
-        start_sim = i1.start_sim
-        acc1_stop = i1.a1_sim_stop
+        #start_sim = i1.start_sim
+        #acc1_stop = i1.a1_sim_stop
+        start_sim = i1.id_22433449_
+        acc1_stop = i1.id_68749308_
         self.lattice = MagneticLattice(i1.cell, start=start_sim,stop=acc1_stop, method=self.method)
         # init physics processes
         sc = SpaceCharge()
@@ -80,7 +95,8 @@ class A1(SectionTrack):
         smooth = SmoothBeam()
         smooth.mslice = SmoothPar
         # adding physics processes
-        acc1_1_stop = i1.a1_1_stop
+        #acc1_1_stop = i1.a1_1_stop
+        acc1_1_stop = i1.id_75115473_
         self.add_physics_process(smooth, start=start_sim, stop=start_sim)
         self.add_physics_process(sc, start=start_sim, stop=acc1_1_stop)
         self.add_physics_process(sc2, start=acc1_1_stop, stop=acc1_stop)
@@ -97,7 +113,8 @@ class AH1(SectionTrack):
         self.output_beam_file = self.particle_dir + 'section_AH1.npz'
         self.tws_file = self.tws_dir + "tws_section_AH1.npz"
         # init tracking lattice
-        acc1_stop = i1.a1_sim_stop
+        #acc1_stop = i1.a1_sim_stop
+        acc1_stop = i1.id_68749308_
         acc39_stop = i1.stlat_47_i1
         self.lattice = MagneticLattice(i1.cell, start=acc1_stop, stop=acc39_stop, method=self.method)
         # init physics processes
@@ -122,7 +139,7 @@ class AH1(SectionTrack):
        
         self.add_physics_process(sc, start=acc1_stop, stop=acc39_stop)
         self.add_physics_process(wake, start=i1.c3_ah1_1_1_i1, stop= acc39_stop)
-        self.add_physics_process(wake_add, start=i1.stlat_47_i1, stop=i1.stlat_47_i1) ############# should be added?? 
+        self.add_physics_process(wake_add, start=i1.stlat_47_i1, stop=i1.stlat_47_i1) 
 
 
 class LH(SectionTrack):
@@ -136,11 +153,13 @@ class LH(SectionTrack):
         self.tws_file = self.tws_dir + "tws_section_LH.npz"
         # init tracking lattice
         acc39_stop = i1.stlat_47_i1
-        lhm_stop = i1.stsub_62_i1
-        self.lattice = MagneticLattice(i1.cell, start=acc39_stop, stop=lhm_stop, method=self.method)
+        #lhm_stop = l1.match_73_i1 #start of dl # 
+        #lhm_stop = i1.stsub_62_i1 
+        lhm_stop = l1.id_90904668_
+        self.lattice = MagneticLattice(i1.cell+ l1.cell, start=acc39_stop, stop=lhm_stop, method=self.method)
         # init physics processes
         csr = CSR()
-        csr.rk_traj = True
+        #csr.rk_traj = True
         #csr.energy = 0.13
         csr.sigma_min = Sig_Z[0] * CSRSigmaFactor
         csr.traj_step = 0.0005
@@ -149,16 +168,21 @@ class LH(SectionTrack):
         sc.step = 50 ######### **************5
         sc.nmesh_xyz = SCmesh
         sc.random_mesh = bool_sc_rand_mesh
-        wake = Wake()
-        wake.wake_table = WakeTable('../wakes/mod_wake_0027.390_0050.080_MONO.dat') ########*********wake_table_A1.dat')
-        wake.factor = 1
-        wake.step = 10
-        wake.w_sampling = WakeSampling
-        wake.filter_order = WakeFilterOrder
+        #wake = Wake()
+        #wake.wake_table = WakeTable('../wakes/mod_wake_0027.390_0050.080_MONO.dat') ########*********wake_table_A1.dat')
+        #wake.factor = 1
+        #wake.step = 10
+        #wake.w_sampling = WakeSampling
+        #wake.filter_order = WakeFilterOrder
+        wake_add = Wake()
+        wake_add.wake_table = WakeTable('../wakes/mod_wake_0027.390_0050.080_MONO.dat')
+        wake_add.factor = 1
+        wake_add.w_sampling = WakeSampling
+        wake_add.filter_order = WakeFilterOrder
 
         lh = LaserModulator()
         lh.dE = LHE
-        lh.Lu = 0.9179999999999999
+        #lh.Lu = 0.9179999999999999
         lh.sigma_l = 300
         lh.sigma_x = 300e-6
         lh.sigma_y = 300e-6
@@ -166,7 +190,8 @@ class LH(SectionTrack):
 
         self.add_physics_process(sc, start=acc39_stop, stop=lhm_stop)
         self.add_physics_process(csr, start=acc39_stop, stop=i1.bpmf_52_i1)
-        self.add_physics_process(wake, start=i1.tds_start, stop=i1.tds_stop)
+        #self.add_physics_process(wake, start=i1.tds_start, stop=i1.tds_stop)
+        self.add_physics_process(wake_add, start=lhm_stop, stop=lhm_stop)
         self.add_physics_process(lh, start=i1.lh_start, stop=i1.lh_stop)
 
 
@@ -181,7 +206,8 @@ class DL(SectionTrack):
         self.tws_file = self.tws_dir + "tws_section_DL.npz"
 
         # init tracking lattice
-        st2_stop = i1.stsub_62_i1
+        st2_stop = l1.id_90904668_ #i1.stsub_62_i1
+        #st2_stop = l1.match_73_i1 #
         dogleg_stop = l1.stlat_96_i1
         self.lattice = MagneticLattice(i1.cell + l1.cell, start=st2_stop, stop=dogleg_stop, method=self.method)
         # init physics processes
@@ -208,7 +234,7 @@ class I1D(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir)
         # setting parameters
-        self.lattice_name = 'DOGLEG_I1D'
+        self.lattice_name = 'I1D'
         self.unit_step = 0.02
         self.input_beam_file = self.particle_dir + 'section_LH.npz'
         self.output_beam_file = self.particle_dir + 'section_I1D.npz'
@@ -287,10 +313,10 @@ class L1(SectionTrack):
         bc0_stop = l1.enlat_101_i1
         acc2_stop = l1.stlat_182_b1
 
-        if "coupler_kick" in kwargs:
-            self.coupler_kick = kwargs["coupler_kick"]
-        else:
-            self.coupler_kick = True
+        #if "coupler_kick" in kwargs:
+        #    self.coupler_kick = kwargs["coupler_kick"]
+        #else:
+        #    self.coupler_kick = True
 
         # init tracking lattice
         self.lattice = MagneticLattice(l1.cell, start=bc0_stop, stop=acc2_stop, method=self.method)
@@ -330,7 +356,7 @@ class BC1(SectionTrack):
 
         # setting parameters
         self.lattice_name = 'BC1'
-        self.unit_step = 0.05
+        self.unit_step = 0.02
 
         self.input_beam_file = self.particle_dir + 'section_L1.npz'
         self.output_beam_file = self.particle_dir + 'section_BC1.npz'
@@ -341,8 +367,6 @@ class BC1(SectionTrack):
         bc1_stop = l1.tora_203_b1
         # init tracking lattice
         self.lattice = MagneticLattice(l1.cell, start=acc2_stop, stop=bc1_stop, method=self.method)
-
-        # init physics processes
 
         # init physics processes
         csr = CSR()
@@ -381,10 +405,10 @@ class L2(SectionTrack):
         bc1_stop = l1.tora_203_b1
         acc3t5_stop = l2.stlat_393_b2
 
-        if "coupler_kick" in kwargs:
-            self.coupler_kick = kwargs["coupler_kick"]
-        else:
-            self.coupler_kick = True
+        #if "coupler_kick" in kwargs:
+        #    self.coupler_kick = kwargs["coupler_kick"]
+        #else:
+        #    self.coupler_kick = True
 
         # init tracking lattice
         self.lattice = MagneticLattice(l1.cell + l2.cell, start=bc1_stop, stop=acc3t5_stop, method=self.method)
@@ -438,9 +462,9 @@ class BC2(SectionTrack):
         csr = CSR()
         csr.step = 1
         csr.n_bin = CSRBin
-        csr.sigma_min = Sig_Z[2]*0.1
+        csr.sigma_min = Sig_Z[3]*CSRSigmaFactor #Sig_Z[2]
         csr.traj_step = 0.0005
-        csr.apply_step = 0.005
+        csr.apply_step = 0.001
 
         sc = SpaceCharge()
         sc.step = 50
@@ -467,9 +491,11 @@ class L3(SectionTrack):
         self.tws_file = self.tws_dir + "tws_section_L3.npz"
 
         bc2_stop = l2.tora_415_b2
-        acc6t26_stop = cl.match_1673_cl
+        acc6t26_stop = l3.ensec_1652_l3
+        #acc6t26_stop =l3.stop_l3
+
         # init tracking lattice
-        self.lattice = MagneticLattice(l2.cell + l3.cell + cl.cell, start=bc2_stop, stop=acc6t26_stop, method=self.method)
+        self.lattice = MagneticLattice(l2.cell + l3.cell, start=bc2_stop, stop=acc6t26_stop, method=self.method)
 
         # init physics processes
         smooth = SmoothBeam()
@@ -513,10 +539,11 @@ class CL1(SectionTrack):
         self.output_beam_file = self.particle_dir + 'section_CL1.npz'
         self.tws_file = self.tws_dir + "tws_section_CL1.npz"
 
-        acc6t26_stop = cl.match_1673_cl
+        #acc6t26_stop = l3.ensec_1652_l3
+        acc6t26_stop = l3.stop_l3
         collimator1_stop = cl.bpma_1746_cl
         # init tracking lattice
-        self.lattice = MagneticLattice(cl.cell, start=acc6t26_stop,stop=collimator1_stop, method=self.method)
+        self.lattice = MagneticLattice(l3.cell + cl.cell, start=acc6t26_stop,stop=collimator1_stop, method=self.method)
 
         # init physics processes
 
@@ -528,37 +555,63 @@ class CL1(SectionTrack):
 
         csr = CSR()
         csr.traj_step = 0.0005
-        csr.apply_step = 0.005
+        csr.apply_step = 0.001
         csr.n_bin = CSRBin ########### ************ 300
         csr.sigma_min = Sig_Z[3]*CSRSigmaFactor
 
         self.add_physics_process(csr, start=acc6t26_stop, stop=collimator1_stop)
 
-    #    if bISR:
-    #        LD = cl.be_1678_cl.l;  teta = cl.be_1678_cl.angle; ro = LD / np.sin(teta);
-    #        sre1 = SpontanRadEffects(); sre1.radius = ro;  sre1.type = 'dipole';
-    #        self.add_physics_process(sre1, cl.M1be_1678_cl, cl.M2be_1678_cl)
-    #        LD = cl.bl_1688_cl.l;        teta = cl.bl_1688_cl.angle;        ro = LD / np.sin(teta);
-    #        sre2 = SpontanRadEffects();        sre2.radius = ro;        sre2.type = 'dipole';
-    #        self.add_physics_process(sre2, cl.M1be_1688_cl, cl.M2be_1688_cl)
-    #        LD = cl.bl_1695_cl.l;        teta = cl.bl_1695_cl.angle;        ro = LD / np.sin(teta);
-    #        sre3 = SpontanRadEffects();        sre3.radius = ro;        sre3.type = 'dipole';
-    #        self.add_physics_process(sre3, cl.M1be_1695_cl, cl.M2be_1695_cl)
-    #        LD = cl.be_1705_cl.l;        teta = cl.be_1705_cl.angle;        ro = LD / np.sin(teta);
-    #        sre4 = SpontanRadEffects();        sre4.radius = ro;        sre4.type = 'dipole';
-    #        self.add_physics_process(sre4, cl.M1be_1705_cl, cl.M2be_1705_cl)
-    #        LD = cl.be_1714_cl.l;  teta = cl.be_1714_cl.angle; ro = LD / np.sin(teta);
-    #        sre5 = SpontanRadEffects(); sre5.radius = ro;  sre5.type = 'dipole';
-    #        self.add_physics_process(sre5, cl.M1be_1714_cl, cl.M2be_1714_cl)
-    #        LD = cl.bl_1724_cl.l;        teta = cl.bl_1724_cl.angle;        ro = LD / np.sin(teta);
-    #        sre6 = SpontanRadEffects();        sre6.radius = ro;        sre6.type = 'dipole';
-    #        self.add_physics_process(sre6, cl.M1be_1724_cl, cl.M2be_1724_cl)
-    #        LD = cl.bl_1731_cl.l;        teta = cl.bl_1731_cl.angle;        ro = LD / np.sin(teta);
-    #        sre7 = SpontanRadEffects();        sre7.radius = ro;        sre7.type = 'dipole';
-    #        self.add_physics_process(sre7, cl.M1be_1731_cl, cl.M2be_1731_cl)
-    #        LD = cl.be_1741_cl.l;  teta = cl.be_1741_cl.angle; ro = LD / np.sin(teta);
-    #        sre8 = SpontanRadEffects(); sre8.radius = ro;  sre8.type = 'dipole';
-    #        self.add_physics_process(sre8, cl.M1be_1741_cl, cl.M2be_1741_cl)
+    #if bISR:
+    #     LD = cl.be_1678_cl.l;  teta = cl.be_1678_cl.angle; ro = LD / np.sin(teta);
+    #     sre1 = SpontanRadEffects(); sre1.radius = ro;  sre1.type = 'dipole';
+    #     self.add_physics_process(sre1, cl.mbe_1678a_cl, cl.mbe_1678d_cl)
+    #     LD = cl.bl_1688_cl.l;        teta = cl.bl_1688_cl.angle;        ro = LD / np.sin(teta);
+    #     sre2 = SpontanRadEffects();        sre2.radius = ro;        sre2.type = 'dipole';
+    #     self.add_physics_process(sre2, cl.mbl_1688a_cl, cl.mbl_1688d_cl)
+    #     LD = cl.bl_1695_cl.l;        teta = cl.bl_1695_cl.angle;        ro = LD / np.sin(teta);
+    #     sre3 = SpontanRadEffects();        sre3.radius = ro;        sre3.type = 'dipole';
+    #     self.add_physics_process(sre3, cl.mbl_1695a_cl, cl.mbl_1695d_cl)
+    #     LD = cl.be_1705_cl.l;        teta = cl.be_1705_cl.angle;        ro = LD / np.sin(teta);
+    #     sre4 = SpontanRadEffects();        sre4.radius = ro;        sre4.type = 'dipole';
+    #     self.add_physics_process(sre4, cl.mbe_1705a_cl, cl.mbe_1705d_cl)
+    #     LD = cl.be_1714_cl.l;  teta = cl.be_1714_cl.angle; ro = LD / np.sin(teta);
+    #     sre5 = SpontanRadEffects(); sre5.radius = ro;  sre5.type = 'dipole';
+    #     self.add_physics_process(sre5, cl.mbe_1714a_cl, cl.mbe_1714d_cl)
+    #     LD = cl.bl_1724_cl.l;        teta = cl.bl_1724_cl.angle;        ro = LD / np.sin(teta);
+    #     sre6 = SpontanRadEffects();        sre6.radius = ro;        sre6.type = 'dipole';
+    #     self.add_physics_process(sre6, cl.mbl_1724a_cl, cl.mbl_1724d_cl)
+    #     LD = cl.bl_1731_cl.l;        teta = cl.bl_1731_cl.angle;        ro = LD / np.sin(teta);
+    #     sre7 = SpontanRadEffects();        sre7.radius = ro;        sre7.type = 'dipole';
+    #     self.add_physics_process(sre7, cl.mbl_1731a_cl, cl.mbl_1731d_cl)
+    #     LD = cl.be_1741_cl.l;  teta = cl.be_1741_cl.angle; ro = LD / np.sin(teta);
+    #     sre8 = SpontanRadEffects(); sre8.radius = ro;  sre8.type = 'dipole';
+    #     self.add_physics_process(sre8, cl.mbe_1741a_cl, cl.mbe_1741d_cl)
+        if bISR:
+            LD = cl.be_1678_cl.l;  teta = cl.be_1678_cl.angle; ro = LD / np.sin(teta);
+            sre1 = SpontanRadEffects(); sre1.radius = ro;  sre1.type = 'dipole';
+            self.add_physics_process(sre1, cl.M1be_1678_cl, cl.M2be_1678_cl)
+            LD = cl.bl_1688_cl.l;        teta = cl.bl_1688_cl.angle;        ro = LD / np.sin(teta);
+            sre2 = SpontanRadEffects();        sre2.radius = ro;        sre2.type = 'dipole';
+            self.add_physics_process(sre2, cl.M1be_1688_cl, cl.M2be_1688_cl)
+            LD = cl.bl_1695_cl.l;        teta = cl.bl_1695_cl.angle;        ro = LD / np.sin(teta);
+            sre3 = SpontanRadEffects();        sre3.radius = ro;        sre3.type = 'dipole';
+            self.add_physics_process(sre3, cl.M1be_1695_cl, cl.M2be_1695_cl)
+            LD = cl.be_1705_cl.l;        teta = cl.be_1705_cl.angle;        ro = LD / np.sin(teta);
+            sre4 = SpontanRadEffects();        sre4.radius = ro;        sre4.type = 'dipole';
+            self.add_physics_process(sre4, cl.M1be_1705_cl, cl.M2be_1705_cl)
+            LD = cl.be_1714_cl.l;  teta = cl.be_1714_cl.angle; ro = LD / np.sin(teta);
+            sre5 = SpontanRadEffects(); sre5.radius = ro;  sre5.type = 'dipole';
+            self.add_physics_process(sre5, cl.M1be_1714_cl, cl.M2be_1714_cl)
+            LD = cl.bl_1724_cl.l;        teta = cl.bl_1724_cl.angle;        ro = LD / np.sin(teta);
+            sre6 = SpontanRadEffects();        sre6.radius = ro;        sre6.type = 'dipole';
+            self.add_physics_process(sre6, cl.M1be_1724_cl, cl.M2be_1724_cl)
+            LD = cl.bl_1731_cl.l;        teta = cl.bl_1731_cl.angle;        ro = LD / np.sin(teta);
+            sre7 = SpontanRadEffects();        sre7.radius = ro;        sre7.type = 'dipole';
+            self.add_physics_process(sre7, cl.M1be_1731_cl, cl.M2be_1731_cl)
+            LD = cl.be_1741_cl.l;  teta = cl.be_1741_cl.angle; ro = LD / np.sin(teta);
+            sre8 = SpontanRadEffects(); sre8.radius = ro;  sre8.type = 'dipole';
+            self.add_physics_process(sre8, cl.M1be_1741_cl, cl.M2be_1741_cl)
+
 
 class CL2(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
@@ -583,7 +636,7 @@ class CL2(SectionTrack):
         sc = SpaceCharge()
         sc.step = 1
         sc.nmesh_xyz = SCmesh ############ ************* [31, 31, 31]
-        sc.low_order_kick = False
+        #sc.low_order_kick = False
         sc.random_mesh = bool_sc_rand_mesh
         self.add_physics_process(sc, start=collimator1_stop, stop=collimator2_stop)
 
@@ -601,16 +654,16 @@ class CL3(SectionTrack):
         self.output_beam_file = self.particle_dir + 'section_CL3.npz'
         self.tws_file = self.tws_dir + "tws_section_CL3.npz"
 
-        if "suffix" in kwargs:
-            filename, file_extension = os.path.splitext(self.input_beam_file)
-            self.input_beam_file = filename + str(kwargs["suffix"]) + file_extension
-            filename, file_extension = os.path.splitext(self.output_beam_file)
-            self.output_beam_file = filename + str(kwargs["suffix"]) + file_extension
-            filename, file_extension = os.path.splitext(self.tws_file)
-            self.tws_file = filename + str(kwargs["suffix"]) + file_extension
+        #if "suffix" in kwargs:
+        #    filename, file_extension = os.path.splitext(self.input_beam_file)
+        #    self.input_beam_file = filename + str(kwargs["suffix"]) + file_extension
+        #    filename, file_extension = os.path.splitext(self.output_beam_file)
+        #    self.output_beam_file = filename + str(kwargs["suffix"]) + file_extension
+        #    filename, file_extension = os.path.splitext(self.tws_file)
+        #    self.tws_file = filename + str(kwargs["suffix"]) + file_extension
 
         collimator2_stop = cl.bpma_1783_cl
-        collimator3_stop = cl.bpma_1853_cl
+        collimator3_stop = cl.ensec_1854_cl
         # init tracking lattice
         self.lattice = MagneticLattice(cl.cell, start=collimator2_stop, stop=collimator3_stop, method=self.method)
 
@@ -619,12 +672,12 @@ class CL3(SectionTrack):
         sc = SpaceCharge()
         sc.step = 10
         sc.nmesh_xyz = SCmesh ############ ************* [31, 31, 31]
-        sc.low_order_kick = False
+        #sc.low_order_kick = False
         sc.random_mesh = bool_sc_rand_mesh
 
         csr = CSR()
         csr.traj_step = 0.0005
-        csr.apply_step = 0.005
+        csr.apply_step = 0.001
         csr.n_bin = CSRBin ######## ********** 300
         csr.sigma_min = Sig_Z[3]*CSRSigmaFactor
 
@@ -636,31 +689,56 @@ class CL3(SectionTrack):
         self.add_physics_process(sc, start=collimator2_stop, stop=collimator3_stop)
         self.add_physics_process(wake_add, start=collimator3_stop, stop=collimator3_stop)
 
-    #    if bISR:
-    #        LD = cl.be_1786_cl.l;  teta = cl.be_1786_cl.angle; ro = LD / np.sin(teta);
-    #        sre1 = SpontanRadEffects(); sre1.radius = ro;  sre1.type = 'dipole';
-    #        self.add_physics_process(sre1, cl.M1be_1786_cl, cl.M2be_1786_cl)
-    #        LD = cl.bl_1796_cl.l;        teta = cl.bl_1796_cl.angle;        ro = LD / np.sin(teta);
-    #        sre2 = SpontanRadEffects();        sre2.radius = ro;        sre2.type = 'dipole';
-    #        self.add_physics_process(sre2, cl.M1be_1796_cl, cl.M2be_1796_cl)
-    #        LD = cl.bl_1803_cl.l;        teta = cl.bl_1803_cl.angle;        ro = LD / np.sin(teta);
-    #        sre3 = SpontanRadEffects();        sre3.radius = ro;        sre3.type = 'dipole';
-    #        self.add_physics_process(sre3, cl.M1be_1803_cl, cl.M2be_1803_cl)
-    #        LD = cl.be_1813_cl.l;        teta = cl.be_1813_cl.angle;        ro = LD / np.sin(teta);
-    #        sre4 = SpontanRadEffects();        sre4.radius = ro;        sre4.type = 'dipole';
-    #        self.add_physics_process(sre4, cl.M1be_1813_cl, cl.M2be_1813_cl)
-    #        LD = cl.be_1822_cl.l;  teta = cl.be_1822_cl.angle; ro = LD / np.sin(teta);
-    #        sre5 = SpontanRadEffects(); sre5.radius = ro;  sre5.type = 'dipole';
-    #        self.add_physics_process(sre5, cl.M1be_1822_cl, cl.M2be_1822_cl)
-    #        LD = cl.bl_1832_cl.l;        teta = cl.bl_1832_cl.angle;        ro = LD / np.sin(teta);
-    #        sre6 = SpontanRadEffects();        sre6.radius = ro;        sre6.type = 'dipole';
-    #        self.add_physics_process(sre6, cl.M1be_1832_cl, cl.M2be_1832_cl)
-    #        LD = cl.bl_1839_cl.l;        teta = cl.bl_1839_cl.angle;        ro = LD / np.sin(teta);
-    #        sre7 = SpontanRadEffects();        sre7.radius = ro;        sre7.type = 'dipole';
-    #        self.add_physics_process(sre7, cl.M1be_1839_cl, cl.M2be_1839_cl)
-    #        LD = cl.be_1849_cl.l;  teta = cl.be_1849_cl.angle; ro = LD / np.sin(teta);
-    #        sre8 = SpontanRadEffects(); sre8.radius = ro;  sre8.type = 'dipole';
-    #        self.add_physics_process(sre8, cl.M1be_1849_cl, cl.M2be_1849_cl)
+    #   if bISR:
+    #     LD = cl.be_1786_cl.l;  teta = cl.be_1786_cl.angle; ro = LD / np.sin(teta);
+    #     sre1 = SpontanRadEffects(); sre1.radius = ro;  sre1.type = 'dipole';
+    #     self.add_physics_process(sre1, cl.mbe_1786a_cl, cl.mbe_1786d_cl)
+    #     LD = cl.bl_1796_cl.l;        teta = cl.bl_1796_cl.angle;        ro = LD / np.sin(teta);
+    #     sre2 = SpontanRadEffects();        sre2.radius = ro;        sre2.type = 'dipole';
+    #     self.add_physics_process(sre2, cl.mbl_1796a_cl, cl.mbl_1796d_cl)
+    #     LD = cl.bl_1803_cl.l;        teta = cl.bl_1803_cl.angle;        ro = LD / np.sin(teta);
+    #     sre3 = SpontanRadEffects();        sre3.radius = ro;        sre3.type = 'dipole';
+    #     self.add_physics_process(sre3, cl.mbl_1803a_cl, cl.mbl_1803d_cl)
+    #     LD = cl.be_1813_cl.l;        teta = cl.be_1813_cl.angle;        ro = LD / np.sin(teta);
+    #     sre4 = SpontanRadEffects();        sre4.radius = ro;        sre4.type = 'dipole';
+    #     self.add_physics_process(sre4, cl.mbe_1813a_cl, cl.mbe_1813d_cl)
+    #     LD = cl.be_1822_cl.l;  teta = cl.be_1822_cl.angle; ro = LD / np.sin(teta);
+    #     sre5 = SpontanRadEffects(); sre5.radius = ro;  sre5.type = 'dipole';
+    #     self.add_physics_process(sre5, cl.mbe_1822a_cl, cl.mbe_1822d_cl)
+    #     LD = cl.bl_1832_cl.l;        teta = cl.bl_1832_cl.angle;        ro = LD / np.sin(teta);
+    #     sre6 = SpontanRadEffects();        sre6.radius = ro;        sre6.type = 'dipole';
+    #     self.add_physics_process(sre6, cl.mbl_1832a_cl, cl.mbl_1832d_cl)
+    #     LD = cl.bl_1839_cl.l;        teta = cl.bl_1839_cl.angle;        ro = LD / np.sin(teta);
+    #     sre7 = SpontanRadEffects();        sre7.radius = ro;        sre7.type = 'dipole';
+    #     self.add_physics_process(sre7, cl.mbl_1839a_cl, cl.mbl_1839d_cl)
+    #     LD = cl.be_1849_cl.l;  teta = cl.be_1849_cl.angle; ro = LD / np.sin(teta);
+    #     sre8 = SpontanRadEffects(); sre8.radius = ro;  sre8.type = 'dipole';
+    #     self.add_physics_process(sre8, cl.mbe_1849a_cl, cl.mbe_1849d_cl)
+        if bISR:
+            LD = cl.be_1786_cl.l;  teta = cl.be_1786_cl.angle; ro = LD / np.sin(teta);
+            sre1 = SpontanRadEffects(); sre1.radius = ro;  sre1.type = 'dipole';
+            self.add_physics_process(sre1, cl.M1be_1786_cl, cl.M2be_1786_cl)
+            LD = cl.bl_1796_cl.l;        teta = cl.bl_1796_cl.angle;        ro = LD / np.sin(teta);
+            sre2 = SpontanRadEffects();        sre2.radius = ro;        sre2.type = 'dipole';
+            self.add_physics_process(sre2, cl.M1be_1796_cl, cl.M2be_1796_cl)
+            LD = cl.bl_1803_cl.l;        teta = cl.bl_1803_cl.angle;        ro = LD / np.sin(teta);
+            sre3 = SpontanRadEffects();        sre3.radius = ro;        sre3.type = 'dipole';
+            self.add_physics_process(sre3, cl.M1be_1803_cl, cl.M2be_1803_cl)
+            LD = cl.be_1813_cl.l;        teta = cl.be_1813_cl.angle;        ro = LD / np.sin(teta);
+            sre4 = SpontanRadEffects();        sre4.radius = ro;        sre4.type = 'dipole';
+            self.add_physics_process(sre4, cl.M1be_1813_cl, cl.M2be_1813_cl)
+            LD = cl.be_1822_cl.l;  teta = cl.be_1822_cl.angle; ro = LD / np.sin(teta);
+            sre5 = SpontanRadEffects(); sre5.radius = ro;  sre5.type = 'dipole';
+            self.add_physics_process(sre5, cl.M1be_1822_cl, cl.M2be_1822_cl)
+            LD = cl.bl_1832_cl.l;        teta = cl.bl_1832_cl.angle;        ro = LD / np.sin(teta);
+            sre6 = SpontanRadEffects();        sre6.radius = ro;        sre6.type = 'dipole';
+            self.add_physics_process(sre6, cl.M1be_1832_cl, cl.M2be_1832_cl)
+            LD = cl.bl_1839_cl.l;        teta = cl.bl_1839_cl.angle;        ro = LD / np.sin(teta);
+            sre7 = SpontanRadEffects();        sre7.radius = ro;        sre7.type = 'dipole';
+            self.add_physics_process(sre7, cl.M1be_1839_cl, cl.M2be_1839_cl)
+            LD = cl.be_1849_cl.l;  teta = cl.be_1849_cl.angle; ro = LD / np.sin(teta);
+            sre8 = SpontanRadEffects(); sre8.radius = ro;  sre8.type = 'dipole';
+            self.add_physics_process(sre8, cl.M1be_1849_cl, cl.M2be_1849_cl)
 
 class TL(SectionTrack):
     def __init__(self, data_dir):
@@ -674,11 +752,14 @@ class TL(SectionTrack):
         self.output_beam_file = self.particle_dir + 'section_STN10.npz'
         self.tws_file = self.tws_dir + "tws_section_STN10.npz"
 
-        collimator3_stop = cl.bpma_1853_cl
-        stN10_stop = sase1.bpme_2235_t2
+        #collimator3_stop = cl.bpma_1853_cl
+        #stN10_stop = sase1.bpme_2235_t2
+        collimator3_stop = cl.ensec_1854_cl
+        stN10_stop = sase1.bpme_2235_t2#sase1.ensec_2235_t2
+        #stN10_stop = sase1.bpme_2241_sa1
         # init tracking lattice
-        self.lattice = MagneticLattice(cl.cell + tl2.cell + tl34.cell + sase1.cell, start=collimator3_stop, stop=stN10_stop, method=self.method)
-
+        #self.lattice = MagneticLattice(cl.cell + tl2.cell + tl34.cell + sase1.cell, start=collimator3_stop, stop=stN10_stop, method=self.method)
+        self.lattice = MagneticLattice(cl.cell + tl34_sase1.cell + sase1.cell, start=collimator3_stop, stop=stN10_stop, method=self.method)
         # init physics processes
 
         sc = SpaceCharge()
@@ -710,8 +791,12 @@ class SASE1(SectionTrack):
         self.output_beam_file = self.particle_dir + 'section_SASE1.npz'
         self.tws_file = self.tws_dir + "tws_section_SASE1.npz"
         # last element sase1 - stsec_2461_t4
-        stN10_stop = sase1.bpme_2235_t2
+        #stN10_stop = sase1.bpme_2235_t2
+        stN10_stop = sase1.ensec_2235_t2
         sase1_stop = sase1.stsec_2461_t4
+        #sase1_stop = sase1.ensec_2461_sa1
+        # stop ~1m before SASE1
+        #sase1_stop = sase1.bpme_2241_sa1
         # init tracking lattice
         self.lattice = MagneticLattice(sase1.cell, start=stN10_stop, stop=sase1_stop, method=self.method)
 
@@ -747,9 +832,10 @@ class T4(SectionTrack):
         self.output_beam_file = self.particle_dir + 'section_T4.npz'
         self.tws_file = self.tws_dir + "tws_section_T4.npz"
         # last element sase1 - stsec_2461_t4
-        sase1_stop = sase1.stsec_2461_t4
+        sase1_stop = sase1.ensec_2461_sa1
         t4_stop = t4.ensub_2800_t4
-        csr_start = t4.t4_start_csr
+        #t4_stop = t4.ensec_2800_t4
+        csr_start = t4.t4_start_csr#t4.id_19088442_#
         csr_stop = t4.bpma_2606_t4
         # init tracking lattice
         self.lattice = MagneticLattice(sase1.cell + t4.cell, start=sase1_stop, stop=t4_stop, method=self.method)
@@ -772,9 +858,13 @@ class T4(SectionTrack):
         sc2.nmesh_xyz = [31, 31, 31]
         sc2.random_mesh = bool_sc_rand_mesh
 
+        sc_in_bend = SpaceCharge()
+        sc_in_bend.step = 25
+        sc_in_bend.nmesh_xyz = SCmesh
+        sc_in_bend.random_mesh = bool_sc_rand_mesh
+
         # creation of wake object with parameters
         wake = Wake()
-        #wake.wake_table = WakeTable('accelerator/wakes/wake_hor_1m_500mkm.txt')
         wake.wake_table = WakeTable('../wakes/Dechirper/wake_hor_axis_500um.txt')
         # w_sampling - defines the number of the equidistant sampling points for the one-dimensional
         # wake coefficients in the Taylor expansion of the 3D wake function.
@@ -791,33 +881,29 @@ class T4(SectionTrack):
         wake_vert.w_sampling = 500
         wake_vert.step = 1  # step in Navigator.unit_step, dz = Navigator.unit_step * wake.step [m]
 
-        
-        self.add_physics_process(wake, start=t4.wake_start, stop=t4.m_tds)
+        #wake_start=t4.d_16
+        #self.add_physics_process(wake, start=wake_start, stop=t4.m_tds)#t4.wake_start
 
         svb4 = SaveBeam(filename=self.particle_dir + "before_structure.npz")
-        self.add_physics_process(svb4, start=t4.wake_start, stop=t4.wake_start)
+        #self.add_physics_process(svb4, start=wake_start, stop=wake_start) #t4.wake_stop
 
-        self.add_physics_process(wake_vert, start=t4.m_tds, stop=t4.wake_stop)
+        #self.add_physics_process(wake_vert, start=t4.m_tds, stop=wake_start)
 
 
         svb3 = SaveBeam(filename=self.particle_dir + "after_structure.npz")
-        self.add_physics_process(svb3, start=t4.wake_stop, stop=t4.wake_stop)
+        #self.add_physics_process(svb3, start=wake_start, stop=wake_start)
 
         svb1 = SaveBeam(filename=self.particle_dir + "screen1.npz")
-        self.add_physics_process(svb1, start=t4.m_img1, stop=t4.m_img1)
+        #self.add_physics_process(svb1, start=t4.m_img1, stop=t4.m_img1)
 
         svb2 = SaveBeam(filename=self.particle_dir + "screen2.npz")
-        self.add_physics_process(svb2, start=t4.m_img2, stop=t4.m_img2)
+        #self.add_physics_process(svb2, start=t4.m_img2, stop=t4.m_img2)
 
         #self.add_physics_process(sc, start=sase1_stop, stop=csr_start)
-        self.add_physics_process(sc, start=sase1_stop, stop=csr_start)
+        #self.add_physics_process(sc, start=sase1_stop, stop=csr_start)
         self.add_physics_process(csr, start=csr_start, stop=csr_stop)
-        self.add_physics_process(sc2, start=csr_stop, stop=t4.ensub_2800_t4)
+        #self.add_physics_process(sc2, start=csr_stop, stop=t4.ensec_2800_t4)
 
-        sc_in_bend = SpaceCharge()
-        sc_in_bend.step = 25
-        sc_in_bend.nmesh_xyz = [31, 31, 31]
-        #self.add_physics_process(sc_in_bend, start=csr_start, stop=csr_stop)
 
 
 class SASE3(SectionTrack):
@@ -833,6 +919,8 @@ class SASE3(SectionTrack):
 
         start = sase3.ensec_2800_t4
         stop = sase3.ensec_2940_sa3
+        # stop ~1m befpre SASE3
+        #stop = sase3.bpme_2806_sa3
         # init tracking lattice
         self.lattice = MagneticLattice(sase3.cell, start=start, stop=stop, method=self.method)
 
