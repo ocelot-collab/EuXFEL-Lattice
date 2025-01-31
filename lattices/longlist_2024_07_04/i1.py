@@ -102,8 +102,8 @@ ciy_55_i1 = Vcor(l=0.1, eid='CIY.55.I1')
 ciy_58_i1 = Vcor(l=0.1, eid='CIY.58.I1')
 
 # Undulators
-u74_49_i1 = Undulator(lperiod=0.074, nperiods=12.405405405405407, eid='U74.49.I1')
-
+u74_49_i1 = Undulator(lperiod=0.074, nperiods=12.405405405405407, eid='U74.49.I1') #Kx=1.294, Ky=0.0,
+#u74_49_i1 = Undulator(lperiod=0.074, nperiods=10, Kx=1.294, Ky=0.0,eid='U74.49.I1')
 # Cavitys
 c_a1_1_1_i1 = Cavity(l=1.0377, v=0.018125, freq=1300000000.0, eid='C.A1.1.1.I1')
 c_a1_1_2_i1 = Cavity(l=1.0377, v=0.018125, freq=1300000000.0, eid='C.A1.1.2.I1')

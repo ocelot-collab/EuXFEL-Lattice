@@ -1,7 +1,7 @@
-ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
+#ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
 import sys
 
-sys.path.append(ocelot_dir)
+#sys.path.append(ocelot_dir)
 sys.path.insert(1, "../")
 
 from ocelot import *
