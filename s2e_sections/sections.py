@@ -759,8 +759,8 @@ class TL(SectionTrack):
         stN10_stop = tl34.ensub_2025_tl#sase1.ensec_2235_t2
         #stN10_stop = sase1.bpme_2241_sa1
         # init tracking lattice
-        #self.lattice = MagneticLattice(cl.cell + tl2.cell + tl34.cell + sase1.cell, start=collimator3_stop, stop=stN10_stop, method=self.method)
-        self.lattice = MagneticLattice(cl.cell + tl34.cell, start=collimator3_stop, stop=stN10_stop, method=self.method)
+        self.lattice = MagneticLattice(cl.cell + tl2.cell + tl34.cell + sase1.cell, start=collimator3_stop, stop=stN10_stop, method=self.method)
+        #self.lattice = MagneticLattice(cl.cell + tl34.cell, start=collimator3_stop, stop=stN10_stop, method=self.method)
         # init physics processes
 
         sc = SpaceCharge()
