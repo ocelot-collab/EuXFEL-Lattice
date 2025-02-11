@@ -243,7 +243,7 @@ class I1D(SectionTrack):
 
         # init tracking lattice
         st2_stop = i1.stsub_62_i1
-        dogleg_stop = i1d.otrc_64_i1d
+        dogleg_stop = i1d.ensec_66_i1d
         self.lattice = MagneticLattice(i1.cell + i1d.cell, start=st2_stop, stop=dogleg_stop, method=self.method)
         # init physics processes
         csr = CSR()
