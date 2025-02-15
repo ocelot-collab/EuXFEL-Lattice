@@ -1094,10 +1094,10 @@ class T1(SectionTrack):
         csr3.sigma_min = Sig_Z[3] * 0.1
 
         wake_add = Wake()
-        wake_add.wake_table = WakeTable('accelerator/wakes/mod_wake_1831.200_2035.190_MONO.dat')
+        wake_add.wake_table = WakeTable('../wakes/mod_wake_1831.200_2035.190_MONO.dat')
         wake_add.factor = 1
         wake_add1 = Wake()
-        wake_add1.wake_table = WakeTable('accelerator/wakes/mod_wake_2035.190_2213.000_MONO.dat')
+        wake_add1.wake_table = WakeTable('../wakes/mod_wake_2035.190_2213.000_MONO.dat')
         wake_add1.factor = 1
 
         self.add_physics_process(wake_add, start=collimator3_stop, stop=collimator3_stop)
@@ -1125,7 +1125,7 @@ class SASE2(SectionTrack):
                                            method=self.method)
         # init physics processes
         wake = Wake()
-        wake.wake_table = WakeTable('accelerator/wakes/Undulator/wake_undulator_OCELOT.txt')
+        wake.wake_table = WakeTable('../wakes/Undulator/wake_undulator_OCELOT.txt')
         wake.step = 10
         wake.w_sampling = 1000
         wake.factor = 35*6.1
