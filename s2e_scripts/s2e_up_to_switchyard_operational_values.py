@@ -58,9 +58,9 @@ RFpars=np.array([[150.6490695436200156,  -12.45143229398958340],
                  [2387.170005428192326, 44.53398073107610600]])
 
 E40 = 14000                 # final beam energy
-r1 = 4.1218                 # deflecting radius in BC0
-r2 = 8.3934                 # deflecting radius in BC1
-r3 = 14.4111                # deflecting radius in BC2
+#r1 = 4.1218                 # deflecting radius in BC0
+#r2 = 8.3934                 # deflecting radius in BC1
+#r3 = 14.4111                # deflecting radius in BC2
 C10= 3                      # local compression in BC0
 C20= 7                      # local compression in BC1
 C30= 400/(C10*C20)          # local compression in BC2
@@ -78,10 +78,15 @@ phi31 = RFpars[3,1] * grad
 v41 = E40-2400
 phi41 = 0
 
+print(f'v11 = {v11}, phi11 = {phi11/grad}')
+print(f'v13 = {v13}, phi13 = {phi13/grad}')
+print(f'v21 = {v11}, phi21 = {phi21/grad}')
+print(f'v31 = {v11}, phi31 = {phi31/grad}')
+
 # BC magnet radius
-#r1 = 0.5 / 0.1366592804  # 3.6587343247857467
-#r2 = 0.5 / 0.0532325422  # 9.392750737348779
-#r3 = 0.5 / 0.0411897704  # 12.138936321917445
+r1 = 0.5 / 0.1366592804  # 3.6587343247857467
+r2 = 0.5 / 0.0532325422  # 9.392750737348779
+r3 = 0.5 / 0.0411897704  # 12.138936321917445
 #################################### Compression WP ################################
 
 # init sections which can be used for tracking
@@ -107,28 +112,33 @@ E0 = p_array.E
 
 from ocelot.utils.acc_utils import beam2rf,beam2rf_xfel_linac 
 v11,phi11,v13,phi13 = beam2rf(E1=E1,chirp=-9.09,curvature=180,skewness=21400,n=3, freq=1.3e9, E0=E0)
-v21,phi21 = beam2rf_xfel_linac(sum_voltage=575.13e-3,chirp=-9.93)
-v31,phi31 = beam2rf_xfel_linac(sum_voltage=1726.57e-3,chirp=-11.58)
-print(v31,phi31)
+v21,phi21 = beam2rf_xfel_linac(sum_voltage=575.13e-3, chirp=-9.93, init_energy=0.13)
+v31,phi31 = beam2rf_xfel_linac(sum_voltage=1726.57e-3, chirp=-11.58, init_energy=0.7)
+
+print(f'v11 = {v11}, phi11 = {phi11}')
+print(f'v13 = {v13}, phi13 = {phi13}')
+print(f'v21 = {v11}, phi21 = {phi21}')
+print(f'v31 = {v11}, phi31 = {phi31}')
+
 
 config = {
-    A1:    {"phi": phi11 / grad, "v": v11 / 8,
+    A1:    {"phi": phi11, "v": v11*1e3 / 8*1e-3,
            "SC": SC_exec, "smooth": True, "wake": wake_exec},
-    AH1:   {"phi": phi13 / grad, "v": v13 / 8,
+    AH1:   {"phi": phi13, "v": v13*1e3 / 8*1e-3,
            "match": False, "SC": SC_exec, "wake": wake_exec}, ######### ************ "bounds": [-5, 5], 
     LH:    {"SC": SC_exec, "CSR": False, "wake": wake_exec, "match": match_exec},
     DL:    {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
     BC0:   {"rho": r1,
            "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    L1:    {"phi": phi21 / grad, "v": v21 / 32, "match": match_exec,
+    L1:    {"phi": phi21, "v": v21*1e3 / 32*1e-3, "match": match_exec,
            "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
     BC1:   {"rho": r2,
            "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    L2:    {"phi": phi31/ grad, "v": v31 / 96, "match": match_exec,
+    L2:    {"phi": phi31, "v": v31*1e3 / 96*1e-3, "match": match_exec,
             "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
     BC2:   {"rho": r3,
             "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    L3:    {"phi": phi41 / grad, "v": v41 / 640,
+    L3:    {"phi": phi41 / grad, "v": v41 / 640*1e-3,
             "match": match_exec, #"bounds":[-1,1],
             "SC": SC_exec, "wake": wake_exec},# "smooth": smooth_exec},
     CL1:   {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
@@ -152,7 +162,7 @@ p_array = section_lat.track_sections(sections=sections, p_array=p_array, config=
 seq_global = []
 tws_track_global = []
 L = 0
-for s in all_sections:
+for s in sections:
     sec = section_lat.dict_sections[s]
     seq_global.append(sec.lattice.sequence)
     for tws in sec.tws_track:

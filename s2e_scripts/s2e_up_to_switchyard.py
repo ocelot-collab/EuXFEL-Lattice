@@ -93,7 +93,7 @@ plot_opt_func(lat, section_lat.tws)
 plt.show()
 
 # sequence of sections for tracking.
-all_sections = [A1, AH1, LH]#, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL]
+all_sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL]
 section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
 # plot twiss parameters
 lat = MagneticLattice(section_lat.elem_seq)
