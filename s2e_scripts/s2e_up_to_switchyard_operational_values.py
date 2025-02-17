@@ -78,12 +78,8 @@ phi31 = RFpars[3,1] * grad
 v41 = E40-2400
 phi41 = 0
 
-print(f'v11 = {v11}, phi11 = {phi11/grad}')
-print(f'v13 = {v13}, phi13 = {phi13/grad}')
-print(f'v21 = {v11}, phi21 = {phi21/grad}')
-print(f'v31 = {v11}, phi31 = {phi31/grad}')
 
-# BC magnet radius
+# BC magnet radius read from BKR
 r1 = 0.5 / 0.1366592804  # 3.6587343247857467
 r2 = 0.5 / 0.0532325422  # 9.392750737348779
 r3 = 0.5 / 0.0411897704  # 12.138936321917445
@@ -105,20 +101,16 @@ lat = MagneticLattice(section_lat.elem_seq)
 plot_opt_func(lat, section_lat.tws)
 plt.show()
 
-p_array = load_particle_array(data_dir + "gun/gun_2019.npz")
+p_array_init = load_particle_array(data_dir + "gun/gun.npz", print_params=True)
+
 
 E1 = 130e-3 
-E0 = p_array.E
+E0 = p_array_init.E
 
 from ocelot.utils.acc_utils import beam2rf,beam2rf_xfel_linac 
 v11,phi11,v13,phi13 = beam2rf(E1=E1,chirp=-9.09,curvature=180,skewness=21400,n=3, freq=1.3e9, E0=E0)
 v21,phi21 = beam2rf_xfel_linac(sum_voltage=575.13e-3, chirp=-9.93, init_energy=0.13)
 v31,phi31 = beam2rf_xfel_linac(sum_voltage=1726.57e-3, chirp=-11.58, init_energy=0.7)
-
-print(f'v11 = {v11}, phi11 = {phi11}')
-print(f'v13 = {v13}, phi13 = {phi13}')
-print(f'v21 = {v11}, phi21 = {phi21}')
-print(f'v31 = {v11}, phi31 = {phi31}')
 
 
 config = {
@@ -152,12 +144,18 @@ config = {
     SASE2: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
 }
 
-show_e_beam(p_array)
+show_e_beam(p_array_init)
 plt.show()
-s_start = deepcopy(p_array.s)
-p_array = section_lat.track_sections(sections=sections, p_array=p_array, config=config, force_ext_p_array=True,
+
+#reducing the number of particles to speed up the 
+p_array_less = p_array_init.thin_out(nth=4) 
+
+s_start = deepcopy(p_array_init.s)
+p_array = section_lat.track_sections(sections=sections, p_array=p_array_less, config=config, force_ext_p_array=True,
                                      coupler_kick=coupler_kick_exec)
 
+end = time.time()
+print(f'\nduration = {end-start}')
 # collect tws for all sections
 seq_global = []
 tws_track_global = []
@@ -259,9 +257,5 @@ out[:, 6] = EmitY_tr
 out[:, 7] = E_tr
 
 np.savetxt("Optics.txt", out)
-
-plt.show()
-
-show_e_beam(p_array)
 
 plt.show()
