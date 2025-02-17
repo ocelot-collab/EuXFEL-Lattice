@@ -3,6 +3,7 @@
 - SECTION CL to TL which affect this marker ENBLOCK.1891.CL
 - SUBSECTION TL to TL5 which affect this marker ENSEC.2058.TL
 - SUBSECTION TL to TL1: TL	TL1	XTL_035	STSEC.1854.TL	STSEC.TL.TL	MARK
+- in SUBSECTION CL: BENDIN or BENDOUT to MARKER 
 
 ## Removed
 - U90 CUS elements. it is coils for magnetic earth correction
