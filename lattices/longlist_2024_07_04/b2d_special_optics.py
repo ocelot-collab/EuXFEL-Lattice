@@ -10,6 +10,7 @@ tws0.E = 2.399999999680003
 tws0.s = 466.8192259999962
 
 # Drifts
+d_2 = Drift(l=0.00145, eid='D_2')
 d_3 = Drift(l=0.58145, eid='D_3')
 d_4 = Drift(l=0.17395, eid='D_4')
 d_5 = Drift(l=0.18395, eid='D_5')
@@ -18,14 +19,17 @@ d_7 = Drift(l=0.13628, eid='D_7')
 d_8 = Drift(l=0.18, eid='D_8')
 d_9 = Drift(l=0.2, eid='D_9')
 d_10 = Drift(l=0.98395, eid='D_10')
-id_68991265_ = Drift(l=0.8553999999999999, eid='ID_68991265_')
+d_11 = Drift(l=0.43628, eid='D_11')
+d_12 = Drift(l=0.41912, eid='D_12')
 d_13 = Drift(l=0.516377, eid='D_13')
 d_14 = Drift(l=0.16902, eid='D_14')
 d_15 = Drift(l=0.25898, eid='D_15')
 d_16 = Drift(l=0.2249, eid='D_16')
 d_17 = Drift(l=0.23402, eid='D_17')
-id_93789011_ = Drift(l=1.01368, eid='ID_93789011_')
+d_18 = Drift(l=0.66368, eid='D_18')
+d_19 = Drift(l=0.35, eid='D_19')
 d_20 = Drift(l=1.01327, eid='D_20')
+
 
 # Quadrupoles
 # special optics in B2/B2D for energy spread measurements 
@@ -55,13 +59,15 @@ bpma_477_b2d = Monitor(eid='BPMA.477.B2D')
 bpmd_479_b2d = Monitor(eid='BPMD.479.B2D')
 
 # Markers
+otra_473_b2d = Marker(eid='OTRA.473.B2D')
+otrd_478_b2d = Marker(eid='OTRD.478.B2D')
 ensec_480_b2d = Marker(eid='ENSEC.480.B2D')
 
 # Lattice 
-cell = (bg_467_b2d, d_3, cfy_468_b2d, d_4, qf_469_b2d, d_5, bpma_469_b2d, d_6, cfx_470_b2d, 
-d_7, qe_471_b2d, d_8, bpma_471_b2d, d_9, cfy_471_b2d, d_10, qf_472_b2d, id_68991265_, bg_474_b2d, 
-d_13, cfy_476_b2d, d_14, qf_476_b2d, d_15, bpma_477_b2d, d_16, cfx_477_b2d, d_17, qf_477_b2d, 
-id_93789011_, bpmd_479_b2d, d_20, ensec_480_b2d)
+cell = (d_2, bg_467_b2d, d_3, cfy_468_b2d, d_4, qf_469_b2d, d_5, bpma_469_b2d, d_6, 
+cfx_470_b2d, d_7, qe_471_b2d, d_8, bpma_471_b2d, d_9, cfy_471_b2d, d_10, qf_472_b2d, d_11, 
+otra_473_b2d, d_12, bg_474_b2d, d_13, cfy_476_b2d, d_14, qf_476_b2d, d_15, bpma_477_b2d, d_16, 
+cfx_477_b2d, d_17, qf_477_b2d, d_18, otrd_478_b2d, d_19, bpmd_479_b2d, d_20, ensec_480_b2d)
 
 # power supplies 
 
@@ -81,3 +87,4 @@ qf_477_b2d.ps_id = 'QF.35.B2D'
 #  
 bg_467_b2d.ps_id = 'BG.1.B2D'
 bg_474_b2d.ps_id = 'BG.1.B2D'
+
