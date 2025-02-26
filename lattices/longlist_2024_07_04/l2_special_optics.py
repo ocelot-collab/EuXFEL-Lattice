@@ -56,7 +56,8 @@ d_211 = Drift(l=0.19165, eid='D_211')
 id_58358695_ = Drift(l=0.6369, eid='ID_58358695_')
 d_214 = Drift(l=0.43477, eid='D_214')
 id_97462571_ = Drift(l=0.38593, eid='ID_97462571_')
-d_218 = Drift(l=0.4, eid='D_218')
+d_218_a = Drift(l=0.2, eid='D_218A')
+d_218_b = Drift(l=0.2, eid='D_218B')
 d_219 = Drift(l=0.17835, eid='D_219')
 d_220 = Drift(l=0.09065, eid='D_220')
 d_221 = Drift(l=0.3223, eid='D_221')
@@ -265,8 +266,8 @@ c_a5_4_5_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A5.4.5
 c_a5_4_6_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A5.4.6.L2')
 c_a5_4_7_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A5.4.7.L2')
 c_a5_4_8_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A5.4.8.L2')
-tdsb_428_b2 = Cavity(l=1.5, freq=2800000000.0, eid='TDSB.428.B2')
-tdsb_430_b2 = Cavity(l=1.5, freq=2800000000.0, eid='TDSB.430.B2')
+tdsb_428_b2 = TDCavity(l=1.5, freq=2800000000.0, eid='TDSB.428.B2')
+tdsb_430_b2 = TDCavity(l=1.5, freq=2800000000.0, eid='TDSB.430.B2')
 
 # Monitors
 bpma_233_b1 = Monitor(eid='BPMA.233.B1')
@@ -304,6 +305,7 @@ stlat_393_b2 = Marker(eid='STLAT.393.B2')
 match_414_b2 = Marker(eid='MATCH.414.B2')
 tora_415_b2 = Marker(eid='TORA.415.B2')
 match_428_b2 = Marker(eid='MATCH.428.B2')
+marker_tds_b2 = Marker(eid='MARKER.TDS.B2')
 match_446_b2 = Marker(eid='MATCH.446.B2')
 ensub_466_b2 = Marker(eid='ENSUB.466.B2')
 
@@ -343,7 +345,7 @@ bpms_404_b2, id_89408864_, bb_404_b2, d_184, cbb_405_b2, id_36281265_, bb_413_b2
 match_414_b2, id_68782998_, bpmf_414_b2, id_79846102_, tora_415_b2, d_198, qd_415_b2, d_199, ccx_415_b2, d_200, 
 ccy_416_b2, id_17322340_, qd_417_b2, d_203, ccx_418_b2, d_9, ccy_418_b2, d_205, bpma_418_b2, d_162, 
 qd_418_b2, id_34164022_, ccx_425_b2, d_210, qd_425_b2, d_211, ccy_426_b2, id_58358695_, bpma_426_b2, d_214, 
-qd_427_b2, id_97462571_, match_428_b2, tdsb_428_b2, d_218, tdsb_430_b2, d_219, qd_431_b2, d_220, ccx_431_b2, 
+qd_427_b2, id_97462571_, match_428_b2, tdsb_428_b2, d_218_a, marker_tds_b2, d_218_b, tdsb_430_b2, d_219, qd_431_b2, d_220, ccx_431_b2, 
 d_221, bpma_432_b2, id_4070650_, qd_434_b2, d_163, ccy_434_b2, d_226, qd_437_b2, id_59971044_, bpma_440_b2, 
 d_162, qd_440_b2, d_163, ccx_441_b2, id_75923817_, bpma_444_b2, d_162, qd_444_b2, d_237, match_446_b2, 
 id_1851905_, ccx_447_b2, d_241, bpma_448_b2, d_162, qd_448_b2, d_163, ccy_448_b2, id_34805185_, bpma_452_b2, 
