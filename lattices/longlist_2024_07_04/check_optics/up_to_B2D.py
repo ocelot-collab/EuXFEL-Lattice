@@ -6,10 +6,10 @@ sys.path.insert(1, "../")
 import pandas as pd
 from ocelot import *
 from ocelot.gui import *
-import i1, l1, l2, b2d
+import i1, l1, l2_special_optics, b2d_special_optics
 
 # calculate twiss functions with ocelot
-lat = MagneticLattice(i1.cell + l1.cell  + l2.cell  + b2d.cell)
+lat = MagneticLattice(i1.cell + l1.cell  + l2_special_optics.cell  + b2d_special_optics.cell)
 tws = twiss(lat, i1.tws0)
 
 
