@@ -555,7 +555,8 @@ cfy_468_b2d = Vcor(l=0.1, eid='CFY.468.B2D')
 cfy_471_b2d = Vcor(l=0.1, eid='CFY.471.B2D')
 
 # Undulators
-u74_49_i1 = Undulator(lperiod=0.074, nperiods=12.405405405405407, Kx=1.294, eid='U74.49.I1')
+#u74_49_i1 = Undulator(lperiod=0.074, nperiods=12.405405405405407, Kx=1.294, eid='U74.49.I1')
+u74_49_i1 = Undulator(lperiod=0.074, nperiods=12.405405405405407, Kx=1.294, Ky=0.0, eid='U74.49.I1')
 
 # Cavitys
 c_a1_1_1_i1 = Cavity(l=1.0377, v=0.018125, freq=1300000000.0, eid='C.A1.1.1.I1')
@@ -797,8 +798,22 @@ bpma_469_b2d = Monitor(eid='BPMA.469.B2D')
 bpma_471_b2d = Monitor(eid='BPMA.471.B2D')
 
 # Markers
+d_8_1 = Drift(l=0.5776, eid='D_12')
+start_sim = Marker(eid="START_SIM")
+d_8_2 = Drift(l=0.3216, eid='ID_35969356_')
+
+d_8_n = (d_8_1, start_sim, d_8_2)
+
+a1_sim_stop = Marker()
+a1_1_stop = Marker()
+
+tds_start = Marker()
+tds_stop = Marker()
+
+lh_start = Marker()
+lh_stop = Marker()
+
 stsec_23_i1 = Marker(eid='STSEC.23.I1')
-start_sim = Marker(eid='START_SIM')
 id_30058415_ = Marker(eid='ID_30058415_')
 id_9649943_ = Marker(eid='ID_9649943_')
 match_37_i1 = Marker(eid='MATCH.37.I1')
@@ -881,6 +896,7 @@ stlat_414_b2 = Marker(eid='STLAT.414.B2')
 stgrd_414_b2 = Marker(eid='STGRD.414.B2')
 bam_414_b2 = Marker(eid='BAM.414.B2')
 midbpmf_414_b2 = Marker(eid='MIDBPMF.414.B2')
+tora_415_b2 = Marker(eid='TORA.415.B2')
 bcm_416_b2 = Marker(eid='BCM.416.B2')
 engrd_419_b2 = Marker(eid='ENGRD.419.B2')
 stgrd_423_b2 = Marker(eid='STGRD.423.B2')
@@ -919,16 +935,16 @@ otra_473_b2d = Marker(eid='OTRA.473.B2D')
 
 # Lattice 
 cell = (stsec_23_i1, id_97509745_, solb_23_i1, qln_23_i1, qls_23_i1, d_2a, ckx_23_i1, cky_23_i1, d_3a, 
-ckx_24_i1, cky_24_i1, d_4a, bpmg_24_i1, id_70110258_, bpmg_25i_i1, id_41101705_, ckx_25_i1, cky_25_i1, d_12a, 
-start_sim, id_35969356_, c_a1_1_1_i1, id_30058415_, d_13a, c_a1_1_2_i1, d_13a, c_a1_1_3_i1, d_13a, c_a1_1_4_i1, 
-d_16a, c_a1_1_5_i1, d_13a, c_a1_1_6_i1, d_13a, c_a1_1_7_i1, d_13a, c_a1_1_8_i1, id_9649943_, d_20, 
+ckx_24_i1, cky_24_i1, d_4a, bpmg_24_i1, id_70110258_, bpmg_25i_i1, id_41101705_, ckx_25_i1, cky_25_i1, d_8_n, 
+c_a1_1_1_i1, a1_1_stop, id_30058415_, d_13a, c_a1_1_2_i1, d_13a, c_a1_1_3_i1, d_13a, c_a1_1_4_i1, 
+d_16a, c_a1_1_5_i1, d_13a, c_a1_1_6_i1, d_13a, c_a1_1_7_i1, d_13a, c_a1_1_8_i1, id_9649943_, a1_sim_stop, d_20, 
 match_37_i1, d_21a, q_37_i1, d_21a, cx_37_i1, cy_37_i1, d_23a, bpmc_38i_i1, id_32151375_, bpmr_38ii_i1, 
 d_26a, q_38_i1, d_21a, cx_39_i1, cy_39_i1, d_28, c3_ah1_1_1_i1, d_29, c3_ah1_1_2_i1, d_29, 
 c3_ah1_1_3_i1, d_29, c3_ah1_1_4_i1, d_29, c3_ah1_1_5_i1, d_29, c3_ah1_1_6_i1, d_29, c3_ah1_1_7_i1, d_29, 
 c3_ah1_1_8_i1, id_95966272_, qi_46_i1, id_18462951_, bpmf_47_i1, id_94338373_, cwx_47_i1, cwy_47_i1, id_7308930_, qi_47_i1, 
 d_43, stlat_47_i1, d_44a, bl_48i_i1, d_45, bl_48ii_i1, id_71696616_, bpmf_48_i1, id_19200616_, id_28650742_, 
-u74_49_i1, id_97588526_, id_36806288_, bl_50i_i1, d_52a, bl_50ii_i1, id_32378225_, qi_50_i1, id_27968780_, ciy_51_i1, 
-d_57, cix_51_i1, d_58, bpmf_52_i1, id_73735098_, match_52_i1, qi_52_i1, d_61, id_82967176_, tdsa_52_i1, 
+lh_start, u74_49_i1, lh_stop, id_97588526_, id_36806288_, bl_50i_i1, d_52a, bl_50ii_i1, id_32378225_, qi_50_i1, id_27968780_, ciy_51_i1, 
+d_57, cix_51_i1, d_58, bpmf_52_i1, id_73735098_, match_52_i1, qi_52_i1, d_61, id_82967176_, tds_start, tdsa_52_i1, tds_stop, 
 id_48693585_, d_61, qi_53_i1, d_63, qi_54_i1, id_61843027_, match_55_i1, otrc_55_i1, d_66, ciy_55_i1, 
 d_67, bpma_55_i1, d_68, qi_55_i1, id_61843027_, otrc_56_i1, d_66, cix_57_i1, d_67, bpma_57_i1, 
 d_68, qi_57_i1, id_61843027_, otrc_58_i1, d_74, ciy_58_i1, d_75, qi_59_i1, d_76a, bpma_59_i1, 
@@ -1021,7 +1037,7 @@ ccx_392_b2, d_174, otra_392_b2, d_175, bam_392_b2, d_176, bpmf_393_b2, id_943383
 engrd_393_b2, d_179, stlat_393_b2, d_180, bb_393_b2, d_181, bb_402_b2, d_182, cbb_403_b2, d_99, 
 bpms_404_b2, d_184, otrs_404_b2, d_185, bb_404_b2, d_182, cbb_405_b2, d_187, srm_406_b2, d_188, 
 bb_413_b2, d_182, cbb_414_b2, d_105, match_414_b2, enlat_414_b2, stlat_414_b2, d_191b, stgrd_414_b2, d_192b, 
-bam_414_b2, d_176, bpmf_414_b2, id_94338373_, midbpmf_414_b2, d_195, qd_415_b2, d_196, ccx_415_b2, d_197, 
+bam_414_b2, d_176, bpmf_414_b2, id_94338373_, tora_415_b2, midbpmf_414_b2, d_195, qd_415_b2, d_196, ccx_415_b2, d_197, 
 ccy_416_b2, d_198, bcm_416_b2, d_199b, qd_417_b2, d_200b, ccx_418_b2, d_67, ccy_418_b2, d_202, 
 bpma_418_b2, d_160, qd_418_b2, d_245a, engrd_419_b2, d_205, stgrd_423_b2, d_206, ccx_425_b2, d_207, 
 qd_425_b2, d_208, ccy_426_b2, d_209, otra_426_b2, d_210b, bpma_426_b2, d_211b, qd_427_b2, d_212b, 
