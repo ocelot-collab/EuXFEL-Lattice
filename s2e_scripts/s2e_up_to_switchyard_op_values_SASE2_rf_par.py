@@ -48,22 +48,22 @@ v31 = 1.7052  # GV
 phi31 = -3.078
 
 c = 299792458
-grad = pi/180
+grad = np.pi/180
 f = 1.3e9
-k = 2*pi*f/c
+k = 2*np.pi*f/c
 # RF parameters from 2019 reference simulations
-RFpars=np.array([[150.6490695436200156,  -12.45143229398958340],
-                 [34.71451849662050648, 133.0130880849731909],
-                 [612.3662881523496253, 21.42357967251925999],
-                 [2387.170005428192326, 44.53398073107610600]])
+RFpars = np.array([[150.6490695436200156, -12.45143229398958340],
+                   [34.71451849662050648, 133.0130880849731909],
+                   [612.3662881523496253, 21.42357967251925999],
+                   [2387.170005428192326, 44.53398073107610600]])
 
 E40 = 14000                 # final beam energy
 #r1 = 4.1218                 # deflecting radius in BC0
 #r2 = 8.3934                 # deflecting radius in BC1
 #r3 = 14.4111                # deflecting radius in BC2
-C10= 3                      # local compression in BC0
-C20= 7                      # local compression in BC1
-C30= 400/(C10*C20)          # local compression in BC2
+C10 = 3                      # local compression in BC0
+C20 = 7                      # local compression in BC1
+C30 = 400/(C10*C20)          # local compression in BC2
 R2 = 0                      # first derivative of the inverse compression function
 R3 = 900                    # second derivative of the inverse compression function
 
@@ -75,11 +75,8 @@ v21 =   RFpars[2, 0]
 phi21 = RFpars[2, 1] * grad
 v31 =   RFpars[3,0]
 phi31 = RFpars[3,1] * grad
-v41 = E40-2400
+v41 = E40 - 2400
 phi41 = 0
-
-print(v11,v21,v31)
-print(phi11/grad,phi21/grad,phi31/grad)
 
 # BC magnet radius read from BKR
 r1 = 0.5 / 0.1366592804  # 3.6587343247857467
@@ -92,16 +89,16 @@ r3 = 0.5 / 0.0411897704  # 12.138936321917445
 section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
 # plot twiss parameters
 lat = MagneticLattice(section_lat.elem_seq)
-plot_opt_func(lat, section_lat.tws)
-plt.show()
+#plot_opt_func(lat, section_lat.tws)
+#plt.show()
 
 # sequence of sections for tracking.
-sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2]#, L3, CL1, CL2, CL3, TL]
+sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2]#, L3]#, CL1, CL2, CL3, TL]
 section_lat = SectionLattice(sequence=sections, tws0=tws0, data_dir=data_dir)
 # plot twiss parameters
 lat = MagneticLattice(section_lat.elem_seq)
-plot_opt_func(lat, section_lat.tws)
-plt.show()
+#plot_opt_func(lat, section_lat.tws)
+#plt.show()
 
 p_array_init = load_particle_array(data_dir + "gun/gun.npz", print_params=True)
 
@@ -110,13 +107,13 @@ E1 = 129.9e-3
 E0 = p_array_init.E
 
 from ocelot.utils.acc_utils import beam2rf,beam2rf_xfel_linac 
-v11,phi11,v13,phi13 = beam2rf(E1=E1,chirp=-9.081,curvature=240,skewness=22002,n=3, freq=1.3e9, E0=E0)
-v21,phi21 = beam2rf_xfel_linac(sum_voltage=578.98e-3, chirp=-9.17, init_energy=0.13)
-v31,phi31 = beam2rf_xfel_linac(sum_voltage=1742.64e-3, chirp=-10.36, init_energy=0.7)
+v11,phi11,v13,phi13 = beam2rf(E1=E1, chirp=-9.314, curvature=170, skewness=23101, n=3, freq=1.3e9, E0=E0)
+v21,phi21 = beam2rf_xfel_linac(sum_voltage=570.50e-3, chirp=-9.34+1.017, init_energy=0.13)
+v31,phi31 = beam2rf_xfel_linac(sum_voltage=(1726.57-44)*1e-3, chirp=-11.58+1.2, init_energy=0.7)
 
-print(v11,v21,v31)
-print(phi11,phi21,phi31)
-exit()
+
+print(v11,v13,v21,v31)
+print(phi11,phi13,phi21,phi31)
 
 config = {
     A1:    {"phi": phi11, "v": v11 / 8,
@@ -135,7 +132,7 @@ config = {
             "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
     BC2:   {"rho": r3,
             "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    L3:    {"phi": phi41 / grad, "v": v41 / 640,
+    L3:    {"phi": phi41 / grad, "v": v41 / 640*1e-3,
             "match": match_exec, #"bounds":[-1,1],
             "SC": SC_exec, "wake": wake_exec},# "smooth": smooth_exec},
     CL1:   {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
@@ -149,14 +146,14 @@ config = {
     SASE2: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
 }
 
-show_e_beam(p_array_init)
-plt.show()
+#show_e_beam(p_array_init)
+#plt.show()
 
 #reducing the number of particles to speed up the 
-p_array_less = p_array_init.thin_out(nth=4) 
+#p_array_less = p_array_init.thin_out(nth=4) 
 
 s_start = deepcopy(p_array_init.s)
-p_array = section_lat.track_sections(sections=sections, p_array=p_array_less, config=config, force_ext_p_array=True,
+p_array = section_lat.track_sections(sections=sections, p_array=p_array_init, config=config, force_ext_p_array=True,
                                      coupler_kick=coupler_kick_exec)
 
 end = time.time()

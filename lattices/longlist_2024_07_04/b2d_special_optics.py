@@ -36,6 +36,7 @@ d_20 = Drift(l=1.01327, eid='D_20')
 qf_469_b2d = Quadrupole(l=0.5321, k1=0.0, eid='QF.469.B2D')
 qe_471_b2d = Quadrupole(l=0.24, k1=2.05, eid='QE.471.B2D')
 qf_472_b2d = Quadrupole(l=0.5321, k1=-0.096, eid='QF.472.B2D')
+
 qf_476_b2d = Quadrupole(l=0.5321, k1=3.1309789299999995, eid='QF.476.B2D')
 qf_477_b2d = Quadrupole(l=0.5321, k1=0.7703645572993798, eid='QF.477.B2D')
 
