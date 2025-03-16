@@ -24,7 +24,7 @@ coupler_kick_exec = False  # coupler effect in RF modules, quadrupole and dipole
 
 
 # all sections which can be potentially used in s2e
-all_sections = [A1, AH1, LH]#, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL, SASE1, T4, SASE3, T4D]
+all_sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL, SASE1, T4, SASE3, T4D]
 
 ######################### Initial Twiss paramters for design optics ##################
 tws0 = Twiss()

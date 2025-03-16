@@ -7,6 +7,7 @@ import lattices.longlist_2024_07_04.i1_track as i1
 import lattices.longlist_2024_07_04.i1d as i1d
 import lattices.longlist_2024_07_04.l1 as l1
 import lattices.longlist_2024_07_04.l2 as l2
+import lattices.longlist_2024_07_04.b2d as b2d
 import lattices.longlist_2024_07_04.l3 as l3
 import lattices.longlist_2024_07_04.cl as cl
 import lattices.longlist_2024_07_04.tl2 as tl2
@@ -436,6 +437,7 @@ class L2(SectionTrack):
         self.add_physics_process(wake_add, start=acc3t5_stop, stop=acc3t5_stop)
 
 
+
 class BC2(SectionTrack):
     
     def __init__(self, data_dir, *args, **kwargs):
@@ -475,6 +477,43 @@ class BC2(SectionTrack):
 
         self.add_physics_process(csr, start=acc3t5_stop, stop=bc2_stop)
         self.add_physics_process(sc, start=acc3t5_stop, stop=bc2_stop)
+
+class B2D(SectionTrack):
+    
+    def __init__(self, data_dir, *args, **kwargs):
+        super().__init__(data_dir)
+
+        # setting parameters
+        self.lattice_name = 'B2D'
+        self.unit_step = 0.02
+
+        self.input_beam_file = self.particle_dir + 'section_BC2.npz'
+        self.output_beam_file = self.particle_dir + 'section_B2D.npz'
+        self.tws_file = self.tws_dir + "tws_section_B2D.npz"
+
+        bc2_stop = l2.tora_415_b2
+        b2d_stop =b2d.otra_473_b2d
+        # init tracking lattice
+        self.lattice = MagneticLattice(l2.cell+b2d.cell, start=bc2_stop, stop=b2d_stop, method=self.method)
+
+        # init physics processes
+
+        csr = CSR()
+        csr.step = 1
+        csr.n_bin = CSRBin
+        csr.sigma_min = Sig_Z[3]*CSRSigmaFactor #Sig_Z[2]
+        csr.traj_step = 0.0005
+        csr.apply_step = 0.001
+
+        sc = SpaceCharge()
+        sc.step = 50
+        sc.nmesh_xyz = SCmesh
+        sc.random_mesh = bool_sc_rand_mesh
+
+
+        self.add_physics_process(csr, start=bc2_stop, stop=b2d_stop)
+        self.add_physics_process(sc, start=bc2_stop, stop=b2d_stop)
+
 
 
 class L3(SectionTrack):
