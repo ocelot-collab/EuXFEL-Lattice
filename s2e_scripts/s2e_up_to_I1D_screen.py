@@ -69,7 +69,7 @@ E0 = p_array.E
 
 
 from ocelot.utils.acc_utils import beam2rf,beam2rf_xfel_linac 
-v11,phi11,v13,phi13 = beam2rf(E1=E1, chirp=-1.1110014915466309, curvature=221.9994354248047, skewness=27999.974609375, n=3, freq=1.3e9, E0=E0)
+v11,phi11,v13,phi13 = beam2rf(E1=E1, chirp=-0, curvature=0, skewness=0.004475, n=3, freq=1.3e9, E0=E0)
 v21,phi21 = beam2rf_xfel_linac(sum_voltage=576.08e-3, chirp=-12.399999618530273, init_energy=0.13)
 v31,phi31 = beam2rf_xfel_linac(sum_voltage=(1737.489990234375)*1e-3, chirp=-5.400000095367432, init_energy=0.7)
 
@@ -80,6 +80,7 @@ config = {
     AH1:   {"phi": phi13, "v": v13 / 8,
            "match": False, "SC": SC_exec, "wake": wake_exec}, ######### ************ "bounds": [-5, 5], 
     LH:    {"SC": SC_exec, "CSR": False, "wake": wake_exec, "match": match_exec},
+    I1D:   {"SC": SC_exec, "CSR": False, "wake": wake_exec},
     DL:    {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
     BC0:   {"rho": r1,
            "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},

@@ -244,14 +244,14 @@ class I1D(SectionTrack):
 
         # init tracking lattice
         st2_stop = i1.stsub_62_i1
-        dogleg_stop = i1d.ensec_66_i1d
+        dogleg_stop = i1d.otrc_64_i1d
         self.lattice = MagneticLattice(i1.cell + i1d.cell, start=st2_stop, stop=dogleg_stop, method=self.method)
         # init physics processes
-        csr = CSR()
-        csr.n_bin = CSRBin
-        csr.sigma_min = Sig_Z[0]*CSRSigmaFactor
-        csr.traj_step = 0.0005
-        csr.apply_step = 0.005
+        wake_add = Wake()
+        wake_add.wake_table = WakeTable('../wakes/mod_wake_0070.030_0073.450_MONO.dat')
+        wake_add.factor = 1
+        wake_add.w_sampling = WakeSampling
+        wake_add.filter_order = WakeFilterOrder
 
         sc = SpaceCharge()
         sc.step = 25
@@ -259,6 +259,7 @@ class I1D(SectionTrack):
         sc.random_mesh = bool_sc_rand_mesh
         #self.add_physics_process(csr, start=st2_stop, stop=dogleg_stop)
         self.add_physics_process(sc, start=st2_stop, stop=dogleg_stop)
+        self.add_physics_process(wake_add, start=dogleg_stop, stop=dogleg_stop)
 
 class BC0(SectionTrack):
 

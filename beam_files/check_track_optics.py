@@ -90,6 +90,10 @@ phi41 = 0
 section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
 # plot twiss parameters
 lat = MagneticLattice(section_lat.elem_seq)
+twss = twiss(lat, tws0)
+s_ocl = [tw.s for tw in twss]
+beta_x_des = [tw.beta_x for tw in twss]
+beta_y_des = [tw.beta_y for tw in twss]
 #plot_opt_func(lat, section_lat.tws)
 #plt.show()
 
@@ -97,6 +101,16 @@ lat = MagneticLattice(section_lat.elem_seq)
 sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2]
 s, bx, by = section_lat.load_twiss_track(sections)
 plt.plot(s, bx, label = "beta_x")
+plt.plot(s_ocl, beta_x_des, "--",label="beta_x design")
+
+plt.xlabel("s [m]")
+
+plt.legend()
+plt.show()
+
 plt.plot(s, by, label = "beta_y")
+plt.plot(s_ocl, beta_y_des, "--",label="beta_y design")
+plt.xlabel("s [m]")
+
 plt.legend()
 plt.show()

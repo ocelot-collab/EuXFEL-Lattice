@@ -45,7 +45,14 @@ tds_stop = Marker()
 lh_start = Marker()
 lh_stop = Marker()
 ```
-
+## l2.py and l2_for_special_optics.py
+```python
+#d_218 was split into 2 halves
+d_218_a = Drift(l=0.2, eid='D_218A')
+d_218_b = Drift(l=0.2, eid='D_218B')
+# Markers added manually
+marker_tds_b2 = Marker(eid='MARKER.TDS.B2')
+```
 ## In t34_sa2.py
 we introduced following changes:
 
