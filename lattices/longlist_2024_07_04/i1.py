@@ -1,5 +1,4 @@
 from ocelot import * 
-from math import pi
 
 #Initial Twiss parameters
 tws0 = Twiss()
@@ -122,8 +121,7 @@ c3_ah1_1_5_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.
 c3_ah1_1_6_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.AH1.1.6.I1')
 c3_ah1_1_7_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.AH1.1.7.I1')
 c3_ah1_1_8_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.AH1.1.8.I1')
-tdsa_52_i1 = TDCavity(l=0.7, freq=2800000000.0, eid='TDSA.52.I1')
-#tdsa_52_i1 = TDCavity(l=0.7, freq=2800000000.0, v=0.00236, tilt=pi/2,phi= 90, eid='TDSA.52.I1')
+tdsa_52_i1 = Cavity(l=0.7, freq=2800000000.0, eid='TDSA.52.I1')
 
 # Solenoids
 solb_23_i1 = Solenoid(eid='SOLB.23.I1')
@@ -161,6 +159,7 @@ d_8_n = (d_8_1, start_sim, d_8_2)
 
 a1_sim_stop = Marker()
 a1_1_stop = Marker()
+ah_stop = Marker()
 
 tds_start = Marker()
 tds_stop = Marker()
@@ -175,7 +174,7 @@ c_a1_1_1_i1, a1_1_stop, d_13, c_a1_1_2_i1, d_13, c_a1_1_3_i1, d_13, c_a1_1_4_i1,
 c_a1_1_6_i1, d_13, c_a1_1_7_i1, d_13, c_a1_1_8_i1, a1_sim_stop, d_20, match_37_i1, d_21, q_37_i1, d_21,
 cx_37_i1, cy_37_i1, d_23, bpmc_38i_i1, id_32151375_, bpmr_38ii_i1, d_26, q_38_i1, d_21, cx_39_i1, 
 cy_39_i1, d_28, c3_ah1_1_1_i1, d_29, c3_ah1_1_2_i1, d_29, c3_ah1_1_3_i1, d_29, c3_ah1_1_4_i1, d_29, 
-c3_ah1_1_5_i1, d_29, c3_ah1_1_6_i1, d_29, c3_ah1_1_7_i1, d_29, c3_ah1_1_8_i1, id_95966272_, qi_46_i1, id_18462951_, 
+c3_ah1_1_5_i1, d_29, c3_ah1_1_6_i1, d_29, c3_ah1_1_7_i1, d_29, c3_ah1_1_8_i1, ah_stop, id_95966272_, qi_46_i1, id_18462951_,
 bpmf_47_i1, id_94338373_, cwx_47_i1, cwy_47_i1, id_7308930_, qi_47_i1, d_43, stlat_47_i1, d_44, bl_48i_i1, 
 d_45, bl_48ii_i1, id_71696616_, bpmf_48_i1, id_19200616_, lh_start, u74_49_i1, lh_stop, id_36806288_, bl_50i_i1, d_52, bl_50ii_i1,
 id_32378225_, qi_50_i1, id_27968780_, ciy_51_i1, d_57, cix_51_i1, d_58, bpmf_52_i1, id_73735098_, match_52_i1, 

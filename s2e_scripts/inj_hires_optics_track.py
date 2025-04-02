@@ -1,25 +1,33 @@
-#ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
 import sys
-
-#sys.path.append(ocelot_dir)
 sys.path.insert(1, "../")
 
 from ocelot import *
 from ocelot.cpbd.physics_proc import IBS
 from ocelot.gui import *
 import lattices.longlist_2024_07_04.i1 as i1
-import lattices.longlist_2024_07_04.i1_track as i1_track
 import lattices.longlist_2024_07_04.i1d as i1d
+from ocelot.utils.acc_utils import beam2rf, beam2rf_xfel_linac
 
-lat = MagneticLattice(i1.cell + i1d.cell)
 
-tws = twiss(lat, i1.tws0)
+i1.q_37_i1.k1 = -1.624560e+00
+i1.q_38_i1.k1 = 1.823629e+00
+i1.qi_46_i1.k1 = -6.922240e-01
+i1.qi_47_i1.k1 = 4.536175e-01
+i1.qi_50_i1.k1 = 4.122258e-01
 
-plot_opt_func(lat, tws,fig_name="Design Optics", legend=False)
-plt.show()
+v11, phi11, v13, phi13 = beam2rf(E1=130e-3, chirp=-2, curvature=222, skewness=28000, n=3, freq=1.3e9, E0=0.0065)
+print(v11, phi11, v13, phi13)
 
-# different dispersions amplitude on screen OTRC.64.I1D
-# DDx = {Dx: ['QI.60.I1'.k1, 'QI.61.I1'.k1, 'QI.63.I1D'.k1]}
+for elem in i1.cell:
+    if elem.__class__ == Cavity:
+        if "C.A1.1" in elem.id:
+            elem.v = v11/8
+            elem.phi = phi11
+        elif "C3.AH1.1" in elem.id:
+            elem.v = v13/8
+            elem.phi = phi13
+
+
 DDx = {1.197: [-2.14371, 3.50288, -1.05],
        1.024: [ -2.1415, 3.50095, 0.45],
        0.801: [-2.14121, 3.45060, 2.45],
@@ -32,11 +40,7 @@ quads_to_change = [i1.qi_60_i1, i1.qi_61_i1, i1d.qi_63_i1d]
 for i, q in enumerate(quads_to_change):
     q.k1 = DDx[1.197][i]
 
-lat = MagneticLattice(i1.cell + i1d.cell, stop=i1d.otrc_64_i1d)
-tws = twiss(lat, i1.tws0)
-
-plot_opt_func(lat, tws,fig_name="HiRes optics up to OTRC.64.I1D", legend=False)
-plt.show()
+lat = MagneticLattice(i1.cell + i1d.cell,start=i1.start_sim,  stop=i1d.otrc_64_i1d)
 
 # TRACKING with collective effects
 navi = Navigator(lat, unit_step=0.01)
@@ -67,20 +71,23 @@ smooth_par = 1000
 smooth = SmoothBeam(mslice = smooth_par)
 
 ibs = IBS(step=10, method="Huang", bound=[-0.1, 0.1])
-acc1_1_stop = i1.a1_1_stop
-acc39_stop = i1.stlat_47_i1
+
 
 navi.add_physics_proc(smooth, i1.start_sim, i1.start_sim)
+# space charge exclude LH chicane and dumb line
 navi.add_physics_proc(sc, i1.start_sim, i1.a1_1_stop)
-navi.add_physics_proc(sc2, i1.a1_1_stop, i1.a1_sim_stop)
+navi.add_physics_proc(sc2, i1.a1_1_stop, i1.bl_48i_i1)
+navi.add_physics_proc(sc3, i1.qi_50_i1, i1.stsub_62_i1)
+# wakes
 navi.add_physics_proc(wake, i1.c_a1_1_1_i1, i1.a1_sim_stop)
-navi.add_physics_proc(sc3, i1.a1_sim_stop, lat.sequence[-1])
-navi.add_physics_proc(wake_ah1, i1.c3_ah1_1_1_i1, acc39_stop)
+navi.add_physics_proc(wake_ah1, i1.c3_ah1_1_1_i1, i1.ah_stop)
 navi.add_physics_proc(wake_tds, i1.tds_start, i1.tds_stop)
-navi.add_physics_proc(ibs, i1.start_sim, lat.sequence[-1])
+# ibs, optional
+#navi.add_physics_proc(ibs, i1_track.start_sim, lat.sequence[-1])
 
 parray = load_particle_array("../beam_files/gun/gun.npz")
-tws_track, parray = track(lat, p_array=parray, navi=navi, bounds=[-1, 1], slice="Imax")
+print(parray)
+tws_track, parray = track(lat, p_array=parray, navi=navi)
 
 plot_opt_func(lat, tws_track, top_plot=["E"])
 plt.show()
