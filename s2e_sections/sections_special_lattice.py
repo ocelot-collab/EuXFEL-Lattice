@@ -3,8 +3,8 @@ from ocelot.cpbd.physics_proc import *
 import os
 from ocelot.utils.section_track import *
 
-import s2e_scripts.bolko_optics as bolko
-import s2e_scripts.high_energy_res_optics as hires
+import lattices.bolko_optics as bolko
+import lattices.high_energy_res_optics as hires
 
 
 # GLOBAL parameters
