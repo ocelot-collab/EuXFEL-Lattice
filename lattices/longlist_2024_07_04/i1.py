@@ -1,4 +1,5 @@
 from ocelot import * 
+from math import pi
 
 #Initial Twiss parameters
 tws0 = Twiss()
@@ -121,7 +122,8 @@ c3_ah1_1_5_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.
 c3_ah1_1_6_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.AH1.1.6.I1')
 c3_ah1_1_7_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.AH1.1.7.I1')
 c3_ah1_1_8_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.AH1.1.8.I1')
-tdsa_52_i1 = Cavity(l=0.7, freq=2800000000.0, eid='TDSA.52.I1')
+tdsa_52_i1 = TDCavity(l=0.7, freq=2800000000.0, eid='TDSA.52.I1')
+#tdsa_52_i1 = TDCavity(l=0.7, freq=2800000000.0, v=0.00236, tilt=pi/2,phi= 90, eid='TDSA.52.I1')
 
 # Solenoids
 solb_23_i1 = Solenoid(eid='SOLB.23.I1')
