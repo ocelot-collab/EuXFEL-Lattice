@@ -575,7 +575,7 @@ c3_ah1_1_5_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.
 c3_ah1_1_6_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.AH1.1.6.I1')
 c3_ah1_1_7_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.AH1.1.7.I1')
 c3_ah1_1_8_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid='C3.AH1.1.8.I1')
-tdsa_52_i1 = Cavity(l=0.7, freq=2800000000.0, eid='TDSA.52.I1')
+tdsa_52_i1 = TDCavity(l=0.7, freq=3000000000.0, eid='TDSA.52.I1')
 c_a2_1_1_l1 = Cavity(l=1.0377, v=0.0214344953, phi=24.999999839999997, freq=1300000000.0, eid='C.A2.1.1.L1')
 c_a2_1_2_l1 = Cavity(l=1.0377, v=0.0214344953, phi=24.999999839999997, freq=1300000000.0, eid='C.A2.1.2.L1')
 c_a2_1_3_l1 = Cavity(l=1.0377, v=0.0214344953, phi=24.999999839999997, freq=1300000000.0, eid='C.A2.1.3.L1')
@@ -608,7 +608,7 @@ c_a2_4_5_l1 = Cavity(l=1.0377, v=0.01757129336, phi=24.999999839999997, freq=130
 c_a2_4_6_l1 = Cavity(l=1.0377, v=0.01757129336, phi=24.999999839999997, freq=1300000000.0, eid='C.A2.4.6.L1')
 c_a2_4_7_l1 = Cavity(l=1.0377, v=0.01757129336, phi=24.999999839999997, freq=1300000000.0, eid='C.A2.4.7.L1')
 c_a2_4_8_l1 = Cavity(l=1.0377, v=0.01757129336, phi=24.999999839999997, freq=1300000000.0, eid='C.A2.4.8.L1')
-tdsb_208_b1 = Cavity(l=1.5, freq=2800000000.0, eid='TDSB.208.B1')
+tdsb_208_b1 = TDCavity(l=1.5, freq=3000000000.0, eid='TDSB.208.B1')
 c_a3_1_1_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A3.1.1.L2')
 c_a3_1_2_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A3.1.2.L2')
 c_a3_1_3_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A3.1.3.L2')
@@ -707,8 +707,8 @@ c_a5_4_7_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A5.4.7
 c_a5_4_8_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A5.4.8.L2')
 
 # TDCavitys
-tdsb_428_b2 = TDCavity(l=1.5, freq=2800000000.0, eid='TDSB.428.B2')
-tdsb_430_b2 = TDCavity(l=1.5, freq=2800000000.0, eid='TDSB.430.B2')
+tdsb_428_b2 = TDCavity(l=1.5, freq=3000000000.0, eid='TDSB.428.B2')
+tdsb_430_b2 = TDCavity(l=1.5, freq=3000000000.0, eid='TDSB.430.B2')
 
 # Solenoids
 solb_23_i1 = Solenoid(eid='SOLB.23.I1')
