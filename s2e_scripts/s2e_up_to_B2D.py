@@ -10,7 +10,7 @@ from ocelot.gui.accelerator import *
 import time
 from ocelot.common.globals import *
 from ocelot import *
-
+from ocelot.utils.acc_utils import beam2rf,beam2rf_xfel_linac
 
 data_dir = "../beam_files/"
 
@@ -24,7 +24,7 @@ coupler_kick_exec = False  # coupler effect in RF modules, quadrupole and dipole
 
 
 # all sections which can be potentially used in s2e
-all_sections = [A1, AH1, LH, BC0, L1, BC1, L2, BC2, B2D]  # , L3, CL1, CL2, CL3, STN10]#, SASE1, T4, SASE3, T4D]
+all_sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, B2D]  # , L3, CL1, CL2, CL3, STN10]#, SASE1, T4, SASE3, T4D]
 
 ######################### Initial Twiss paramters for design optics ##################
 tws0 = Twiss()
@@ -62,22 +62,16 @@ lat = MagneticLattice(section_lat.elem_seq)
 
 # sequence of sections for tracking.
 sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, B2D]#, L3, CL1, CL2, CL3, TL]
-section_lat = SectionLattice(sequence=sections, tws0=tws0, data_dir=data_dir)
-# plot twiss parameters
-lat = MagneticLattice(section_lat.elem_seq)
-#plot_opt_func(lat, section_lat.tws)
-#plt.show()
-
-p_array_init = load_particle_array(data_dir + "gun/gun.npz", print_params=True)
 
 
-E1 = 129.9e-3 
-E0 = p_array_init.E
 
-from ocelot.utils.acc_utils import beam2rf,beam2rf_xfel_linac 
-v11,phi11,v13,phi13 = beam2rf(E1=E1, chirp=-9.314, curvature=180, skewness=23101, n=3, freq=1.3e9, E0=E0)#(E1=E1, chirp=-9.314, curvature=230, skewness=23101, n=3, freq=1.3e9, E0=E0)
-v21,phi21 = beam2rf_xfel_linac(sum_voltage=570.50e-3, chirp=-9.34+0.12, init_energy=0.13)
-v31,phi31 = beam2rf_xfel_linac(sum_voltage=(1726.57-44)*1e-3, chirp=-11.58+2.1, init_energy=0.7)
+E1 = 130e-3
+E0 = 0.0065
+
+
+v11,phi11,v13,phi13 = beam2rf(E1=E1, chirp=-9.11, curvature=222, skewness=28000, n=3, freq=1.3e9, E0=E0)#(E1=E1, chirp=-9.314, curvature=230, skewness=23101, n=3, freq=1.3e9, E0=E0)
+v21,phi21 = beam2rf_xfel_linac(sum_voltage=570e-3, chirp=-5.4, init_energy=0.13)
+v31,phi31 = beam2rf_xfel_linac(sum_voltage=1.7, chirp=-9.4, init_energy=0.7)
 
 config = {
     A1:    {"phi": phi11, "v": v11 / 8,
@@ -98,24 +92,16 @@ config = {
             "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
     B2D:   {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec}
 }
-'''
-    L3:    {"SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
-    CL1:   {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    CL2:   {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    CL3:   {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    TL:    {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    SASE1: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    T4:    {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    T1:    {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    T3:    {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    SASE2: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-'''
+
 p_array = load_particle_array(data_dir + "gun/gun.npz")
 #show_e_beam(p_array)
 #plt.show()
 
 p_array = section_lat.track_sections(sections=sections, p_array=p_array, config=config, force_ext_p_array=True,
                                      coupler_kick=coupler_kick_exec)
+
+
+plot_opt_func(lat, section_lat.tws_track, top_plot=["E"], fig_name="Track Twiss")
 
 
 show_e_beam(p_array)
