@@ -266,8 +266,8 @@ c_a5_4_5_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A5.4.5
 c_a5_4_6_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A5.4.6.L2')
 c_a5_4_7_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A5.4.7.L2')
 c_a5_4_8_l2 = Cavity(l=1.0377, v=0.01770833333, freq=1300000000.0, eid='C.A5.4.8.L2')
-tdsb_428_b2 = TDCavity(l=1.5, freq=2800000000.0, eid='TDSB.428.B2')
-tdsb_430_b2 = TDCavity(l=1.5, freq=2800000000.0, eid='TDSB.430.B2')
+tdsb_428_b2 = TDCavity(l=1.5, freq=3_000_000_000, eid='TDSB.428.B2')
+tdsb_430_b2 = TDCavity(l=1.5, freq=3_000_000_000, eid='TDSB.430.B2')
 
 # Monitors
 bpma_233_b1 = Monitor(eid='BPMA.233.B1')
