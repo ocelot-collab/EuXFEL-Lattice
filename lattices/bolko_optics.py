@@ -6,8 +6,6 @@ tws0.beta_x = 55.7981
 tws0.beta_y = 55.7981
 tws0.alpha_x = 18.1886
 tws0.alpha_y = 18.1886
-tws0.gamma_x = 5.946890126366311
-tws0.gamma_y = 5.946890126366311
 tws0.E = 0.005
 
 # Drifts
