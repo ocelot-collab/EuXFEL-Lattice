@@ -1099,15 +1099,13 @@ class T1(SectionTrack):
         self.output_beam_file = self.particle_dir + 'section_T1.npz'
         self.tws_file = self.tws_dir + "tws_section_T1.npz"
 
-        collimator3_stop = cl.bpma_1853_cl
+        collimator3_stop = cl.ensec_1854_cl
         t1_stop = t1.ensec_2197_t1
         # init tracking lattice
-        method = MethodTM()
-        method.global_method = SecondTM
-        method.params[Octupole] = KickTM
-        method.params["nkick"] = 5
-        self.lattice = MagneticLattice(cl.cell + tl34_sa2.cell + t1.cell, start=collimator3_stop, stop=t1_stop,
+
+        self.lattice = MagneticLattice(cl.cell + tl2.cell + tl34_sa2.cell +  t1.cell, start=collimator3_stop, stop=t1_stop,
                                        method={"global": SecondTM, Octupole: KickTM, "nkick": 5})
+
 
         # init physics processes
         csr = CSR()
