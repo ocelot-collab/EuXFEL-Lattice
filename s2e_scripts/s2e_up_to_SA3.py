@@ -1,8 +1,14 @@
-#ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
+ocelot_dir = "/Users/zagor/DESY/dev/PythonScripts4BD/EuXFEL-Lattice"
+import os
+# Change working directory to the folder where the script is
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
+print("Current working directory:", os.getcwd())
+
 import sys
 import matplotlib.pyplot as plt
-#sys.path.append(ocelot_dir)
-sys.path.insert(1, "../")
+sys.path.append(ocelot_dir)
+#sys.path.insert(1, "../")
 
 from s2e_sections.sections import *
 from ocelot.utils.section_track import *
