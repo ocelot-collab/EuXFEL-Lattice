@@ -13,8 +13,8 @@ Repository structure:
 * s2e_sections - EuXFEL accelerator section descriptions 
 * wakes - database of wakefield files (cavities, collimators, dechirpers etc)
 * beam_files - particle distributions 
-  * gun - initial beam distribution from gun (3.2 m position)
-  * 
+  * gun - initial beam distribution from gun (3.2 m position) 
+  * gun_2019 - initial beam distribution used in the settings https://www.desy.de/fel-beam/s2e/xfel/Nominal/nom250pC.html used for the 2019 simulation studies published in [this article](https://www.sciencedirect.com/science/article/abs/pii/S0168900221000954)
 * scripts - s2e main scripts 
 * utils - beam matching script
 * Astra_gun_simulation/250pC_phi42 - by downloading the Astra executables from the official page https://www.desy.de/~mpyflo/ and adjusting the parameters in generator.in first (the laser pulse length sig_clock) and in the rfgun.in file later (phi(1)), it is possible to simulate the particle distribution from the gun till the position specified in the ZSTOP parameter.
