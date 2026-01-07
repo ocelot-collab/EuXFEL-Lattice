@@ -1,0 +1,32 @@
+[project]
+name = "euxfel"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Stuart Walker", email = "stuart.walker@desy.de" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "click>=8.3.1",
+    "fastexcel>=0.18.0",
+    "latdraw>=0.2.0",
+    "matplotlib>=3.10.7",
+    "ocelot-desy>=25.6.0",
+    "polars>=1.36.1",
+    "pyarrow>=22.0.0",
+    "pyyaml>=6.0.3",
+    "xlrd>=2.0.2",
+]
+
+[build-system]
+requires = ["uv_build>=0.8.20,<0.9.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ipdb>=0.13.13",
+    "ipython>=9.7.0",
+    "isort>=7.0.0",
+    "pyflakes>=3.4.0",
+]
