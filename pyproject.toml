@@ -4,8 +4,11 @@ version = "0.1.0"
 description = "The EuXFEL lattice repository"
 readme = "README.md"
 authors = [
-    { name = "Stuart Walker", email = "stuart.walker@desy.de" }
+  { name = "Sergey Tomin", email = "" },
+  { name = "Bianca Veglia", email = "" },
+  { name = "Stuart Walker", email = "stuart.walker@desy.de" }
 ]
+
 requires-python = ">=3.14"
 dependencies = [
     "click>=8.3.1",
@@ -60,4 +63,3 @@ omit = ["tests/*"]
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
-# fail_under = 85

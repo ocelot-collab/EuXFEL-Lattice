@@ -1,7 +1,15 @@
 # EuXFEL-Lattice
-Unofficial Ocelot EuXFEL lattice repository. Created by Bianca and Sergey. 
+Unofficial Ocelot EuXFEL lattice repository. Created by Bianca,  Sergey and Stuart.
 
-Lattice files based on MS Excel "LongList" https://xfel.desy.de/operation/component_list/
+This is the repository for the EuXFEL ocelot repository.  The idea
+ should be one transparent model that everyone uses and we can all
+ contribute to and benefit from.
+
+Currently the OCELOT Python EuXFEL sequences are generated from the
+"Component List", an Excel spreadsheet generated internally by the
+group leader as the "single source of truth" for what actually is in
+the tunnel.  These files can be found here https://xfel.desy.de/operation/component_list/.
+
 
 Repository structure:
 * Lattices - lattice files in ocelot format
@@ -18,15 +26,49 @@ Repository structure:
 * Astra_gun_simulation/250pC_phi42 - by downloading the Astra executables from the official page https://www.desy.de/~mpyflo/ and adjusting the parameters in generator.in first (the laser pulse length sig_clock) and in the rfgun.in file later (phi(1)), it is possible to simulate the particle distribution from the gun till the position specified in the ZSTOP parameter. The current setting was developed by Igor Zagorodnov for 250pC. The radial_smear.m is a Matlab script for smoothing the profile obtain by the generator
 * scripts - s2e main scripts 
 * utils - beam matching script
+* src/euxfel - the location of a new Python package that aims to
+  encapsulate all or most of the above and will replace many of these
+  features.  
 
 
-Lattice files - 
-1. gun to tld: i1, l1, l2, l3, cl, tl2_tld, tld
-2. gun to t4d: i1, l1, l2, l3, cl, tl2, tl34, sase1, t4, sase3, t4d
-3. gun to t5d: i1, l1, l2, l3, cl, tl2, tl34_sa2, t1, sase2, t3, t5, t5d
-4. gun to i1d: i1, i1d
-5. gun to b1d: i1, l1, b1d
-6. gun to b2d: i1, l1, l2, b2d
+## Getting started
+
+Clone the repository and install the package.
+
+```
+$ cd EuXFEL-Lattice
+pip install .
+```
+
+Some key functionality can then be accessed from the command line:
+
+```bash
+$ euxfel convert # Regenerate the Python subsequences
+$ euxfel compare # Compare the OCELOT optics for all the paths through the machine with the Component List.
+$ euxfel plot i1d # Just plot for I1D.
+```
+
+Otherwise you can use it in Python, for example to access the sequence from the cathode to I1D in Python
+
+```python
+import euxfel.sequences as sequences
+from ocelot import *
+import matplotlib.pyplot as plt
+twiss0 = sequences.CATHODE_TWISS0
+sequence = sequences.cathode_to_i1d
+# Example of use with plain OCELOT:
+plot_opt_funct(MagneticLattice(sequence), twiss0)
+plt.show()
+```
+
+## TODO:
+
+- [ ] Integration of physics processes stuff (i.e. SectionTrack and friends) into package
+- [ ] Particle tracking helper stuff into Python package.
+- [ ] Python to Longlist (i.e. full round trip) converter.
+
+
+## Further Comments
 
 ######  IMPORTANT ######
 In the distribution section two beams (straight and kicked) are going through the same quadrupoles and hence see the different magnetic fields:
