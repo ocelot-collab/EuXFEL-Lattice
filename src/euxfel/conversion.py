@@ -154,13 +154,13 @@ class LongListConverter:
 
     @property
     def twiss0(self) -> Twiss:
-        start = self.clist.longlist.iloc[0]
+        start = self.clist.longlist[0]
         t = Twiss()
-        t.beta_x = start.BETX
-        t.beta_y = start.BETY
-        t.alpha_x = start.ALFX
-        t.alpha_y = start.ALFY
-        t.E = start.ENERGY
+        t.beta_x = start["BETX"]
+        t.beta_y = start["BETY"]
+        t.alpha_x = start["ALFX"]
+        t.alpha_y = start["ALFY"]
+        t.E = start["ENERGY"]
         return t
 
     def _round(self, value: float) -> float:
@@ -216,9 +216,7 @@ class LongListConverter:
             .filter(pl.col("cnt") > 1)
         )
 
-        if not dup_counts.is_empty():
-            from IPython import embed; embed()
-
+        assert dup_counts.is_empty()
 
         # keep the same assertion semantics (expects exactly 2)
         bad = dup_counts.filter(pl.col("cnt") != 2)
@@ -283,10 +281,6 @@ class LongListConverter:
         # Do the slicing of the longlist and extract the subsections we want based on the names
         print(f"Converting section \"{pysec.name}\" from sheet \"{pysec.sheet_name}\"")
         df = self.clist.get_sheet(pysec.sheet_name)
-        # from IPython import embed; embed()
-        # section_df = df.set_index("NAME1").loc[pysec.start_marker_name1:pysec.stop_marker_name1]
-        # section_df = section_df.reset_index()  # put NAME1 back as a column again.
-
         idx = df.with_row_index("row_nr")
         start_row = idx.filter(pl.col("NAME1") == pysec.start_marker_name1)
         stop_row = idx.filter(pl.col("NAME1") == pysec.stop_marker_name1)
@@ -441,16 +435,13 @@ class LongListConverter:
             expanded_sequence.append(p)
 
         # Something impressive goes here for placing global and relative S elements...
-
         for s, placements_at_this_s in between:
             if  oelement_s_start < s < oelement_s_start + oelement0.l:
                 # THIS NEEDS TO BE HANDLED PROPERLY!!!  split them??
                 # XXX!!!
                 continue
-                # from IPython import embed; embed()
             # We are currently at in global s-space:
             # s_oelement_s_start + sum(x.l for x in expanded_sequence)
-            # from IPython import embed; embed()
             expanded_sequence.extend(self._next_drift_sequence(s - oelement_s_start - sum(x.l for x in expanded_sequence)))
             for placement in placements_at_this_s:
                 print(placement.element)
@@ -508,7 +499,6 @@ class LongListConverter:
                 f"{row["NAME1"]=}, {row["GROUP"]=}, {row["CLASS"]=}, {row["TYPE"]=}, {row["LENGTH"]=}"
             ) from e
 
-
     def convert_magnet(
         self, row: dict[str, Any]
     ) -> Union[
@@ -541,42 +531,46 @@ class LongListConverter:
         if row["CLASS"] == "QUAD":
             if row["LENGTH"] == 0 and row["STRENGTH"] == 0:
                 return elements.Quadrupole(**common_kw)                
-            return elements.Quadrupole(k1=row["STRENGTH"] / row["LENGTH"], **common_kw)
+            ele = elements.Quadrupole(k1=row["STRENGTH"] / row["LENGTH"], **common_kw)
         elif row["CLASS"] == "HKIC":
-            return elements.Hcor(angle=row["STRENGTH"], **common_kw)
+            ele = elements.Hcor(angle=row["STRENGTH"], **common_kw)
         elif row["CLASS"] == "VKIC":
-            return elements.Vcor(angle=row["STRENGTH"], **common_kw)
+            ele = elements.Vcor(angle=row["STRENGTH"], **common_kw)
         elif row["CLASS"] == "SBEN":
-            return elements.SBend(
+            ele = elements.SBend(
                 angle=row["STRENGTH"], e1=row["E1/LAG"], e2=row["E2/FREQ"], **common_kw
             )
         elif row["CLASS"] == "SOLE":
-            return elements.Solenoid(**common_kw)
+            ele = elements.Solenoid(**common_kw)
         elif row["CLASS"] == "SEXT":
             if row["LENGTH"] == 0 and row["STRENGTH"] == 0:
-                return elements.Sextupole(**common_kw)
-            return elements.Sextupole(k2=row["STRENGTH"] / row["LENGTH"], **common_kw)
+                ele = elements.Sextupole(**common_kw)
+            ele = elements.Sextupole(k2=row["STRENGTH"] / row["LENGTH"], **common_kw)
         elif row["CLASS"] == "RBEN":
-            return elements.RBend(
+            ele = elements.RBend(
                 angle=row["STRENGTH"], e1=row["E1/LAG"], e2=row["E2/FREQ"], **common_kw
             )
         elif row["CLASS"] == "OCTU":
             if row["LENGTH"] == 0 and row["STRENGTH"] == 0:
-                return elements.Octupole(**common_kw)
-            return elements.Octupole(k3=row["STRENGTH"] / row["LENGTH"], **common_kw)
-
-        raise UnknownLongListElement(row)
+                ele = elements.Octupole(**common_kw)
+            ele = elements.Octupole(k3=row["STRENGTH"] / row["LENGTH"], **common_kw)
+        else:
+            raise UnknownLongListElement(row)
+        ele.ps_id = row["NAME2"]
+        return ele
 
     def convert_pmagnet(self, row: dict[str, Any]) -> elements.RBend | elements.Quadrupole:
         common_kw = dict(eid=row["NAME1"], l=row["LENGTH"])
         if row["CLASS"] == "RBEN":
-            return elements.RBend(
+            ele = elements.RBend(
                 angle=row["STRENGTH"], e1=row["E1/LAG"], e2=row["E2/FREQ"], **common_kw
             )
-        if row["CLASS"] == "QUAD":
-            return elements.Quadrupole(k1=row["STRENGTH"] / row["LENGTH"], **common_kw)
-        raise UnknownLongListElement(row)
-
+        elif row["CLASS"] == "QUAD":
+            ele = elements.Quadrupole(k1=row["STRENGTH"] / row["LENGTH"], **common_kw)
+        else:
+            raise UnknownLongListElement(row)
+        ele.ps_id = row["NAME2"]
+        return ele
 
     def convert_undu(self, row: dict[str, Any]) -> elements.Undulator | elements.Drift:
         assert row["GROUP"] == "UNDU"
@@ -594,24 +588,30 @@ class LongListConverter:
         # # have to explicitly set the length here, otherwise it is 0.0
         # # cos the class invariant is not properly preserved by the
         # # class itself.
-        # undulator.l = undulator.lperiod * undulator.nperiods
+        undulator.ps_id = row["NAME2"]
         return undulator
 
     def convert_phaseshifter(self, row: dict[str, Any]) -> elements.Drift:
         """Phase shifters are converted to drifts (at least for now)"""
         assert row["GROUP"] == "UNDU"
         assert row["CLASS"] == "PHASESHIFTER"
-        return elements.Drift(l=row["LENGTH"], eid=row["NAME1"])
+        ele = elements.Drift(l=row["LENGTH"], eid=row["NAME1"])
+        ele.ps_id = row["NAME2"]
+        return ele
 
     def convert_cryo(self, row: dict[str, Any]) -> elements.Drift:
         assert row["GROUP"] == "CRYO"
         assert row["CLASS"] == "CRYO"
-        return elements.Drift(l=row["LENGTH"], eid=row["NAME1"])
+        ele = elements.Drift(l=row["LENGTH"], eid=row["NAME1"])
+        ele.ps_id = row["NAME2"]
+        return ele
 
     def convert_vacuum(self, row: dict[str, Any]) -> elements.Drift:
         assert row["GROUP"] == "VACUUM"
         assert row["CLASS"] in {"VAC", "ECOL", "PLACEH", "ABSORBER"}, (row["CLASS"], row["LENGTH"])
-        return elements.Drift(l=row["LENGTH"], eid=row["NAME1"])
+        ele = elements.Drift(l=row["LENGTH"], eid=row["NAME1"])
+        ele.ps_id = row["NAME2"]
+        return ele
 
     def convert_cavity(self, row: dict[str, Any]) -> Union[elements.Cavity, elements.TDCavity]:
         assert row["GROUP"] == "CAVITY"
@@ -626,25 +626,33 @@ class LongListConverter:
             common_kw["tilt"] = row["TILT"]
 
         if row["TYPE"] == "C" or row["TYPE"] == "C3":
-            return elements.Cavity(**common_kw)
+            ele = elements.Cavity(**common_kw)
         elif row["TYPE"] == "TDSA" or row["TYPE"] == "TDSB":
-            return elements.TDCavity(**common_kw)
+            ele = elements.TDCavity(**common_kw)
+        else:
+            raise UnknownLongListElement(row)
 
-        raise UnknownLongListElement(row)
+        ele.ps_id = row["NAME2"]
+        return ele
 
     def convert_diag(self, row: dict[str, Any]) -> Union[elements.Marker, elements.Monitor]:
         assert row["GROUP"] == "DIAG"
         if row["CLASS"] == "INSTR":
-            return elements.Marker(eid=row["NAME1"])
+            ele = elements.Marker(eid=row["NAME1"])
         elif row["CLASS"] == "MONI":
-            return elements.Monitor(eid=row["NAME1"], l=row["LENGTH"])
+            ele = elements.Monitor(eid=row["NAME1"], l=row["LENGTH"])
         elif row["CLASS"] == "CM":
-            return elements.Marker(eid=row["NAME1"])
-        raise UnknownLongListElement(row)
+            ele = elements.Marker(eid=row["NAME1"])
+        else:
+            raise UnknownLongListElement(row)
+        ele.ps_id = row["NAME2"]
+        return ele
 
     def convert_mark(self, row: dict[str, Any]) -> elements.Marker:
         assert row["GROUP"] == "MARK"
-        return elements.Marker(eid=row["NAME1"])
+        ele = elements.Marker(eid=row["NAME1"])
+        ele.ps_id = row["NAME2"]
+        return ele
 
     convert_rampkick = convert_magnet
     convert_fastkick = convert_magnet
@@ -659,6 +667,14 @@ def longlist_to_ocelot(
 
     with open(ftoml, "rb") as f:
         config = yaml.safe_load(f)
+
+    try:
+        dwriter = config["writer"]
+    except KeyError:
+        write_types_power_supplies = set()
+    else:
+        write_types_power_supplies = dwriter.get("write_types_power_supplies", set())
+        
 
     # Parse the config dictionary
     sections = _parse_config_dict(config)
@@ -680,9 +696,9 @@ def longlist_to_ocelot(
         writer = PythonSubsequenceWriter(sequence, twiss0)
 
         with open(outf, "w") as f:
-            f.write(writer.to_module())
+            f.write(writer.to_module(write_types_power_supplies=write_types_power_supplies))
 
-    init_path = outdir / "__init__.py"
+    init_path = Path(outdir) / "__init__.py"
     with open(init_path, "w") as f:
         for module_name in module_names:
             f.write(f"from . import {module_name}\n")
@@ -782,7 +798,6 @@ def _parse_element_placement(element, dd: dict[str, str]) -> Placement:
         assert reference is not None
         placement = AdjacentPlacement(element, AdjacentPositionType[dd["adjacent"].upper()], reference)
     elif is_s_pos:
-        # from IPython import embed; embed()
         placement = OffsetPlacement(element, dd["s"], reference_name1=reference)
     else:
         raise KeyError()

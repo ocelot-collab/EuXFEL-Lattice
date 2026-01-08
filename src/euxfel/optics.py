@@ -205,7 +205,6 @@ def get_match_point(twiss_df: pl.DataFrame, additional_names: Optional[list[str]
     twiss_match_reference = default_match_point_optics()
 
     # Calculate relative difference
-    # from IPython import embed; embed()
     result = twiss_match.clone()
     # filter twiss_match_reference to keep only rows with ids in our twiss_df of interest
     twiss_match_reference = twiss_match_reference.filter(pl.col("id").is_in(twiss_match["id"]))

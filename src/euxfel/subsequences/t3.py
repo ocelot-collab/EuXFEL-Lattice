@@ -7,6 +7,8 @@ twiss0._beta_y = 38.9113
 twiss0._alpha_x = -0.854
 twiss0._alpha_y = 1.242
 
+
+
 # Drifts:
 d_0 = Drift(l=0.2579999999998108, eid="D_0")
 d_1 = Drift(l=1.4725000000003092, eid="D_1")
@@ -348,3 +350,33 @@ cell = (stsec_2473_t3,
         ensec_2743_un1)
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+qe_2480_t3.ps_id = "QE.3.T3"
+qe_2495_t3.ps_id = "QE.4.T3"
+qe_2506_t3.ps_id = "QE.5.T3"
+qe_2518_t3.ps_id = "QE.6.T3"
+qh_2529_t3.ps_id = "QH.5.T3"
+qh_2532_t3.ps_id = "QH.6.T3"
+qh_2544_t3.ps_id = "QH.1.T3"
+qm_2549_t3.ps_id = "QM.2.T3"
+qm_2554_t3.ps_id = "QM.1.T3"
+qm_2559_t3.ps_id = "QM.2.T3"
+qm_2564_t3.ps_id = "QM.1.T3"
+qh_2569_t3.ps_id = "QH.2.T3"
+qh_2580_t3.ps_id = "QH.3.T3"
+qh_2583_t3.ps_id = "QH.4.T3"
+qe_2603_t3.ps_id = "QE.1.T3"
+qe_2625_t3.ps_id = "QE.2.T3"
+qe_2646_t3.ps_id = "QE.1.T3"
+qe_2668_t3.ps_id = "QE.2.T3"
+qe_2690_un1.ps_id = "QE.1.UN1"
+qe_2712_un1.ps_id = "QE.2.UN1"
+qe_2733_un1.ps_id = "QE.1.UN1"
+
+# SBend power supplies:
+be_2546_t3.ps_id = "BE.1.T3"
+be_2566_t3.ps_id = "BE.1.T3"
+
+# Sextupole power supplies:
+saox_2555_t3.ps_id = "SAOX.1.T3"
+sao_2561_t3.ps_id = "SAO.2.T3"

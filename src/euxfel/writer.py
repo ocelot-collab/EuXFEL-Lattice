@@ -127,7 +127,7 @@ class PythonSubsequenceWriter:
 
     def make_var_names(self, elements: list[OpticElement]) -> dict[OpticElement, str]:
         # Remove duplicate elements in the sequence (i.e. literal
-        # shared memory addresses) to avoid 
+        # shared memory addresses) to avoid
         elements = set(elements)
         variable_names = {}
         ttable = str.maketrans(self.NAMES_TO_VARIABLES_MAP)
@@ -143,40 +143,47 @@ class PythonSubsequenceWriter:
             variable_names[element] = name
         return variable_names
 
-    def power_supplies_to_string(self, element_order: list[str] | None = None,
-                                 variable_names: dict[OpticElement, str] = None) -> str:
+    def power_supplies_to_string(self,
+                                 element_order: list[str] | None = None,
+                                 variable_names: dict[OpticElement, str] = None,
+                                 write_types_power_supplies: list[str] | None = None) -> str:
+
         element_order = element_order or DEFAULT_ELEMENT_ORDER
         elements_by_type = self.make_element_class_names_to_instances_map()
+        write_types_power_supplies = set(write_types_power_supplies) or set()
 
         if variable_names is None:
             variable_names = self.make_var_names(self.sequence)
         lines = []
         for element_type_name in element_order:
+            if element_type_name not in write_types_power_supplies:
+                continue
             elements_of_this_type = elements_by_type[element_type_name]
             elements_with_ps_ids = [e for e in elements_of_this_type if hasattr(e, "ps_id")]
-
             if elements_with_ps_ids:
-                lines.append(f"\n# {element_type_name}")
-            for element in elements_with_ps_ids:
-                variable_name = self.variable_names[element]
-                lines.append(f"{variable_name}.ps_id = {element.ps_id}")
+                lines.append(f"\n# {element_type_name} power supplies:")
 
-        return f"# Power Supply IDs:\n{"\n".join(lines)}"
+            for element in elements_with_ps_ids:
+                variable_name = variable_names[element]
+                lines.append(f'{variable_name}.ps_id = "{element.ps_id}"')
+
+        return f"# Power Supply IDs:{"\n".join(lines)}"
 
     def make_import_string(self) -> str:
         return "from ocelot import *"
 
-    def to_module(self) -> str:
+    def to_module(self, write_types_power_supplies: list[str] | None= None) -> str:
         variable_names = self.make_var_names(self.sequence)
         return (self.make_import_string()
                 + "\n\n"
                 + self.twiss_to_string()
+                + "\n\n"
                 + self.elements_to_string(variable_names=variable_names)
                 + "\n\n"
                 + self.sequence_to_string(variable_names=variable_names)
                 + "\n\n"
-                + self.power_supplies_to_string(variable_names=variable_names))
-
+                + self.power_supplies_to_string(variable_names=variable_names,
+                                                write_types_power_supplies=write_types_power_supplies))
 
     def rbend_to_string(self, element: RBend, variable_name: str) -> str:
         parameters = get_obj_init_parameters(element)
@@ -207,7 +214,7 @@ class PythonSubsequenceWriter:
             return f"{parameter}=\"{value}\""
         else:
             raise ValueError(parameter)
-        
+
 
     def is_default_value(self, object: Any, parameter: str, default_obj=None) -> bool:
         if default_obj is None:
@@ -217,7 +224,7 @@ class PythonSubsequenceWriter:
 
         return getattr(object, attribute_name) == getattr(default_obj, attribute_name)
 
-    
+
 def check_eid_id(object, default_obj=None):
     if default_obj is None:
         default_obj = type(object)()

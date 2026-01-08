@@ -7,6 +7,8 @@ twiss0._beta_y = 25.9409
 twiss0._alpha_x = 1.2497
 twiss0._alpha_y = -0.8253
 
+
+
 # Drifts:
 d_0 = Drift(l=0.2927199999999175, eid="D_0")
 d_1 = Drift(l=5.466779999999744, eid="D_1")
@@ -1440,3 +1442,59 @@ cell = (stsec_2197_sa2,
         ensec_2473_sa2)
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+qa_2203_sa2.ps_id = "QA.1.SA2"
+qa_2209_sa2.ps_id = "QA.2.SA2"
+qa_2215_sa2.ps_id = "QA.1.SA2"
+qa_2221_sa2.ps_id = "QA.2.SA2"
+qa_2227_sa2.ps_id = "QA.1.SA2"
+qa_2234_sa2.ps_id = "QA.2.SA2"
+qa_2240_sa2.ps_id = "QA.1.SA2"
+qa_2246_sa2.ps_id = "QA.2.SA2"
+qa_2252_sa2.ps_id = "QA.1.SA2"
+qa_2258_sa2.ps_id = "QA.2.SA2"
+qa_2264_sa2.ps_id = "QA.1.SA2"
+qa_2270_sa2.ps_id = "QA.2.SA2"
+qa_2276_sa2.ps_id = "QA.1.SA2"
+qa_2282_sa2.ps_id = "QA.2.SA2"
+qa_2288_sa2.ps_id = "QA.1.SA2"
+qa_2295_sa2.ps_id = "QA.2.SA2"
+qa_2301_sa2.ps_id = "QA.1.SA2"
+qa_2307_sa2.ps_id = "QA.2.SA2"
+qa_2313_sa2.ps_id = "QA.1.SA2"
+qa_2319_sa2.ps_id = "QA.2.SA2"
+qa_2325_sa2.ps_id = "QA.1.SA2"
+qa_2331_sa2.ps_id = "QA.2.SA2"
+qa_2337_sa2.ps_id = "QA.1.SA2"
+qa_2343_sa2.ps_id = "QA.2.SA2"
+qa_2349_sa2.ps_id = "QA.1.SA2"
+qa_2355_sa2.ps_id = "QA.2.SA2"
+qa_2362_sa2.ps_id = "QA.1.SA2"
+qa_2368_sa2.ps_id = "QA.2.SA2"
+qa_2374_sa2.ps_id = "QA.1.SA2"
+qa_2380_sa2.ps_id = "QA.2.SA2"
+qa_2386_sa2.ps_id = "QA.1.SA2"
+qa_2392_sa2.ps_id = "QA.2.SA2"
+qa_2398_sa2.ps_id = "QA.1.SA2"
+qa_2404_sa2.ps_id = "QA.2.SA2"
+qa_2410_sa2.ps_id = "QA.1.SA2"
+qa_2416_sa2.ps_id = "QA.2.SA2"
+qa_2422_sa2.ps_id = "QA.1.SA2"
+qa_2429_sa2.ps_id = "QA.2.SA2"
+qa_2435_sa2.ps_id = "QA.1.SA2"
+qa_2441_sa2.ps_id = "QA.2.SA2"
+qa_2447_sa2.ps_id = "QA.1.SA2"
+qa_2454_sa2.ps_id = "QA.2.SA2"
+qa_2460_sa2.ps_id = "QA.1.SA2"
+qa_2467_sa2.ps_id = "QA.2.SA2"
+qa_2473_sa2.ps_id = "QA.1.SA2"
+
+# SBend power supplies:
+bs_2259_sa2.ps_id = "BS.1.SA2"
+bs_2260_sa2.ps_id = "BS.1.SA2"
+bs_2262_sa2.ps_id = "BS.1.SA2"
+bs_2263_sa2.ps_id = "BS.1.SA2"
+bs_2314_sa2.ps_id = "BS.2.SA2"
+bs_2315_sa2.ps_id = "BS.2.SA2"
+bs_2316_sa2.ps_id = "BS.2.SA2"
+bs_2318_sa2.ps_id = "BS.2.SA2"

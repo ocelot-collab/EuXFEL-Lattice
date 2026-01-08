@@ -4,6 +4,9 @@
 # Then we go to SA1/3 (t4d)
 # Really it could not be any other way.
 
+writer:
+  write_types_power_supplies: ["Quadrupole", "Sextupole", "Octupole", "Cavity", "RBend", "SBend"]
+
 rows:
   skip:
     TYPE: ["BENDMARK", "RF", "CTBI", "CUX"]
@@ -23,21 +26,6 @@ rows:
       CBY: { LENGTH: 0.0 }
     CLASS: {}
     GROUP: {}
-
-
-models:
-  i1d:
-    sections: [i1, i1d]
-  b1d:
-    sections: [i1, l1, bld]
-  b2d:
-    sections: [i1, l1, l2, b2d]
-  tld:
-    sections: [i1, l1, l2, l3, cl, tld]
-  t5d:
-    sections: [i1, l1, l2, l3, cl, ""]
-  t4d:
-    sections: [i1, l1, l2, l3, cl, ""]
 
 sections:
   I1:

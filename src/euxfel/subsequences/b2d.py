@@ -7,6 +7,8 @@ twiss0._beta_y = 5.0704
 twiss0._alpha_x = 2.5552
 twiss0._alpha_y = -1.1692
 
+
+
 # Drifts:
 d_0 = Drift(l=0.0014499999999770807, eid="D_0")
 d_1 = Drift(l=0.5814499999999729, eid="D_1")
@@ -106,3 +108,13 @@ cell = (stsec_466_b2d,
         ensec_480_b2d)
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+qf_469_b2d.ps_id = "QF.31.B2D"
+qe_471_b2d.ps_id = "QE.32.B2D"
+qf_472_b2d.ps_id = "QF.33.B2D"
+qf_476_b2d.ps_id = "QF.34.B2D"
+qf_477_b2d.ps_id = "QF.35.B2D"
+
+# SBend power supplies:
+bg_467_b2d.ps_id = "BG.1.B2D"
+bg_474_b2d.ps_id = "BG.1.B2D"

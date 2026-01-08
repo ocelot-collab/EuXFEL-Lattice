@@ -7,6 +7,8 @@ twiss0._beta_y = 57.1921
 twiss0._alpha_x = -1.0021
 twiss0._alpha_y = 2.1351
 
+
+
 # Drifts:
 d_0 = Drift(l=6.388699999999972, eid="D_0")
 d_1 = Drift(l=0.10000000000013642, eid="D_1")
@@ -606,3 +608,84 @@ cell = (stsec_1652_cl,
         ensec_1854_cl)
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+qf_1660_cl.ps_id = "QF.3.CL"
+qh_1667_cl.ps_id = "QH.1.CL"
+qh_1669_cl.ps_id = "QH.1.CL"
+qh_1670_cl.ps_id = "QH.2.CL"
+qh_1671_cl.ps_id = "QH.2.CL"
+qf_1673_cl.ps_id = "QF.4.CL"
+qf_1682_cl.ps_id = "QF.4.CL"
+qf_1691_cl.ps_id = "QF.4.CL"
+qf_1700_cl.ps_id = "QF.4.CL"
+qf_1709_cl.ps_id = "QF.4.CL"
+qf_1718_cl.ps_id = "QF.4.CL"
+qf_1727_cl.ps_id = "QF.4.CL"
+qf_1736_cl.ps_id = "QF.4.CL"
+qf_1745_cl.ps_id = "QF.4.CL"
+qh_1748_cl.ps_id = "QH.3.CL"
+qh_1749_cl.ps_id = "QH.3.CL"
+qh_1751_cl.ps_id = "QH.4.CL"
+qh_1752_cl.ps_id = "QH.4.CL"
+qf_1754_cl.ps_id = "QF.5.CL"
+qf_1759_cl.ps_id = "QF.6.CL"
+qf_1763_cl.ps_id = "QF.7.CL"
+qf_1767_cl.ps_id = "QF.6.CL"
+qf_1772_cl.ps_id = "QF.5.CL"
+qh_1775_cl.ps_id = "QH.4.CL"
+qh_1776_cl.ps_id = "QH.4.CL"
+qh_1778_cl.ps_id = "QH.3.CL"
+qh_1779_cl.ps_id = "QH.3.CL"
+qf_1781_cl.ps_id = "QF.4.CL"
+qf_1790_cl.ps_id = "QF.4.CL"
+qf_1799_cl.ps_id = "QF.4.CL"
+qf_1808_cl.ps_id = "QF.4.CL"
+qf_1817_cl.ps_id = "QF.4.CL"
+qf_1826_cl.ps_id = "QF.4.CL"
+qf_1835_cl.ps_id = "QF.4.CL"
+qf_1844_cl.ps_id = "QF.4.CL"
+qf_1853_cl.ps_id = "QF.4.CL"
+
+# SBend power supplies:
+be_1678_cl.ps_id = "BE.1.CL"
+bl_1688_cl.ps_id = "BL.1.CL"
+bl_1695_cl.ps_id = "BL.1.CL"
+be_1705_cl.ps_id = "BE.1.CL"
+be_1714_cl.ps_id = "BE.1.CL"
+bl_1724_cl.ps_id = "BL.1.CL"
+bl_1731_cl.ps_id = "BL.1.CL"
+be_1741_cl.ps_id = "BE.1.CL"
+be_1786_cl.ps_id = "BE.2.CL"
+bl_1796_cl.ps_id = "BL.2.CL"
+bl_1803_cl.ps_id = "BL.2.CL"
+be_1813_cl.ps_id = "BE.2.CL"
+be_1822_cl.ps_id = "BE.2.CL"
+bl_1832_cl.ps_id = "BL.2.CL"
+bl_1839_cl.ps_id = "BL.2.CL"
+be_1849_cl.ps_id = "BE.2.CL"
+
+# Sextupole power supplies:
+sa_1674_cl.ps_id = "SA.1.CL"
+sa_1683_cl.ps_id = "SA.2.CL"
+sa_1691_cl.ps_id = "SA.3.CL"
+sa_1692_cl.ps_id = "SA.3.CL"
+sa_1700_cl.ps_id = "SA.2.CL"
+sa_1708_cl.ps_id = "SA.1.CL"
+sa_1710_cl.ps_id = "SA.1.CL"
+sa_1719_cl.ps_id = "SA.2.CL"
+sa_1726_cl.ps_id = "SA.3.CL"
+sa_1728_cl.ps_id = "SA.3.CL"
+sa_1736_cl.ps_id = "SA.2.CL"
+sa_1744_cl.ps_id = "SA.1.CL"
+sa_1782_cl.ps_id = "SA.4.CL"
+sa_1791_cl.ps_id = "SA.5.CL"
+sa_1798_cl.ps_id = "SA.6.CL"
+sa_1800_cl.ps_id = "SA.6.CL"
+sa_1808_cl.ps_id = "SA.5.CL"
+sa_1816_cl.ps_id = "SA.4.CL"
+sa_1818_cl.ps_id = "SA.4.CL"
+sa_1827_cl.ps_id = "SA.5.CL"
+sa_1834_cl.ps_id = "SA.6.CL"
+sa_1836_cl.ps_id = "SA.6.CL"
+sa_1844_cl.ps_id = "SA.5.CL"
+sa_1852_cl.ps_id = "SA.4.CL"

@@ -7,6 +7,8 @@ twiss0._beta_y = 10.9438
 twiss0._alpha_x = -2.1712
 twiss0._alpha_y = 0.689
 
+
+
 # Drifts:
 d_0 = Drift(l=1.4724009999999907, eid="D_0")
 d_1 = Drift(l=13.047400999999823, eid="D_1")
@@ -128,3 +130,19 @@ cell = (stsub_1980_tl,
         ensub_2025_tl)
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+qk_1982_tl.ps_id = "QK.1.TL"
+qf_1997_tl.ps_id = "QF.2.TL"
+
+# SBend power supplies:
+qf_2012_tl.ps_id = "QF.1.TL"
+
+# RBend power supplies:
+kl_1998_tl.ps_id = "KL.1998.TL"
+kl_1999_tl.ps_id = "KL.1999.TL"
+kl_2000_tl.ps_id = "KL.2000.TL"
+kl_2001_tl.ps_id = "KL.2001.TL"
+kl_2002_tl.ps_id = "KL.2002.TL"
+kl_2003_tl.ps_id = "KL.2003.TL"
+kl_2005_tl.ps_id = "KL.2005.TL"
+kl_2006_tl.ps_id = "KL.2006.TL"

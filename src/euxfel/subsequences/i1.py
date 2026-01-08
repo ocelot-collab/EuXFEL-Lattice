@@ -7,6 +7,8 @@ twiss0._beta_y = 55.7981
 twiss0._alpha_x = 18.1886
 twiss0._alpha_y = 18.1886
 
+
+
 # Drifts:
 d_0 = Drift(l=0.276, eid="D_0")
 d_1 = Drift(l=0.043999999999999984, eid="D_1")
@@ -454,3 +456,41 @@ cell = (stsec_23_i1,
         ensub_62_i1)
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+q_37_i1.ps_id = "Q.A1.1.I1"
+q_38_i1.ps_id = "Q.AH1.1.I1"
+qi_46_i1.ps_id = "QI.1.I1"
+qi_47_i1.ps_id = "QI.2.I1"
+qi_50_i1.ps_id = "QI.3.I1"
+qi_52_i1.ps_id = "QI.4.I1"
+qi_53_i1.ps_id = "QI.5.I1"
+qi_54_i1.ps_id = "QI.6.I1"
+qi_55_i1.ps_id = "QI.7.I1"
+qi_57_i1.ps_id = "QI.8.I1"
+qi_59_i1.ps_id = "QI.9.I1"
+qi_60_i1.ps_id = "QI.11.I1"
+qi_61_i1.ps_id = "QI.12.I1"
+
+# SBend power supplies:
+bl_48i_i1.ps_id = "BL.1.I1"
+bl_48ii_i1.ps_id = "BL.1.I1"
+bl_50i_i1.ps_id = "BL.3.I1"
+bl_50ii_i1.ps_id = "BL.4.I1"
+
+# Cavity power supplies:
+c_a1_1_1_i1.ps_id = "C.A1.I1"
+c_a1_1_2_i1.ps_id = "C.A1.I1"
+c_a1_1_3_i1.ps_id = "C.A1.I1"
+c_a1_1_4_i1.ps_id = "C.A1.I1"
+c_a1_1_5_i1.ps_id = "C.A1.I1"
+c_a1_1_6_i1.ps_id = "C.A1.I1"
+c_a1_1_7_i1.ps_id = "C.A1.I1"
+c_a1_1_8_i1.ps_id = "C.A1.I1"
+c3_ah1_1_1_i1.ps_id = "C3.AH1.I1"
+c3_ah1_1_2_i1.ps_id = "C3.AH1.I1"
+c3_ah1_1_3_i1.ps_id = "C3.AH1.I1"
+c3_ah1_1_4_i1.ps_id = "C3.AH1.I1"
+c3_ah1_1_5_i1.ps_id = "C3.AH1.I1"
+c3_ah1_1_6_i1.ps_id = "C3.AH1.I1"
+c3_ah1_1_7_i1.ps_id = "C3.AH1.I1"
+c3_ah1_1_8_i1.ps_id = "C3.AH1.I1"

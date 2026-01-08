@@ -24,9 +24,7 @@ def draw_to_target(ax, clist: ComponentList, sheet_name: str):
         mid_z, mid_x = row["S"], 0.0
         half_length = row["LENGTH"] / 2
         start_z = mid_z - half_length
-        # stop_z = mid_x + half_length
         start_x = mid_x - 2 * MAGNET_WIDTH
-        # stop_x = mid_x + MAGNET_WIDTH / 2
         kick = row["STRENGTH"]
         width = 4 * MAGNET_WIDTH
 
@@ -64,13 +62,11 @@ def draw_to_target(ax, clist: ComponentList, sheet_name: str):
         else:
             continue
 
-        # from IPython import embed; embed()
         rectx = patches.Rectangle(
             (start_z, start_x),
             row["LENGTH"],
             width,
             linewidth=0.1,
-            # label=label,
             edgecolor="white",
             facecolor=colour,
             alpha=alpha,

@@ -7,6 +7,8 @@ twiss0._beta_y = 26.9484
 twiss0._alpha_x = -0.4663
 twiss0._alpha_y = 1.7423
 
+
+
 # Drifts:
 d_0 = Drift(l=0.2579999999998108, eid="D_0")
 d_1 = Drift(l=6.570000000000164, eid="D_1")
@@ -300,3 +302,35 @@ cell = (stsec_2955_t4d,
         ensec_3106_t4d)
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+qf_2962_t4d.ps_id = "QF.2.T4D"
+qf_2970_t4d.ps_id = "QF.3.T4D"
+qf_2977_t4d.ps_id = "QF.1.T4D"
+qf_2983_t4d.ps_id = "QF.6.T4D"
+qf_2987_t4d.ps_id = "QF.7.T4D"
+qf_3006_t4d.ps_id = "QF.8.T4D"
+qf_3010_t4d.ps_id = "QF.9.T4D"
+qf_3015_t4d.ps_id = "QF.10.T4D"
+qf_3023_t4d.ps_id = "QF.11.T4D"
+qf_3058_t4d.ps_id = "QF.4.T4D"
+qf_3065_t4d.ps_id = "QF.5.T4D"
+qk_3074_t4d.ps_id = "QK.1.T4D"
+qk_3079_t4d.ps_id = "QK.1.T4D"
+qk_3089_t4d.ps_id = "QK.6.T4D"
+qk_3090_t4d.ps_id = "QK.6.T4D"
+qk_3092_t4d.ps_id = "QK.6.T4D"
+qk_3093_t4d.ps_id = "QK.6.T4D"
+
+# SBend power supplies:
+bv_3067_t4d.ps_id = "BV.1.T4D"
+bv_3070_t4d.ps_id = "BV.1.T4D"
+bv_3083_t4d.ps_id = "BV.1.T4D"
+bv_3086_t4d.ps_id = "BV.1.T4D"
+
+# RBend power supplies:
+sweep_3095_t4d.ps_id = "SWEEP.1.T4D"
+sweep_3096_t4d.ps_id = "SWEEP.1.T4D"
+
+# Sextupole power supplies:
+sk_3076_t4d.ps_id = "SK.1.T4D"
+sk_3078_t4d.ps_id = "SK.1.T4D"

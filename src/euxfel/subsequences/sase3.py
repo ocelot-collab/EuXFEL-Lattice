@@ -7,6 +7,8 @@ twiss0._beta_y = 9.6311
 twiss0._alpha_x = 1.5464
 twiss0._alpha_y = -0.6632
 
+
+
 # Drifts:
 d_0 = Drift(l=0.29272000000037224, eid="D_0")
 d_1 = Drift(l=5.466779999999744, eid="D_1")
@@ -956,3 +958,43 @@ cell = (stsec_2800_sa3,
         ensec_2955_sa3)
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+qa_2806_sa3.ps_id = "QA.1.SA3"
+qa_2812_sa3.ps_id = "QA.2.SA3"
+qa_2818_sa3.ps_id = "QA.1.SA3"
+qa_2824_sa3.ps_id = "QA.2.SA3"
+qa_2831_sa3.ps_id = "QA.1.SA3"
+qa_2837_sa3.ps_id = "QA.2.SA3"
+qa_2843_sa3.ps_id = "QA.1.SA3"
+qa_2849_sa3.ps_id = "QA.2.SA3"
+qa_2855_sa3.ps_id = "QA.1.SA3"
+qa_2861_sa3.ps_id = "QA.2.SA3"
+qa_2867_sa3.ps_id = "QA.1.SA3"
+qa_2873_sa3.ps_id = "QA.2.SA3"
+qa_2879_sa3.ps_id = "QA.1.SA3"
+qa_2885_sa3.ps_id = "QA.2.SA3"
+qa_2892_sa3.ps_id = "QA.1.SA3"
+qa_2898_sa3.ps_id = "QA.2.SA3"
+qa_2904_sa3.ps_id = "QA.1.SA3"
+qa_2910_sa3.ps_id = "QA.2.SA3"
+qa_2916_sa3.ps_id = "QA.1.SA3"
+qa_2922_sa3.ps_id = "QA.2.SA3"
+qa_2928_sa3.ps_id = "QA.1.SA3"
+qa_2934_sa3.ps_id = "QA.2.SA3"
+qa_2940_sa3.ps_id = "QA.1.SA3"
+qp_2941_sa3.ps_id = "QP.CELL24.SA3"
+qp_2943_sa3.ps_id = "QP.CELL24.SA3"
+qp_2945_sa3.ps_id = "QP.CELL25.SA3"
+qp_2947_sa3.ps_id = "QP.CELL25.SA3"
+qa_2948_sa3.ps_id = "QA.2.SA3"
+qp_2948_sa3.ps_id = "QP.CELL26.SA3"
+qp_2951_sa3.ps_id = "QP.CELL26.SA3"
+qp_2952_sa3.ps_id = "QP.CELL27.SA3"
+qp_2954_sa3.ps_id = "QP.CELL27.SA3"
+qa_2955_sa3.ps_id = "QA.1.SA3"
+
+# SBend power supplies:
+bsl_2874_sa3.ps_id = "BSL.1.SA3"
+bsl_2875_sa3.ps_id = "BSL.1.SA3"
+bsl_2877_sa3.ps_id = "BSL.1.SA3"
+bsl_2878_sa3.ps_id = "BSL.1.SA3"

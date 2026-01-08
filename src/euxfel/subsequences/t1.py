@@ -7,6 +7,8 @@ twiss0._beta_y = 42.1384
 twiss0._alpha_x = 0.6815
 twiss0._alpha_y = -2.1569
 
+
+
 # Drifts:
 d_0 = Drift(l=0.47240099999999074, eid="D_0")
 d_1 = Drift(l=1.9724209999999536, eid="D_1")
@@ -360,3 +362,44 @@ cell = (stsec_2025_t1,
         ensec_2197_t1)
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+qf_2041_t1.ps_id = "QF.1.T1"
+qf_2045_t1.ps_id = "QF.2.T1"
+qf_2055_t1.ps_id = "QF.3.T1"
+qf_2063_t1.ps_id = "QF.4.T1"
+qf_2069_t1.ps_id = "QF.5.T1"
+qf_2083_t1.ps_id = "QF.6.T1"
+qf_2098_t1.ps_id = "QF.7.T1"
+qf_2110_t1.ps_id = "QF.8.T1"
+qf_2124_t1.ps_id = "QF.9.T1"
+qf_2139_t1.ps_id = "QF.10.T1"
+qf_2153_t1.ps_id = "QF.11.T1"
+qf_2168_t1.ps_id = "QF.12.T1"
+qf_2180_t1.ps_id = "QF.13.T1"
+qa_2191_t1.ps_id = "QA.1.T1"
+qa_2197_t1.ps_id = "QA.2.T1"
+
+# SBend power supplies:
+bz_2025_t1.ps_id = "BZ.1.T1"
+bz_2030_t1.ps_id = "BZ.2.T1"
+bz_2031_t1.ps_id = "BZ.2.T1"
+bz_2033_t1.ps_id = "BZ.2.T1"
+bd_2050_t1.ps_id = "BD.2.T1"
+bd_2062_t1.ps_id = "BD.2.T1"
+bd_2077_t1.ps_id = "BD.1.T1"
+bd_2079_t1.ps_id = "BD.1.T1"
+bd_2080_t1.ps_id = "BD.1.T1"
+bd_2082_t1.ps_id = "BD.1.T1"
+bd_2084_t1.ps_id = "BD.3.T1"
+bd_2097_t1.ps_id = "BD.4.T1"
+
+# RBend power supplies:
+bsect_2102_t1.ps_id = "BSECT.T1"
+
+# Sextupole power supplies:
+sa_2052_t1.ps_id = "SA.1.T1"
+sa_2067_t1.ps_id = "SA.2.T1"
+
+# Octupole power supplies:
+oa_2042_t1.ps_id = "OA.1.T1"
+oa_2056_t1.ps_id = "OA.2.T1"

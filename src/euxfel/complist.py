@@ -82,7 +82,7 @@ def get_component_list_paths() -> list[str]:
 
 def get_default_component_list_path() -> str:
     return get_component_list_paths()[DEFAULT_COMPONENT_LIST_INDEX]
-    
+
 
 # def get_component_list_to_target(target="i1d", component_list_path=None):
 #     sheet_name = f"I1to{target.upper()}"
@@ -98,12 +98,13 @@ class ComponentList:
         self._comp_list = BytesIO()
         with open(xls_path, 'rb') as f:
             self._comp_list.write(f.read())
-        self._sheets = {}
+        self._sheets: dict[str, pl.DataFrame] = {}
 
     def _lazy_load_sheet(self, sheet_name: str) -> None:
         self._comp_list.seek(0)
-        df = pl.read_excel(self._comp_list, sheet_name=sheet_name, read_csv_options={"skip_rows": 1})
-        # df = df.rename({"E1/LAG": "E1_LAG", "E2/FREQ": "E2_FREQ"})
+        df = pl.read_excel(self._comp_list,
+                           sheet_name=sheet_name,
+                           read_csv_options={"skip_rows": 1})
         self._sheets[sheet_name] = df
 
     def get_sheet(self, sheet_name: str) -> pl.DataFrame:
@@ -195,4 +196,3 @@ class ComponentList:
             return df.set_index("NAME1").loc[name12]
         except KeyError:
             return df.set_index("NAME2").loc[name12]
-

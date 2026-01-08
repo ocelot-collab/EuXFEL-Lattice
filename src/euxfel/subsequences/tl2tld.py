@@ -7,6 +7,8 @@ twiss0._beta_y = 2.9601
 twiss0._alpha_x = -1.3653
 twiss0._alpha_y = 0.1496
 
+
+
 # Drifts:
 d_0 = Drift(l=0.1539500000001226, eid="D_0")
 d_1 = Drift(l=0.6899999999999636, eid="D_1")
@@ -688,3 +690,85 @@ cell = (stsec_1854_tl,
         ensec_2130_tld)
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+qh_1855_tl.ps_id = "QH.5.TL"
+qh_1857_tl.ps_id = "QH.6.TL"
+qh_1858_tl.ps_id = "QH.7.TL"
+qh_1859_tl.ps_id = "QH.8.TL"
+qf_1864_tl.ps_id = "QF.8.TL"
+qf_1868_tl.ps_id = "QF.9.TL"
+qf_1873_tl.ps_id = "QF.10.TL"
+qf_1881_tl.ps_id = "QF.11.TL"
+qf_1892_tl.ps_id = "QF.1.TL"
+qf_1907_tl.ps_id = "QF.2.TL"
+qf_1922_tl.ps_id = "QF.1.TL"
+qf_1937_tl.ps_id = "QF.2.TL"
+qf_1996_tld.ps_id = "QF.1.TLD"
+qf_2009_tld.ps_id = "QF.2.TLD"
+qf_2016_tld.ps_id = "QF.3.TLD"
+qf_2024_tld.ps_id = "QF.4.TLD"
+qf_2034_tld.ps_id = "QF.5.TLD"
+qf_2046_tld.ps_id = "QF.6.TLD"
+qf_2058_tld.ps_id = "QF.7.TLD"
+qf_2068_tld.ps_id = "QF.8.TLD"
+qf_2075_tld.ps_id = "QF.9.TLD"
+qk_2095_tld.ps_id = "QK.1.TLD"
+qk_2103_tld.ps_id = "QK.1.TLD"
+qk_2113_tld.ps_id = "QK.2.TLD"
+qk_2115_tld.ps_id = "QK.2.TLD"
+qk_2116_tld.ps_id = "QK.3.TLD"
+qk_2117_tld.ps_id = "QK.3.TLD"
+
+# SBend power supplies:
+qf_1952_tl.ps_id = "QF.1.TL"
+qf_1967_tl.ps_id = "QF.2.TL"
+bz_1980_tld.ps_id = "BZ.1.TLD"
+bz_1983_tld.ps_id = "BZ.2.TLD"
+bz_1985_tld.ps_id = "BZ.2.TLD"
+bz_1986_tld.ps_id = "BZ.2.TLD"
+bd_2005_tld.ps_id = "BD.3.TLD"
+bd_2006_tld.ps_id = "BD.3.TLD"
+bd_2008_tld.ps_id = "BD.5.TLD"
+bd_2039_tld.ps_id = "BD.5.TLD"
+bd_2066_tld.ps_id = "BD.4.TLD"
+bv_2087_tld.ps_id = "BV.1.TLD"
+bv_2090_tld.ps_id = "BV.1.TLD"
+bv_2093_tld.ps_id = "BV.1.TLD"
+bv_2105_tld.ps_id = "BV.1.TLD"
+bv_2108_tld.ps_id = "BV.1.TLD"
+bv_2111_tld.ps_id = "BV.1.TLD"
+
+# RBend power supplies:
+kmx_1938_tl.ps_id = "KMX.1938.TL"
+kny_1938_tl.ps_id = "KNY.1938.TL"
+kspos_1941_tl.ps_id = "KSPOS.1941.TL"
+ksneg_1941_tl.ps_id = "KSNEG.1941.TL"
+kspos_1943_tl.ps_id = "KSPOS.1943.TL"
+ksneg_1943_tl.ps_id = "KSNEG.1943.TL"
+kspos_1945_tl.ps_id = "KSPOS.1945.TL"
+ksneg_1945_tl.ps_id = "KSNEG.1945.TL"
+kspos_1948_tl.ps_id = "KSPOS.1948.TL"
+ksneg_1948_tl.ps_id = "KSNEG.1948.TL"
+kspos_1950_tl.ps_id = "KSPOS.1950.TL"
+ksneg_1950_tl.ps_id = "KSNEG.1950.TL"
+kspos_1953_tl.ps_id = "KSPOS.1953.TL"
+ksneg_1953_tl.ps_id = "KSNEG.1953.TL"
+kspos_1955_tl.ps_id = "KSPOS.1955.TL"
+ksneg_1955_tl.ps_id = "KSNEG.1955.TL"
+kspos_1958_tl.ps_id = "KSPOS.1958.TL"
+ksneg_1958_tl.ps_id = "KSNEG.1958.TL"
+kspos_1960_tl.ps_id = "KSPOS.1960.TL"
+ksneg_1960_tl.ps_id = "KSNEG.1960.TL"
+kspos_1962_tl.ps_id = "KSPOS.1962.TL"
+ksneg_1962_tl.ps_id = "KSNEG.1962.TL"
+kmx_1965_tl.ps_id = "KMX.1965.TL"
+kny_1966_tl.ps_id = "KNY.1966.TL"
+sweep_2119_tld.ps_id = "SWEEP.1.TLD"
+sweep_2120_tld.ps_id = "SWEEP.1.TLD"
+
+# Sextupole power supplies:
+sa_2016_tld.ps_id = "SA.1.TLD"
+sa_2021_tld.ps_id = "SA.2.TLD"
+sa_2037_tld.ps_id = "SA.3.TLD"
+sk_2096_tld.ps_id = "SK.1.TLD"
+sk_2102_tld.ps_id = "SK.1.TLD"

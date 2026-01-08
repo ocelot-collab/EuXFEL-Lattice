@@ -75,15 +75,6 @@ def compare_cathode_to_target(target: str, complist: ComponentList) -> tuple[pl.
     mx2.set_ylabel("OCELOT", fontsize=8)
     mx1.sharey(mx2)
 
-    # from IPython import embed; embed()
-
-    # mx1.set_autoscale_on(False)
-    # mx2.set_autoscale_on(False)
-    # mx1.get_yaxis().set_autoscale_on(False)
-    # mx2.get_yaxis().set_autoscale_on(False)
-    # mx1.set_navigate_mode('x')
-    # mx2.set_navigate_mode('x')
-
     ll = complist
     lldf = ll.get_sheet(f"I1to{target}")
 

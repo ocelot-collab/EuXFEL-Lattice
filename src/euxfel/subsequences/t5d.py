@@ -7,6 +7,8 @@ twiss0._beta_y = 47.773
 twiss0._alpha_x = -1.063
 twiss0._alpha_y = 1.2411
 
+
+
 # Drifts:
 d_0 = Drift(l=1.0, eid="D_0")
 d_1 = Drift(l=12.471400000000358, eid="D_1")
@@ -216,3 +218,29 @@ cell = (stsec_3039_t5d,
         ensec_3189_t5d)
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+qe_3052_t5d.ps_id = "QE.1.T5D"
+qf_3068_t5d.ps_id = "QF.1.T5D"
+qf_3081_t5d.ps_id = "QF.2.T5D"
+qf_3142_t5d.ps_id = "QF.3.T5D"
+qf_3148_t5d.ps_id = "QF.4.T5D"
+qk_3158_t5d.ps_id = "QK.1.T5D"
+qk_3163_t5d.ps_id = "QK.1.T5D"
+qk_3172_t5d.ps_id = "QK.6.T5D"
+qk_3174_t5d.ps_id = "QK.6.T5D"
+qk_3175_t5d.ps_id = "QK.6.T5D"
+qk_3177_t5d.ps_id = "QK.6.T5D"
+
+# SBend power supplies:
+bv_3151_t5d.ps_id = "BV.1.T5D"
+bv_3154_t5d.ps_id = "BV.1.T5D"
+bv_3167_t5d.ps_id = "BV.1.T5D"
+bv_3170_t5d.ps_id = "BV.1.T5D"
+
+# RBend power supplies:
+sweep_3178_t5d.ps_id = "SWEEP.1.T5D"
+sweep_3179_t5d.ps_id = "SWEEP.1.T5D"
+
+# Sextupole power supplies:
+sk_3159_t5d.ps_id = "SK.1.T5D"
+sk_3161_t5d.ps_id = "SK.1.T5D"
