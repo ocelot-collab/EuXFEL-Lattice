@@ -145,7 +145,6 @@ class PythonSubsequenceWriter:
 
     def power_supplies_to_string(self, element_order: list[str] | None = None,
                                  variable_names: dict[OpticElement, str] = None) -> str:
-        from IPython import embed; embed()
         element_order = element_order or DEFAULT_ELEMENT_ORDER
         elements_by_type = self.make_element_class_names_to_instances_map()
 
