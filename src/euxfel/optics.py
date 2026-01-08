@@ -168,8 +168,6 @@ def get_match_point_optics(twiss_df: pl.DataFrame, additional_names: Optional[li
     except TypeError:
         raise ValueError("Unable to extract, possibly duplicate names in twiss_df id column")
     
-    
-
 def default_match_point_optics():
     df = ComponentList(get_default_component_list_path()).longlist
     df = _normalise_twiss_df(df)
@@ -178,17 +176,16 @@ def default_match_point_optics():
     optics_just_match_points_df = just_match_points_df[_OCELOT_TWISS_NAMES]
     return optics_just_match_points_df
 
-
-def get_default_match_point(match_name: str) -> Twiss:
-    df = default_match_point_optics()
-    twiss_series = df[df.id == match_name]
-    
-    return Twiss.from_series(twiss_series)
-
-def print_match_point_optics(twiss_or_twiss_df: pl.DataFrame,
-                               additional_names: Optional[list[str]] = None) -> None:
+def print_match_point_optics(
+    twiss_or_twiss_df: pl.DataFrame, additional_names: Optional[list[str]] = None
+) -> None:
     try:
-        with pl.Config(tbl_cols=-1, tbl_rows=-1, tbl_hide_dataframe_shape=True):
+        with pl.Config(
+            tbl_cols=-1,
+            tbl_rows=-1,
+            tbl_hide_dataframe_shape=True,
+            tbl_hide_column_data_types=True,
+        ):
             print(get_match_point(twiss_or_twiss_df, additional_names=additional_names))
         return
     except AttributeError:
@@ -197,6 +194,7 @@ def print_match_point_optics(twiss_or_twiss_df: pl.DataFrame,
         raise TypeError(f"Unknown Twiss type: {twiss_or_twiss_df}")
 
     print(get_match_point(twiss_or_twiss_df, additional_names=additional_names))
+
 
 def get_match_point(twiss_df: pl.DataFrame, additional_names: Optional[list[str]] = None) -> pl.DataFrame:
     # What we have calculated ourselves and wish to check:
@@ -320,5 +318,10 @@ def compare_match_point_surveys(mlat) -> pl.DataFrame:
     return pl.DataFrame(columns)
 
 def print_surveyed_match_points(mlat) -> None:
-    with pl.Config(tbl_cols=-1, tbl_rows=-1, tbl_hide_dataframe_shape=True):
+    with pl.Config(
+        tbl_cols=-1,
+        tbl_rows=-1,
+        tbl_hide_dataframe_shape=True,
+        tbl_hide_column_data_types=True,
+    ):
         print(compare_match_point_surveys(mlat))
