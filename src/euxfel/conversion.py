@@ -7,12 +7,10 @@ from importlib.resources import files
 from pathlib import Path
 from typing import Any, TypeVar, Union
 
-import numpy as np
-from ocelot import MagneticLattice
 import ocelot.cpbd.elements as elements
-import pandas as pd
 import polars as pl
 import yaml
+from ocelot import MagneticLattice
 from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.elements.optic_element import OpticElement
 from ocelot.cpbd.match import match
@@ -21,39 +19,13 @@ from euxfel.complist import ComponentList
 from euxfel.slicing import SlicedElement
 from euxfel.writer import PythonSubsequenceWriter
 
-
-# from .xfelt import EuXFELSimConfig, EuXFEL
-# from .optics import START_SIM, MATCH_37, MATCH_52, INJECTOR_MATCHING_QUAD_NAMES
-
-# from .astra import load_reference_0320_100k_distribution
-
-
-# DEFAULT_CONVERSION_CONFIG_PATH = str(files("euxfel.longlists") / "conversion-config.toml")
 DEFAULT_CONVERSION_CONFIG_PATH = str(files("euxfel.longlists") / "conversion-config.yaml")
 
 logging.basicConfig()
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.INFO)
 
-AnyTupT = tuple[Any, ...]
 ElementT = TypeVar("ElementT", bound=OpticElement)
-
-# SKIP_TYPE = ["BENDMARK", "RF", "CTBI", "CUX"]
-# SKIP_CLASS = ["CRYO", "UNDPLACEH"]
-SKIP_GROUP = [
-    "CRYO",
-    "VACUUM",
-    "MOVER",  # "FASTKICK"
-    "HKIC", # NAUGHTy
-    "VKIC", # NAUGHTY
-    "PHOTON",
-    "DUMP",
-    "CRYO"
-]
-
-
-TRACKING_CONF_NAME = "tracking-matched-conf.toml"
-REAL_CONF_NAME = "real-matched-conf.toml"
 
 @dataclass
 class RowSkips:
@@ -116,8 +88,6 @@ class UnknownLongListElement(ComponentListToOcelotConversionError):
     pass
 
 
-# class NewLatticeIO(LatticeIO):
-
 class ExternalElementPlacer:
     def __init__(self, placements: dict[str, Placement]):
         self.adjacent_placements = defaultdict(list)
@@ -164,17 +134,6 @@ class ExternalElementPlacer:
 
         return append_element0, between_elements, prepend_element1
 
-    # def s_elements_in_interval(
-    #     self, s_start: float, s_stop: float
-    # ) -> list[tuple[elements.Element, float]]:
-    #     result = []
-    #     for s_element in self.s_elements:
-    #         s = s_element.s
-    #         if s >= s_start and s < s_stop:
-    #             result.append((elements.Element(eid=s_element.name), s))
-    #     return result
-
-
 
 class LongListConverter:
     ROUND_NDIGITS = 6  # For rounding to make drifts and other lenghts look nice.
@@ -214,10 +173,6 @@ class LongListConverter:
             self.drift_counter = 0
             try:
                 result[section.name] = self.convert_section(section)
-            # except ComponentListToOcelotConversionError as e:
-            #     raise ComponentListToOcelotConversionError(
-            #         f"Conversion failed in {section.name} in sheet {section.sheet_name}"
-            #         ) from e
             except Exception as e:
                 raise ComponentListToOcelotConversionError(
                     f"Conversion failed in {section.name} in sheet {section.sheet_name}"
@@ -225,7 +180,7 @@ class LongListConverter:
 
         return result
 
-    def _filter_on_bad_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _filter_on_bad_columns(self, df: pl.DataFrame) -> pl.DataFrame:
         bad_element_types = (
             pl.col("TYPE").is_in(self.rowskips.type)
             | pl.col("CLASS").is_in(self.rowskips.cls)
@@ -287,7 +242,7 @@ class LongListConverter:
 
         return df2.drop(["Index", "_pos_in_s", "_is_dup_s"])
 
-    def _filter_bad_entries(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _filter_bad_entries(self, df: pl.DataFrame) -> pl.DataFrame:
         """Filter bad/nonsensical columns from the DataFrame,
         e.g.:
          * elements with negative S
@@ -343,11 +298,7 @@ class LongListConverter:
 
         idx_start = start_row.select("row_nr")[0, 0]
         idx_stop  = stop_row.select("row_nr")[0, 0]
-
-        try:
-            section_df = df.slice(idx_start, idx_stop - idx_start + 1)
-        except:
-            from IPython import embed; embed()
+        section_df = df.slice(idx_start, idx_stop - idx_start + 1)
 
         _raise_if_row_is_not_marker(df[idx_start])
         _raise_if_row_is_not_marker(df[idx_stop])
@@ -437,8 +388,8 @@ class LongListConverter:
 
             print(f"Start matching @ {marker_name} with quads: {quadrupoles}")
             print(f"Initial quadrupole strengths: {initial_strengths}")
-            new_k1 = match(
-                MagneticLattice(sequence),
+            match(
+                MagneticLattice(sequence), # type: ignore
                 {
                     marker: {
                         "beta_x": marker_row["BETX"].item(),
@@ -473,9 +424,6 @@ class LongListConverter:
         final_length = next_element_s_start - oelement_s_start
 
         ep = external_element_placer
-
-
-
         # We go through the elements 1 by 1 now that we may wish to attach...
 
         append0, between, prepend1 = ep.get_elements_to_insert_in_range(
@@ -517,46 +465,6 @@ class LongListConverter:
             expanded_sequence.append(p)
 
         return expanded_sequence
-
-        # from IPython import embed; embed()
-
-
-    # def _attach_markers_to_element(
-    #     self, s_start: float, s_stop: float, oelement, element_placer: ExternalElementPlacer
-    # ) -> list:
-    #     """s_start, s_stop define region where were look to try to insert markers"""
-    #     #XXX: This function is also responsible for adding drifts to the sequence!
-    #     try:
-    #         assert np.isclose(s_stop, s_start) or (s_stop > s_start)
-    #     except:
-    #         import ipdb; ipdb.set_trace()
-
-    #     # Attach any markers either side of the element (based on name)
-    #     oelement_with_markers = marker_placer.build_element_sequence_with_markers(
-    #         oelement
-    #     )
-
-    #     # See if there are any markers placed at S
-    #     markers_with_s = marker_placer.s_markers_in_interval(s_start, s_stop)
-    #     if not markers_with_s:
-    #         drift_length = s_stop - s_start
-    #         if drift_length > 0:
-    #             drift = self._next_drift(l=drift_length)
-    #             oelement_with_markers = [drift] + oelement_with_markers
-    #         return oelement_with_markers
-
-    #     # Place markers
-    #     for marker, s in markers_with_s:
-    #         # Drift, Marker
-    #         drift_length = self._round(s - s_start)
-    #         if drift_length > 0:
-    #             oelement_with_markers.append(self._next_drift(l=drift_length))
-    #         oelement_with_markers.append(marker)
-    #         s_start = s
-
-    #     oelement_with_markers.append(self._next_drift(s_stop - s))
-
-    #     return oelement_with_markers
 
     def _next_drift_sequence(self, l: float) -> list[elements.Drift]:
         # We reject very small
@@ -961,46 +869,3 @@ def _raise_if_row_is_not_marker(rowdict: dict[str, str | float]) -> None:
         raise MalformedConversionConfig(f"Start/Stop element: {rowdict["NAME1"]} is not a marker")
     if rowdict["CLASS"].item() != "MARK":
         raise MalformedConversionConfig(f"Start/Stop element: {rowdict["NAME1"]} is not a marker")
-
-
-# def match_real_injector():
-#     from oxfel import cat_to_i1d
-
-#     fel = cat_to_i1d(model_type="real")
-
-#     parray032 = load_reference_0320_100k_distribution()
-
-#     parray37 = fel.track(parray032, start="start_ocelot", stop=MATCH_37)
-#     twiss37 = get_envelope(parray37)
-
-#     cl = get_default_longlist()
-#     match_52_twiss_constraint = cl.get_optics_constraint("MATCH.52.I1")
-
-#     linear_matched_conf = fel.match(
-#         twiss37,
-#         start=MATCH_37,
-#         stop=MATCH_52,
-#         constraints=match_52_twiss_constraint,
-#         elements=INJECTOR_MATCHING_QUAD_NAMES,
-#         verbose=True,
-#     )
-
-#     tracking_matched_conf = fel.match_beam(
-#         parray37,
-#         start=MATCH_37,
-#         stop=MATCH_52,
-#         elements=INJECTOR_MATCHING_QUAD_NAMES,
-#         constraints=match_52_twiss_constraint,
-#         felconfig=linear_matched_conf,
-#     )
-
-#     toml.load(files("oxfel.accelerator.lattice") / TRACKING_CONF_NAME)
-#     outdir = files("oxfel.accelerator.lattice")
-
-#     with (outdir / TRACKING_CONF_NAME).open("w") as f:
-#         toml.dump(
-#             {"components": tracking_matched_conf.components},
-#             f,
-#             encoder=toml.TomlNumpyEncoder(),
-#         )
-#         print(f"Wrote {f.name}")

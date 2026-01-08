@@ -1,6 +1,7 @@
 from collections import defaultdict
 from itertools import groupby
 from numbers import Number
+from typing import Any
 
 from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.elements import Drift, RBend
@@ -32,7 +33,7 @@ class PythonSubsequenceWriter:
     PARAMETER_NAME_TO_ATTRIBUTE_DICT = {"eid": "id"}
     SKIPPABLE_PARAMETERS = set(["tm"])  # I just don't write these for some reason
     NAMES_TO_VARIABLES_MAP = {":": "_", ".": "_", "-": "_", "'": "_"}
-    def __init__(self, sequence, twiss0):
+    def __init__(self, sequence: list[OpticElement], twiss0: Twiss):
         self.sequence = sequence
         self.twiss0 = twiss0
 
@@ -50,27 +51,6 @@ class PythonSubsequenceWriter:
             if twiss.__dict__[param] != twiss_ref.__dict__[param]:
                 lines.append('twiss0.' + str(param) + ' = ' + str(twiss.__dict__[param]) + '\n')
         return "".join(lines)
-
-
-    # def twiss_to_string(self):
-    #     """
-    #     Generates a string, in a python readable format, that contains the Twiss parameter to store it in a python file.
-    #     :param twiss: Input twiss
-    #     :return: A string that contains Twiss parameter in a python readable format
-    #     """
-    #     lines = []
-    #     default_twiss = Twiss()
-    #     lines.append('twiss0 = Twiss()')
-    #     twiss = self.twiss0
-
-    #     for attribute in dir(twiss):
-    #         if attribute.startswith("_") or attribute.endswith("__"):
-    #             continue
-
-    #         if not self.is_default_value(twiss, param, default_obj=default_twiss):
-    #             lines.append(f"twiss0.{param}={getattr(twiss, param)}")
-    #     return "\n".join(lines)
-
 
     def element_to_string(self, element, variable_name) -> str:
         cls = type(element)
@@ -123,9 +103,6 @@ class PythonSubsequenceWriter:
         lines = []
         for element_type_name in element_order:
             elements_of_this_type = elements_by_type[element_type_name]
-            # if element_type_name == "SlicedElement":
-            #     if elements_of_this_type:
-            #         from IPython import embed; embed()
             if not elements_of_this_type:
                 continue
             lines.append(f"\n# {element_type_name}s:")
@@ -148,7 +125,7 @@ class PythonSubsequenceWriter:
         ordered_var_names = [variable_names[element] for element in self.sequence]
         return f"# Sequence:\ncell = ({",\n        ".join(ordered_var_names)})"
 
-    def make_var_names(self, elements) -> dict[OpticElement, str]:
+    def make_var_names(self, elements: list[OpticElement]) -> dict[OpticElement, str]:
         # Remove duplicate elements in the sequence (i.e. literal
         # shared memory addresses) to avoid 
         elements = set(elements)
@@ -166,7 +143,9 @@ class PythonSubsequenceWriter:
             variable_names[element] = name
         return variable_names
 
-    def power_supplies_to_string(self, element_order=None, variable_names=None) -> str:
+    def power_supplies_to_string(self, element_order: list[str] | None = None,
+                                 variable_names: dict[OpticElement, str] = None) -> str:
+        from IPython import embed; embed()
         element_order = element_order or DEFAULT_ELEMENT_ORDER
         elements_by_type = self.make_element_class_names_to_instances_map()
 
@@ -183,10 +162,9 @@ class PythonSubsequenceWriter:
                 variable_name = self.variable_names[element]
                 lines.append(f"{variable_name}.ps_id = {element.ps_id}")
 
-        # from IPython import embed; embed()
         return f"# Power Supply IDs:\n{"\n".join(lines)}"
 
-    def make_import_string(self):
+    def make_import_string(self) -> str:
         return "from ocelot import *"
 
     def to_module(self) -> str:
@@ -201,7 +179,7 @@ class PythonSubsequenceWriter:
                 + self.power_supplies_to_string(variable_names=variable_names))
 
 
-    def rbend_to_string(self, element, variable_name) -> str:
+    def rbend_to_string(self, element: RBend, variable_name: str) -> str:
         parameters = get_obj_init_parameters(element)
         set_params = []
         for parameter in parameters:
@@ -223,7 +201,7 @@ class PythonSubsequenceWriter:
             set_params.append(self.handle_strings_and_numbers(parameter, value))
         return f"{variable_name} = {type(element).__name__}({", ".join(set_params)})"
 
-    def handle_strings_and_numbers(self, parameter, value) -> str:
+    def handle_strings_and_numbers(self, parameter: str, value: Number | str) -> str:
         if isinstance(value, Number):
             return f"{parameter}={value}"
         elif isinstance(value, str):
@@ -232,37 +210,21 @@ class PythonSubsequenceWriter:
             raise ValueError(parameter)
         
 
-    def write_parameter(self, param, value):
-        pass
-
-    def is_default_value(self, object, parameter: str, default_obj=None) -> bool:
+    def is_default_value(self, object: Any, parameter: str, default_obj=None) -> bool:
         if default_obj is None:
             default_obj = type(object)()
 
         attribute_name = self.PARAMETER_NAME_TO_ATTRIBUTE_DICT.get(parameter, parameter)
 
-        try:
-            return getattr(object, attribute_name) == getattr(default_obj, attribute_name)
-        except:
-            from IPython import embed; embed()
+        return getattr(object, attribute_name) == getattr(default_obj, attribute_name)
 
     
 def check_eid_id(object, default_obj=None):
     if default_obj is None:
         default_obj = type(object)()
 
-    # if object.id == default_obj
-
-
 def get_obj_init_parameters(obj) -> list[str]:
     return type(obj).__init__.__code__.co_varnames[1:] # Skip self
-
-
-# def get_object_attribute_from_parameter_name(
-#     if parameter == "eid":
-#         value = element.id
-#     else:
-#         value = getattr(element, parameter)
 
 
 class ComponentListWriter:
