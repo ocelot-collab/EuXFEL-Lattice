@@ -1,6 +1,6 @@
 [project]
 name = "euxfel"
-version = "0.1.0+componentlist.20240704"
+version = "0.1.0+componentlist.20260121"
 description = "The EuXFEL lattice repository"
 readme = "README.md"
 authors = [

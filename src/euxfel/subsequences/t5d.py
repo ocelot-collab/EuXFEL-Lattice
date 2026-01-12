@@ -1,14 +1,14 @@
-# Converted from component_list_2024.07.04.xls
+# Converted from component_list_2026.01.21.xls
 
 from ocelot.cpbd.elements import *
 from ocelot.cpbd.beam import Twiss
 
 twiss0 = Twiss()
 twiss0._E = 14.0
-twiss0._beta_x = 39.9753
-twiss0._beta_y = 50.1757
-twiss0._alpha_x = -1.0772
-twiss0._alpha_y = 1.3008
+twiss0._beta_x = 41.2014
+twiss0._beta_y = 47.773
+twiss0._alpha_x = -1.063
+twiss0._alpha_y = 1.2411
 
 
 

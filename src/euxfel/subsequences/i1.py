@@ -1,4 +1,4 @@
-# Converted from component_list_2024.07.04.xls
+# Converted from component_list_2026.01.21.xls
 
 from ocelot.cpbd.elements import *
 from ocelot.cpbd.beam import Twiss
@@ -13,9 +13,9 @@ twiss0._alpha_y = 18.1886
 
 
 # Drifts:
-d_0 = Drift(l=0.27599999999999997, eid="D_0")
-d_1 = Drift(l=0.21600000000000014, eid="D_1")
-d_2 = Drift(l=0.10800000000000001, eid="D_2")
+d_0 = Drift(l=0.276, eid="D_0")
+d_1 = Drift(l=0.043999999999999984, eid="D_1")
+d_2 = Drift(l=0.43, eid="D_2")
 d_3 = Drift(l=0.003000000000000086, eid="D_3")
 d_4 = Drift(l=0.04699999999999995, eid="D_4")
 d_5 = Drift(l=0.1499999999999999, eid="D_5")
@@ -105,8 +105,8 @@ d_88 = Drift(l=0.2351499999999973, eid="D_88")
 d_89 = Drift(l=0.5311500000000005, eid="D_89")
 
 # Quadrupoles:
-qln_23_i1 = Quadrupole(l=0.05, eid="QLN.23.I1")
-qls_23_i1 = Quadrupole(l=0.05, tilt=0.785398163, eid="QLS.23.I1")
+qln_23_i1 = Quadrupole(eid="QLN.23.I1")
+qls_23_i1 = Quadrupole(tilt=0.785398163, eid="QLS.23.I1")
 q_37_i1 = Quadrupole(l=0.2136, k1=-1.4580302196100934, eid="Q.37.I1")
 q_38_i1 = Quadrupole(l=0.2136, k1=1.4400508710472228, eid="Q.38.I1")
 qi_46_i1 = Quadrupole(l=0.2377, k1=0.23883797297714596, eid="QI.46.I1")
@@ -128,7 +128,7 @@ bl_50i_i1 = SBend(l=0.2, angle=0.099484, e2=0.099484, eid="BL.50I.I1")
 bl_50ii_i1 = SBend(l=0.2, angle=-0.099484, e1=-0.099484, eid="BL.50II.I1")
 
 # Hcors:
-ckx_23_i1 = Hcor(l=0.025, eid="CKX.23.I1")
+clx_23_i1 = Hcor(eid="CLX.23.I1")
 kix_24_i1 = Hcor(l=0.1, eid="KIX.24.I1")
 ckx_24_i1 = Hcor(l=0.025, eid="CKX.24.I1")
 ckx_25_i1 = Hcor(l=0.025, eid="CKX.25.I1")
@@ -143,7 +143,7 @@ cix_57_i1 = Hcor(l=0.1, eid="CIX.57.I1")
 kjx_57_i1 = Hcor(l=0.175, eid="KJX.57.I1")
 
 # Vcors:
-cky_23_i1 = Vcor(l=0.025, eid="CKY.23.I1")
+cly_23_i1 = Vcor(eid="CLY.23.I1")
 kiy_24_i1 = Vcor(l=0.1, eid="KIY.24.I1")
 cky_24_i1 = Vcor(l=0.025, eid="CKY.24.I1")
 cky_25_i1 = Vcor(l=0.025, eid="CKY.25.I1")
@@ -179,6 +179,9 @@ c3_ah1_1_8_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.
 
 # TDCavitys:
 tdsa_52_i1 = TDCavity(l=0.7, freq=2800000000.0, tilt=1.570796327, eid="TDSA.52.I1")
+
+# Solenoids:
+solb_23_i1 = Solenoid(eid="SOLB.23.I1")
 
 # Monitors:
 bpmg_24_i1 = Monitor(eid="BPMG.24.I1")
@@ -237,11 +240,12 @@ cell = (stsec_23_i1,
         stsub_23_i1,
         gun_23_i1,
         d_0,
+        solb_23_i1,
+        d_1,
         qln_23_i1,
         qls_23_i1,
-        d_1,
-        ckx_23_i1,
-        cky_23_i1,
+        clx_23_i1,
+        cly_23_i1,
         d_2,
         kix_24_i1,
         kiy_24_i1,
@@ -436,8 +440,6 @@ cell = (stsec_23_i1,
 
 # Power Supply IDs:
 # Quadrupole power supplies:
-qln_23_i1.ps_id = "QLN.23.I1"
-qls_23_i1.ps_id = "QLS.23.I1"
 q_37_i1.ps_id = "Q.A1.1.I1"
 q_38_i1.ps_id = "Q.AH1.1.I1"
 qi_46_i1.ps_id = "QI.1.I1"

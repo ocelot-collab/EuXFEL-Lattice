@@ -1,4 +1,4 @@
-# Converted from component_list_2024.07.04.xls
+# Converted from component_list_2026.01.21.xls
 
 from ocelot.cpbd.elements import *
 from ocelot.cpbd.beam import Twiss
@@ -25,17 +25,18 @@ d_8 = Drift(l=0.06999999999999995, eid="D_8")
 d_9 = Drift(l=0.06999999999999995, eid="D_9")
 d_10 = Drift(l=0.20499999999999086, eid="D_10")
 d_11 = Drift(l=0.18999999999987266, eid="D_11")
-d_12 = Drift(l=5.380000000000173, eid="D_12")
-d_13 = Drift(l=0.44569999999989707, eid="D_13")
-d_14 = Drift(l=0.15429999999992106, eid="D_14")
-d_15 = Drift(l=0.20895100000007005, eid="D_15")
-d_16 = Drift(l=0.15395100000013406, eid="D_16")
-d_17 = Drift(l=0.19999999999986356, eid="D_17")
-d_18 = Drift(l=7.784699999999975, eid="D_18")
-d_19 = Drift(l=0.09999999999986359, eid="D_19")
-d_20 = Drift(l=1.4347000000002026, eid="D_20")
-d_21 = Drift(l=0.1999999999998181, eid="D_21")
-d_22 = Drift(l=1.8607200000001285, eid="D_22")
+d_12 = Drift(l=0.5200000000000454, eid="D_12")
+d_13 = Drift(l=3.930000000000127, eid="D_13")
+d_14 = Drift(l=0.44569999999989707, eid="D_14")
+d_15 = Drift(l=0.15429999999992106, eid="D_15")
+d_16 = Drift(l=0.20895100000007005, eid="D_16")
+d_17 = Drift(l=0.15395100000013406, eid="D_17")
+d_18 = Drift(l=0.19999999999986356, eid="D_18")
+d_19 = Drift(l=7.784699999999975, eid="D_19")
+d_20 = Drift(l=0.09999999999986359, eid="D_20")
+d_21 = Drift(l=1.4347000000002026, eid="D_21")
+d_22 = Drift(l=0.1999999999998181, eid="D_22")
+d_23 = Drift(l=1.8607200000001285, eid="D_23")
 
 # Quadrupoles:
 qk_1982_tl = Quadrupole(l=1.0552, k1=0.09035960007960576, eid="QK.1982.TL")
@@ -52,6 +53,7 @@ kl_2001_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.5707963
 kl_2002_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2002.TL")
 kl_2003_tl = RBend(l=0.93, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2003.TL")
 kl_2005_tl = RBend(l=0.93, e1=0.0, e2=0.0, eid="KL.2005.TL")
+kl_2006_tl = RBend(l=0.93, e1=0.0, e2=0.0, eid="KL.2006.TL")
 
 # Hcors:
 chx_2012_tl = Hcor(l=0.2, eid="CHX.2012.TL")
@@ -106,26 +108,28 @@ cell = (stsub_1980_tl,
         d_11,
         kl_2005_tl,
         d_12,
-        cfy_2010_tl,
+        kl_2006_tl,
         d_13,
-        tora_2011_tl,
+        cfy_2010_tl,
         d_14,
-        bpma_2011_tl,
+        tora_2011_tl,
         d_15,
-        qf_2012_tl,
+        bpma_2011_tl,
         d_16,
-        chx_2012_tl,
+        qf_2012_tl,
         d_17,
-        chy_2012_tl,
+        chx_2012_tl,
         d_18,
-        cnx_2021_tl,
+        chy_2012_tl,
         d_19,
-        cny_2021_tl,
+        cnx_2021_tl,
         d_20,
-        bpmd_2022_tl,
+        cny_2021_tl,
         d_21,
-        otre_2023_tl,
+        bpmd_2022_tl,
         d_22,
+        otre_2023_tl,
+        d_23,
         ensub_2025_tl)
 
 # Power Supply IDs:
@@ -144,3 +148,4 @@ kl_2001_tl.ps_id = "KL.2001.TL"
 kl_2002_tl.ps_id = "KL.2002.TL"
 kl_2003_tl.ps_id = "KL.2003.TL"
 kl_2005_tl.ps_id = "KL.2005.TL"
+kl_2006_tl.ps_id = "KL.2006.TL"
