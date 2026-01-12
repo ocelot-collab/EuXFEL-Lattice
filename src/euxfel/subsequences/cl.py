@@ -1,4 +1,7 @@
-from ocelot import *
+# Converted from component_list_2024.07.04.xls
+
+from ocelot.cpbd.elements import *
+from ocelot.cpbd.beam import Twiss
 
 twiss0 = Twiss()
 twiss0._E = 14.0

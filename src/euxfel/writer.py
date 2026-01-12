@@ -1,3 +1,4 @@
+import inspect
 from collections import defaultdict
 from itertools import groupby
 from numbers import Number
@@ -170,11 +171,14 @@ class PythonSubsequenceWriter:
         return f"# Power Supply IDs:{"\n".join(lines)}"
 
     def make_import_string(self) -> str:
-        return "from ocelot import *"
+        lines = ["from ocelot.cpbd.elements import *",
+                 "from ocelot.cpbd.beam import Twiss"]
+        return "\n".join(lines)
 
-    def to_module(self, write_types_power_supplies: list[str] | None= None) -> str:
+    def to_module(self, write_types_power_supplies: list[str] | None = None, comment: str = "") -> str:
         variable_names = self.make_var_names(self.sequence)
-        return (self.make_import_string()
+        return (f"# {comment}\n\n"
+                + self.make_import_string()
                 + "\n\n"
                 + self.twiss_to_string()
                 + "\n\n"
@@ -215,13 +219,10 @@ class PythonSubsequenceWriter:
         else:
             raise ValueError(parameter)
 
-
     def is_default_value(self, object: Any, parameter: str, default_obj=None) -> bool:
         if default_obj is None:
             default_obj = type(object)()
-
         attribute_name = self.PARAMETER_NAME_TO_ATTRIBUTE_DICT.get(parameter, parameter)
-
         return getattr(object, attribute_name) == getattr(default_obj, attribute_name)
 
 
@@ -230,8 +231,15 @@ def check_eid_id(object, default_obj=None):
         default_obj = type(object)()
 
 def get_obj_init_parameters(obj) -> list[str]:
+    if init_has_kwargs(type(obj)):
+        return type(obj).__init__.__code__.co_varnames[1:-1] # Skip self and kwargs
     return type(obj).__init__.__code__.co_varnames[1:] # Skip self
 
+def init_has_kwargs(cls):
+    return any(
+        p.kind is inspect.Parameter.VAR_KEYWORD
+        for p in inspect.signature(cls.__init__).parameters.values()
+    )
 
 class ComponentListWriter:
     pass

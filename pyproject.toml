@@ -1,6 +1,6 @@
 [project]
 name = "euxfel"
-version = "0.1.0"
+version = "0.1.0+componentlist.20240704"
 description = "The EuXFEL lattice repository"
 readme = "README.md"
 authors = [
@@ -15,11 +15,11 @@ dependencies = [
     "fastexcel>=0.18.0",
     "latdraw>=0.2.0",
     "matplotlib>=3.10.7",
-    "ocelot-desy>=25.6.0",
     "polars>=1.36.1",
     "pyarrow>=22.0.0",
     "pyyaml>=6.0.3",
     "xlrd>=2.0.2",
+    "ocelot-collab",
 ]
 
 [project.scripts]
@@ -63,3 +63,6 @@ omit = ["tests/*"]
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
+
+[tool.uv.sources]
+ocelot-collab = { git = "https://github.com/ocelot-collab/ocelot.git", rev = "eb8394b5ced61a4d395bcc1fa10b3a92caf620e2" }

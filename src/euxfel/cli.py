@@ -3,6 +3,7 @@ import pickle
 import tomllib
 from importlib.resources import files
 from euxfel.complist_draw import draw_to_target
+from euxfel.subsequences import USED_COMPONENT_LIST
 
 import click
 import latdraw
@@ -12,15 +13,13 @@ from ocelot.cpbd.magnetic_lattice import MagneticLattice
 
 from euxfel.complist import (
     ComponentList,
-    get_default_component_list_path,
-    select_xls_file
 )
 from euxfel.sequences import TARGET_NAMES
 from euxfel.conversion import (
     longlist_to_ocelot,
 )
 from euxfel.conversion import DEFAULT_CONVERSION_CONFIG_PATH
-from euxfel.optics import print_match_point_optics, print_surveyed_match_points
+from euxfel.optics import print_optics_at_points, print_surveyed_match_points
 from euxfel.plot import compare_cathode_to_target, plot_cathode_to_target
 
 
@@ -42,21 +41,27 @@ def convert(outdir, config):
     if not config:
         config = DEFAULT_CONVERSION_CONFIG_PATH
 
-    longlist_to_ocelot(select_xls_file(), config, outdir)
+    longlist_to_ocelot(config, outdir)
 
 
 @main.command(help="Check the OCELOT optics against the Component List")
 @argument("targets", nargs=-1)
-def compare(targets):
-    clist = ComponentList(get_default_component_list_path())
+@click.option(
+    "--marker",
+    multiple=True,
+    help="One or more marker strings",
+)
+def compare(targets, marker):
+    clist = ComponentList(USED_COMPONENT_LIST)
     selected_targets = targets or reversed(TARGET_NAMES)
     for target in selected_targets:
         print(f"Target: {target}")
-        twiss, mlat, _ = compare_cathode_to_target(target.lower(), clist)
+        twiss, mlat, fig = compare_cathode_to_target(target.lower(), clist)
+        fig.suptitle(USED_COMPONENT_LIST.name)
         print("Optics:")
-        print_match_point_optics(twiss)
+        print_optics_at_points(twiss, markers=list(marker))
         print("Marker Positions:")
-        print_surveyed_match_points(mlat)
+        print_surveyed_match_points(mlat, markers=list(marker))
 
     plt.show()
 

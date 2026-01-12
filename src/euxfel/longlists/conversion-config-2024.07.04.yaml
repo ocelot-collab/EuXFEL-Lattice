@@ -1,0 +1,207 @@
+# Conversion config for going from Component List to OCELOT.
+
+# This will be looked for inside of src/euxfel/longlists
+component_list: component_list_2024.07.04.xls
+
+
+writer:
+  write_types_power_supplies: ["Quadrupole", "Sextupole", "Octupole", "Cavity", "RBend", "SBend"]
+
+rows:
+  skip:
+    TYPE: ["BENDMARK", "RF", "CTBI", "CUX"]
+    CLASS: ["CRYO", "UNDPLACEH"]
+    GROUP: ["CRYO",
+            "VACUUM",
+            "MOVER",
+            "PHOTON",
+            "DUMP"]
+    NAME1: []
+
+  edit:
+    TYPE:
+      CAX: { LENGTH: 0.0 }
+      CAY: { LENGTH: 0.0 }
+      CBX: { LENGTH: 0.0 }
+      CBY: { LENGTH: 0.0 }
+    CLASS: {}
+    GROUP: {}
+
+sections:
+  I1:
+    sheet: I1toI1D
+    start_marker_name1: STSEC.23.I1
+    stop_marker_name1: ENSUB.62.I1
+    extras:
+      TDSA.52.I1:
+        tilt: 1.570796327
+      U74.49.I1:
+        Kx: 1.294
+        Ky: 0
+    new_markers:
+      stop_astra: { s: 3.2 }
+      start_ocelot: { s: 3.2 }
+      a1_sim_stop: { reference: C.A1.1.8.I1, adjacent: after }
+      ah1_sim_start: { reference: C.A1.1.8.I1, adjacent: after }
+      a1_1_stop: { reference: C.A1.1.1.I1, adjacent: after }
+      lh_start: { reference: U74.49.I1, adjacent: before }
+      lh_stop: { reference: U74.49.I1, adjacent: after }
+      DUMP.CSR.START: { s: 38.789005 }
+    matching:
+      marker: MATCH.52.I1
+      quadrupoles:
+        - Q.37.I1
+        - Q.38.I1
+        - QI.46.I1
+        - QI.47.I1
+        - QI.50.I1
+
+  I1D:
+    sheet: I1toI1D
+    start_marker_name1: STSEC.62.I1D
+    stop_marker_name1: ENSEC.66.I1D
+
+  L1:
+    sheet: I1toB1D
+    start_marker_name1: STSUB.62.I1
+    stop_marker_name1: ENSUB.229.B1
+    new_markers:
+      dogleg_start: { reference: CIX.65.I1, adjacent: before }
+      dogleg_stop_bc0_start: { reference: STLAT.96.I1, adjacent: before }
+      bc0_stop_l1_start: { reference: QI.103.I1, adjacent: before }
+      l1_stop_bc1_start: { reference: STLAT.182.B1, adjacent: before }
+      bc1_stop_l2_start: { reference: TORA.203.B1, adjacent: after }
+
+  B1D:
+    sheet: I1toB1D
+    start_marker_name1: STSEC.229.B1D
+    stop_marker_name1: ENSEC.237.B1D
+
+  L2:
+    sheet: I1toB2D
+    start_marker_name1: STSUB.229.B1
+    stop_marker_name1: ENSUB.466.B2
+    new_markers:
+      l2_stop_bc2_start: { reference: STLAT.393.B2, adjacent: before }
+      bc2_stop_b2d_start: { reference: TORA.415.B2, adjacent: after }
+
+  B2D:
+    sheet: I1toB2D
+    start_marker_name1: STSEC.466.B2D
+    stop_marker_name1: ENSEC.480.B2D
+
+  L3:
+    sheet: I1toTLD
+    start_marker_name1: STSUB.466.B2
+    stop_marker_name1: ENSEC.1652.L3
+    new_markers:
+      stop_l3: { reference: CFY.1651.L3, adjacent: before }
+
+  CL:
+    sheet: I1toTLD
+    start_marker_name1: STSEC.1652.CL
+    stop_marker_name1: ENSEC.1854.CL
+
+  TL2TLD:
+    sheet: I1toTLD
+    start_marker_name1: STSEC.1854.TL
+    stop_marker_name1: ENSEC.2130.TLD
+    extras:
+      QF.1952.TL: { k1: 0.17919084758504 }
+      QF.1967.TL: { k1: -0.17919084758504 }
+    new_elements:
+      QK.1982.TL:
+        position: { reference: BZ.1980.TLD, delta_s: 0.4724 }
+        type: SlicedElement
+        expression: "(19 * [xslice1982] + [yslice1982]) * 10"
+        elements:
+          xslice1982:
+            type: RBend
+            l: 0.005276
+            angle: 1.180477777265855e-05
+            k1: 0.090359600075815
+          yslice1982:
+            type: RBend
+            l: 0.005276
+            angle: -7.780804909999998e-05
+            k1: -0.090359600075815
+            tilt: 1.570796327
+
+  TL2:
+    sheet: I1toT5D
+    start_marker_name1: STSEC.1854.TL
+    stop_marker_name1: ENSUB.1980.TL
+
+  TL34_SA2:
+    sheet: I1toT5D
+    start_marker_name1: STSUB.1980.TL
+    stop_marker_name1: ENSUB.2025.TL
+    extras:
+      QF.2012.TL: { k1: -0.1791908476 }
+
+  T1:
+    sheet: I1toT5D
+    start_marker_name1: STSEC.2025.T1
+    stop_marker_name1: ENSEC.2197.T1
+    new_elements:
+      QK.2027.TL:
+        position: { reference: BZ.2025.T1, delta_s: 0.472401 }
+        type: SlicedElement
+        expression: "(19 * [yslice2027] + [xslice2027]) * 10"
+        elements:
+          xslice2027:
+            type: RBend
+            l: 0.005276
+            angle: -7.791933105545399e-05
+            k1: -0.090359600075815
+          yslice2027:
+            type: RBend
+            l: 0.005276
+            angle: 1.181521439452105e-05
+            k1: 0.090359600075815
+            tilt: 1.570796327
+
+  SASE2:
+    sheet: I1toT5D
+    start_marker_name1: STSEC.2197.SA2
+    stop_marker_name1: ENSEC.2423.SA2
+
+  T3:
+    sheet: I1toT5D
+    start_marker_name1: STSEC.2423.T3
+    stop_marker_name1: ENSEC.2743.UN1
+
+  T5:
+    sheet: I1toT5D
+    start_marker_name1: STSEC.2743.T5
+    stop_marker_name1: ENSEC.3039.UN2
+
+  T5D:
+    sheet: I1toT5D
+    start_marker_name1: STSEC.3039.T5D
+    stop_marker_name1: ENSEC.3189.T5D
+
+  TL34:
+    sheet: I1toT4D
+    start_marker_name1: STSUB.1980.TL
+    stop_marker_name1: ENSUB.2025.TL
+
+  SASE1:
+    sheet: I1toT4D
+    start_marker_name1: STSUB.2025.TL
+    stop_marker_name1: ENSEC.2461.SA1
+
+  T4:
+    sheet: I1toT4D
+    start_marker_name1: STSEC.2461.T4
+    stop_marker_name1: ENSEC.2800.T4
+
+  SASE3:
+    sheet: I1toT4D
+    start_marker_name1: STSEC.2800.SA3
+    stop_marker_name1: ENSEC.2955.SA3
+
+  T4D:
+    sheet: I1toT4D
+    start_marker_name1: STSEC.2955.T4D
+    stop_marker_name1: ENSEC.3106.T4D

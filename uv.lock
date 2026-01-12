@@ -120,14 +120,14 @@ wheels = [
 
 [[package]]
 name = "euxfel"
-version = "0.1.0"
+version = "0.1.0+componentlist.20260121"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
     { name = "fastexcel" },
     { name = "latdraw" },
     { name = "matplotlib" },
-    { name = "ocelot-desy" },
+    { name = "ocelot-collab" },
     { name = "polars" },
     { name = "pyarrow" },
     { name = "pyyaml" },
@@ -151,7 +151,7 @@ requires-dist = [
     { name = "fastexcel", specifier = ">=0.18.0" },
     { name = "latdraw", specifier = ">=0.2.0" },
     { name = "matplotlib", specifier = ">=3.10.7" },
-    { name = "ocelot-desy", specifier = ">=25.6.0" },
+    { name = "ocelot-collab", git = "https://github.com/ocelot-collab/ocelot.git?rev=eb8394b5ced61a4d395bcc1fa10b3a92caf620e2" },
     { name = "polars", specifier = ">=1.36.1" },
     { name = "pyarrow", specifier = ">=22.0.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },
@@ -463,9 +463,9 @@ wheels = [
 ]
 
 [[package]]
-name = "ocelot-desy"
-version = "25.6.0"
-source = { registry = "https://pypi.org/simple" }
+name = "ocelot-collab"
+version = "25.12.0"
+source = { git = "https://github.com/ocelot-collab/ocelot.git?rev=eb8394b5ced61a4d395bcc1fa10b3a92caf620e2#eb8394b5ced61a4d395bcc1fa10b3a92caf620e2" }
 dependencies = [
     { name = "h5py" },
     { name = "matplotlib" },
@@ -473,7 +473,6 @@ dependencies = [
     { name = "pandas" },
     { name = "scipy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/04/3e/1137ed4c35ffae33e0ef59dcd508251ce88121734989773ce98157da5f24/ocelot-desy-25.6.0.tar.gz", hash = "sha256:1f392767679e55de68c9974ea12ed5de179d64b349a9245a0bed6ffe497cac98", size = 1343683, upload-time = "2025-06-30T15:11:10.314Z" }
 
 [[package]]
 name = "packaging"

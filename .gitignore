@@ -29,3 +29,5 @@ filed_map.txt
 
 .coverage
 src/.coverage
+
+.envrc

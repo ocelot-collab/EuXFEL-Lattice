@@ -1,39 +1,9 @@
-from typing import Optional
-import os
-
-import numpy as np
-import numpy.typing as npt
-from ocelot.cpbd.beam import Twiss
-
 import polars as pl
+from ocelot.cpbd.magnetic_lattice import MagneticLattice
 
-from .complist import ComponentList, get_default_component_list_path
+from euxfel.subsequences import USED_COMPONENT_LIST
 
-INJECTOR_MATCHING_QUAD_NAMES: list[str] = [
-    "Q.37.I1",
-    "Q.38.I1",
-    "QI.46.I1",
-    "QI.47.I1",
-    "QI.50.I1",
-]
-B2_MATCHING_QUAD_NAMES: list[str] = [
-    "Q.333.L2",
-    "Q.345.L2",
-    "Q.357.L2",
-    "Q.369.L2",
-    "Q.381.L2",
-]
-
-#
-START_SIM: str = "start_ocelot"
-MATCH_37: str = "MATCH.37.I1"
-MATCH_52: str = "MATCH.52.I1"
-
-
-# Not a tru "fixed" point, just in front of the TDS2
-MATCH_428: str = "MATCH.428.B2"
-
-
+from .complist import ComponentList
 
 FIXED_MATCH_POINTS: list[str] = [
     # In front of TDS must be fixed
@@ -49,117 +19,62 @@ FIXED_MATCH_POINTS: list[str] = [
     "MATCH.525.L3",
     # Entrance to collimation dogleg must be fixed
     "MATCH.1673.CL",
-    # Ask nina the meaing of these..
+    # Ask nina the precise meaning of these:
     "MATCH.2248.SA1",
     "MATCH.2813.SA3",
     "MATCH.2197.SA2"
 ]
-
-
-
-# FIXED_MATCH_POINTS: list[str] = [
-#     # In front of TDS must be fixed
-#     "MATCH.52.I1",
-#     # In front of dogleg must be fixed
-#     "MATCH.73.I1",
-#     # ??? Why must this be fixed ???
-#     "MATCH.104.I1",
-#     # In front of BC1 TDS must be fixed
-#     "MATCH.218.B1",
-#     "MATCH.446.B2",
-#     # Entrance to L3 must be fixed
-#     "MATCH.525.L3",
-#     # Entrance to collimation dogleg must be fixed
-#     "MATCH.1673.CL"
-# ]
-
-ALL_INTERESTING_MATCH_POINTS = FIXED_MATCH_POINTS + [MATCH_428]
-
-FIXED_MATCH_POINTS = ALL_INTERESTING_MATCH_POINTS
 
 _OCELOT_OPTICS_NAMES = ["beta_x", "alpha_x", "beta_y", "alpha_y"]
 _OCELOT_OTHER_NAMES = ["id", "s"]
 _OCELOT_TWISS_NAMES = _OCELOT_OTHER_NAMES + _OCELOT_OPTICS_NAMES
 
 
+def _longlist_optics_column_names_to_ocelot_names(df: pl.DataFrame) -> pl.DataFrame:
+    """
+    Rename component longlist column names to OCELOT-compatible Twiss names.
 
-def get_name2_fixed_match_points(additional_names: Optional[list[str]] = None):
-    if additional_names is None:
-        additional_names = []
-    ll = ComponentList(get_default_component_list_path())
-    
-    return [
-        ll.name1_to_name2(name1).item()
-        for name1 in FIXED_MATCH_POINTS + additional_names
-    ]
+    This helper function maps common longlist column conventions to the
+    corresponding OCELOT-style column names used throughout the optics
+    analysis code. Columns that are not present are ignored.
 
+    Parameters
+    ----------
+    df : pl.DataFrame
+        Polars DataFrame containing optics data from a component longlist.
 
-def get_match_point_constraints(clist: Optional[XFELComponentList] = None) -> dict[str, dict[str, float]]:
-    if clist is None:
-        clist = ComponentList(get_default_component_list_path())
-    points = ALL_INTERESTING_MATCH_POINTS
-
-    tups = [x for x in clist.df.itertuples() if x.NAME1 in points]
-
-    constraints = {}
-    for tup in tups:
-        odict = {"alpha_x": tup.ALFX,
-                 "beta_x": tup.BETX,
-                 "alpha_y": tup.ALFY,
-                 "beta_y": tup.BETY}
-        
-        constraints[tup.NAME1] = odict
-
-    return constraints
-
-
-def _normalise_twiss_df(df: pl.DataFrame) -> pl.DataFrame:
-    # Change columns to ocelot column names
-    # Change NAME2 to NAME1s.
-    try: # if pandas...
-        df = df.rename(
-            mapper={
-                "BETX": "beta_x",
-                "SUML": "s",
-                "BETY": "beta_y",
-                "ALFX": "alpha_x",
-                "ALFY": "alpha_y",
-                "ENERGY": "E",
-                "S": "s",
-                "NAME1": "id",
-                "NAME": "id",
-            },
-            axis=1,
-        )
-    except: # If polars...
-        df = df.rename(
-            {
-                "BETX": "beta_x",
-                "SUML": "s",
-                "BETY": "beta_y",
-                "ALFX": "alpha_x",
-                "ALFY": "alpha_y",
-                "ENERGY": "E",
-                "S": "s",
-                "NAME1": "id",
-                "NAME": "id",
-            },
-            strict=False
-        )
-    return df
+    Returns
+    -------
+    pl.DataFrame
+        A DataFrame with columns renamed to OCELOT-compatible names where
+        applicable.
+    """
+    return df.rename(
+        {
+            "BETX": "beta_x",
+            "SUML": "s",
+            "BETY": "beta_y",
+            "ALFX": "alpha_x",
+            "ALFY": "alpha_y",
+            "ENERGY": "E",
+            "S": "s",
+            "NAME1": "id",
+            "NAME": "id",
+        },
+        strict=False,
+    )
 
 
-def get_match_point_optics(twiss_df: pl.DataFrame, additional_names: Optional[list[str]] = None) -> pl.DataFrame:
-    twiss_df = _normalise_twiss_df(twiss_df)
+def get_optics_at_points(twiss_df: pl.DataFrame, markers: list[str] | None = None) -> pl.DataFrame:
+    twiss_df = _longlist_optics_column_names_to_ocelot_names(twiss_df)
 
-    if additional_names is None:
-        additional_names = []
+    markers = markers or []
+    point_names = FIXED_MATCH_POINTS + markers
 
-    point_names = FIXED_MATCH_POINTS + additional_names
-    names = [name for name in point_names if name in np.array(twiss_df["id"])]
+    names = [name for name in point_names if name in twiss_df["id"]]
 
     try:
-        # Just select the rows corresponding to FIXED_MATCH_POINT ids and any additional_names
+        # Just select the rows corresponding to FIXED_MATCH_POINT ids and any additional marker names
         # this gives us a df with nrows = len(names), if all names are in the id column and all strings
         # in the id column are unique.
         df_at_ids = twiss_df.filter(pl.col("id").is_in(names))
@@ -167,40 +82,88 @@ def get_match_point_optics(twiss_df: pl.DataFrame, additional_names: Optional[li
         return df_at_ids.select(_OCELOT_TWISS_NAMES)
     except TypeError:
         raise ValueError("Unable to extract, possibly duplicate names in twiss_df id column")
-    
-def default_match_point_optics():
-    df = ComponentList(get_default_component_list_path()).longlist
-    df = _normalise_twiss_df(df)
 
-    just_match_points_df = df.filter(pl.col("id").is_in(FIXED_MATCH_POINTS))
-    optics_just_match_points_df = just_match_points_df[_OCELOT_TWISS_NAMES]
-    return optics_just_match_points_df
+def optics_at_points_from_longlist(markers: list[str] | None = None) -> pl.DataFrame:
+    """
+    Extract reference optics parameters at selected points
+    from the default component longlist.
 
-def print_match_point_optics(
-    twiss_or_twiss_df: pl.DataFrame, additional_names: Optional[list[str]] = None
+    Parameters
+    ----------
+    markers : list[str] | None, optional
+        Additional marker IDs to include beyond the predefined fixed match
+        points. If None, only fixed match points are used.
+
+    Returns
+    -------
+    pl.DataFrame
+        A Polars DataFrame containing some key optics parameters at the given match points
+
+    """
+    df = ComponentList(USED_COMPONENT_LIST).longlist
+    df = _longlist_optics_column_names_to_ocelot_names(df)
+
+    markers = markers or []
+
+    # First filter to keep only the IDs we are interested in (i.e. markers)
+    df_just_at_points = df.filter(pl.col("id").is_in(FIXED_MATCH_POINTS + markers))
+    # Now also filter to just keep the columns (optics) we are interested in.
+    optics_just_at_points = df_just_at_points[_OCELOT_TWISS_NAMES]
+    return optics_just_at_points
+
+def print_optics_at_points(
+    twiss_or_twiss_df: pl.DataFrame, markers: list[str] | None = None
 ) -> None:
-    try:
-        with pl.Config(
-            tbl_cols=-1,
-            tbl_rows=-1,
-            tbl_hide_dataframe_shape=True,
-            tbl_hide_column_data_types=True,
-        ):
-            print(get_match_point(twiss_or_twiss_df, additional_names=additional_names))
-        return
-    except AttributeError:
-        pass
-    except:
-        raise TypeError(f"Unknown Twiss type: {twiss_or_twiss_df}")
+    """
+    Print optics parameters and Bmag values at selected points, by default, only at the fixed match points
+    (given by FIXED_MATCH_POINTS) will be printed.
 
-    print(get_match_point(twiss_or_twiss_df, additional_names=additional_names))
+    Parameters
+    ----------
+    twiss_or_twiss_df : pl.DataFrame
+        Twiss optics DataFrame containing the calculated lattice optics.
+    markers : list[str] | None, optional
+        Additional marker IDs to include beyond the predefined fixed match
+        points. If None, only the fixed match points are used.
+
+    Returns
+    -------
+    None
+    """
+    with pl.Config(
+        tbl_cols=-1,
+        tbl_rows=-1,
+        tbl_hide_dataframe_shape=True,
+        tbl_hide_column_data_types=True,
+    ):
+        print(get_optics_with_bmags_at_points(twiss_or_twiss_df, markers=markers))
 
 
-def get_match_point(twiss_df: pl.DataFrame, additional_names: Optional[list[str]] = None) -> pl.DataFrame:
+def get_optics_with_bmags_at_points(twiss_df: pl.DataFrame, markers: list[str] | None = None) -> pl.DataFrame:
+    """
+    Compute optics parameters at selected match points and evaluate mismatch
+    (Bmag) relative to reference optics from the component longlist.
+
+    Parameters
+    ----------
+    twiss_df : pl.DataFrame
+        Twiss optics DataFrame containing at least `id`, `s`, `beta_x`,
+        `alpha_x`, `beta_y`, and `alpha_y` columns.
+    markers : list[str] | None, optional
+        Additional marker IDs to include beyond the predefined fixed match
+        points. If None, only fixed match points given by FIXED_MATCH_POINTS are used.
+
+    Returns
+    -------
+    pl.DataFrame
+        A Polars DataFrame containing the optics at the selected points with
+        additional columns `bmag_x` and `bmag_y` quantifying the mismatch
+        relative to the component-list reference optics.
+    """
     # What we have calculated ourselves and wish to check:
-    twiss_match = get_match_point_optics(twiss_df, additional_names=additional_names)
+    twiss_match = get_optics_at_points(twiss_df, markers=markers)
     # What we are comparing to, this comes from the component list:
-    twiss_match_reference = default_match_point_optics()
+    twiss_match_reference = optics_at_points_from_longlist(markers=markers)
 
     # Calculate relative difference
     result = twiss_match.clone()
@@ -240,71 +203,131 @@ def get_match_point(twiss_df: pl.DataFrame, additional_names: Optional[list[str]
                    )
     )
 
-    # result = result.drop(["gamma_x", "gamma_y"])
-
     # Ensure that it is sorted w.r.t s if it isn't..:
     return result.sort("s")
 
 
-def read_mad8(fname: os.PathLike) -> pl.DataFrame:
-    import pand8
+def bmag(beta: float, alpha: float, beta0: float, alpha0: float) -> float:
+    """
+    Compute the optical mismatch parameter (Bmag) between two sets of Twiss parameters.
 
-    df8 = pand8.read(fname)
-    df8 = df8.rename(mapper={"NAME": "NAME2"}, axis=1)
+    Parameters
+    ----------
+    beta : float
+        Beta function of the optics being evaluated.
+    alpha : float
+        Alpha function of the optics being evaluated.
+    beta0 : float
+        Reference (design) beta function.
+    alpha0 : float
+        Reference (design) alpha function.
 
-    ll = LongList(get_default_longlist_path())
-
-    di = dict(zip(ll.df.NAME2, ll.df.NAME1))
-
-    name1s = [di.get(name2, name2) for name2 in df8.NAME2]
-
-    df8["NAME1"] = name1s
-
-    return _normalise_twiss_df(df8)
-
-
-def bmag(beta, alpha, beta_design, alpha_design) -> float:
+    Returns
+    -------
+    float
+        The Bmag mismatch parameter.
+    """
     result = 0.5 * (
-        (beta / beta_design + beta_design / beta)
-        + (beta * beta_design * ((alpha_design / beta_design) - (alpha / beta)) ** 2)
+        (beta / beta0 + beta0 / beta)
+        + (beta * beta0 * ((alpha0 / beta0) - (alpha / beta)) ** 2)
     )
     return result
 
-def compare_match_point_surveys(mlat) -> pl.DataFrame:
-    df = ComponentList(get_default_component_list_path()).longlist
+def compare_match_point_surveys(mlat: MagneticLattice, markers: list[str] | None = None) -> pl.DataFrame:
+    """
+    Compare surveyed match-point coordinates from an ocelot sequence against
+    reference values from the Longlist.
+
+    Parameters
+    ----------
+    mlat : MagneticLattice
+    markers : list[str] | None, optional
+        Additional marker names to include beyond the predefined fixed match
+        points. If None, only fixed match points are used.
+
+    Returns
+    -------
+    pl.DataFrame
+        A Polars DataFrame with one row per (marker, source) pair, containing
+        positions (X, Y, Z), angles (THETA, PHI, CHI), and first derivatives
+        (XPD, YPD, ZPD), with a SOURCE column indicating "OCELOT" or "LONGLIST".
+    """
+    df = ComponentList(USED_COMPONENT_LIST).longlist
 
     r0 = df[0]
-    x, y, z, ang_x, ang_y = mlat.survey(x0=r0["X"].item(),
-                                    y0=r0["Y"].item(),
-                                    z0=r0["Z"].item(),
-                                    ang_x=r0["PHI"].item(),
-                                    ang_y=r0["THETA"].item())
+    mid_points, _ = mlat.survey_longlist(
+        X0=r0["X"].item(),
+        Y0=r0["Y"].item(),
+        Z0=r0["Z"].item(),
+        theta0=r0["THETA"].item(),
+        phi0=r0["PHI"].item(),
+        chi0=r0["CHI"].item(),
+    )
+
+    markers = markers or []
 
     names = [e.id for e in mlat.sequence]
-    match_points = [name for name in names if name in FIXED_MATCH_POINTS]
+    match_points = [name for name in names if name in FIXED_MATCH_POINTS + markers]
     end_marker_name = mlat.sequence[-1].id
     marker_names = match_points + [end_marker_name]
 
-
-
-    columns = {"NAME1": [], "SOURCE": [], "X": [], "Y": [], "Z": [], "THETA": [], "PHI": []}
+    columns = {
+        "NAME1": [],
+        "SOURCE": [],
+        "X": [],
+        "Y": [],
+        "Z": [],
+        "THETA": [],
+        "PHI": [],
+        "CHI": [],
+        "XPD": [],
+        "YPD": [],
+        "ZPD": [],
+        # "THETAPD": [],
+        # "PHIPD": [],
+        # "CHIPD": [],
+    }
     for marker_name in marker_names:
         survey_idx = next(
             i for (i, ele) in enumerate(mlat.sequence) if ele.id == marker_name
         )
-        survey_idx += 1  # Add one because mlat.survey inserts the initial offset as first point
-
+        survey_idx += (
+            1  # Add one because mlat.survey inserts the initial offset as first point
+        )
 
         columns["NAME1"].append(f"{marker_name}")
-        columns["SOURCE"].append(f"OCELOT")
-        columns["X"].append(x[survey_idx].item())
-        columns["Y"].append(y[survey_idx].item())
-        columns["Z"].append(z[survey_idx].item())
-        columns["THETA"].append(ang_y[survey_idx].item())
-        columns["PHI"].append(ang_x[survey_idx].item())
+        columns["SOURCE"].append("OCELOT")
+
+        # Positions/angles
+        columns["X"].append(mid_points[survey_idx]["X"].item())
+        columns["Y"].append(mid_points[survey_idx]["Y"].item())
+        columns["Z"].append(mid_points[survey_idx]["Z"].item())
+        columns["THETA"].append(mid_points[survey_idx]["THETA"].item())
+        columns["PHI"].append(mid_points[survey_idx]["PHI"].item())
+        columns["CHI"].append(mid_points[survey_idx]["CHI"].item())
+
+        # PD (derivatives?)
+        columns["XPD"].append(mid_points[survey_idx]["XPD"].item())
+        columns["YPD"].append(mid_points[survey_idx]["YPD"].item())
+        columns["ZPD"].append(mid_points[survey_idx]["ZPD"].item())
+        # columns["THETAPD"].append(mid_points[survey_idx]["THETAPD"].item())
+        # columns["PHIPD"].append(mid_points[survey_idx]["PHIPD"].item())
+        # columns["CHIPD"].append(mid_points[survey_idx]["CHIPD"].item())
 
         lldf = df.filter(pl.col("NAME1") == marker_name)[
-            "NAME1", "X", "Y", "Z", "THETA", "PHI"
+            "NAME1",
+            "X",
+            "Y",
+            "Z",
+            "THETA",
+            "PHI",
+            "CHI",
+            "XPD",
+            "YPD",
+            "ZPD",
+            "THETAPD",
+            "PHIPD",
+            "CHIPD",
         ]
 
         columns["NAME1"].append(f"{marker_name}")
@@ -314,14 +337,39 @@ def compare_match_point_surveys(mlat) -> pl.DataFrame:
         columns["Z"].append(lldf["Z"].item())
         columns["THETA"].append(lldf["THETA"].item())
         columns["PHI"].append(lldf["PHI"].item())
-        
+        columns["CHI"].append(lldf["CHI"].item())
+
+        columns["XPD"].append(lldf["XPD"].item())
+        columns["YPD"].append(lldf["YPD"].item())
+        columns["ZPD"].append(lldf["ZPD"].item())
+
+        # columns["THETAPD"].append(lldf["THETAPD"].item())
+        # columns["PHIPD"].append(lldf["PHIPD"].item())
+        # columns["CHIPD"].append(lldf["CHIPD"].item())
+
+
     return pl.DataFrame(columns)
 
-def print_surveyed_match_points(mlat) -> None:
+def print_surveyed_match_points(mlat: MagneticLattice, markers: list[str] | None = None) -> None:
+    """
+    Print a comparison of surveyed coordinates at specific points for a magnetic lattice.  By default,
+    only the fixed match points (given by FIXED_MATCH_POINTS) are printed.
+
+    Parameters
+    ----------
+    mlat : MagneticLattice
+    markers : list[str] | None, optional
+        Additional marker names to include beyond the predefined fixed match
+        points. If None, only the fixed match points are used.
+
+    Returns
+    -------
+    None
+    """
     with pl.Config(
         tbl_cols=-1,
         tbl_rows=-1,
         tbl_hide_dataframe_shape=True,
         tbl_hide_column_data_types=True,
     ):
-        print(compare_match_point_surveys(mlat))
+        print(compare_match_point_surveys(mlat, markers=markers))
