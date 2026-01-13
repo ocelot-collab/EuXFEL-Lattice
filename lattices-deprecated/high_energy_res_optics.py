@@ -796,7 +796,7 @@ bpma_471_b2d = Monitor(eid='BPMA.471.B2D')
 
 # Markers
 stsec_23_i1 = Marker(eid='STSEC.23.I1')
-start_sim = Marker(eid='START_SIM')
+start_ocelot = Marker(eid='start_ocelot')
 id_30058415_ = Marker(eid='ID_30058415_')
 id_9649943_ = Marker(eid='ID_9649943_')
 match_37_i1 = Marker(eid='MATCH.37.I1')
@@ -919,7 +919,7 @@ otra_473_b2d = Marker(eid='OTRA.473.B2D')
 # Lattice 
 cell = (stsec_23_i1, id_97509745_, solb_23_i1, qln_23_i1, qls_23_i1, d_2a, ckx_23_i1, cky_23_i1, d_3a, 
 ckx_24_i1, cky_24_i1, d_4a, bpmg_24_i1, id_70110258_, bpmg_25i_i1, id_41101705_, ckx_25_i1, cky_25_i1, d_12a, 
-start_sim, id_35969356_, c_a1_1_1_i1, id_30058415_, d_13a, c_a1_1_2_i1, d_13a, c_a1_1_3_i1, d_13a, c_a1_1_4_i1, 
+start_ocelot, id_35969356_, c_a1_1_1_i1, id_30058415_, d_13a, c_a1_1_2_i1, d_13a, c_a1_1_3_i1, d_13a, c_a1_1_4_i1, 
 d_16a, c_a1_1_5_i1, d_13a, c_a1_1_6_i1, d_13a, c_a1_1_7_i1, d_13a, c_a1_1_8_i1, id_9649943_, d_20, 
 match_37_i1, d_21a, q_37_i1, d_21a, cx_37_i1, cy_37_i1, d_23a, bpmc_38i_i1, id_32151375_, bpmr_38ii_i1, 
 d_26a, q_38_i1, d_21a, cx_39_i1, cy_39_i1, d_28, c3_ah1_1_1_i1, d_29, c3_ah1_1_2_i1, d_29, 

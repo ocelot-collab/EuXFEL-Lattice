@@ -797,10 +797,10 @@ bpma_471_b2d = Monitor(eid='BPMA.471.B2D')
 
 # Markers
 d_8_1 = Drift(l=0.5776, eid='D_12')
-start_sim = Marker(eid="START_SIM")
+start_ocelot = Marker(eid="start_ocelot")
 d_8_2 = Drift(l=0.3216, eid='ID_35969356_')
 
-d_8_n = (d_8_1, start_sim, d_8_2)
+d_8_n = (d_8_1, start_ocelot, d_8_2)
 
 a1_sim_stop = Marker()
 a1_1_stop = Marker()

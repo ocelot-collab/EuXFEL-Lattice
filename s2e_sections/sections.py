@@ -3,28 +3,30 @@ from ocelot.cpbd.physics_proc import *
 import os
 from ocelot.utils.section_track import *
 
-import lattices.longlist_2024_07_04.i1_track as i1
-import lattices.longlist_2024_07_04.i1d as i1d
-import lattices.longlist_2024_07_04.l1 as l1
-import lattices.longlist_2024_07_04.l2 as l2
-import lattices.longlist_2024_07_04.b2d as b2d
-import lattices.longlist_2024_07_04.l3 as l3
-import lattices.longlist_2024_07_04.cl as cl
-import lattices.longlist_2024_07_04.tl2 as tl2
-import lattices.longlist_2024_07_04.tl2_tld as tl2_tld
-import lattices.longlist_2024_07_04.tl34 as tl34
-import lattices.longlist_2024_07_04.tl34_sa2 as tl34_sa2
-import lattices.longlist_2024_07_04.sase1 as sase1
-import lattices.longlist_2024_07_04.t4 as t4
-import lattices.longlist_2024_07_04.sase3 as sase3
-import lattices.longlist_2024_07_04.t4d as t4d
+# import lattices.longlist_2024_07_04.i1_track as i1
+# import lattices.longlist_2024_07_04.i1d as i1d
+# import lattices.longlist_2024_07_04.l1 as l1
+# import lattices.longlist_2024_07_04.l2 as l2
+# import lattices.longlist_2024_07_04.b2d as b2d
+# import lattices.longlist_2024_07_04.l3 as l3
+# import lattices.longlist_2024_07_04.cl as cl
+# import lattices.longlist_2024_07_04.tl2 as tl2
+# import lattices.longlist_2024_07_04.tl2_tld as tl2_tld
+# import lattices.longlist_2024_07_04.tl34 as tl34
+# import lattices.longlist_2024_07_04.tl34_sa2 as tl34_sa2
+# import lattices.longlist_2024_07_04.sase1 as sase1
+# import lattices.longlist_2024_07_04.t4 as t4
+# import lattices.longlist_2024_07_04.sase3 as sase3
+# import lattices.longlist_2024_07_04.t4d as t4d
 
-import lattices.longlist_2024_07_04.t1 as t1
-import lattices.longlist_2024_07_04.t3 as t3
-import lattices.longlist_2024_07_04.t5 as t5
-import lattices.longlist_2024_07_04.sase2 as sase2
+# import lattices.longlist_2024_07_04.t1 as t1
+# import lattices.longlist_2024_07_04.t3 as t3
+# import lattices.longlist_2024_07_04.t5 as t5
+# import lattices.longlist_2024_07_04.sase2 as sase2
 
-import lattices.longlist_2024_07_04.t5d as t5d
+# import lattices.longlist_2024_07_04.t5d as t5d
+
+from euxfel.subsequences import *
 
 #
 # import lattices.from2019.i1 as i1
@@ -73,11 +75,11 @@ class A1(SectionTrack):
         self.output_beam_file = self.particle_dir + 'section_A1.npz'
         self.tws_file = self.tws_dir + "tws_section_A1.npz"
         # init tracking lattice
-        start_sim = i1.start_sim
+        start_ocelot = i1.start_ocelot
         acc1_stop = i1.a1_sim_stop
-        # start_sim = i1.id_22433449_
+        # start_ocelot = i1.id_22433449_
         # acc1_stop = i1.id_68749308_
-        self.lattice = MagneticLattice(i1.cell, start=start_sim, stop=acc1_stop, method=self.method)
+        self.lattice = MagneticLattice(i1.cell, start=start_ocelot, stop=acc1_stop, method=self.method)
         # init physics processes
         sc = SpaceCharge(step=1, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
@@ -97,8 +99,8 @@ class A1(SectionTrack):
         # adding physics processes
         acc1_1_stop = i1.a1_1_stop
         # acc1_1_stop = i1.id_75115473_
-        self.add_physics_process(smooth, start=start_sim, stop=start_sim)
-        self.add_physics_process(sc, start=start_sim, stop=acc1_1_stop)
+        self.add_physics_process(smooth, start=start_ocelot, stop=start_ocelot)
+        self.add_physics_process(sc, start=start_ocelot, stop=acc1_1_stop)
         self.add_physics_process(sc2, start=acc1_1_stop, stop=acc1_stop)
         self.add_physics_process(wake, start=i1.c_a1_1_1_i1, stop=acc1_stop)
 
@@ -148,7 +150,7 @@ class LH(SectionTrack):
         # init tracking lattice
         acc39_stop = i1.stlat_47_i1
         # lhm_stop = l1.match_73_i1 #start of dl #
-        lhm_stop = i1.stsub_62_i1
+        lhm_stop = i1.ensub_62_i1
         # lhm_stop = l1.id_90904668_
         self.lattice = MagneticLattice(i1.cell, start=acc39_stop, stop=lhm_stop, method=self.method)
         # init physics processes
@@ -194,7 +196,7 @@ class DL(SectionTrack):
 
         # init tracking lattice
         # st2_stop = l1.id_90904668_ #i1.stsub_62_i1
-        st2_stop = i1.stsub_62_i1  #
+        st2_stop = i1.ensub_62_i1  #
         dogleg_stop = l1.stlat_96_i1
         self.lattice = MagneticLattice(i1.cell + l1.cell, start=st2_stop, stop=dogleg_stop, method=self.method)
         # init physics processes
@@ -226,7 +228,7 @@ class I1D(SectionTrack):
         self.tws_file = self.tws_dir + "tws_section_I1D.npz"
 
         # init tracking lattice
-        st2_stop = i1.stsub_62_i1
+        st2_stop = i1.ensub_62_i1
         dogleg_stop = i1d.ensec_66_i1d
         self.lattice = MagneticLattice(i1.cell + i1d.cell, start=st2_stop, stop=dogleg_stop, method=self.method)
         # init physics processes
@@ -871,8 +873,8 @@ class T4(SectionTrack):
         sase1_stop = sase1.ensec_2461_sa1
         # t4_stop = t4.ensub_2800_t4
         t4_stop = t4.ensec_2800_t4
-        csr_start = t4.id_19088442_  # t4.t4_start_csr#
-        csr_stop = t4.bpma_2606_t4
+        csr_start = t4.t4_start_csr
+        csr_stop = t4.t4_stop_csr
         # init tracking lattice
 
         t4.qm_2592_t4.k1 = self.init_parameters.get("qm_2592_t4", 0.28822914539964134)
@@ -939,7 +941,7 @@ class SASE3(SectionTrack):
         self.output_beam_file = self.particle_dir + 'section_SASE3.npz'
         self.tws_file = self.tws_dir + "tws_section_SASE3.npz"
 
-        start = sase3.ensec_2800_t4
+        start = sase3.stsec_2800_sa3
         # stop = sase3.ensec_2940_sa3
         # stop ~1m befpre SASE3
         stop = sase3.bpme_2806_sa3

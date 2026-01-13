@@ -37,11 +37,11 @@ class A1(SectionTrack):
         self.output_beam_file = self.particle_dir + 'section_A1.npz'
         self.tws_file = self.tws_dir + "tws_section_A1.npz"
         # init tracking lattice
-        start_sim = bolko.start_sim
+        start_ocelot = bolko.start_ocelot
         acc1_stop = bolko.a1_sim_stop
-        #start_sim = i1.id_22433449_
+        #start_ocelot = i1.id_22433449_
         #acc1_stop = i1.id_68749308_
-        self.lattice = MagneticLattice(bolko.cell, start=start_sim,stop=acc1_stop, method=self.method)
+        self.lattice = MagneticLattice(bolko.cell, start=start_ocelot,stop=acc1_stop, method=self.method)
         # init physics processes
         sc = SpaceCharge()
         sc.step = 1
@@ -65,8 +65,8 @@ class A1(SectionTrack):
         # adding physics processes
         acc1_1_stop = bolko.a1_1_stop
         #acc1_1_stop = i1.id_75115473_
-        self.add_physics_process(smooth, start=start_sim, stop=start_sim)
-        self.add_physics_process(sc, start=start_sim, stop=acc1_1_stop)
+        self.add_physics_process(smooth, start=start_ocelot, stop=start_ocelot)
+        self.add_physics_process(sc, start=start_ocelot, stop=acc1_1_stop)
         self.add_physics_process(sc2, start=acc1_1_stop, stop=acc1_stop)
         self.add_physics_process(wake, start=bolko.c_a1_1_1_i1, stop=acc1_stop)
 

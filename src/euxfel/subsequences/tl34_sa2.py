@@ -1,4 +1,4 @@
-# Converted from component_list_2026.01.21.xls
+# Converted from component_list_2024.07.04.xls
 
 from ocelot.cpbd.elements import *
 from ocelot.cpbd.beam import Twiss
@@ -13,30 +13,37 @@ twiss0._alpha_y = 0.689
 
 
 # Drifts:
+vcst98t40_1980_tl = Drift(eid="VCST98T40.1980.TL")
 d_0 = Drift(l=1.4724009999999907, eid="D_0")
 d_1 = Drift(l=13.047400999999823, eid="D_1")
 d_2 = Drift(l=1.1589500000002317, eid="D_2")
 d_3 = Drift(l=0.1539500000000229, eid="D_3")
 d_4 = Drift(l=0.16000000000008185, eid="D_4")
-d_5 = Drift(l=0.06999999999999995, eid="D_5")
-d_6 = Drift(l=0.06999999999999995, eid="D_6")
-d_7 = Drift(l=0.28000000000003633, eid="D_7")
-d_8 = Drift(l=0.06999999999999995, eid="D_8")
-d_9 = Drift(l=0.06999999999999995, eid="D_9")
+d_5 = Drift(l=0.07000000000016371, eid="D_5")
+d_6 = Drift(l=0.07000000000016371, eid="D_6")
+d_7 = Drift(l=0.2799999999999727, eid="D_7")
+d_8 = Drift(l=0.06999999999993634, eid="D_8")
+d_9 = Drift(l=0.07000000000016371, eid="D_9")
 d_10 = Drift(l=0.20499999999999086, eid="D_10")
 d_11 = Drift(l=0.18999999999987266, eid="D_11")
-d_12 = Drift(l=0.5200000000000454, eid="D_12")
-d_13 = Drift(l=3.930000000000127, eid="D_13")
-d_14 = Drift(l=0.44569999999989707, eid="D_14")
-d_15 = Drift(l=0.15429999999992106, eid="D_15")
-d_16 = Drift(l=0.20895100000007005, eid="D_16")
-d_17 = Drift(l=0.15395100000013406, eid="D_17")
-d_18 = Drift(l=0.19999999999986356, eid="D_18")
-d_19 = Drift(l=7.784699999999975, eid="D_19")
+d_12 = Drift(l=5.380000000000173, eid="D_12")
+d_13 = Drift(l=0.44569999999989707, eid="D_13")
+d_14 = Drift(l=0.15429999999992106, eid="D_14")
+d_15 = Drift(l=0.20895100000007005, eid="D_15")
+d_16 = Drift(l=0.15395100000013406, eid="D_16")
+d_17 = Drift(l=0.19999999999986356, eid="D_17")
+d_18 = Drift(l=1.4800000000000637, eid="D_18")
+vcst40t98_2014_tl = Drift(eid="VCST40T98.2014.TL")
+d_19 = Drift(l=6.304699999999912, eid="D_19")
 d_20 = Drift(l=0.09999999999986359, eid="D_20")
 d_21 = Drift(l=1.4347000000002026, eid="D_21")
 d_22 = Drift(l=0.1999999999998181, eid="D_22")
-d_23 = Drift(l=1.8607200000001285, eid="D_23")
+d_23 = Drift(l=0.15000000000009095, eid="D_23")
+vcv100_2023_tl = Drift(l=0.085, eid="VCV100.2023.TL")
+d_24 = Drift(l=0.5857000000001245, eid="D_24")
+vcb100_2024_tl = Drift(l=0.18, eid="VCB100.2024.TL")
+vcabsa_2024_tl = Drift(l=0.61, eid="VCABSA.2024.TL")
+d_25 = Drift(l=0.25002000000007685, eid="D_25")
 
 # Quadrupoles:
 qk_1982_tl = Quadrupole(l=1.0552, k1=0.09035960007960576, eid="QK.1982.TL")
@@ -53,7 +60,6 @@ kl_2001_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.5707963
 kl_2002_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2002.TL")
 kl_2003_tl = RBend(l=0.93, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2003.TL")
 kl_2005_tl = RBend(l=0.93, e1=0.0, e2=0.0, eid="KL.2005.TL")
-kl_2006_tl = RBend(l=0.93, e1=0.0, e2=0.0, eid="KL.2006.TL")
 
 # Hcors:
 chx_2012_tl = Hcor(l=0.2, eid="CHX.2012.TL")
@@ -75,12 +81,23 @@ bpmd_2022_tl = Monitor(eid="BPMD.2022.TL")
 stsub_1980_tl = Marker(eid="STSUB.1980.TL")
 ensub_1997_tl = Marker(eid="ENSUB.1997.TL")
 stsub_1997_tl = Marker(eid="STSUB.1997.TL")
+mkl_1998a_tl = Marker(eid="MKL.1998a.TL")
+mkl_1998d_tl = Marker(eid="MKL.1998d.TL")
+mkl_1999a_tl = Marker(eid="MKL.1999a.TL")
+mkl_1999d_tl = Marker(eid="MKL.1999d.TL")
+mkl_2000a_tl = Marker(eid="MKL.2000a.TL")
+mkl_2000d_tl = Marker(eid="MKL.2000d.TL")
+mkl_2001a_tl = Marker(eid="MKL.2001a.TL")
+mkl_2001d_tl = Marker(eid="MKL.2001d.TL")
+mkl_2002a_tl = Marker(eid="MKL.2002a.TL")
+mkl_2002d_tl = Marker(eid="MKL.2002d.TL")
 tora_2011_tl = Marker(eid="TORA.2011.TL")
 otre_2023_tl = Marker(eid="OTRE.2023.TL")
 ensub_2025_tl = Marker(eid="ENSUB.2025.TL")
 
 # Sequence:
 cell = (stsub_1980_tl,
+        vcst98t40_1980_tl,
         d_0,
         qk_1982_tl,
         d_1,
@@ -92,15 +109,25 @@ cell = (stsub_1980_tl,
         ensub_1997_tl,
         stsub_1997_tl,
         d_4,
+        mkl_1998a_tl,
         kl_1998_tl,
+        mkl_1998d_tl,
         d_5,
+        mkl_1999a_tl,
         kl_1999_tl,
+        mkl_1999d_tl,
         d_6,
+        mkl_2000a_tl,
         kl_2000_tl,
+        mkl_2000d_tl,
         d_7,
+        mkl_2001a_tl,
         kl_2001_tl,
+        mkl_2001d_tl,
         d_8,
+        mkl_2002a_tl,
         kl_2002_tl,
+        mkl_2002d_tl,
         d_9,
         kl_2003_tl,
         d_10,
@@ -108,19 +135,19 @@ cell = (stsub_1980_tl,
         d_11,
         kl_2005_tl,
         d_12,
-        kl_2006_tl,
-        d_13,
         cfy_2010_tl,
-        d_14,
+        d_13,
         tora_2011_tl,
-        d_15,
+        d_14,
         bpma_2011_tl,
-        d_16,
+        d_15,
         qf_2012_tl,
-        d_17,
+        d_16,
         chx_2012_tl,
-        d_18,
+        d_17,
         chy_2012_tl,
+        d_18,
+        vcst40t98_2014_tl,
         d_19,
         cnx_2021_tl,
         d_20,
@@ -130,6 +157,11 @@ cell = (stsub_1980_tl,
         d_22,
         otre_2023_tl,
         d_23,
+        vcv100_2023_tl,
+        d_24,
+        vcb100_2024_tl,
+        vcabsa_2024_tl,
+        d_25,
         ensub_2025_tl)
 
 # Power Supply IDs:
@@ -148,4 +180,3 @@ kl_2001_tl.ps_id = "KL.2001.TL"
 kl_2002_tl.ps_id = "KL.2002.TL"
 kl_2003_tl.ps_id = "KL.2003.TL"
 kl_2005_tl.ps_id = "KL.2005.TL"
-kl_2006_tl.ps_id = "KL.2006.TL"

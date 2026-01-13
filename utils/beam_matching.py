@@ -13,7 +13,7 @@ parray = load_particle_array("../beam_files/gun/gun.npz")
 
 
 # TRACK first trough A1
-lat_a1 = MagneticLattice(i1.cell , start=i1.start_sim, stop=i1.a1_sim_stop, method={"global": SecondTM})
+lat_a1 = MagneticLattice(i1.cell , start=i1.start_ocelot, stop=i1.a1_sim_stop, method={"global": SecondTM})
 navi_a1 = Navigator(lat_a1, unit_step=0.01)
 
 sc_mesh = [63, 63, 63]
@@ -43,8 +43,8 @@ wake_tds.wake_table = WakeTable('../wakes/RF/wake_table_TDS1.dat')
 smooth_par = 1000
 smooth = SmoothBeam(mslice = smooth_par)
 
-navi_a1.add_physics_proc(smooth, i1.start_sim, i1.start_sim)
-navi_a1.add_physics_proc(sc, i1.start_sim, i1.a1_1_stop)
+navi_a1.add_physics_proc(smooth, i1.start_ocelot, i1.start_ocelot)
+navi_a1.add_physics_proc(sc, i1.start_oceloty, i1.a1_1_stop)
 navi_a1.add_physics_proc(sc2, i1.a1_1_stop, navi_a1.lat.sequence[-1])
 navi_a1.add_physics_proc(wake, i1.c_a1_1_1_i1, i1.a1_sim_stop)
 

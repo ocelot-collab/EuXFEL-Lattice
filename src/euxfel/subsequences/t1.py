@@ -1,4 +1,4 @@
-# Converted from component_list_2026.01.21.xls
+# Converted from component_list_2024.07.04.xls
 
 from ocelot.cpbd.elements import *
 from ocelot.cpbd.beam import Twiss
@@ -13,84 +13,102 @@ twiss0._alpha_y = -2.1569
 
 
 # Drifts:
-d_0 = Drift(l=0.47240099999999074, eid="D_0")
-d_1 = Drift(l=1.9724209999999536, eid="D_1")
-d_2 = Drift(l=0.5, eid="D_2")
-d_3 = Drift(l=0.5, eid="D_3")
-d_4 = Drift(l=4.750005999999985, eid="D_4")
-d_5 = Drift(l=0.5, eid="D_5")
-d_6 = Drift(l=1.775000000000091, eid="D_6")
-d_7 = Drift(l=0.2089499999999589, eid="D_7")
-d_8 = Drift(l=0.1539500000000229, eid="D_8")
-d_9 = Drift(l=1.2243500000000949, eid="D_9")
-d_10 = Drift(l=1.710027999999903, eid="D_10")
+vcst98t40_2025_t1 = Drift(eid="VCST98T40.2025.T1")
+d_0 = Drift(l=4.999999873689376e-06, eid="D_0")
+d_1 = Drift(l=0.47240099999999074, eid="D_1")
+d_2 = Drift(l=1.9724160000000799, eid="D_2")
+d_3 = Drift(l=9.999999974752427e-06, eid="D_3")
+d_4 = Drift(l=0.49999000000002525, eid="D_4")
+d_5 = Drift(l=1.5000000075815478e-05, eid="D_5")
+d_6 = Drift(l=0.4999849999999242, eid="D_6")
+d_7 = Drift(l=1.9999999949504854e-05, eid="D_7")
+d_8 = Drift(l=4.749986000000035, eid="D_8")
+d_9 = Drift(l=0.5, eid="D_9")
+d_10 = Drift(l=1.775000000000091, eid="D_10")
 d_11 = Drift(l=0.2089499999999589, eid="D_11")
 d_12 = Drift(l=0.1539500000000229, eid="D_12")
-d_13 = Drift(l=4.379405000000043, eid="D_13")
-d_14 = Drift(l=0.8567999999997937, eid="D_14")
-d_15 = Drift(l=2.976816000000257, eid="D_15")
-d_16 = Drift(l=0.2089499999999589, eid="D_16")
-d_17 = Drift(l=0.1539500000000229, eid="D_17")
-d_18 = Drift(l=0.22434999999986757, eid="D_18")
-d_19 = Drift(l=5.0290839999999495, eid="D_19")
-d_20 = Drift(l=0.27500000000009095, eid="D_20")
-d_21 = Drift(l=0.2089499999999589, eid="D_21")
-d_22 = Drift(l=0.1539500000000229, eid="D_22")
-d_23 = Drift(l=3.331799999999839, eid="D_23")
-d_24 = Drift(l=1.2779820000002233, eid="D_24")
+d_13 = Drift(l=1.2243500000000949, eid="D_13")
+d_14 = Drift(l=1.710027999999903, eid="D_14")
+d_15 = Drift(l=0.2089499999999589, eid="D_15")
+d_16 = Drift(l=0.1539500000000229, eid="D_16")
+d_17 = Drift(l=4.379405000000043, eid="D_17")
+d_18 = Drift(l=0.8567999999997937, eid="D_18")
+d_19 = Drift(l=2.976816000000257, eid="D_19")
+d_20 = Drift(l=0.2089499999999589, eid="D_20")
+d_21 = Drift(l=0.1539500000000229, eid="D_21")
+d_22 = Drift(l=0.22434999999986757, eid="D_22")
+d_23 = Drift(l=5.0290839999999495, eid="D_23")
+d_24 = Drift(l=0.27500000000009095, eid="D_24")
 d_25 = Drift(l=0.2089499999999589, eid="D_25")
 d_26 = Drift(l=0.1539500000000229, eid="D_26")
-d_27 = Drift(l=7.2184250000001615, eid="D_27")
-d_28 = Drift(l=0.5000019999997676, eid="D_28")
-d_29 = Drift(l=0.5000009999998838, eid="D_29")
-d_30 = Drift(l=0.5, eid="D_30")
-d_31 = Drift(l=0.2750020000003133, eid="D_31")
-d_32 = Drift(l=0.20894999999973152, eid="D_32")
-d_33 = Drift(l=0.15394999999979553, eid="D_33")
-d_34 = Drift(l=0.23000000000038198, eid="D_34")
-d_35 = Drift(l=3.619999999999891, eid="D_35")
-d_36 = Drift(l=0.2699999999999818, eid="D_36")
-d_37 = Drift(l=3.4199999999999817, eid="D_37")
-d_38 = Drift(l=0.2699999999999818, eid="D_38")
-d_39 = Drift(l=3.7200000000001636, eid="D_39")
+d_27 = Drift(l=3.331799999999839, eid="D_27")
+d_28 = Drift(l=1.2779820000002233, eid="D_28")
+d_29 = Drift(l=0.2089499999999589, eid="D_29")
+d_30 = Drift(l=0.1539500000000229, eid="D_30")
+d_31 = Drift(l=7.218423999999823, eid="D_31")
+d_32 = Drift(l=1.0000003385357559e-06, eid="D_32")
+d_33 = Drift(l=9.99999883788405e-07, eid="D_33")
+d_34 = Drift(l=0.5, eid="D_34")
+d_35 = Drift(l=9.99999883788405e-07, eid="D_35")
+d_36 = Drift(l=0.5, eid="D_36")
+d_37 = Drift(l=9.99999883788405e-07, eid="D_37")
+d_38 = Drift(l=0.5, eid="D_38")
+d_39 = Drift(l=2.000000222324161e-06, eid="D_39")
 d_40 = Drift(l=0.27500000000009095, eid="D_40")
 d_41 = Drift(l=0.20894999999973152, eid="D_41")
 d_42 = Drift(l=0.15394999999979553, eid="D_42")
-d_43 = Drift(l=3.1900000000004183, eid="D_43")
-d_44 = Drift(l=6.315000000000055, eid="D_44")
-d_45 = Drift(l=0.20894999999973152, eid="D_45")
-d_46 = Drift(l=0.15394999999979553, eid="D_46")
-d_47 = Drift(l=6.730000000000382, eid="D_47")
-d_48 = Drift(l=6.775000000000091, eid="D_48")
-d_49 = Drift(l=0.20894999999973152, eid="D_49")
-d_50 = Drift(l=0.15394999999979553, eid="D_50")
-d_51 = Drift(l=13.505000000000473, eid="D_51")
-d_52 = Drift(l=0.20894999999973152, eid="D_52")
-d_53 = Drift(l=0.15394999999979553, eid="D_53")
-d_54 = Drift(l=6.730000000000382, eid="D_54")
-d_55 = Drift(l=6.775000000000091, eid="D_55")
-d_56 = Drift(l=0.20894999999973152, eid="D_56")
-d_57 = Drift(l=0.15394999999979553, eid="D_57")
-d_58 = Drift(l=6.730000000000382, eid="D_58")
-d_59 = Drift(l=6.775000000000091, eid="D_59")
-d_60 = Drift(l=0.20894999999973152, eid="D_60")
-d_61 = Drift(l=0.15394999999979553, eid="D_61")
-d_62 = Drift(l=5.4300000000002004, eid="D_62")
-d_63 = Drift(l=5.474999999999909, eid="D_63")
-d_64 = Drift(l=0.20895000000018626, eid="D_64")
-d_65 = Drift(l=0.15394999999979553, eid="D_65")
-d_66 = Drift(l=4.020000000000346, eid="D_66")
-d_67 = Drift(l=5.5946249999997235, eid="D_67")
-d_68 = Drift(l=0.8065000000001419, eid="D_68")
-d_69 = Drift(l=0.2181500000001506, eid="D_69")
-d_70 = Drift(l=0.17814999999961292, eid="D_70")
-d_71 = Drift(l=0.1250000000001819, eid="D_71")
-d_72 = Drift(l=2.167499999999927, eid="D_72")
-d_73 = Drift(l=1.8266999999999642, eid="D_73")
-d_74 = Drift(l=0.1499999999998181, eid="D_74")
-d_75 = Drift(l=0.4323000000003049, eid="D_75")
-d_76 = Drift(l=0.18665000000009968, eid="D_76")
-d_77 = Drift(l=0.040150000000147706, eid="D_77")
+d_43 = Drift(l=0.23000000000038198, eid="D_43")
+d_44 = Drift(l=3.619999999999891, eid="D_44")
+d_45 = Drift(l=0.2699999999999818, eid="D_45")
+d_46 = Drift(l=3.4199999999999817, eid="D_46")
+d_47 = Drift(l=0.2699999999999818, eid="D_47")
+d_48 = Drift(l=3.7200000000001636, eid="D_48")
+d_49 = Drift(l=0.27500000000009095, eid="D_49")
+d_50 = Drift(l=0.20894999999973152, eid="D_50")
+d_51 = Drift(l=0.15394999999979553, eid="D_51")
+d_52 = Drift(l=3.1900000000004183, eid="D_52")
+d_53 = Drift(l=6.315000000000055, eid="D_53")
+d_54 = Drift(l=0.20894999999973152, eid="D_54")
+d_55 = Drift(l=0.15394999999979553, eid="D_55")
+d_56 = Drift(l=6.730000000000382, eid="D_56")
+d_57 = Drift(l=6.775000000000091, eid="D_57")
+d_58 = Drift(l=0.20894999999973152, eid="D_58")
+d_59 = Drift(l=0.15394999999979553, eid="D_59")
+d_60 = Drift(l=4.528200000000107, eid="D_60")
+vcbshut_2130_t1 = Drift(l=0.3, eid="VCBSHUT.2130.T1")
+d_61 = Drift(l=8.676800000000366, eid="D_61")
+d_62 = Drift(l=0.20894999999973152, eid="D_62")
+d_63 = Drift(l=0.15394999999979553, eid="D_63")
+d_64 = Drift(l=6.730000000000382, eid="D_64")
+d_65 = Drift(l=6.775000000000091, eid="D_65")
+d_66 = Drift(l=0.20894999999973152, eid="D_66")
+d_67 = Drift(l=0.15394999999979553, eid="D_67")
+d_68 = Drift(l=6.730000000000382, eid="D_68")
+d_69 = Drift(l=6.775000000000091, eid="D_69")
+d_70 = Drift(l=0.20894999999973152, eid="D_70")
+d_71 = Drift(l=0.15394999999979553, eid="D_71")
+d_72 = Drift(l=5.4300000000002004, eid="D_72")
+d_73 = Drift(l=5.474999999999909, eid="D_73")
+d_74 = Drift(l=0.20895000000018626, eid="D_74")
+d_75 = Drift(l=0.15394999999979553, eid="D_75")
+d_76 = Drift(l=4.020000000000346, eid="D_76")
+d_77 = Drift(l=0.6149999999997817, eid="D_77")
+vcbshut_2185_t1 = Drift(l=0.3, eid="VCBSHUT.2185.T1")
+d_78 = Drift(l=4.679624999999942, eid="D_78")
+d_79 = Drift(l=0.6067500000003747, eid="D_79")
+vcst40t10_2190_t1 = Drift(eid="VCST40T10.2190.T1")
+d_80 = Drift(l=0.19974999999976717, eid="D_80")
+d_81 = Drift(l=0.2181500000001506, eid="D_81")
+d_82 = Drift(l=0.17814999999961292, eid="D_82")
+d_83 = Drift(l=0.1250000000001819, eid="D_83")
+d_84 = Drift(l=2.167499999999927, eid="D_84")
+d_85 = Drift(l=1.8266999999999642, eid="D_85")
+d_86 = Drift(l=0.1499999999998181, eid="D_86")
+d_87 = Drift(l=0.21000000000040017, eid="D_87")
+absp_2197_t1 = Drift(l=0.05, eid="ABSP.2197.T1")
+d_88 = Drift(l=0.1722999999999047, eid="D_88")
+d_89 = Drift(l=0.18665000000009968, eid="D_89")
+d_90 = Drift(l=0.040150000000147706, eid="D_90")
 
 # Quadrupoles:
 qf_2041_t1 = Quadrupole(l=0.5321, k1=0.3152129371001691, eid="QF.2041.T1")
@@ -183,8 +201,29 @@ bpme_2197_t1 = Monitor(eid="BPME.2197.T1")
 # Markers:
 stsec_2025_t1 = Marker(eid="STSEC.2025.T1")
 stsub_2025_t1 = Marker(eid="STSUB.2025.T1")
+mbz_2025a_t1 = Marker(eid="MBZ.2025a.T1")
+mbz_2025d_t1 = Marker(eid="MBZ.2025d.T1")
+mbz_2030d_t1 = Marker(eid="MBZ.2030d.T1")
+mbz_2031d_t1 = Marker(eid="MBZ.2031d.T1")
+mbz_2033d_t1 = Marker(eid="MBZ.2033d.T1")
 tora_2038_t1 = Marker(eid="TORA.2038.T1")
 otra_2038_t1 = Marker(eid="OTRA.2038.T1")
+mbd_2050a_t1 = Marker(eid="MBD.2050a.T1")
+mbd_2050d_t1 = Marker(eid="MBD.2050d.T1")
+mbd_2062a_t1 = Marker(eid="MBD.2062a.T1")
+mbd_2062d_t1 = Marker(eid="MBD.2062d.T1")
+mbd_2077a_t1 = Marker(eid="MBD.2077a.T1")
+mbd_2077d_t1 = Marker(eid="MBD.2077d.T1")
+mbd_2079a_t1 = Marker(eid="MBD.2079a.T1")
+mbd_2079d_t1 = Marker(eid="MBD.2079d.T1")
+mbd_2080a_t1 = Marker(eid="MBD.2080a.T1")
+mbd_2080d_t1 = Marker(eid="MBD.2080d.T1")
+mbd_2082a_t1 = Marker(eid="MBD.2082a.T1")
+mbd_2082d_t1 = Marker(eid="MBD.2082d.T1")
+mbd_2084a_t1 = Marker(eid="MBD.2084a.T1")
+mbd_2084d_t1 = Marker(eid="MBD.2084d.T1")
+mbd_2097a_t1 = Marker(eid="MBD.2097a.T1")
+mbd_2097d_t1 = Marker(eid="MBD.2097d.T1")
 ensub_2097_t1 = Marker(eid="ENSUB.2097.T1")
 stsub_2097_t1 = Marker(eid="STSUB.2097.T1")
 otrbw_2117_t1 = Marker(eid="OTRBW.2117.T1")
@@ -203,164 +242,203 @@ qk_2027_tl = (19 * [yslice2027] + [xslice2027]) * 10
 # Sequence:
 cell = (stsec_2025_t1,
         stsub_2025_t1,
+        vcst98t40_2025_t1,
+        mbz_2025a_t1,
         bz_2025_t1,
         d_0,
-        qk_2027_tl,
+        mbz_2025d_t1,
         d_1,
-        bz_2030_t1,
+        qk_2027_tl,
         d_2,
-        bz_2031_t1,
+        bz_2030_t1,
         d_3,
-        bz_2033_t1,
+        mbz_2030d_t1,
         d_4,
-        tora_2038_t1,
+        bz_2031_t1,
         d_5,
-        otra_2038_t1,
+        mbz_2031d_t1,
         d_6,
-        bpma_2040_t1,
+        bz_2033_t1,
         d_7,
-        qf_2041_t1,
+        mbz_2033d_t1,
         d_8,
-        cfx_2041_t1,
+        tora_2038_t1,
         d_9,
-        oa_2042_t1,
+        otra_2038_t1,
         d_10,
-        bpma_2044_t1,
+        bpma_2040_t1,
         d_11,
-        qf_2045_t1,
+        qf_2041_t1,
         d_12,
-        cfy_2045_t1,
+        cfx_2041_t1,
         d_13,
-        bd_2050_t1,
+        oa_2042_t1,
         d_14,
-        sa_2052_t1,
+        bpma_2044_t1,
         d_15,
-        bpma_2055_t1,
+        qf_2045_t1,
         d_16,
-        qf_2055_t1,
+        cfy_2045_t1,
         d_17,
-        cfx_2056_t1,
+        mbd_2050a_t1,
+        bd_2050_t1,
+        mbd_2050d_t1,
         d_18,
-        oa_2056_t1,
+        sa_2052_t1,
         d_19,
-        bd_2062_t1,
+        bpma_2055_t1,
         d_20,
-        bpma_2062_t1,
+        qf_2055_t1,
         d_21,
-        qf_2063_t1,
+        cfx_2056_t1,
         d_22,
-        cfy_2063_t1,
+        oa_2056_t1,
         d_23,
-        sa_2067_t1,
+        mbd_2062a_t1,
+        bd_2062_t1,
+        mbd_2062d_t1,
         d_24,
-        bpma_2068_t1,
+        bpma_2062_t1,
         d_25,
-        qf_2069_t1,
+        qf_2063_t1,
         d_26,
-        cfx_2069_t1,
+        cfy_2063_t1,
         d_27,
-        bd_2077_t1,
+        sa_2067_t1,
         d_28,
-        bd_2079_t1,
+        bpma_2068_t1,
         d_29,
-        bd_2080_t1,
+        qf_2069_t1,
         d_30,
-        bd_2082_t1,
+        cfx_2069_t1,
         d_31,
-        bpma_2082_t1,
+        mbd_2077a_t1,
         d_32,
-        qf_2083_t1,
+        bd_2077_t1,
         d_33,
-        cfy_2083_t1,
+        mbd_2077d_t1,
         d_34,
-        bd_2084_t1,
+        mbd_2079a_t1,
         d_35,
-        bpma_2088_t1,
+        bd_2079_t1,
+        mbd_2079d_t1,
         d_36,
-        cfx_2089_t1,
+        mbd_2080a_t1,
         d_37,
-        bpma_2092_t1,
+        bd_2080_t1,
+        mbd_2080d_t1,
         d_38,
-        cfy_2092_t1,
+        mbd_2082a_t1,
+        bd_2082_t1,
         d_39,
+        mbd_2082d_t1,
+        d_40,
+        bpma_2082_t1,
+        d_41,
+        qf_2083_t1,
+        d_42,
+        cfy_2083_t1,
+        d_43,
+        mbd_2084a_t1,
+        bd_2084_t1,
+        mbd_2084d_t1,
+        d_44,
+        bpma_2088_t1,
+        d_45,
+        cfx_2089_t1,
+        d_46,
+        bpma_2092_t1,
+        d_47,
+        cfy_2092_t1,
+        d_48,
+        mbd_2097a_t1,
         bd_2097_t1,
+        mbd_2097d_t1,
         ensub_2097_t1,
         stsub_2097_t1,
-        d_40,
-        bpma_2097_t1,
-        d_41,
-        qf_2098_t1,
-        d_42,
-        cfx_2098_t1,
-        d_43,
-        bsect_2102_t1,
-        d_44,
-        bpma_2109_t1,
-        d_45,
-        qf_2110_t1,
-        d_46,
-        cfy_2110_t1,
-        d_47,
-        otrbw_2117_t1,
-        d_48,
-        bpma_2124_t1,
         d_49,
-        qf_2124_t1,
+        bpma_2097_t1,
         d_50,
-        cfx_2125_t1,
+        qf_2098_t1,
         d_51,
-        bpma_2138_t1,
+        cfx_2098_t1,
         d_52,
-        qf_2139_t1,
+        bsect_2102_t1,
         d_53,
-        cfy_2139_t1,
+        bpma_2109_t1,
         d_54,
-        otrbw_2146_t1,
+        qf_2110_t1,
         d_55,
-        bpma_2153_t1,
+        cfy_2110_t1,
         d_56,
-        qf_2153_t1,
+        otrbw_2117_t1,
         d_57,
-        cfx_2154_t1,
+        bpma_2124_t1,
         d_58,
-        otrbw_2161_t1,
+        qf_2124_t1,
         d_59,
-        bpma_2167_t1,
+        cfx_2125_t1,
         d_60,
-        qf_2168_t1,
+        vcbshut_2130_t1,
         d_61,
-        cfy_2168_t1,
+        bpma_2138_t1,
         d_62,
-        otrbw_2174_t1,
+        qf_2139_t1,
         d_63,
-        bpma_2179_t1,
+        cfy_2139_t1,
         d_64,
-        qf_2180_t1,
+        otrbw_2146_t1,
         d_65,
-        cfx_2180_t1,
+        bpma_2153_t1,
         d_66,
-        bpma_2184_t1,
+        qf_2153_t1,
         d_67,
-        tora_2190_t1,
+        cfx_2154_t1,
         d_68,
-        bpme_2191_t1,
+        otrbw_2161_t1,
         d_69,
-        qa_2191_t1,
+        bpma_2167_t1,
         d_70,
-        cny_2191_t1,
+        qf_2168_t1,
         d_71,
-        cex_2192_t1,
+        cfy_2168_t1,
         d_72,
-        u40s_2194_t1,
+        otrbw_2174_t1,
         d_73,
-        cny_2196_t1,
+        bpma_2179_t1,
         d_74,
-        cex_2196_t1,
+        qf_2180_t1,
         d_75,
-        bpme_2197_t1,
+        cfx_2180_t1,
         d_76,
-        qa_2197_t1,
+        bpma_2184_t1,
         d_77,
+        vcbshut_2185_t1,
+        d_78,
+        tora_2190_t1,
+        d_79,
+        vcst40t10_2190_t1,
+        d_80,
+        bpme_2191_t1,
+        d_81,
+        qa_2191_t1,
+        d_82,
+        cny_2191_t1,
+        d_83,
+        cex_2192_t1,
+        d_84,
+        u40s_2194_t1,
+        d_85,
+        cny_2196_t1,
+        d_86,
+        cex_2196_t1,
+        d_87,
+        absp_2197_t1,
+        d_88,
+        bpme_2197_t1,
+        d_89,
+        qa_2197_t1,
+        d_90,
         ensub_2197_t1,
         ensec_2197_t1)
 

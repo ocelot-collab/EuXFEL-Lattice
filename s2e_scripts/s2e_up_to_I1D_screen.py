@@ -122,8 +122,8 @@ for el in lat.sequence:
 gen = (tw for tw in section_lat.tws if tw.id == "OTRC.64.I1D")
 tws_at_screen = next(gen)
 print("!!!!!Twiss!",  tws_at_screen)
-#plt.show()
-exit()
+plt.show()
+# exit()
 
 p_array = load_particle_array(data_dir + "gun/gun.npz")
 
