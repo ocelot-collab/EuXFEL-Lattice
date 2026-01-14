@@ -57,34 +57,8 @@ r3 = 0.5 / 0.0411897704  # 12.138936321917445
 section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
 section_lat.elem_seq = [i for i in flatten(section_lat.elem_seq)]
 
-gen = (tw for tw in section_lat.tws if tw.id == "OTRC.64.I1D")
-tws_at_screen = next(gen)
-print("!!!!!Twiss!",  tws_at_screen)
-
-#SPECIAL_DX06_OPTICS_I1D = {
-#   "Q.A1.1.I1": -0.309370,
-#   "Q.AH1.1.I1": 0.310489,
-#   "QI.1.I1": 0.053430,
-#   "QI.2.I1": 0.164670,
-#    "BL.1.I1": 0.099484,
-#    "BL.3.I1": 0.097738,
-#    "BL.4.I1": 0.099484,
-#   "QI.3.I1": -0.205530,
-#   "QI.4.I1": -0.083720,
-#   "QI.5.I1": 0.500308,
-#   "QI.6.I1": 0.188820,
-#   "QI.7.I1": -0.712480,
-#   "QI.8.I1": 0.712480,
-#   "QI.9.I1": -0.712480,
-#   "QI.11.I1": 0.508749,
-#   "QI.12.I1": 0.789625,
-#    "BB.5.IID": -0.523599,
-#   "QI.41.IID": 1.046306,
-#   "QI.42.IID": -0.475400
-#}
-
 SPECIAL_DX12_OPTICS_I1D = {
-    "QI.55.I1": -29974,
+    "QI.55.I1": -2.9974,
     "QI.57.I1": 2.9974,
     "QI.59.I1": -2.9974,
     "QI.61.I1": -2.14371,
@@ -93,16 +67,7 @@ SPECIAL_DX12_OPTICS_I1D = {
     "QI.64.I1D": 3.5
 }
 
-#for element in flatten(section_lat.elem_seq):
-#    if not isinstance(element, Quadrupole):
-#        continue
-#    if element.ps_id in SPECIAL_DX06_OPTICS_I1D:
-#        k1l = SPECIAL_DX06_OPTICS_I1D[element.ps_id]
-#        k1 = k1l / element.l
-#        element.k1 = k1
-#        print(element, k1l)
 
-#section_lat= flatten(section_lat.elem_seq)
 
 for element in section_lat.elem_seq:
     if not isinstance(element, Quadrupole):
@@ -113,34 +78,22 @@ for element in section_lat.elem_seq:
         element.k1 = k1
         
 
-
 # plot twiss parameters
 lat = MagneticLattice(section_lat.elem_seq)
-for el in lat.sequence:
-    print()
-#plot_opt_func(lat, section_lat.tws)
-gen = (tw for tw in section_lat.tws if tw.id == "OTRC.64.I1D")
-tws_at_screen = next(gen)
-print("!!!!!Twiss!",  tws_at_screen)
-plt.show()
-# exit()
+sections = [A1, AH1, LH, I1D]
 
-p_array = load_particle_array(data_dir + "gun/gun.npz")
-
-E1 = 129.9e-3 
-E0 = p_array.E
-
+E1 = 130e-3
+E0 = 0.0065
         
-chirp = -1.11100113391876
-curvature = 122.00003051757812
-skewness = 27999.9765625
+chirp     = -9.11 
+curvature = 222 
+skewness  = 28000
 
 from ocelot.utils.acc_utils import beam2rf,beam2rf_xfel_linac 
 v11,phi11,v13,phi13 = beam2rf(E1=E1, chirp=chirp, curvature=curvature, skewness=skewness, n=3, freq=1.3e9, E0=E0)
-v21,phi21 = beam2rf_xfel_linac(sum_voltage=576.08e-3, chirp=-12.399999618530273, init_energy=0.13)
-v31,phi31 = beam2rf_xfel_linac(sum_voltage=(1737.489990234375)*1e-3, chirp=-5.400000095367432, init_energy=0.7)
+v21,phi21 = beam2rf_xfel_linac(sum_voltage=570e-3, chirp=-5.4, init_energy=0.13)
+v31,phi31 = beam2rf_xfel_linac(sum_voltage=1.7, chirp=-9.4, init_energy=0.7)
 
-print(f'chirp={chirp}, curvature={curvature}, skewness={skewness}')
 config = {
     A1:    {"phi": phi11, "v": v11 / 8,
            "SC": SC_exec, "smooth": True, "wake": wake_exec},
@@ -170,9 +123,8 @@ config = {
     SASE2: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
 }
 
-
-p_array = section_lat.track_sections(sections=all_sections, p_array=p_array, config=config, force_ext_p_array=True,
-                                     coupler_kick=coupler_kick_exec)
+p_array = load_particle_array(data_dir + "gun/gun.npz")
+p_array = section_lat.track_sections(sections=all_sections, p_array=p_array, config=config, force_ext_p_array=True, coupler_kick=coupler_kick_exec)
 
 
 show_e_beam(p_array)
