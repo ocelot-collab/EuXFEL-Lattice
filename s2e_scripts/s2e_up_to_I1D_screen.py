@@ -93,7 +93,6 @@ from ocelot.utils.acc_utils import beam2rf,beam2rf_xfel_linac
 v11,phi11,v13,phi13 = beam2rf(E1=E1, chirp=chirp, curvature=curvature, skewness=skewness, n=3, freq=1.3e9, E0=E0)
 v21,phi21 = beam2rf_xfel_linac(sum_voltage=570e-3, chirp=-5.4, init_energy=0.13)
 v31,phi31 = beam2rf_xfel_linac(sum_voltage=1.7, chirp=-9.4, init_energy=0.7)
-
 config = {
     A1:    {"phi": phi11, "v": v11 / 8,
            "SC": SC_exec, "smooth": True, "wake": wake_exec},

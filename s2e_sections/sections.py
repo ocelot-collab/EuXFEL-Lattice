@@ -71,7 +71,7 @@ class A1(SectionTrack):
         # setting parameters
         self.lattice_name = 'A1'
         self.unit_step = 0.02
-        self.input_beam_file = self.particle_dir + "gun/gun_2019.npz"
+        self.input_beam_file = self.particle_dir + "gun/gun.npz"
         self.output_beam_file = self.particle_dir + 'section_A1.npz'
         self.tws_file = self.tws_dir + "tws_section_A1.npz"
         # init tracking lattice
