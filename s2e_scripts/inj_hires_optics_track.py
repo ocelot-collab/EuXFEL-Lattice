@@ -1,5 +1,4 @@
 import sys
-sys.path.insert(1, "../")
 
 from ocelot import *
 from ocelot.cpbd.physics_proc import IBS

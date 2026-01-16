@@ -2,10 +2,9 @@
 import sys
 
 #sys.path.append(ocelot_dir)
-sys.path.insert(1, "../")
 #print(sys.path)
 # from s2e_sections.sections_special_lattice import *
-from s2e_sections.sections import *
+from euxfel.sections import *
 from ocelot.utils.section_track import *
 from ocelot.gui.accelerator import *
 import time
