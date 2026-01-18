@@ -1,14 +1,14 @@
-# Converted from component_list_2026.01.21.xls
+# Converted from component_list_2024.07.04.xls
 
 from ocelot.cpbd.elements import *
 from ocelot.cpbd.beam import Twiss
 
 twiss0 = Twiss()
 twiss0._E = 14.0
-twiss0._beta_x = 49.3586
-twiss0._beta_y = 40.0818
-twiss0._alpha_x = 1.2634
-twiss0._alpha_y = -1.0757
+twiss0._beta_x = 45.1111
+twiss0._beta_y = 42.2277
+twiss0._alpha_x = 1.1465
+twiss0._alpha_y = -1.1146
 
 
 
@@ -75,47 +75,24 @@ d_56 = Drift(l=0.14000000000010915, eid="D_56")
 d_57 = Drift(l=21.064999999999962, eid="D_57")
 d_58 = Drift(l=0.20499999999992724, eid="D_58")
 d_59 = Drift(l=0.14000000000010915, eid="D_59")
-d_60 = Drift(l=21.60000000000009, eid="D_60")
-d_61 = Drift(l=0.1539499999996224, eid="D_61")
-d_62 = Drift(l=0.20895000000008657, eid="D_62")
-d_63 = Drift(l=1.3250000000002728, eid="D_63")
-d_64 = Drift(l=0.1499999999998181, eid="D_64")
-d_65 = Drift(l=0.21894999999973153, eid="D_65")
-d_66 = Drift(l=0.2089500000005413, eid="D_66")
-d_67 = Drift(l=1.4399999999995998, eid="D_67")
-d_68 = Drift(l=0.15395000000007714, eid="D_68")
-d_69 = Drift(l=0.20895000000008657, eid="D_69")
-d_70 = Drift(l=0.8364999999998872, eid="D_70")
-d_71 = Drift(l=0.44050000000015643, eid="D_71")
-d_72 = Drift(l=1.030999999999949, eid="D_72")
-vcstern_2953_t5 = Drift(eid="VCSTERN.2953.T5")
-d_73 = Drift(l=1.2550000000001091, eid="D_73")
-d_74 = Drift(l=1.0529999999998836, eid="D_74")
-d_75 = Drift(l=0.20894999999973152, eid="D_75")
-d_76 = Drift(l=0.15395000000025028, eid="D_76")
-d_77 = Drift(l=1.4400000000002364, eid="D_77")
-d_78 = Drift(l=0.20894999999973152, eid="D_78")
-d_79 = Drift(l=0.21895000000030485, eid="D_79")
-d_80 = Drift(l=0.14999999999987268, eid="D_80")
-d_81 = Drift(l=1.325, eid="D_81")
-d_82 = Drift(l=0.20894999999973152, eid="D_82")
-d_83 = Drift(l=0.15395000000025028, eid="D_83")
-d_84 = Drift(l=12.953999999999905, eid="D_84")
-d_85 = Drift(l=0.20894999999973152, eid="D_85")
-d_86 = Drift(l=0.15395000000025028, eid="D_86")
-d_87 = Drift(l=0.8399999999998726, eid="D_87")
-d_88 = Drift(l=0.7332599999999729, eid="D_88")
-d_89 = Drift(l=7.139000000000124, eid="D_89")
-d_90 = Drift(l=0.205000000000382, eid="D_90")
-d_91 = Drift(l=0.1399999999996544, eid="D_91")
-d_92 = Drift(l=1.103149999999823, eid="D_92")
-d_93 = Drift(l=19.96185000000014, eid="D_93")
-d_94 = Drift(l=0.205000000000382, eid="D_94")
-d_95 = Drift(l=0.1399999999996544, eid="D_95")
-d_96 = Drift(l=21.064999999999962, eid="D_96")
-d_97 = Drift(l=0.205000000000382, eid="D_97")
-d_98 = Drift(l=0.1399999999996544, eid="D_98")
-d_99 = Drift(l=9.67599999999984, eid="D_99")
+d_60 = Drift(l=21.064999999999962, eid="D_60")
+d_61 = Drift(l=0.20499999999992724, eid="D_61")
+d_62 = Drift(l=0.14000000000010915, eid="D_62")
+d_63 = Drift(l=21.064999999999962, eid="D_63")
+d_64 = Drift(l=0.20499999999992724, eid="D_64")
+d_65 = Drift(l=0.14000000000010915, eid="D_65")
+d_66 = Drift(l=11.514999999999782, eid="D_66")
+d_67 = Drift(l=0.7332599999999729, eid="D_67")
+d_68 = Drift(l=7.139000000000124, eid="D_68")
+d_69 = Drift(l=0.205000000000382, eid="D_69")
+d_70 = Drift(l=0.1399999999996544, eid="D_70")
+d_71 = Drift(l=21.064999999999962, eid="D_71")
+d_72 = Drift(l=0.205000000000382, eid="D_72")
+d_73 = Drift(l=0.1399999999996544, eid="D_73")
+d_74 = Drift(l=21.064999999999962, eid="D_74")
+d_75 = Drift(l=0.205000000000382, eid="D_75")
+d_76 = Drift(l=0.1399999999996544, eid="D_76")
+d_77 = Drift(l=9.67599999999984, eid="D_77")
 
 # Quadrupoles:
 qe_2756_t5 = Quadrupole(l=0.24, k1=-0.2155167819, eid="QE.2756.T5")
@@ -134,16 +111,9 @@ qh_2855_t5 = Quadrupole(l=1.0291, k1=0.19652570639976683, eid="QH.2855.T5")
 qh_2858_t5 = Quadrupole(l=1.0291, k1=-0.1965228316995433, eid="QH.2858.T5")
 qe_2878_t5 = Quadrupole(l=0.24, k1=0.19227955160000001, eid="QE.2878.T5")
 qe_2900_t5 = Quadrupole(l=0.24, k1=-0.19227955160000001, eid="QE.2900.T5")
-qe_2922_t5 = Quadrupole(l=0.24, k1=0.19515670000000002, eid="QE.2922.T5")
-qf_2945_t5 = Quadrupole(l=0.5321, k1=-0.44567809999999997, eid="QF.2945.T5")
-qe_2947_t5 = Quadrupole(l=0.24, k1=0.49325050000000004, eid="QE.2947.T5")
-qf_2948_t5 = Quadrupole(l=0.5321, k1=0.49325050000000004, eid="QF.2948.T5")
-qf_2950_t5 = Quadrupole(l=0.5321, k1=-0.448114, eid="QF.2950.T5")
-qf_2956_t5 = Quadrupole(l=0.5321, k1=-0.4210365, eid="QF.2956.T5")
-qf_2958_t5 = Quadrupole(l=0.5321, k1=0.49188450000000006, eid="QF.2958.T5")
-qe_2959_t5 = Quadrupole(l=0.24, k1=0.4918845, eid="QE.2959.T5")
-qf_2961_t5 = Quadrupole(l=0.5321, k1=-0.4469194, eid="QF.2961.T5")
-qf_2976_t5 = Quadrupole(l=0.5321, k1=0.1004532, eid="QF.2976.T5")
+qe_2922_t5 = Quadrupole(l=0.24, k1=0.19227955160000001, eid="QE.2922.T5")
+qe_2943_t5 = Quadrupole(l=0.24, k1=-0.19227955160000001, eid="QE.2943.T5")
+qe_2965_t5 = Quadrupole(l=0.24, k1=0.19227955160000001, eid="QE.2965.T5")
 qe_2985_un2 = Quadrupole(l=0.24, k1=-0.19227955160000001, eid="QE.2985.UN2")
 qe_3007_un2 = Quadrupole(l=0.24, k1=0.19227955160000001, eid="QE.3007.UN2")
 qe_3029_un2 = Quadrupole(l=0.24, k1=-0.19227955160000001, eid="QE.3029.UN2")
@@ -165,10 +135,8 @@ chx_2830_t5 = Hcor(l=0.2, eid="CHX.2830.T5")
 chx_2838_t5 = Hcor(l=0.2, eid="CHX.2838.T5")
 chx_2856_t5 = Hcor(l=0.2, eid="CHX.2856.T5")
 cex_2879_t5 = Hcor(l=0.1, eid="CEX.2879.T5")
-cmx_2922_t5 = Hcor(l=0.3, eid="CMX.2922.T5")
-cmx_2947_t5 = Hcor(l=0.3, eid="CMX.2947.T5")
-cmx_2959_t5 = Hcor(l=0.3, eid="CMX.2959.T5")
-cmx_2976_t5 = Hcor(l=0.3, eid="CMX.2976.T5")
+cex_2922_t5 = Hcor(l=0.1, eid="CEX.2922.T5")
+cex_2966_t5 = Hcor(l=0.1, eid="CEX.2966.T5")
 cex_3007_un2 = Hcor(l=0.1, eid="CEX.3007.UN2")
 
 # Vcors:
@@ -180,10 +148,7 @@ chy_2835_t5 = Vcor(l=0.2, eid="CHY.2835.T5")
 chy_2845_t5 = Vcor(l=0.2, eid="CHY.2845.T5")
 chy_2859_t5 = Vcor(l=0.2, eid="CHY.2859.T5")
 cey_2900_t5 = Vcor(l=0.1, eid="CEY.2900.T5")
-cmy_2944_t5 = Vcor(l=0.3, eid="CMY.2944.T5")
-cmy_2950_t5 = Vcor(l=0.3, eid="CMY.2950.T5")
-cmy_2956_t5 = Vcor(l=0.3, eid="CMY.2956.T5")
-cmy_2962_t5 = Vcor(l=0.3, eid="CMY.2962.T5")
+cey_2944_t5 = Vcor(l=0.1, eid="CEY.2944.T5")
 cey_2986_un2 = Vcor(l=0.1, eid="CEY.2986.UN2")
 cey_3029_un2 = Vcor(l=0.1, eid="CEY.3029.UN2")
 
@@ -204,13 +169,8 @@ bpma_2858_t5 = Monitor(eid="BPMA.2858.T5")
 bpma_2878_t5 = Monitor(eid="BPMA.2878.T5")
 bpma_2900_t5 = Monitor(eid="BPMA.2900.T5")
 bpma_2921_t5 = Monitor(eid="BPMA.2921.T5")
-bpma_2945_t5 = Monitor(eid="BPMA.2945.T5")
-bpma_2948_t5 = Monitor(eid="BPMA.2948.T5")
-bpma_2951_t5 = Monitor(eid="BPMA.2951.T5")
-bpma_2955_t5 = Monitor(eid="BPMA.2955.T5")
-bpma_2958_t5 = Monitor(eid="BPMA.2958.T5")
-bpma_2961_t5 = Monitor(eid="BPMA.2961.T5")
-bpma_2975_t5 = Monitor(eid="BPMA.2975.T5")
+bpma_2943_t5 = Monitor(eid="BPMA.2943.T5")
+bpma_2965_t5 = Monitor(eid="BPMA.2965.T5")
 bpma_2985_un2 = Monitor(eid="BPMA.2985.UN2")
 bpma_3007_un2 = Monitor(eid="BPMA.3007.UN2")
 bpma_3028_un2 = Monitor(eid="BPMA.3028.UN2")
@@ -225,14 +185,10 @@ mbe_2821a_t5 = Marker(eid="MBE.2821a.T5")
 mbe_2821d_t5 = Marker(eid="MBE.2821d.T5")
 mbe_2841a_t5 = Marker(eid="MBE.2841a.T5")
 mbe_2841d_t5 = Marker(eid="MBE.2841d.T5")
-miral_2952_t5 = Marker(eid="MIRAL.2952.T5")
-otrc_2952_t5 = Marker(eid="OTRC.2952.T5")
-otrc_2954_t5 = Marker(eid="OTRC.2954.T5")
 tora_2977_t5 = Marker(eid="TORA.2977.T5")
 ensub_2978_t5 = Marker(eid="ENSUB.2978.T5")
 ensec_2978_t5 = Marker(eid="ENSEC.2978.T5")
 stsec_2978_un2 = Marker(eid="STSEC.2978.UN2")
-otrdp4_2987_un2 = Marker(eid="OTRDP4.2987.UN2")
 ensec_3039_un2 = Marker(eid="ENSEC.3039.UN2")
 
 # Sequence:
@@ -360,88 +316,44 @@ cell = (stsec_2743_t5,
         d_58,
         qe_2922_t5,
         d_59,
-        cmx_2922_t5,
+        cex_2922_t5,
         d_60,
-        cmy_2944_t5,
+        bpma_2943_t5,
         d_61,
-        qf_2945_t5,
+        qe_2943_t5,
         d_62,
-        bpma_2945_t5,
+        cey_2944_t5,
         d_63,
-        cmx_2947_t5,
+        bpma_2965_t5,
         d_64,
-        qe_2947_t5,
+        qe_2965_t5,
         d_65,
-        qf_2948_t5,
+        cex_2966_t5,
         d_66,
-        bpma_2948_t5,
-        d_67,
-        cmy_2950_t5,
-        d_68,
-        qf_2950_t5,
-        d_69,
-        bpma_2951_t5,
-        d_70,
-        miral_2952_t5,
-        d_71,
-        otrc_2952_t5,
-        d_72,
-        vcstern_2953_t5,
-        d_73,
-        otrc_2954_t5,
-        d_74,
-        bpma_2955_t5,
-        d_75,
-        qf_2956_t5,
-        d_76,
-        cmy_2956_t5,
-        d_77,
-        bpma_2958_t5,
-        d_78,
-        qf_2958_t5,
-        d_79,
-        qe_2959_t5,
-        d_80,
-        cmx_2959_t5,
-        d_81,
-        bpma_2961_t5,
-        d_82,
-        qf_2961_t5,
-        d_83,
-        cmy_2962_t5,
-        d_84,
-        bpma_2975_t5,
-        d_85,
-        qf_2976_t5,
-        d_86,
-        cmx_2976_t5,
-        d_87,
         tora_2977_t5,
-        d_88,
+        d_67,
         ensub_2978_t5,
         ensec_2978_t5,
         stsec_2978_un2,
-        d_89,
+        d_68,
         bpma_2985_un2,
-        d_90,
+        d_69,
         qe_2985_un2,
-        d_91,
+        d_70,
         cey_2986_un2,
-        d_92,
-        otrdp4_2987_un2,
-        d_93,
+        d_71,
         bpma_3007_un2,
-        d_94,
+        d_72,
         qe_3007_un2,
-        d_95,
+        d_73,
         cex_3007_un2,
-        d_96,
+        d_74,
         bpma_3028_un2,
-        d_97,
+        d_75,
         qe_3029_un2,
-        d_98,
+        d_76,
         cey_3029_un2,
-        d_99,
+        d_77,
         ensec_3039_un2)
 
 # Power Supply IDs:
@@ -462,16 +374,9 @@ qh_2855_t5.ps_id = "QH.3.T5"
 qh_2858_t5.ps_id = "QH.4.T5"
 qe_2878_t5.ps_id = "QE.1.T5"
 qe_2900_t5.ps_id = "QE.2.T5"
-qe_2922_t5.ps_id = "QE.7.T5"
-qf_2945_t5.ps_id = "QF.3.T5"
-qe_2947_t5.ps_id = "QF.4.T5"
-qf_2948_t5.ps_id = "QF.4.T5"
-qf_2950_t5.ps_id = "QF.5.T5"
-qf_2956_t5.ps_id = "QF.15.T5"
-qf_2958_t5.ps_id = "QF.14.T5"
-qe_2959_t5.ps_id = "QF.14.T5"
-qf_2961_t5.ps_id = "QF.13.T5"
-qf_2976_t5.ps_id = "QF.12.T5"
+qe_2922_t5.ps_id = "QE.1.T5"
+qe_2943_t5.ps_id = "QE.2.T5"
+qe_2965_t5.ps_id = "QE.1.T5"
 qe_2985_un2.ps_id = "QE.2.UN2"
 qe_3007_un2.ps_id = "QE.1.UN2"
 qe_3029_un2.ps_id = "QE.2.UN2"

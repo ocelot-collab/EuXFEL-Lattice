@@ -1388,7 +1388,6 @@ def _parse_new_elements_dict(dconf: dict[str, dict[str, Any]]) -> dict[str, Plac
     for name, properties in dconf.items():
         etype = properties["type"]
         if etype == "SlicedElement":
-            print(1)
             elements = {}
             for slice_name, element_slice_def in properties["elements"].items():
                 element_slice = _dict_to_element(slice_name, element_slice_def)

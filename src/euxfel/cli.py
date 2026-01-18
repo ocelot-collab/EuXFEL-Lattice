@@ -41,6 +41,8 @@ def convert(outdir, config):
     if not config:
         config = DEFAULT_CONVERSION_CONFIG_PATH
 
+    print(f"Using Conversion Config file: {pathlib.Path(config).resolve()}")
+
     longlist_to_ocelot(config, outdir)
 
 
