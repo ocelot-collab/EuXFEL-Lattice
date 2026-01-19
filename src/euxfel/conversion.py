@@ -92,7 +92,6 @@ class RowEdits:
             is modified in place.
         """
         # if row["TYPE"] in ["CAX", "CAY", "CBX", "CBY"]:
-        #     from IPython import embed; embed()
         row.update(self.group.get(row["GROUP"], {}))
         row.update(self.cls.get(row["CLASS"], {}))
         row.update(self.type.get(row["TYPE"], {}))
@@ -251,7 +250,6 @@ class ExternalElementPlacer:
         between_elements: list[tuple[float, Placement]] = []
         for s, placements in self.global_placements.items():
             if s0 <= s <= s1:
-                from IPython import embed; embed()
                 between_elements.append((s, placements))
 
         # now we check offset placements: Let's look for elements to
@@ -413,6 +411,69 @@ class LongListConverter:
 
         return df.filter(~full_bad)
 
+    # def _check_external_placements(self, df: pl.DataFrame, new_elements: dict[str, Placement]) -> None:
+    #     return
+    #     from IPython import embed; embed()
+    #     # We basically need to check the new elements.  We consider
+    #     # two types, "thin" new elements, and thick ones
+    #     for new_element_name, placement in new_elements.items():
+    #         element = placement.element
+    #         length = placement.element.l
+    #         refname = placement.reference_name1
+
+    #         if refname == "":
+    #             ref_element_start = 0.
+    #             ref_element_stop = 0.
+    #         else:
+    #             ref_element_row = df.filter(pl.col("NAME1") == refname)
+    #             ref_element_start = (ref_element_row["S"] - ref_element_row["LENGTH"] / 2.0).item()
+    #             ref_element_stop = (ref_element_row["S"] + ref_element_row["LENGTH"] / 2.0).item()
+
+                
+    #         if isinstance(placement, AdjacentPlacement):
+    #             # By definition we do not expect overlaps with
+    #             # existing elements for an AdjacentPlacement of an
+    #             # element with zero length.  So this is immediately
+    #             # OK.
+    #             if not length:
+    #                 continue
+
+    #             if placement.before_after is AdjacentPositionType.BEFORE:
+    #                 element_stop = ref_element_start
+    #                 element_start = element_stop - length
+    #             elif placement.before_after is AdjacentPositionType.AFTER:
+    #                 element_start = ref_element_stop
+
+    #             if element.l:
+    #                 element_Start = ref_element_stop
+    #                 raise ValueError()
+
+
+    #         if isinstance(placement, OffsetPlacement):
+    #             if not length:
+    #                 continue
+
+    #             delta_s = placement.delta_s
+
+    #             if delta_s > 0:
+    #                 element_start = ref_element_stop + delta_s
+    #                 element_stop = element_start + placement.element.l
+                    
+    #             elif delta_s < 0:
+    #                 element_stop = ref_element_start - delta_s
+    #                 element_start = element_stop - placement.element.l
+
+    #             else:
+    #                 pass
+
+    #             # 
+    #             existing_elements_start = df["S"] - df["LENGTH"] * 0.5
+    #             existing_elements_stop = df["S"] + df["LENGTH"] * 0.5
+
+                
+
+    #     pass
+
     def _filter_bad_rows(self, df: pl.DataFrame) -> pl.DataFrame:
         """
         Remove invalid or nonsensical rows from a component-list DataFrame prior to conversion.
@@ -465,6 +526,8 @@ class LongListConverter:
                 assert row["LENGTH"] == 0.0
 
         df_no_bad = df.filter(~pl.col("NAME1").is_in(bad_name1s))
+
+        # from IPython import embed; embed()
 
         return df_no_bad
 
@@ -738,14 +801,21 @@ class LongListConverter:
                 continue
             # We are currently at in global s-space:
             # s_oelement_s_start + sum(x.l for x in expanded_sequence)
-            expanded_sequence.extend(self._next_drift_sequence(s - oelement_s_start - sum(x.l for x in expanded_sequence)))
+            try:
+                expanded_sequence.extend(self._next_drift_sequence(s - oelement_s_start - sum(x.l for x in expanded_sequence)))
+            except:
+                from IPython import embed; embed()
+
             for placement in placements_at_this_s:
                 print(placement.element)
                 print(f"Placing element @ {s}")
                 expanded_sequence.append(placement.element)
 
         length_so_far = sum(x.l for x in expanded_sequence)
-        expanded_sequence.extend(self._next_drift_sequence(length=final_length - length_so_far))
+        try:
+            expanded_sequence.extend(self._next_drift_sequence(length=final_length - length_so_far))
+        except:
+            from IPython import embed; embed()
 
         for p in prepend1:
             print(f"Prepending element vor {p}")
@@ -931,7 +1001,7 @@ class LongListConverter:
 
         if row["CLASS"] == "QUAD":
             if row["LENGTH"] == 0 and row["STRENGTH"] == 0:
-                return elements.Quadrupole(**common_kw)                
+                return elements.Quadrupole(**common_kw)
             ele = elements.Quadrupole(k1=row["STRENGTH"] / row["LENGTH"], **common_kw)
         elif row["CLASS"] == "HKIC":
             ele = elements.Hcor(angle=row["STRENGTH"], **common_kw)
@@ -1108,7 +1178,7 @@ class LongListConverter:
             Drift element representing the vacuum component.
         """
         assert row["GROUP"] == "VACUUM"
-        assert row["CLASS"] in {"VAC", "ECOL", "PLACEH", "ABSORBER"}, (row["CLASS"], row["LENGTH"])
+        # assert row["CLASS"] in {"VAC", "ECOL", "PLACEH", "ABSORBER", "VA}, (row["CLASS"], row["LENGTH"])
         ele = elements.Drift(l=row["LENGTH"], eid=row["NAME1"])
         ele.ps_id = row["NAME2"]
         return ele
@@ -1210,7 +1280,7 @@ class LongListConverter:
         Convert a MARK row from the component list into an OCELOT Marker element.
 
         This method expects a row originating from the component list model
-        with GROUP equal to "MARK". 
+        with GROUP equal to "MARK".
 
         Parameters
         ----------
@@ -1254,7 +1324,7 @@ def longlist_to_ocelot(
         raise MalformedConversionConfig("Missing longlist input file name in conversion config.")
 
     fpath = files("euxfel.longlists") / fname
-    
+
     # Parse the config dictionary
     sections = _parse_config_dict(config)
     rowskips, rowedits = _parse_row_changes(config)
@@ -1278,7 +1348,7 @@ def longlist_to_ocelot(
             f.write(writer.to_module(write_types_power_supplies=write_types_power_supplies,
                                      comment=f"Converted from {fname}"))
 
-    fname = Path(fpath).name            
+    fname = Path(fpath).name
     init_path = Path(outdir) / "__init__.py"
     with open(init_path, "w") as f:
 
@@ -1302,7 +1372,7 @@ def longlist_to_ocelot(
 
         f.write("# The longlist file we used to generate the subsequences in this directory:\n")
         f.write(f'USED_COMPONENT_LIST = files("euxfel.longlists") / "{fname}"\n')
-        
+
     print("Written", init_path)
 
 def _parse_new_markers_dict(dconf: dict) -> dict[str, Placement]:
@@ -1318,7 +1388,6 @@ def _parse_new_elements_dict(dconf: dict[str, dict[str, Any]]) -> dict[str, Plac
     for name, properties in dconf.items():
         etype = properties["type"]
         if etype == "SlicedElement":
-            print(1)
             elements = {}
             for slice_name, element_slice_def in properties["elements"].items():
                 element_slice = _dict_to_element(slice_name, element_slice_def)
@@ -1420,7 +1489,7 @@ def _parse_row_changes(dconf: dict) -> tuple[RowSkips, RowEdits]:
         skips = RowSkips(group=set(skipconf.get("GROUP", [])),
                         cls=skipconf.get("CLASS", set()),
                         type=skipconf.get("TYPE", set()),
-                        name1=skipconf.get("NAME1", set())                        
+                        name1=skipconf.get("NAME1", set())
                          )
 
 

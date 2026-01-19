@@ -32,9 +32,9 @@ SA3	UE90	XTD4_004	QP.2951.SA3	QP.CELL26.SA3	PMAGNET	QUAD	QP
 ```python
 # Markers added manually
 d_8_1 = Drift(l=0.5776, eid='D_12')
-start_sim = Marker(eid="START_SIM")
+start_ocelot = Marker(eid="start_ocelot")
 d_8_2 = Drift(l=id_79148922_.l - d_8_1.l)
-d_8_n = (d_8_1, start_sim, d_8_2)
+d_8_n = (d_8_1, start_ocelot, d_8_2)
 
 a1_sim_stop = Marker()
 a1_1_stop = Marker()

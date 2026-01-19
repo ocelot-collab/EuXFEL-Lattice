@@ -12,6 +12,7 @@ from ocelot.gui.accelerator import *
 import time
 from ocelot.common.globals import *
 from ocelot import *
+c = 299792458
 
 
 data_dir = "../beam_files/"
@@ -38,46 +39,20 @@ tws0.alpha_y = -0.8390696483216522
 start = time.time()
 
 #################################### Compression Working Point ################################
-
+E40 = 14 
+r1 = 4.1218                 # deflecting radius in BC0
+r2 = 8.3934                 # deflecting radius in BC1
+r3 = 14.4111                # deflecting radius in BC2
 # RF settings
 v11 = 0.148  # GV
-phi1 = -12.07
+phi11 = -12.07
 v13 = 0.031384   # GV
 phi13 = 131.85
 v21 = 0.659  # GV
 phi21 = 30.13
 v31 = 1.7052  # GV
 phi31 = -3.078
-
-c = 299792458
-grad = pi/180
-f = 1.3e9
-k = 2*pi*f/c
-# RF parameters from 2019 reference simulations
-RFpars=np.array([[150.6490695436200156,  -12.45143229398958340],
-                 [34.71451849662050648, 133.0130880849731909],
-                 [612.3662881523496253, 21.42357967251925999],
-                 [2387.170005428192326, 44.53398073107610600]])
-
-E40 = 14000                 # final beam energy
-r1 = 4.1218                 # deflecting radius in BC0
-r2 = 8.3934                 # deflecting radius in BC1
-r3 = 14.4111                # deflecting radius in BC2
-C10= 3                      # local compression in BC0
-C20= 7                      # local compression in BC1
-C30= 400/(C10*C20)          # local compression in BC2
-R2 = 0                      # first derivative of the inverse compression function
-R3 = 900                    # second derivative of the inverse compression function
-
-v11 =   RFpars[0,0]
-phi11 = RFpars[0,1] * grad
-v13 =   RFpars[1, 0]
-phi13 = RFpars[1, 1] * grad
-v21 =   RFpars[2, 0]
-phi21 = RFpars[2, 1] * grad
-v31 =   RFpars[3,0]
-phi31 = RFpars[3,1] * grad
-v41 = E40-2400
+v41 = E40-2.4
 phi41 = 0
 
 # BC magnet radius

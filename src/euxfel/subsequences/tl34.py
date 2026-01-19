@@ -13,6 +13,7 @@ twiss0._alpha_y = 0.6891
 
 
 # Drifts:
+vcst98t40_1980_tl = Drift(eid="VCST98T40.1980.TL")
 d_0 = Drift(l=1.4724009999999907, eid="D_0")
 d_1 = Drift(l=13.047400999999823, eid="D_1")
 d_2 = Drift(l=1.1589500000002317, eid="D_2")
@@ -32,11 +33,18 @@ d_15 = Drift(l=0.15429999999992106, eid="D_15")
 d_16 = Drift(l=0.20895100000007005, eid="D_16")
 d_17 = Drift(l=0.15395100000013406, eid="D_17")
 d_18 = Drift(l=0.19999999999986356, eid="D_18")
-d_19 = Drift(l=7.784699999999975, eid="D_19")
-d_20 = Drift(l=0.09999999999986359, eid="D_20")
-d_21 = Drift(l=1.4347000000002026, eid="D_21")
-d_22 = Drift(l=0.1999999999998181, eid="D_22")
-d_23 = Drift(l=1.8607200000001285, eid="D_23")
+d_19 = Drift(l=1.4800000000000637, eid="D_19")
+vcst40t98_2014_tl = Drift(eid="VCST40T98.2014.TL")
+d_20 = Drift(l=6.304699999999912, eid="D_20")
+d_21 = Drift(l=0.09999999999986359, eid="D_21")
+d_22 = Drift(l=1.4347000000002026, eid="D_22")
+d_23 = Drift(l=0.1999999999998181, eid="D_23")
+d_24 = Drift(l=0.15000000000009095, eid="D_24")
+vcv100_2023_tl = Drift(l=0.085, eid="VCV100.2023.TL")
+d_25 = Drift(l=0.5857000000001245, eid="D_25")
+vcb100_2024_tl = Drift(l=0.18, eid="VCB100.2024.TL")
+vcabsa_2024_tl = Drift(l=0.61, eid="VCABSA.2024.TL")
+d_26 = Drift(l=0.25002000000007685, eid="D_26")
 
 # Quadrupoles:
 qk_1982_tl = Quadrupole(l=1.0552, k1=0.09035960007960576, eid="QK.1982.TL")
@@ -79,6 +87,7 @@ ensub_2025_tl = Marker(eid="ENSUB.2025.TL")
 
 # Sequence:
 cell = (stsub_1980_tl,
+        vcst98t40_1980_tl,
         d_0,
         qk_1982_tl,
         d_1,
@@ -120,14 +129,21 @@ cell = (stsub_1980_tl,
         d_18,
         chy_2012_tl,
         d_19,
-        cnx_2021_tl,
+        vcst40t98_2014_tl,
         d_20,
-        cny_2021_tl,
+        cnx_2021_tl,
         d_21,
-        bpmd_2022_tl,
+        cny_2021_tl,
         d_22,
-        otre_2023_tl,
+        bpmd_2022_tl,
         d_23,
+        otre_2023_tl,
+        d_24,
+        vcv100_2023_tl,
+        d_25,
+        vcb100_2024_tl,
+        vcabsa_2024_tl,
+        d_26,
         ensub_2025_tl)
 
 # Power Supply IDs:

@@ -9,10 +9,9 @@ writer:
 
 rows:
   skip:
-    TYPE: ["BENDMARK", "RF", "CTBI", "CUX"]
+    TYPE: ["RF", "CTBI", "CUX"]
     CLASS: ["CRYO", "UNDPLACEH"]
     GROUP: ["CRYO",
-            "VACUUM",
             "MOVER",
             "PHOTON",
             "DUMP"]
@@ -39,14 +38,17 @@ sections:
         Kx: 1.294
         Ky: 0
     new_markers:
-      stop_astra: { s: 3.2 }
-      start_ocelot: { s: 3.2 }
+      astra_stop: { delta_s: 3.2 }
+      ocelot_start: { delta_s: 3.2 }
       a1_sim_stop: { reference: C.A1.1.8.I1, adjacent: after }
       ah1_sim_start: { reference: C.A1.1.8.I1, adjacent: after }
       a1_1_stop: { reference: C.A1.1.1.I1, adjacent: after }
+      ah_stop: { reference: C3.AH1.1.8.I1, adjacent: after }
       lh_start: { reference: U74.49.I1, adjacent: before }
       lh_stop: { reference: U74.49.I1, adjacent: after }
-      DUMP.CSR.START: { s: 38.789005 }
+      i1_tds_start: { reference: TDSA.52.I1, adjacent: before }
+      i1_tds_stop: { reference: TDSA.52.I1, adjacent: after }
+      i1d_csr_start: { delta_s: 38.789005 }
     matching:
       marker: MATCH.52.I1
       quadrupoles:
@@ -111,7 +113,7 @@ sections:
       QF.1967.TL: { k1: -0.17919084758504 }
     new_elements:
       QK.1982.TL:
-        position: { reference: BZ.1980.TLD, delta_s: 0.4724 }
+        position: { reference: MBZ.1980d.TLD, delta_s: 0.4724 }
         type: SlicedElement
         expression: "(19 * [xslice1982] + [yslice1982]) * 10"
         elements:
@@ -145,7 +147,7 @@ sections:
     stop_marker_name1: ENSEC.2197.T1
     new_elements:
       QK.2027.TL:
-        position: { reference: BZ.2025.T1, delta_s: 0.472401 }
+        position: { reference: MBZ.2025d.T1, delta_s: 0.472401 }
         type: SlicedElement
         expression: "(19 * [yslice2027] + [xslice2027]) * 10"
         elements:
@@ -170,6 +172,9 @@ sections:
     sheet: I1toT5D
     start_marker_name1: STSEC.2423.T3
     stop_marker_name1: ENSEC.2743.UN1
+    new_markers:
+      t3_csr_start: { reference: QH.2544.T3, adjacent: after }
+      t3_csr_stop: { reference: QH.2569.T3, adjacent: before }
 
   T5:
     sheet: I1toT5D
@@ -195,6 +200,9 @@ sections:
     sheet: I1toT4D
     start_marker_name1: STSEC.2461.T4
     stop_marker_name1: ENSEC.2800.T4
+    new_markers:
+      t4_csr_start: { reference: QH.2582.T4, adjacent: after }
+      t4_csr_stop: { reference: BPMA.2606.T4, adjacent: after }
 
   SASE3:
     sheet: I1toT4D
