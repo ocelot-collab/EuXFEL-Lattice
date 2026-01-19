@@ -2,16 +2,17 @@
 Unofficial Ocelot EuXFEL lattice repository. Created by Bianca,  Sergey and Stuart.
 
 This is the repository for the EuXFEL ocelot repository.  The idea
- should be one transparent model that everyone uses and we can all
- contribute to and benefit from.
+ behind it is to have one transparent model that everyone uses, everyone can 
+ contribute to, and in turn everyone can benefit from.
 
 Currently the OCELOT Python EuXFEL sequences are generated from the
 "Component List", an Excel spreadsheet generated internally by the
 group leader as the "single source of truth" for what actually is in
-the tunnel.  These files can be found here https://xfel.desy.de/operation/component_list/.
+the tunnel.  These files can be found [here](https://xfel.desy.de/operation/component_list/).
 
-Repository structure:
-* euxfel - the main Python package for the Ocelot lattices and so on.  See below for more detailed explanation of the contents.
+## Repository structure
+* src/euxfel - the main Python package for the Ocelot lattices and so on.  See below for more detailed explanation of the contents.
+  For a deeper explanation of the package's layout, see [here](#the-layout-of-srceuxfel).
 * beam_files - particle distributions
   * gun - initial beam distribution from gun (3.2 m position)
   * gun_2019 - initial beam distribution used in the settings https://www.desy.de/fel-beam/s2e/xfel/Nominal/nom250pC.html used for the 2019 simulation studies published in [this article](https://www.sciencedirect.com/science/article/abs/pii/S0168900221000954)
@@ -19,53 +20,6 @@ Repository structure:
 * s2e_scripts - example scripts for running a start to end simulation from 3.2m to anywhere in the machine.
 * tests - tests for the euxfel package.
 * utils - beam matching script
-
-
-## Package Layout for src/euxfel
-
-```
-src
-└── euxfel
-    ├── __init__.py
-    ├── cli.py              # The command line interface for 
-    ├── complist_draw.py    # Draw Component Lists directly onto maptlotlib axes
-    ├── complist.py         # Load Component Lists
-    ├── conversion.py       # Convert component lists to OCELOT
-    ├── longlists           # Contains longlists and conversion configs for each one.
-    │   │                   # `conversion-config.yaml` is a symlink pointing to the one to be used for conversion.
-    │   ├── __init__.py
-    │   ├── component_list_2024.07.04.xls
-    │   ├── component_list_2026.01.21.xls
-    │   ├── conversion-config-2024.07.04.yaml
-    │   ├── conversion-config-2026.01.21.yaml
-    │   └── conversion-config.yaml -> conversion-config-2026.01.21.yaml
-    ├── optics.py           # Some utilities for checking optics
-    ├── plot.py             # Functions for plotting OCELOT optics and comparing with the Component List
-    ├── sections.py         # Set of classes inheriting SectionTrack.  This is where physics processes are added.
-    ├── sequences.py        # A set of sequences that 
-    ├── slicing.py          # Special class for implementing symbolically sliced elements in ocelot
-    ├── subsequences        # All the subsequence Python modules live here.
-    │   ├── i1.py
-    │   ├── i1d.py
-    │   ├── …
-    │   └── t4d.py
-    ├── wakes               # All the wake files live in this directory
-    │   ├── __init__.py
-    │   ├── Dechirper
-    │   │   ├── __init__.py
-    │   │   ├── …
-    │   │   └── wake_vert_axis_700um.txt
-    │   ├── …
-    │   ├── mod_wake_2035.190_2213.000_MONO.dat
-    │   ├── RF
-    │   │   ├── …
-    │   │   └── wake_table_TDS1.dat
-    │   └── Undulator
-    │       ├── …
-    │       └── wake_undulator_OCELOTnew.txt
-    └── writer.py            # The custom writer for writing the Python modules out one by one.
-```
-
 
 ## Getting started
 
@@ -88,9 +42,17 @@ $ euxfel plot     # Plot all OCELOT optics
 $ euxfel plot b1d # Just plot for B1D
 ```
 
+For example, `$ euxfel compare b1d` gives the following image and prints the following two tables to the terminal:
+
+<img width="2696" height="1702" alt="Bildschirmfoto 2026-01-19 um 15 33 06" src="https://github.com/user-attachments/assets/716a1569-5474-453d-bb6a-8be9f18fe7e3" />
+
+<img width="2082" height="778" alt="Bildschirmfoto 2026-01-19 um 15 38 05" src="https://github.com/user-attachments/assets/6820d3e5-bc47-49ad-a314-a0de44e0ed34" />
+
+
+
 ### Optics in Plain Python
 
-Otherwise you use it in Python as a normal library, for example to access the sequence from the cathode to I1D in Python.
+You can of course use the euxfel package in Python as a normal library, for example to access the sequence from the cathode to I1D in Python:
 
 ```python
 import euxfel.sequences as sequences
@@ -108,8 +70,7 @@ In addition to `sequences.cathode_to_i1d`, there is also a `squences.cathode_to_
 
 ### Full Start to End Simulations
 
-Look in the top level directory `s2e_scripts` for examples of start to end simulation scripts from 3.2m to various targets downstream.
-
+Look in the top-level directory `s2e_scripts` for examples of start to end simulation scripts from 3.2m to various targets downstream.
 
 ## How to Run the Conversion Now
 
@@ -118,10 +79,11 @@ component list you want to convert in `src/euxfel/longlists`, or use
 one that is already there.  The converter will look for a file called
 `conversion-config.yaml` to drive the entire conversion process.
 Either use the existing one, make a new one, or make a symlink with
-this name to one of the explicitly named (i.e. dated) yaml files.
-Look at one of the other conversion yaml files for guidance on how
-to write your own for a given component list.  Further details on
-the makeup of these conversion-config.yaml files is in the next section.
+the name `conversion-config.yaml` that points to one of the
+explicitly named (i.e. dated) yaml files. Look at one of the other conversion
+yaml files for guidance on how to write your own for a given component list. 
+Further details on the makeup of these conversion-config.yaml files is
+follows [here](#conversion-configuration).
 
 ```bash
 $ euxfel convert
@@ -129,7 +91,6 @@ $ euxfel convert
 
 This will run, and the output will automatically be written to
 `src/euxfel/subsequences/`.
-
 
 ## Conversion Configuration
 
@@ -316,12 +277,51 @@ Currently no other element types besides the `SlicedElement` may be
 inserted into the lattice at conversion time.
 
 
-## TODO:
+## The Layout of src/euxfel
 
-- [ ] Integration of physics processes stuff (i.e. SectionTrack and
-      friends) into package
-- [ ] Particle tracking helper stuff into Python package.
-- [ ] Python to Longlist (i.e. full round trip) converter.
+```
+src
+└── euxfel
+    ├── __init__.py
+    ├── cli.py              # The command line interface for 
+    ├── complist_draw.py    # Draw Component Lists directly onto maptlotlib axes
+    ├── complist.py         # Load Component Lists
+    ├── conversion.py       # Convert component lists to OCELOT
+    ├── longlists           # Contains longlists and conversion configs for each one.
+    │   │                   # `conversion-config.yaml` is a symlink pointing to the one to be used for conversion.
+    │   ├── __init__.py
+    │   ├── component_list_2024.07.04.xls
+    │   ├── component_list_2026.01.21.xls
+    │   ├── conversion-config-2024.07.04.yaml
+    │   ├── conversion-config-2026.01.21.yaml
+    │   └── conversion-config.yaml -> conversion-config-2026.01.21.yaml
+    ├── optics.py           # Some utilities for checking optics
+    ├── plot.py             # Functions for plotting OCELOT optics and comparing with the Component List
+    ├── sections.py         # Set of classes inheriting SectionTrack.  This is where physics processes are added.
+    ├── sequences.py        # A set of sequences that 
+    ├── slicing.py          # Special class for implementing symbolically sliced elements in ocelot
+    ├── subsequences        # All the subsequence Python modules live here.
+    │   ├── i1.py
+    │   ├── i1d.py
+    │   ├── …
+    │   └── t4d.py
+    ├── wakes               # All the wake files live in this directory
+    │   ├── __init__.py
+    │   ├── Dechirper
+    │   │   ├── __init__.py
+    │   │   ├── …
+    │   │   └── wake_vert_axis_700um.txt
+    │   ├── …
+    │   ├── mod_wake_2035.190_2213.000_MONO.dat
+    │   ├── RF
+    │   │   ├── …
+    │   │   └── wake_table_TDS1.dat
+    │   └── Undulator
+    │       ├── …
+    │       └── wake_undulator_OCELOTnew.txt
+    └── writer.py            # The custom writer for writing the Python modules out one by one.
+```
+
 
 
 ## Further Comments
