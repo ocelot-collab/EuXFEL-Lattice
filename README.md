@@ -10,25 +10,61 @@ Currently the OCELOT Python EuXFEL sequences are generated from the
 group leader as the "single source of truth" for what actually is in
 the tunnel.  These files can be found here https://xfel.desy.de/operation/component_list/.
 
-
 Repository structure:
-* Lattices - lattice files in ocelot format
-  * LL2ocelot - scripts to generate ocelot lattice files from MS Excel LongList
-  * longlist_2024_07_04
-    * check_optics - comparison scripts for plotting the beta functions and dispersions calculated with Ocelot and read from the longlist (obtained with Mad8)
-    * ocelot lattice files for each section of the machine (building up s2e-lines as explained in the list below)
-    * readme.txt lists the modifications done to the excel file or to the generated python lattice files in order to accurately model all the elements
-* s2e_sections - EuXFEL accelerator section descriptions
-* wakes - database of wakefield files (cavities, collimators, dechirpers etc)
+* euxfel - the main Python package for the Ocelot lattices and so on.  See below for more detailed explanation of the contents.
 * beam_files - particle distributions
   * gun - initial beam distribution from gun (3.2 m position)
   * gun_2019 - initial beam distribution used in the settings https://www.desy.de/fel-beam/s2e/xfel/Nominal/nom250pC.html used for the 2019 simulation studies published in [this article](https://www.sciencedirect.com/science/article/abs/pii/S0168900221000954)
 * Astra_gun_simulation/250pC_phi42 - by downloading the Astra executables from the official page https://www.desy.de/~mpyflo/ and adjusting the parameters in generator.in first (the laser pulse length sig_clock) and in the rfgun.in file later (phi(1)), it is possible to simulate the particle distribution from the gun till the position specified in the ZSTOP parameter. The current setting was developed by Igor Zagorodnov for 250pC. The radial_smear.m is a Matlab script for smoothing the profile obtain by the generator
-* scripts - s2e main scripts
+* s2e_scripts - example scripts for running a start to end simulation from 3.2m to anywhere in the machine.
+* tests - tests for the euxfel package.
 * utils - beam matching script
-* src/euxfel - the location of a new Python package that aims to
-  encapsulate all or most of the above and will replace many of these
-  features.
+
+
+## Package Layout for src/euxfel
+
+```
+src
+└── euxfel
+    ├── __init__.py
+    ├── cli.py              # The command line interface for 
+    ├── complist_draw.py    # Draw Component Lists directly onto maptlotlib axes
+    ├── complist.py         # Load Component Lists
+    ├── conversion.py       # Convert component lists to OCELOT
+    ├── longlists           # Contains longlists and conversion configs for each one.
+    │   │                   # `conversion-config.yaml` is a symlink pointing to the one to be used for conversion.
+    │   ├── __init__.py
+    │   ├── component_list_2024.07.04.xls
+    │   ├── component_list_2026.01.21.xls
+    │   ├── conversion-config-2024.07.04.yaml
+    │   ├── conversion-config-2026.01.21.yaml
+    │   └── conversion-config.yaml -> conversion-config-2026.01.21.yaml
+    ├── optics.py           # Some utilities for checking optics
+    ├── plot.py             # Functions for plotting OCELOT optics and comparing with the Component List
+    ├── sections.py         # Set of classes inheriting SectionTrack.  This is where physics processes are added.
+    ├── sequences.py        # A set of sequences that 
+    ├── slicing.py          # Special class for implementing symbolically sliced elements in ocelot
+    ├── subsequences        # All the subsequence Python modules live here.
+    │   ├── i1.py
+    │   ├── i1d.py
+    │   ├── …
+    │   └── t4d.py
+    ├── wakes               # All the wake files live in this directory
+    │   ├── __init__.py
+    │   ├── Dechirper
+    │   │   ├── __init__.py
+    │   │   ├── …
+    │   │   └── wake_vert_axis_700um.txt
+    │   ├── …
+    │   ├── mod_wake_2035.190_2213.000_MONO.dat
+    │   ├── RF
+    │   │   ├── …
+    │   │   └── wake_table_TDS1.dat
+    │   └── Undulator
+    │       ├── …
+    │       └── wake_undulator_OCELOTnew.txt
+    └── writer.py            # The custom writer for writing the Python modules out one by one.
+```
 
 
 ## Getting started
@@ -40,32 +76,52 @@ $ cd EuXFEL-Lattice
 pip install .
 ```
 
+### Command Line Interface
+
 Some key functionality can then be accessed from the command line:
 
 ```bash
-$ euxfel convert # Regenerate the Python subsequences
-$ euxfel compare # Compare the OCELOT optics for all the paths through the machine with the Component List.
-$ euxfel plot i1d # Just plot for I1D.
+$ euxfel convert  # Regenerate the Python subsequences
+$ euxfel compare  # Compare the OCELOT optics for all the paths through the machine with the Component List.
+$ euxfel compare  # Just compare for I1D.
+$ euxfel plot     # Plot all OCELOT optics
+$ euxfel plot b1d # Just plot for B1D
 ```
 
-Otherwise you can use it in Python, for example to access the sequence from the cathode to I1D in Python
+### Optics in Plain Python
+
+Otherwise you use it in Python as a normal library, for example to access the sequence from the cathode to I1D in Python.
 
 ```python
 import euxfel.sequences as sequences
 from ocelot import *
+from ocelot.gui.accelerator import *
 import matplotlib.pyplot as plt
 twiss0 = sequences.CATHODE_TWISS0
-sequence = sequences.cathode_to_i1d
+mlat_i1d = MagneticLattice(sequences.cathode_to_i1d)
+machine_twiss = twiss(mlat_i1d, twiss0)
 # Example of use with plain OCELOT:
-plot_opt_funct(MagneticLattice(sequence), twiss0)
+plot_opt_func(mlat_i1d, machine_twiss)
 plt.show()
 ```
+In addition to `sequences.cathode_to_i1d`, there is also a `squences.cathode_to_` attribute for `b1d`, `b2d`, `tld`, `t4d` and `t5d`.
 
-## I Just Want to  Run the Conversion Now
+### Full Start to End Simulations
+
+Look in the top level directory `s2e_scripts` for examples of start to end simulation scripts from 3.2m to various targets downstream.
+
+
+## How to Run the Conversion Now
 
 Clone the repository and install the Python package.  Put the
 component list you want to convert in `src/euxfel/longlists`, or use
-one that is already there.  Run:
+one that is already there.  The converter will look for a file called
+`conversion-config.yaml` to drive the entire conversion process.
+Either use the existing one, make a new one, or make a symlink with
+this name to one of the explicitly named (i.e. dated) yaml files.
+Look at one of the other conversion yaml files for guidance on how
+to write your own for a given component list.  Further details on
+the makeup of these conversion-config.yaml files is in the next section.
 
 ```bash
 $ euxfel convert
@@ -82,6 +138,12 @@ hand edits of the output Python modules should be necessary.  To this
 end, the configuration is fully described in the file
 conversion-config.yaml.  I'll try to explain some of the sections of
 this config file here.
+
+The filename is chosen as:
+
+```
+component_list: component_list_2026.01.21.xls
+```
 
 ### Writer
 
@@ -162,8 +224,8 @@ sections:
 This introduces two markers at 3.2m and one at 38.789m (just befor the
 I1D dump dipole).
 
-Warning: It is up to the user to ensure that these markers are not inside of
-other elements!
+⚠️ **Warning:**: It is up to the user to ensure that these inserted markers are not placed inside of
+other elements!  There is no checking done on this and it may fail cryptically.
 
 Additionaly, the laser heater undulator `U74.49.I1` is wrapped with
 two markers, one immediately `before` and one immediately `after` in
@@ -229,7 +291,7 @@ sections:
     [...]
     new_elements:
       QK.1982.TL:
-        position: { reference: BZ.1980.TLD, s: 0.4724 }
+        position: { reference: MBZ.1980d.TLD, s: 0.4724 }
         type: SlicedElement
         expression: "(19 * [xslice1982] + [yslice1982]) * 10"
         elements:
@@ -245,6 +307,10 @@ sections:
             k1: -0.090359600075815
             tilt: 1.570796327
 ```
+
+⚠️ **Warning:** the named refrence element *must* have no other elements between it and the
+newly inserted element.  Otherwise it will most likely fail and it will fail mysteriously, most
+likely with cryptic complains about negative drift lengths!  I never added special checks on this.
 
 Currently no other element types besides the `SlicedElement` may be
 inserted into the lattice at conversion time.
