@@ -48,8 +48,6 @@ For example, `$ euxfel compare b1d` gives the following image and prints the fol
 
 <img width="2082" height="778" alt="Bildschirmfoto 2026-01-19 um 15 38 05" src="https://github.com/user-attachments/assets/6820d3e5-bc47-49ad-a314-a0de44e0ed34" />
 
-
-
 ### Optics in Plain Python
 
 You can of course use the euxfel package in Python as a normal library, for example to access the sequence from the cathode to I1D in Python:
@@ -97,6 +95,23 @@ This will run, and the output will automatically be written to
 
 If you want to use a different version of the lattice, then the
 easiest way is to check out a different tagged release.
+Always use the latest version for a given model type:
+
+To use v0.2 (at the time of writing the latest version) of the July 2024 model:
+
+```
+$ git checkout 0.2.0+componentlist.20240704
+```
+
+To use v0.2 of the January 2026 model:
+
+```
+$ git checkout 0.2.0+componentlist.20260121
+```
+
+API changes should be separate from lattice versions and the two packages
+should be functionally identical except for the lattice files.
+
 
 ## Conversion Configuration
 
