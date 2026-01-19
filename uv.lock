@@ -120,7 +120,7 @@ wheels = [
 
 [[package]]
 name = "euxfel"
-version = "0.1.0+componentlist.20260121"
+version = "0.2.0+componentlist.20260121"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
@@ -151,7 +151,7 @@ requires-dist = [
     { name = "fastexcel", specifier = ">=0.18.0" },
     { name = "latdraw", specifier = ">=0.2.0" },
     { name = "matplotlib", specifier = ">=3.10.7" },
-    { name = "ocelot-collab", git = "https://github.com/ocelot-collab/ocelot.git?rev=eb8394b5ced61a4d395bcc1fa10b3a92caf620e2" },
+    { name = "ocelot-collab", git = "https://github.com/ocelot-collab/ocelot.git?rev=cadf5d69284416c099088b6fec22e8f1d604ad19" },
     { name = "polars", specifier = ">=1.36.1" },
     { name = "pyarrow", specifier = ">=22.0.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },
@@ -465,7 +465,7 @@ wheels = [
 [[package]]
 name = "ocelot-collab"
 version = "25.12.0"
-source = { git = "https://github.com/ocelot-collab/ocelot.git?rev=eb8394b5ced61a4d395bcc1fa10b3a92caf620e2#eb8394b5ced61a4d395bcc1fa10b3a92caf620e2" }
+source = { git = "https://github.com/ocelot-collab/ocelot.git?rev=cadf5d69284416c099088b6fec22e8f1d604ad19#cadf5d69284416c099088b6fec22e8f1d604ad19" }
 dependencies = [
     { name = "h5py" },
     { name = "matplotlib" },

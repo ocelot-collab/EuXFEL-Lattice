@@ -92,6 +92,12 @@ $ euxfel convert
 This will run, and the output will automatically be written to
 `src/euxfel/subsequences/`.
 
+
+## Changing OCELOT Lattice Versions
+
+If you want to use a different version of the lattice, then the
+easiest way is to check out a different tagged release.
+
 ## Conversion Configuration
 
 The conversion should be as transparent as possible, and absolutely no

@@ -396,83 +396,14 @@ class LongListConverter:
             | pl.col("NAME1").is_in(self.rowskips.name1)
         )
 
-        # zero_length = pl.col("LENGTH") == 0
-        # full_bad = bad_element_types & zero_length
         full_bad = bad_element_types
 
         skipped = df.filter(full_bad)
-
-        # # equivalent to: if skipped_elements.LENGTH.abs().sum() > 0
-        # if skipped.select(pl.col("LENGTH").abs().sum()).item() > 0:
-        #     raise ValueError("Non-zero length elements are to be skipped")
 
         for n1, s, t, cls, grp in skipped.select("NAME1", "S", "TYPE", "CLASS", "GROUP").iter_rows():
             print(f"Skipping: NAME1 = {n1}, @ S = {s}, TYPE = {t}, CLASS = {cls}, GROUP = {grp}")
 
         return df.filter(~full_bad)
-
-    # def _check_external_placements(self, df: pl.DataFrame, new_elements: dict[str, Placement]) -> None:
-    #     return
-    #     from IPython import embed; embed()
-    #     # We basically need to check the new elements.  We consider
-    #     # two types, "thin" new elements, and thick ones
-    #     for new_element_name, placement in new_elements.items():
-    #         element = placement.element
-    #         length = placement.element.l
-    #         refname = placement.reference_name1
-
-    #         if refname == "":
-    #             ref_element_start = 0.
-    #             ref_element_stop = 0.
-    #         else:
-    #             ref_element_row = df.filter(pl.col("NAME1") == refname)
-    #             ref_element_start = (ref_element_row["S"] - ref_element_row["LENGTH"] / 2.0).item()
-    #             ref_element_stop = (ref_element_row["S"] + ref_element_row["LENGTH"] / 2.0).item()
-
-                
-    #         if isinstance(placement, AdjacentPlacement):
-    #             # By definition we do not expect overlaps with
-    #             # existing elements for an AdjacentPlacement of an
-    #             # element with zero length.  So this is immediately
-    #             # OK.
-    #             if not length:
-    #                 continue
-
-    #             if placement.before_after is AdjacentPositionType.BEFORE:
-    #                 element_stop = ref_element_start
-    #                 element_start = element_stop - length
-    #             elif placement.before_after is AdjacentPositionType.AFTER:
-    #                 element_start = ref_element_stop
-
-    #             if element.l:
-    #                 element_Start = ref_element_stop
-    #                 raise ValueError()
-
-
-    #         if isinstance(placement, OffsetPlacement):
-    #             if not length:
-    #                 continue
-
-    #             delta_s = placement.delta_s
-
-    #             if delta_s > 0:
-    #                 element_start = ref_element_stop + delta_s
-    #                 element_stop = element_start + placement.element.l
-                    
-    #             elif delta_s < 0:
-    #                 element_stop = ref_element_start - delta_s
-    #                 element_start = element_stop - placement.element.l
-
-    #             else:
-    #                 pass
-
-    #             # 
-    #             existing_elements_start = df["S"] - df["LENGTH"] * 0.5
-    #             existing_elements_stop = df["S"] + df["LENGTH"] * 0.5
-
-                
-
-    #     pass
 
     def _filter_bad_rows(self, df: pl.DataFrame) -> pl.DataFrame:
         """
@@ -526,8 +457,6 @@ class LongListConverter:
                 assert row["LENGTH"] == 0.0
 
         df_no_bad = df.filter(~pl.col("NAME1").is_in(bad_name1s))
-
-        # from IPython import embed; embed()
 
         return df_no_bad
 
@@ -783,42 +712,31 @@ class LongListConverter:
             oelement_s_start, next_element_s_start, oelement0, oelement1
         )
 
-        # XX THJIS SI WRONG< WHAT IF MARKER INSSIDE FIRST ELEMENT??? ASSUMED NOIT TO BE< BUT COULD BE!!
         expanded_sequence = [oelement0]
 
-        # if not (append0 or between or prepend1):
-        #     return [oelement0, self._next_drift(l=next_element_s_start - oelement_s_start + oelement0.l)]
-
         for p in append0:
-            print(f"Appending element @ {p}")
+            print(f"Appending {p} to element {oelement0}")
             expanded_sequence.append(p)
 
         # Something impressive goes here for placing global and relative S elements...
         for s, placements_at_this_s in between:
             if  oelement_s_start < s < oelement_s_start + oelement0.l:
-                # THIS NEEDS TO BE HANDLED PROPERLY!!!  split them??
-                # XXX!!!
-                continue
+                raise MalformedConversionConfig(f"External placement {placements_at_this_s}"
+                                                f" is inside component list element {oelement0}.")
             # We are currently at in global s-space:
             # s_oelement_s_start + sum(x.l for x in expanded_sequence)
-            try:
-                expanded_sequence.extend(self._next_drift_sequence(s - oelement_s_start - sum(x.l for x in expanded_sequence)))
-            except:
-                from IPython import embed; embed()
+            expanded_sequence.extend(self._next_drift_sequence(s - oelement_s_start - sum(x.l for x in expanded_sequence)))
 
             for placement in placements_at_this_s:
                 print(placement.element)
-                print(f"Placing element @ {s}")
+                print(f"Placing {placement} @ {s}")
                 expanded_sequence.append(placement.element)
 
         length_so_far = sum(x.l for x in expanded_sequence)
-        try:
-            expanded_sequence.extend(self._next_drift_sequence(length=final_length - length_so_far))
-        except:
-            from IPython import embed; embed()
+        expanded_sequence.extend(self._next_drift_sequence(length=final_length - length_so_far))
 
         for p in prepend1:
-            print(f"Prepending element vor {p}")
+            print(f"Prepending {p} to element {oelement1}")
             expanded_sequence.append(p)
 
         return expanded_sequence
