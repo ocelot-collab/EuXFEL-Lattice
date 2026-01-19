@@ -1024,7 +1024,7 @@ class SASE2(SectionTrack):
         self.tws_file = self.tws_dir + "tws_section_SASE2.npz"
 
         sase2_start = t1.ensec_2197_t1
-        sase2_stop = sase2.ensec_2423_sa2
+        sase2_stop = sase2.ensec_2473_sa2
 
         self.lattice = MagneticLattice(t1.cell + sase2.cell, start=sase2_start, stop=sase2_stop,
                                        method=self.method)
@@ -1056,7 +1056,7 @@ class T3(SectionTrack):
         self.input_beam_file = self.particle_dir + 'section_SASE2.npz'
         self.output_beam_file = self.particle_dir + 'section_T3.npz'
         self.tws_file = self.tws_dir + "tws_section_T3.npz"
-        sase2_stop = sase2.ensec_2423_sa2
+        sase2_stop = sase2.ensec_2473_sa2
         t3_stop = t3.ensec_2743_un1
         self.lattice = MagneticLattice(sase2.cell + t3.cell, start=sase2_stop, stop=t3_stop,
                                        method=self.method)
@@ -1088,7 +1088,7 @@ class T3_chirper(SectionTrack):
         self.input_beam_file = self.particle_dir + 'section_SASE2.npz'
         self.output_beam_file = self.particle_dir + 'section_T3.npz'
         self.tws_file = self.tws_dir + "tws_section_T3.npz"
-        sase2_stop = sase2.ensec_2423_sa2
+        sase2_stop = sase2.ensec_2473_sa2
         # t3_stop = t3.ensec_2743_un1
         t3_stop = t3.chy_2569_t3
         self.lattice = MagneticLattice(sase2.cell + t3.cell, start=sase2_stop, stop=t3_stop,
