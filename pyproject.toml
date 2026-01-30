@@ -9,7 +9,7 @@ authors = [
   { name = "Stuart Walker", email = "stuart.walker@desy.de" }
 ]
 
-requires-python = ">=3.14"
+requires-python = ">=3.10"
 dependencies = [
     "click>=8.3.1",
     "fastexcel>=0.18.0",

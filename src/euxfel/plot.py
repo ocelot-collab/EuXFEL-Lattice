@@ -16,7 +16,7 @@ from .complist import ComponentList
 from latdraw.plot import s_label
 
 
-def plot_cathode_to_target(target: str) -> tuple[pd.DataFrame, MagneticLattice, plt.Figure]:
+def plot_cathode_to_target(target: str) -> tuple[pl.DataFrame, MagneticLattice, plt.Figure]:
     sequence = getattr(sequences, f"cathode_to_{target.lower()}")
     twiss0 = sequences.CATHODE_TWISS0
 

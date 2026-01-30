@@ -96,32 +96,28 @@ d_72 = Drift(l=0.09600000000000009, eid="D_72")
 d_73 = Drift(l=0.1836500000000001, eid="D_73")
 d_74 = Drift(l=0.051149999999996504, eid="D_74")
 d_75 = Drift(l=0.05115000000000269, eid="D_75")
-d_76 = Drift(l=0.27815000000000034, eid="D_76")
-d_77 = Drift(l=0.08615000000000067, eid="D_77")
-d_78 = Drift(l=0.0861500000000002, eid="D_78")
-d_79 = Drift(l=0.2850000000000016, eid="D_79")
-d_80 = Drift(l=0.03499999999999659, eid="D_80")
-d_81 = Drift(l=0.17500000000000426, eid="D_81")
-d_82 = Drift(l=0.15, eid="D_82")
-d_83 = Drift(l=0.1311499999999981, eid="D_83")
-d_84 = Drift(l=0.0861500000000002, eid="D_84")
-d_85 = Drift(l=0.3200000000000017, eid="D_85")
-d_86 = Drift(l=0.17499999999999716, eid="D_86")
-d_87 = Drift(l=0.15, eid="D_87")
-d_88 = Drift(l=0.1311499999999981, eid="D_88")
-d_89 = Drift(l=0.0861500000000002, eid="D_89")
-d_90 = Drift(l=0.31999999999999745, eid="D_90")
-d_91 = Drift(l=0.2750000000000057, eid="D_91")
-d_92 = Drift(l=0.18114999999998957, eid="D_92")
-d_93 = Drift(l=0.2011500000000022, eid="D_93")
-d_94 = Drift(l=0.38000000000000256, eid="D_94")
-d_95 = Drift(l=0.2811499999999967, eid="D_95")
-d_96 = Drift(l=0.262850000000004, eid="D_96")
-d_97 = Drift(l=0.36430000000000007, eid="D_97")
-d_98 = Drift(l=0.14999999999999858, eid="D_98")
-d_99 = Drift(l=0.2351499999999973, eid="D_99")
-d_100 = Drift(l=0.43115000000000614, eid="D_100")
-d_101 = Drift(l=0.09999999999999432, eid="D_101")
+d_76 = Drift(l=0.7142999999999982, eid="D_76")
+d_77 = Drift(l=0.7211500000000017, eid="D_77")
+d_78 = Drift(l=0.03499999999999659, eid="D_78")
+d_79 = Drift(l=0.17500000000000426, eid="D_79")
+d_80 = Drift(l=0.15, eid="D_80")
+d_81 = Drift(l=0.1311499999999981, eid="D_81")
+d_82 = Drift(l=0.7561500000000019, eid="D_82")
+d_83 = Drift(l=0.17499999999999716, eid="D_83")
+d_84 = Drift(l=0.15, eid="D_84")
+d_85 = Drift(l=0.1311499999999981, eid="D_85")
+d_86 = Drift(l=0.7561500000000019, eid="D_86")
+d_87 = Drift(l=0.2750000000000057, eid="D_87")
+d_88 = Drift(l=0.18114999999998957, eid="D_88")
+d_89 = Drift(l=0.2011500000000022, eid="D_89")
+d_90 = Drift(l=0.38000000000000256, eid="D_90")
+d_91 = Drift(l=0.2811499999999967, eid="D_91")
+d_92 = Drift(l=0.262850000000004, eid="D_92")
+d_93 = Drift(l=0.36430000000000007, eid="D_93")
+d_94 = Drift(l=0.14999999999999858, eid="D_94")
+d_95 = Drift(l=0.2351499999999973, eid="D_95")
+d_96 = Drift(l=0.43115000000000614, eid="D_96")
+d_97 = Drift(l=0.09999999999999432, eid="D_97")
 
 # Quadrupoles:
 qln_23_i1 = Quadrupole(eid="QLN.23.I1")
@@ -155,11 +151,7 @@ cx_37_i1 = Hcor(eid="CX.37.I1")
 cx_39_i1 = Hcor(eid="CX.39.I1")
 cwx_47_i1 = Hcor(eid="CWX.47.I1")
 cix_51_i1 = Hcor(l=0.1, eid="CIX.51.I1")
-kjx_54_i1 = Hcor(l=0.175, eid="KJX.54.I1")
-kax_55_i1 = Hcor(l=0.35, eid="KAX.55.I1")
-kax_56_i1 = Hcor(l=0.35, eid="KAX.56.I1")
 cix_57_i1 = Hcor(l=0.1, eid="CIX.57.I1")
-kjx_57_i1 = Hcor(l=0.175, eid="KJX.57.I1")
 
 # Vcors:
 cly_23_i1 = Vcor(eid="CLY.23.I1")
@@ -170,9 +162,7 @@ cy_37_i1 = Vcor(eid="CY.37.I1")
 cy_39_i1 = Vcor(eid="CY.39.I1")
 cwy_47_i1 = Vcor(eid="CWY.47.I1")
 ciy_51_i1 = Vcor(l=0.1, eid="CIY.51.I1")
-kjy_54_i1 = Vcor(l=0.175, eid="KJY.54.I1")
 ciy_55_i1 = Vcor(l=0.1, eid="CIY.55.I1")
-kjy_57_i1 = Vcor(l=0.175, eid="KJY.57.I1")
 ciy_58_i1 = Vcor(l=0.1, eid="CIY.58.I1")
 
 # Undulators:
@@ -457,59 +447,49 @@ cell = (stsec_23_i1,
         d_75,
         qi_53_i1,
         d_76,
-        kjx_54_i1,
-        kjy_54_i1,
-        d_77,
         qi_54_i1,
-        d_78,
-        kax_55_i1,
-        d_79,
+        d_77,
         stlat_55_i1,
-        d_80,
+        d_78,
         match_55_i1,
         otrc_55_i1,
-        d_81,
+        d_79,
         ciy_55_i1,
-        d_82,
+        d_80,
         bpma_55_i1,
-        d_83,
+        d_81,
         qi_55_i1,
-        d_84,
-        kax_56_i1,
-        d_85,
+        d_82,
         otrc_56_i1,
-        d_86,
+        d_83,
         cix_57_i1,
-        d_87,
+        d_84,
         bpma_57_i1,
-        d_88,
+        d_85,
         qi_57_i1,
-        d_89,
-        kjx_57_i1,
-        kjy_57_i1,
-        d_90,
+        d_86,
         otrc_58_i1,
-        d_91,
+        d_87,
         ciy_58_i1,
-        d_92,
+        d_88,
         qi_59_i1,
-        d_93,
+        d_89,
         bpma_59_i1,
-        d_94,
+        d_90,
         otrc_59_i1,
-        d_95,
+        d_91,
         qi_60_i1,
-        d_96,
+        d_92,
         tora_60_i1,
-        d_97,
+        d_93,
         bpma_60_i1,
-        d_98,
+        d_94,
         bpmatest_61_i1,
-        d_99,
+        d_95,
         qi_61_i1,
-        d_100,
+        d_96,
         dump_csr_start,
-        d_101,
+        d_97,
         ensub_62_i1)
 
 # Power Supply IDs:
