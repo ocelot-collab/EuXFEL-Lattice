@@ -9,7 +9,7 @@ writer:
 
 rows:
   skip:
-    TYPE: ["RF", "CTBI", "CUX", "KJX", "KJY", "KAX", "KAY"]
+    TYPE: ["RF", "CTBI", "CUX", "KJX", "KJY", "KAX", "KAY", "KIX", "KIY", "KDY", "KFBY", "KFBX"]
     CLASS: ["CRYO", "UNDPLACEH"]
     GROUP: ["CRYO",
             "MOVER",

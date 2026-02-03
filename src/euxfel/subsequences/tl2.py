@@ -39,75 +39,71 @@ d_22 = Drift(l=0.09600000000000364, eid="D_22")
 d_23 = Drift(l=0.38149999999996, eid="D_23")
 kfb0_1880_tl = Drift(l=2.0, eid="KFB0.1880.TL")
 d_24 = Drift(l=0.23395000000004984, eid="D_24")
-d_25 = Drift(l=0.23394999999995014, eid="D_25")
-d_26 = Drift(l=0.2700000000002092, eid="D_26")
-d_27 = Drift(l=4.352499999999873, eid="D_27")
-d_28 = Drift(l=0.09600000000000364, eid="D_28")
-d_29 = Drift(l=0.38149999999996, eid="D_29")
+d_25 = Drift(l=2.5039500000001595, eid="D_25")
+d_26 = Drift(l=4.352499999999873, eid="D_26")
+d_27 = Drift(l=0.09600000000000364, eid="D_27")
+d_28 = Drift(l=0.38149999999996, eid="D_28")
 kfb0_1890_tl = Drift(l=2.0, eid="KFB0.1890.TL")
-d_30 = Drift(l=0.23395000000004984, eid="D_30")
-d_31 = Drift(l=0.23394999999995014, eid="D_31")
-d_32 = Drift(l=0.3000000000001819, eid="D_32")
-d_33 = Drift(l=4.0999999999998185, eid="D_33")
-d_34 = Drift(l=5.5, eid="D_34")
+d_29 = Drift(l=0.23395000000004984, eid="D_29")
+d_30 = Drift(l=2.5339500000001323, eid="D_30")
+d_31 = Drift(l=4.0999999999998185, eid="D_31")
+d_32 = Drift(l=5.5, eid="D_32")
 kfb0_1905_tl = Drift(l=2.0, eid="KFB0.1905.TL")
-d_35 = Drift(l=0.23395000000004984, eid="D_35")
-d_36 = Drift(l=0.23394999999995014, eid="D_36")
-d_37 = Drift(l=0.4774999999999636, eid="D_37")
-d_38 = Drift(l=0.09600000000000364, eid="D_38")
-d_39 = Drift(l=0.30150000000003274, eid="D_39")
-d_40 = Drift(l=3.525, eid="D_40")
-d_41 = Drift(l=5.5, eid="D_41")
+d_33 = Drift(l=0.23395000000004984, eid="D_33")
+d_34 = Drift(l=2.711449999999914, eid="D_34")
+d_35 = Drift(l=0.09600000000000364, eid="D_35")
+d_36 = Drift(l=0.30150000000003274, eid="D_36")
+d_37 = Drift(l=3.525, eid="D_37")
+d_38 = Drift(l=5.5, eid="D_38")
 kfb0_1920_tl = Drift(l=2.0, eid="KFB0.1920.TL")
-d_42 = Drift(l=0.23395000000004984, eid="D_42")
-d_43 = Drift(l=0.23394999999995014, eid="D_43")
-d_44 = Drift(l=0.4774999999999636, eid="D_44")
+d_39 = Drift(l=0.23395000000004984, eid="D_39")
+d_40 = Drift(l=2.711449999999914, eid="D_40")
+d_41 = Drift(l=0.09600000000000364, eid="D_41")
+d_42 = Drift(l=0.30150000000003274, eid="D_42")
+d_43 = Drift(l=3.525, eid="D_43")
+d_44 = Drift(l=1.2774999999999181, eid="D_44")
 d_45 = Drift(l=0.09600000000000364, eid="D_45")
-d_46 = Drift(l=0.30150000000003274, eid="D_46")
-d_47 = Drift(l=3.525, eid="D_47")
-d_48 = Drift(l=1.2774999999999181, eid="D_48")
-d_49 = Drift(l=0.09600000000000364, eid="D_49")
-d_50 = Drift(l=1.0715000000000146, eid="D_50")
-d_51 = Drift(l=0.3000000000001819, eid="D_51")
-d_52 = Drift(l=2.677500000000009, eid="D_52")
-d_53 = Drift(l=2.3114499999999225, eid="D_53")
-d_54 = Drift(l=0.1539500000000229, eid="D_54")
-d_55 = Drift(l=0.29000000000010007, eid="D_55")
-d_56 = Drift(l=0.2825000000000236, eid="D_56")
-d_57 = Drift(l=0.09600000000000364, eid="D_57")
-d_58 = Drift(l=0.4815000000000964, eid="D_58")
-d_59 = Drift(l=0.2699999999997999, eid="D_59")
+d_46 = Drift(l=1.0715000000000146, eid="D_46")
+d_47 = Drift(l=0.3000000000001819, eid="D_47")
+d_48 = Drift(l=2.677500000000009, eid="D_48")
+d_49 = Drift(l=2.3114499999999225, eid="D_49")
+d_50 = Drift(l=0.1539500000000229, eid="D_50")
+d_51 = Drift(l=0.29000000000010007, eid="D_51")
+d_52 = Drift(l=0.2825000000000236, eid="D_52")
+d_53 = Drift(l=0.09600000000000364, eid="D_53")
+d_54 = Drift(l=0.4815000000000964, eid="D_54")
+d_55 = Drift(l=0.2699999999997999, eid="D_55")
 vcst40t30_1940_tl = Drift(eid="VCST40T30.1940.TL")
-d_60 = Drift(l=0.10000000000013642, eid="D_60")
-d_61 = Drift(l=0.31999999999993634, eid="D_61")
-d_62 = Drift(l=0.31999999999993634, eid="D_62")
+d_56 = Drift(l=0.10000000000013642, eid="D_56")
+d_57 = Drift(l=0.31999999999993634, eid="D_57")
+d_58 = Drift(l=0.31999999999993634, eid="D_58")
+d_59 = Drift(l=0.3200000000001637, eid="D_59")
+d_60 = Drift(l=0.31999999999993634, eid="D_60")
+d_61 = Drift(l=0.2839510000001155, eid="D_61")
+d_62 = Drift(l=0.28395099999978846, eid="D_62")
 d_63 = Drift(l=0.3200000000001637, eid="D_63")
 d_64 = Drift(l=0.31999999999993634, eid="D_64")
-d_65 = Drift(l=0.2839510000001155, eid="D_65")
-d_66 = Drift(l=0.28395099999978846, eid="D_66")
-d_67 = Drift(l=0.3200000000001637, eid="D_67")
-d_68 = Drift(l=0.31999999999993634, eid="D_68")
-d_69 = Drift(l=0.31999999999993634, eid="D_69")
-d_70 = Drift(l=0.31999999999993634, eid="D_70")
-d_71 = Drift(l=0.10000000000013642, eid="D_71")
+d_65 = Drift(l=0.31999999999993634, eid="D_65")
+d_66 = Drift(l=0.31999999999993634, eid="D_66")
+d_67 = Drift(l=0.10000000000013642, eid="D_67")
 vcst30t40_1963_tl = Drift(eid="VCST30T40.1963.TL")
-d_72 = Drift(l=0.2699999999999818, eid="D_72")
-d_73 = Drift(l=0.4100000000001273, eid="D_73")
-d_74 = Drift(l=0.22499999999995451, eid="D_74")
-d_75 = Drift(l=0.36000000000012367, eid="D_75")
-d_76 = Drift(l=0.20895100000007005, eid="D_76")
-d_77 = Drift(l=0.1539509999999067, eid="D_77")
-d_78 = Drift(l=0.20000000000009094, eid="D_78")
-d_79 = Drift(l=1.4799999999998363, eid="D_79")
+d_68 = Drift(l=0.2699999999999818, eid="D_68")
+d_69 = Drift(l=0.4100000000001273, eid="D_69")
+d_70 = Drift(l=0.22499999999995451, eid="D_70")
+d_71 = Drift(l=0.36000000000012367, eid="D_71")
+d_72 = Drift(l=0.20895100000007005, eid="D_72")
+d_73 = Drift(l=0.1539509999999067, eid="D_73")
+d_74 = Drift(l=0.20000000000009094, eid="D_74")
+d_75 = Drift(l=1.4799999999998363, eid="D_75")
 vcst40t98_1969_tl = Drift(eid="VCST40T98.1969.TL")
-d_80 = Drift(l=7.589199999999892, eid="D_80")
-d_81 = Drift(l=0.10000000000009096, eid="D_81")
-d_82 = Drift(l=0.15000000000004549, eid="D_82")
-d_83 = Drift(l=0.20000000000004547, eid="D_83")
-d_84 = Drift(l=0.820699999999988, eid="D_84")
+d_76 = Drift(l=7.589199999999892, eid="D_76")
+d_77 = Drift(l=0.10000000000009096, eid="D_77")
+d_78 = Drift(l=0.15000000000004549, eid="D_78")
+d_79 = Drift(l=0.20000000000004547, eid="D_79")
+d_80 = Drift(l=0.820699999999988, eid="D_80")
 vcb100_1979_tl = Drift(l=0.18, eid="VCB100.1979.TL")
 vcabsa_1979_tl = Drift(l=0.61, eid="VCABSA.1979.TL")
-d_85 = Drift(l=0.2500400000002537, eid="D_85")
+d_81 = Drift(l=0.2500400000002537, eid="D_81")
 
 # Quadrupoles:
 qh_1855_tl = Quadrupole(l=1.0291, k1=0.3716633416004276, eid="QH.1855.TL")
@@ -155,9 +151,7 @@ kny_1966_tl = RBend(l=0.279, e1=0.0, e2=0.0, tilt=1.570796327, eid="KNY.1966.TL"
 chx_1855_tl = Hcor(l=0.2, eid="CHX.1855.TL")
 cfx_1864_tl = Hcor(l=0.1, eid="CFX.1864.TL")
 cfx_1873_tl = Hcor(l=0.1, eid="CFX.1873.TL")
-kfbx_1893_tl = Hcor(l=2.0, eid="KFBX.1893.TL")
 cfx_1894_tl = Hcor(l=0.1, eid="CFX.1894.TL")
-kfbx_1923_tl = Hcor(l=2.0, eid="KFBX.1923.TL")
 cfx_1925_tl = Hcor(l=0.1, eid="CFX.1925.TL")
 bl_1939_tl = Hcor(l=0.2, eid="BL.1939.TL")
 bl_1964_tl = Hcor(l=0.2, eid="BL.1964.TL")
@@ -169,9 +163,7 @@ cnx_1977_tl = Hcor(l=0.3, eid="CNX.1977.TL")
 cfy_1854_tl = Vcor(l=0.1, eid="CFY.1854.TL")
 chy_1861_tl = Vcor(l=0.2, eid="CHY.1861.TL")
 cfy_1869_tl = Vcor(l=0.1, eid="CFY.1869.TL")
-kfby_1883_tl = Vcor(l=2.0, eid="KFBY.1883.TL")
 cfy_1884_tl = Vcor(l=0.1, eid="CFY.1884.TL")
-kfby_1908_tl = Vcor(l=2.0, eid="KFBY.1908.TL")
 cfy_1910_tl = Vcor(l=0.1, eid="CFY.1910.TL")
 cfy_1937_tl = Vcor(l=0.1, eid="CFY.1937.TL")
 chy_1967_tl = Vcor(l=0.2, eid="CHY.1967.TL")
@@ -280,152 +272,144 @@ cell = (stsec_1854_tl,
         d_24,
         qf_1881_tl,
         d_25,
-        kfby_1883_tl,
-        d_26,
         cfy_1884_tl,
-        d_27,
+        d_26,
         midbpmi_1889_tl,
-        d_28,
+        d_27,
         bpmi_1889_tl,
-        d_29,
+        d_28,
         kfb0_1890_tl,
-        d_30,
+        d_29,
         enblock_1891_cl,
         qf_1892_tl,
-        d_31,
-        kfbx_1893_tl,
-        d_32,
+        d_30,
         cfx_1894_tl,
-        d_33,
+        d_31,
         otrbw_1899_tl,
-        d_34,
+        d_32,
         kfb0_1905_tl,
-        d_35,
+        d_33,
         qf_1907_tl,
-        d_36,
-        kfby_1908_tl,
-        d_37,
+        d_34,
         midbpmi_1910_tl,
-        d_38,
+        d_35,
         bpmi_1910_tl,
-        d_39,
+        d_36,
         cfy_1910_tl,
-        d_40,
+        d_37,
         otrbw_1914_tl,
-        d_41,
+        d_38,
         kfb0_1920_tl,
-        d_42,
+        d_39,
         qf_1922_tl,
-        d_43,
-        kfbx_1923_tl,
-        d_44,
+        d_40,
         midbpmi_1925_tl,
-        d_45,
+        d_41,
         bpmi_1925_tl,
-        d_46,
+        d_42,
         cfx_1925_tl,
-        d_47,
+        d_43,
         otrbw_1929_tl,
-        d_48,
+        d_44,
         midbpmi_1930_tl,
-        d_49,
+        d_45,
         bpmi_1930_tl,
-        d_50,
+        d_46,
         bam_1931_tl,
-        d_51,
+        d_47,
         bam_1932_tl,
-        d_52,
+        d_48,
         crd_1934_tl,
-        d_53,
+        d_49,
         qf_1937_tl,
-        d_54,
+        d_50,
         cfy_1937_tl,
-        d_55,
+        d_51,
         kmx_1938_tl,
         kny_1938_tl,
-        d_56,
+        d_52,
         midbpmi_1939_tl,
-        d_57,
+        d_53,
         bpmi_1939_tl,
-        d_58,
+        d_54,
         bl_1939_tl,
-        d_59,
+        d_55,
         ensub_1940_tl,
         stsub_1940_tl,
         vcst40t30_1940_tl,
-        d_60,
+        d_56,
         kspos_1941_tl,
         ks_1941_tl,
         ksneg_1941_tl,
-        d_61,
+        d_57,
         kspos_1943_tl,
         ks_1943_tl,
         ksneg_1943_tl,
-        d_62,
+        d_58,
         kspos_1945_tl,
         ks_1945_tl,
         ksneg_1945_tl,
-        d_63,
+        d_59,
         kspos_1948_tl,
         ks_1948_tl,
         ksneg_1948_tl,
-        d_64,
+        d_60,
         kspos_1950_tl,
         ks_1950_tl,
         ksneg_1950_tl,
-        d_65,
+        d_61,
         qf_1952_tl,
-        d_66,
+        d_62,
         kspos_1953_tl,
         ks_1953_tl,
         ksneg_1953_tl,
-        d_67,
+        d_63,
         kspos_1955_tl,
         ks_1955_tl,
         ksneg_1955_tl,
-        d_68,
+        d_64,
         kspos_1958_tl,
         ks_1958_tl,
         ksneg_1958_tl,
-        d_69,
+        d_65,
         kspos_1960_tl,
         ks_1960_tl,
         ksneg_1960_tl,
-        d_70,
+        d_66,
         kspos_1962_tl,
         ks_1962_tl,
         ksneg_1962_tl,
-        d_71,
+        d_67,
         vcst30t40_1963_tl,
-        d_72,
+        d_68,
         bl_1964_tl,
-        d_73,
+        d_69,
         chx_1965_tl,
-        d_74,
+        d_70,
         kmx_1965_tl,
         kny_1966_tl,
-        d_75,
+        d_71,
         bpma_1966_tl,
-        d_76,
+        d_72,
         qf_1967_tl,
-        d_77,
+        d_73,
         chx_1967_tl,
-        d_78,
+        d_74,
         chy_1967_tl,
-        d_79,
+        d_75,
         vcst40t98_1969_tl,
-        d_80,
+        d_76,
         cnx_1977_tl,
-        d_81,
+        d_77,
         cny_1977_tl,
-        d_82,
+        d_78,
         bpmd_1977_tl,
-        d_83,
+        d_79,
         otre_1978_tl,
-        d_84,
+        d_80,
         vcb100_1979_tl,
         vcabsa_1979_tl,
-        d_85,
+        d_81,
         ensub_1980_tl)
 
 # Power Supply IDs:
