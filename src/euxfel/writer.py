@@ -50,11 +50,24 @@ class PythonSubsequenceWriter:
         twiss_ref = Twiss()
         lines.append("twiss0 = Twiss()\n")
         twiss = self.twiss0
-        for param in twiss.__dict__:
-            if twiss.__dict__[param] != twiss_ref.__dict__[param]:
-                lines.append(
-                    "twiss0." + str(param) + " = " + str(twiss.__dict__[param]) + "\n"
-                )
+        for name in dir(twiss):
+            if name.startswith("_"):
+                continue
+            value = getattr(twiss, name)  # Just to check that it doesn't raise an error
+            if callable(value):
+                continue
+
+            if not hasattr(twiss, f"_{name}"):
+                # Then this attribute is dynamically calculated (i.e. it is a property).
+                # We assume this!  I hope it does not change...
+                continue
+
+            ref_value = getattr(twiss_ref, name)
+            if value == ref_value:
+                continue
+
+            lines.append(f"twiss0.{name} = {value}\n")
+
         return "".join(lines)
 
     def element_to_string(self, element, variable_name) -> str:
