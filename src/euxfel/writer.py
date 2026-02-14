@@ -195,16 +195,23 @@ class PythonSubsequenceWriter:
         return f"# Power Supply IDs:{"\n".join(lines)}"
 
     def make_import_string(self) -> str:
-        elements_to_import = ", ".join(
-            sorted(set(type(element).__name__ for element in self.sequence))
-        )
+        class_names = set(type(element).__name__ for element in self.sequence)
+        # This is a special case, as it is written not as a SlicedElement at all,
+        # And instead just as lists of elements multiplied by integers:
+        class_names.discard("SlicedElement")
+        elements_to_import = ", ".join(sorted(class_names))
         lines = [
             f"from ocelot.cpbd.elements import {elements_to_import}",
             "from ocelot.cpbd.beam import Twiss",
         ]
         return "\n".join(lines)
 
-    def write_module(self, fname: str, write_types_power_supplies: list[str] | None = None, comment: str = ""):
+    def write_module(
+        self,
+        fname: str,
+        write_types_power_supplies: list[str] | None = None,
+        comment: str = "",
+    ):
         with open(fname, "w") as f:
             f.write(
                 self.to_module(

@@ -9,13 +9,16 @@ writer:
 
 rows:
   skip:
-    TYPE: ["RF", "CTBI", "CUX", "KJX", "KJY", "KAX", "KAY", "KIX", "KIY", "KDY", "KFBY", "KFBX"]
+    TYPE: ["RF", "CTBI", "CUX", "KJX", "KJY", "KAX", "KAY", "KIX", "KIY", "KDY", "KFBY", "KFBX", "VCCHIRP_S"]
     CLASS: ["CRYO", "UNDPLACEH"]
     GROUP: ["CRYO",
             "MOVER",
             "PHOTON",
             "DUMP"]
     NAME1: []
+
+  keep:
+    NAME1: ["VCCHIRP.2490.T3"]
 
   edit:
     TYPE:

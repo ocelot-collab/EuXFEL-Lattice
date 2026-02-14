@@ -1,4 +1,4 @@
-# Converted from component_list_2026.01.21.xls @ 2026-02-14T21:25:01.867407
+# Converted from component_list_2026.01.21.xls
 
 from ocelot.cpbd.elements import (
     Drift,
@@ -22,10 +22,8 @@ twiss0.beta_y = 38.1166
 
 
 # Drifts:
-vcst10t22_2461_t4 = Drift(eid="VCST10T22.2461.T4")
 d_0 = Drift(l=0.2580000000002656, eid="D_0")
 d_1 = Drift(l=0.041999999999916326, eid="D_1")
-vcst22t40_2461_t4 = Drift(eid="VCST22T40.2461.T4")
 d_2 = Drift(l=1.080500000000029, eid="D_2")
 d_3 = Drift(l=5.677999999999884, eid="D_3")
 d_4 = Drift(l=0.205000000000382, eid="D_4")
@@ -61,11 +59,9 @@ d_33 = Drift(l=0.18499999999976352, eid="D_33")
 d_34 = Drift(l=0.18999999999987266, eid="D_34")
 d_35 = Drift(l=0.2104500000000371, eid="D_35")
 d_36 = Drift(l=0.135449999999963, eid="D_36")
-vcst40t93x_2583_t4 = Drift(eid="VCST40T93X.2583.T4")
 d_37 = Drift(l=0.25, eid="D_37")
 d_38 = Drift(l=7.000000096013537e-06, eid="D_38")
 d_39 = Drift(l=7.000000096013537e-06, eid="D_39")
-vcst93xt40_2585_t4 = Drift(eid="VCST93XT40.2585.T4")
 d_40 = Drift(l=1.0701500000000124, eid="D_40")
 d_41 = Drift(l=3.5951499999998964, eid="D_41")
 d_42 = Drift(l=0.3451500000001033, eid="D_42")
@@ -125,7 +121,6 @@ d_95 = Drift(l=0.6149999999997817, eid="D_95")
 vcbshut_2791_t4 = Drift(l=0.3, eid="VCBSHUT.2791.T4")
 d_96 = Drift(l=1.9357130000000324, eid="D_96")
 d_97 = Drift(l=0.60674999999992, eid="D_97")
-vcst40t10_2793_t4 = Drift(eid="VCST40T10.2793.T4")
 d_98 = Drift(l=0.19975000000022192, eid="D_98")
 d_99 = Drift(l=0.2181500000001506, eid="D_99")
 d_100 = Drift(l=0.17814999999961292, eid="D_100")
@@ -255,14 +250,18 @@ bpme_2800_t4 = Monitor(eid="BPME.2800.T4")
 # Markers:
 stsec_2461_t4 = Marker(eid="STSEC.2461.T4")
 stsub_2461_t4 = Marker(eid="STSUB.2461.T4")
+vcst10t22_2461_t4 = Marker(eid="VCST10T22.2461.T4")
 bamc_2461_t4 = Marker(eid="BAMC.2461.T4")
+vcst22t40_2461_t4 = Marker(eid="VCST22T40.2461.T4")
 tora_2462_t4 = Marker(eid="TORA.2462.T4")
 otra_2494_t4 = Marker(eid="OTRA.2494.T4")
 t4_csr_start = Marker(eid="t4_csr_start")
+vcst40t93x_2583_t4 = Marker(eid="VCST40T93X.2583.T4")
 ensub_2583_t4 = Marker(eid="ENSUB.2583.T4")
 stsub_2583_t4 = Marker(eid="STSUB.2583.T4")
 mbe_2584a_t4 = Marker(eid="MBE.2584a.T4")
 mbe_2584d_t4 = Marker(eid="MBE.2584d.T4")
+vcst93xt40_2585_t4 = Marker(eid="VCST93XT40.2585.T4")
 mbe_2604d_t4 = Marker(eid="MBE.2604d.T4")
 t4_csr_stop = Marker(eid="t4_csr_stop")
 otrbw_2718_t4 = Marker(eid="OTRBW.2718.T4")
@@ -270,6 +269,7 @@ otrbw_2755_t4 = Marker(eid="OTRBW.2755.T4")
 otrbw_2779_t4 = Marker(eid="OTRBW.2779.T4")
 ks_2787_t4 = Marker(eid="KS.2787.T4")
 tora_2793_t4 = Marker(eid="TORA.2793.T4")
+vcst40t10_2793_t4 = Marker(eid="VCST40T10.2793.T4")
 ensub_2800_t4 = Marker(eid="ENSUB.2800.T4")
 ensec_2800_t4 = Marker(eid="ENSEC.2800.T4")
 

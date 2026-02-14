@@ -1,4 +1,4 @@
-# Converted from component_list_2026.01.21.xls @ 2026-02-14T21:25:01.741311
+# Converted from component_list_2026.01.21.xls
 
 from ocelot.cpbd.elements import Drift, Hcor, Marker, Monitor, Quadrupole, RBend, Vcor
 from ocelot.cpbd.beam import Twiss
@@ -12,7 +12,6 @@ twiss0.beta_y = 10.9438
 
 
 # Drifts:
-vcst98t40_1980_tl = Drift(eid="VCST98T40.1980.TL")
 d_0 = Drift(l=1.4724009999999907, eid="D_0")
 d_1 = Drift(l=13.047400999999823, eid="D_1")
 d_2 = Drift(l=1.1589500000002317, eid="D_2")
@@ -33,7 +32,6 @@ d_16 = Drift(l=0.20895100000007005, eid="D_16")
 d_17 = Drift(l=0.15395100000013406, eid="D_17")
 d_18 = Drift(l=0.19999999999986356, eid="D_18")
 d_19 = Drift(l=1.4800000000000637, eid="D_19")
-vcst40t98_2014_tl = Drift(eid="VCST40T98.2014.TL")
 d_20 = Drift(l=6.304699999999912, eid="D_20")
 d_21 = Drift(l=0.09999999999986359, eid="D_21")
 d_22 = Drift(l=1.4347000000002026, eid="D_22")
@@ -78,9 +76,11 @@ bpmd_2022_tl = Monitor(eid="BPMD.2022.TL")
 
 # Markers:
 stsub_1980_tl = Marker(eid="STSUB.1980.TL")
+vcst98t40_1980_tl = Marker(eid="VCST98T40.1980.TL")
 ensub_1997_tl = Marker(eid="ENSUB.1997.TL")
 stsub_1997_tl = Marker(eid="STSUB.1997.TL")
 tora_2011_tl = Marker(eid="TORA.2011.TL")
+vcst40t98_2014_tl = Marker(eid="VCST40T98.2014.TL")
 otre_2023_tl = Marker(eid="OTRE.2023.TL")
 ensub_2025_tl = Marker(eid="ENSUB.2025.TL")
 

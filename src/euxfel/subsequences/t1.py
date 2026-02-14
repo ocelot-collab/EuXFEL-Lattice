@@ -1,4 +1,4 @@
-# Converted from component_list_2026.01.21.xls @ 2026-02-14T21:25:01.507533
+# Converted from component_list_2026.01.21.xls
 
 from ocelot.cpbd.elements import (
     Drift,
@@ -10,7 +10,6 @@ from ocelot.cpbd.elements import (
     RBend,
     SBend,
     Sextupole,
-    SlicedElement,
     Undulator,
     Vcor,
 )
@@ -25,7 +24,6 @@ twiss0.beta_y = 42.1384
 
 
 # Drifts:
-vcst98t40_2025_t1 = Drift(eid="VCST98T40.2025.T1")
 d_0 = Drift(l=4.999999873689376e-06, eid="D_0")
 d_1 = Drift(l=0.47240099999999074, eid="D_1")
 d_2 = Drift(l=1.9724160000000799, eid="D_2")
@@ -108,7 +106,6 @@ d_77 = Drift(l=0.6149999999997817, eid="D_77")
 vcbshut_2185_t1 = Drift(l=0.3, eid="VCBSHUT.2185.T1")
 d_78 = Drift(l=4.679624999999942, eid="D_78")
 d_79 = Drift(l=0.6067500000003747, eid="D_79")
-vcst40t10_2190_t1 = Drift(eid="VCST40T10.2190.T1")
 d_80 = Drift(l=0.19974999999976717, eid="D_80")
 d_81 = Drift(l=0.2181500000001506, eid="D_81")
 d_82 = Drift(l=0.17814999999961292, eid="D_82")
@@ -251,6 +248,7 @@ bpme_2197_t1 = Monitor(eid="BPME.2197.T1")
 # Markers:
 stsec_2025_t1 = Marker(eid="STSEC.2025.T1")
 stsub_2025_t1 = Marker(eid="STSUB.2025.T1")
+vcst98t40_2025_t1 = Marker(eid="VCST98T40.2025.T1")
 mbz_2025a_t1 = Marker(eid="MBZ.2025a.T1")
 mbz_2025d_t1 = Marker(eid="MBZ.2025d.T1")
 mbz_2030d_t1 = Marker(eid="MBZ.2030d.T1")
@@ -281,6 +279,7 @@ otrbw_2146_t1 = Marker(eid="OTRBW.2146.T1")
 otrbw_2161_t1 = Marker(eid="OTRBW.2161.T1")
 otrbw_2174_t1 = Marker(eid="OTRBW.2174.T1")
 tora_2190_t1 = Marker(eid="TORA.2190.T1")
+vcst40t10_2190_t1 = Marker(eid="VCST40T10.2190.T1")
 ensub_2197_t1 = Marker(eid="ENSUB.2197.T1")
 ensec_2197_t1 = Marker(eid="ENSEC.2197.T1")
 

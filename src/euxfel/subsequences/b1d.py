@@ -1,4 +1,4 @@
-# Converted from component_list_2026.01.21.xls @ 2026-02-14T21:25:01.139169
+# Converted from component_list_2026.01.21.xls
 
 from ocelot.cpbd.elements import Drift, Hcor, Marker, Monitor, Quadrupole, SBend, Vcor
 from ocelot.cpbd.beam import Twiss
@@ -25,7 +25,6 @@ d_9 = Drift(l=2.584000000000026, eid="D_9")
 d_10 = Drift(l=0.14829999999997767, eid="D_10")
 d_11 = Drift(l=0.15430000000000632, eid="D_11")
 d_12 = Drift(l=0.265199999999993, eid="D_12")
-vcst40t60_237_b1d = Drift(eid="VCST40T60.237.B1D")
 d_13 = Drift(l=0.8841000000000179, eid="D_13")
 
 # Quadrupoles:
@@ -54,6 +53,7 @@ mbb_229a_b1d = Marker(eid="MBB.229a.B1D")
 mbb_229d_b1d = Marker(eid="MBB.229d.B1D")
 otrc_236_b1d = Marker(eid="OTRC.236.B1D")
 tora_236_b1d = Marker(eid="TORA.236.B1D")
+vcst40t60_237_b1d = Marker(eid="VCST40T60.237.B1D")
 ensec_237_b1d = Marker(eid="ENSEC.237.B1D")
 
 # Sequence:

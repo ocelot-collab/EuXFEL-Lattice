@@ -42,6 +42,9 @@ dev = [
     "pytest-cov>=7.0.0",
 ]
 
+[tool.uv.sources]
+ocelot-collab = { git = "https://github.com/ocelot-collab/ocelot.git", rev = "cadf5d69284416c099088b6fec22e8f1d604ad19" }
+
 
 [tool.pytest.ini_options]
 minversion = "8.0"

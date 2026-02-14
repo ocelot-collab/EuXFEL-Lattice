@@ -1,7 +1,6 @@
 from . import plot
 from . import subsequences
 
-
 try:
     from .sequences import (
         cathode_to_i1d,
@@ -13,7 +12,7 @@ try:
         CATHODE_TWISS0,
     )
 except Exception:
-     # Then probably the conversion failed and the sequences are missing
+    # Then probably the conversion failed and the sequences are missing
     import warnings
 
     warnings.warn(

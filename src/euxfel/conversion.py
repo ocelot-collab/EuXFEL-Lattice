@@ -7,7 +7,6 @@ from enum import Enum, auto
 from importlib.resources import files
 from pathlib import Path
 from typing import Any, TypeVar, Union
-import datetime
 
 import ocelot.cpbd.elements as elements
 import polars as pl
@@ -31,13 +30,16 @@ LOG.setLevel(logging.INFO)
 
 
 @dataclass
-class RowSkips:
-    """
-    Specify row-level exclusions for converting from the Component List Excel spreadsheet.
+class RowFilter:
+    """Specify row-level exclusions for converting from the Component List Excel spreadsheet.
 
     This dataclass collects sets of identifiers used to skip rows from the
     spreadsheet during model conversion. Each field corresponds to a column
     in the Excel source and defines values that should be ignored.
+
+    Elements which would otherwise be skipped can be re-included on a
+    per-NAME1 basis using the `keep_name1s` field, which takes
+    precedence over all other skip rules.
 
     Attributes
     ----------
@@ -49,12 +51,14 @@ class RowSkips:
         Spreadsheet TYPE values identifying rows to skip.
     name1 : set[str]
         Spreadsheet NAME1 values identifying rows to skip.
+
     """
 
-    group: set[str] = field(default_factory=set)
-    cls: set[str] = field(default_factory=set)
-    type: set[str] = field(default_factory=set)
-    name1: set[str] = field(default_factory=set)
+    skip_groups: set[str] = field(default_factory=set)
+    skip_classes: set[str] = field(default_factory=set)
+    skip_types: set[str] = field(default_factory=set)
+    skip_name1s: set[str] = field(default_factory=set)
+    keep_name1s: set[str] = field(default_factory=set)
 
 
 @dataclass
@@ -322,18 +326,19 @@ class LongListConverter:
     """
 
     MINIMUM_DRIFT_LENGTH = 1e-9
+    DRIFTABLE_GROUPS = ["CRYO", "VACUUM"]
 
     def __init__(
         self,
         clist: ComponentList,
         extra_properties=None,
-        rowskips: RowSkips | None = None,
+        rowskips: RowFilter | None = None,
         rowedits: RowEdits | None = None,
     ):
         self.clist = clist
         self.extra_properties = extra_properties if extra_properties else {}
         # # to have unique drift names...
-        self.rowskips: RowSkips = rowskips or RowSkips()
+        self.rowskips: RowFilter = rowskips or RowFilter()
         self.rowedits: RowEdits = rowedits or RowEdits()
 
         self.drift_counter = 0
@@ -406,16 +411,15 @@ class LongListConverter:
             A filtered DataFrame with all rows matching the skip criteria removed.
         """
 
-        bad_element_types = (
-            pl.col("TYPE").is_in(self.rowskips.type)
-            | pl.col("CLASS").is_in(self.rowskips.cls)
-            | pl.col("GROUP").is_in(self.rowskips.group)
-            | pl.col("NAME1").is_in(self.rowskips.name1)
+        filter_rows_expr = (
+            pl.col("TYPE").is_in(self.rowskips.skip_types)
+            | pl.col("CLASS").is_in(self.rowskips.skip_classes)
+            | pl.col("GROUP").is_in(self.rowskips.skip_groups)
+            | pl.col("NAME1").is_in(self.rowskips.skip_name1s)
         )
+        but_keep_rows_expr = pl.col("NAME1").is_in(self.rowskips.keep_name1s)
 
-        full_bad = bad_element_types
-
-        skipped = df.filter(full_bad)
+        skipped = df.filter(filter_rows_expr & ~but_keep_rows_expr)
 
         for n1, s, t, cls, grp in skipped.select(
             "NAME1", "S", "TYPE", "CLASS", "GROUP"
@@ -424,7 +428,7 @@ class LongListConverter:
                 f"Skipping: NAME1 = {n1}, @ S = {s}, TYPE = {t}, CLASS = {cls}, GROUP = {grp}"
             )
 
-        return df.filter(~full_bad)
+        return df.filter(~filter_rows_expr | but_keep_rows_expr)
 
     def _filter_bad_rows(self, df: pl.DataFrame) -> pl.DataFrame:
         """
@@ -867,7 +871,11 @@ class LongListConverter:
             If an unexpected error occurs during conversion or manual-edit
             application.
         """
-        ocelot_class_name = row["GROUP"].lower()
+        group = row["GROUP"]
+        if group in self.DRIFTABLE_GROUPS:
+            return self.convert_drift_equivalent(row)
+
+        ocelot_class_name = group.lower()
         try:
             oelement = getattr(self, f"convert_{ocelot_class_name}")(row)
             self._apply_manual_changes(oelement)
@@ -882,6 +890,46 @@ class LongListConverter:
                 "Unexpected error converting element:"
                 f"{row["NAME1"]=}, {row["GROUP"]=}, {row["CLASS"]=}, {row["TYPE"]=}, {row["LENGTH"]=}"
             ) from e
+
+    def convert_drift_equivalent(
+        self, row: dict[str, Any]
+    ) -> elements.Drift | elements.Marker:
+        """
+        Convert a non-magnet component-list row into an OCELOT drift or marker element.
+
+        This method handles rows that do not correspond to physical magnets but still
+        need to be represented in the lattice. The conversion logic is based on the
+        GROUP and CLASS fields:
+        - If GROUP is "MARKER", a zero-length Marker element is created.
+        - For other GROUP values, a Drift element is created with length taken from
+          the LENGTH field.
+
+        Parameters
+        ----------
+        row : dict[str, Any]
+            Dictionary representing a single component-list row with non-magnet
+            semantics.
+
+        Returns
+        -------
+        elements.Drift | elements.Marker
+            An OCELOT Drift element if the row represents a non-marker component,
+            or a Marker element if the GROUP is "MARKER".
+
+        Raises
+        ------
+        AssertionError
+            If GROUP is "MARKER" but LENGTH is not zero, or if GROUP is unrecognized.
+        """
+        length = row["LENGTH"]
+        name1 = row["NAME1"]
+        name2 = row["NAME2"]
+        if not length:
+            element = elements.Marker(eid=name1)
+        else:
+            element = elements.Drift(l=length, eid=name1)
+        element.ps_id = name2
+        return element
 
     def convert_magnet(self, row: dict[str, Any]) -> Union[
         elements.Quadrupole,
@@ -1093,55 +1141,6 @@ class LongListConverter:
         ele.ps_id = row["NAME2"]
         return ele
 
-    def convert_cryo(self, row: dict[str, Any]) -> elements.Drift:
-        """
-        Convert a CRYO entry into an OCELOT Drift element.
-
-        Cryomodules are represented as drifts during conversion. This method
-        expects a row with GROUP "CRYO" and CLASS "CRYO".
-
-        Parameters
-        ----------
-        row : dict[str, Any]
-            Dictionary representing a single component-list row with cryomodule
-            semantics.
-
-        Returns
-        -------
-        elements.Drift
-            Drift element representing the cryomodule.
-        """
-        assert row["GROUP"] == "CRYO"
-        assert row["CLASS"] == "CRYO"
-        ele = elements.Drift(l=row["LENGTH"], eid=row["NAME1"])
-        ele.ps_id = row["NAME2"]
-        return ele
-
-    def convert_vacuum(self, row: dict[str, Any]) -> elements.Drift:
-        """
-        Convert a VACUUM entry into an OCELOT Drift element.
-
-        Vacuum-related components are represented as drifts during conversion.
-        This method expects a row with GROUP "VACUUM" and one of the supported
-        CLASS values ("VAC", "ECOL", "PLACEH", "ABSORBER").
-
-        Parameters
-        ----------
-        row : dict[str, Any]
-            Dictionary representing a single component-list row with vacuum
-            component semantics.
-
-        Returns
-        -------
-        elements.Drift
-            Drift element representing the vacuum component.
-        """
-        assert row["GROUP"] == "VACUUM"
-        # assert row["CLASS"] in {"VAC", "ECOL", "PLACEH", "ABSORBER", "VA}, (row["CLASS"], row["LENGTH"])
-        ele = elements.Drift(l=row["LENGTH"], eid=row["NAME1"])
-        ele.ps_id = row["NAME2"]
-        return ele
-
     def convert_cavity(
         self, row: dict[str, Any]
     ) -> Union[elements.Cavity, elements.TDCavity]:
@@ -1309,9 +1308,8 @@ def longlist_to_ocelot(
         writer.write_module(
             fname=outf,
             write_types_power_supplies=write_types_power_supplies,
-            comment=f"Converted from {fname} @ {datetime.datetime.now().isoformat()}",
+            comment=f"Converted from {fname}",
         )
-
 
     fname = Path(fpath).name
     init_path = Path(outdir) / "__init__.py"
@@ -1451,22 +1449,25 @@ def _parse_config_dict(dconf: dict) -> list[SubsequenceModule]:
     return sections
 
 
-def _parse_row_changes(dconf: dict) -> tuple[RowSkips, RowEdits]:
+def _parse_row_changes(dconf: dict) -> tuple[RowFilter, RowEdits]:
     try:
         rconf = dconf["rows"]
     except KeyError:
-        return RowSkips(), RowEdits()
+        return RowFilter(), RowEdits()
+
+    keepconf = rconf.get("keep", {})
 
     try:
         skipconf = rconf["skip"]
     except KeyError:
-        skips = RowSkips()
+        skips = RowFilter()
     else:
-        skips = RowSkips(
-            group=set(skipconf.get("GROUP", [])),
-            cls=skipconf.get("CLASS", set()),
-            type=skipconf.get("TYPE", set()),
-            name1=skipconf.get("NAME1", set()),
+        skips = RowFilter(
+            skip_groups=set(skipconf.get("GROUP", [])),
+            skip_classes=skipconf.get("CLASS", set()),
+            skip_types=skipconf.get("TYPE", set()),
+            skip_name1s=skipconf.get("NAME1", set()),
+            keep_name1s=keepconf.get("NAME1", set()),
         )
 
     try:

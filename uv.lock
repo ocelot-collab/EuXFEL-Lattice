@@ -227,7 +227,6 @@ name = "euxfel"
 version = "0.2.0+componentlist.20260121"
 source = { editable = "." }
 dependencies = [
-    { name = "black" },
     { name = "click" },
     { name = "fastexcel" },
     { name = "latdraw" },
@@ -254,12 +253,11 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "black", specifier = ">=26.1.0" },
     { name = "click", specifier = ">=8.3.1" },
     { name = "fastexcel", specifier = ">=0.18.0" },
     { name = "latdraw", specifier = ">=0.3.0" },
     { name = "matplotlib", specifier = ">=3.10.7" },
-    { name = "ocelot-collab" },
+    { name = "ocelot-collab", git = "https://github.com/ocelot-collab/ocelot.git?rev=cadf5d69284416c099088b6fec22e8f1d604ad19" },
     { name = "polars", specifier = ">=1.36.1" },
     { name = "pyarrow", specifier = ">=22.0.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },
@@ -683,18 +681,14 @@ wheels = [
 
 [[package]]
 name = "ocelot-collab"
-version = "25.7.1"
-source = { registry = "https://pypi.org/simple" }
+version = "25.12.0"
+source = { git = "https://github.com/ocelot-collab/ocelot.git?rev=cadf5d69284416c099088b6fec22e8f1d604ad19#cadf5d69284416c099088b6fec22e8f1d604ad19" }
 dependencies = [
     { name = "h5py" },
     { name = "matplotlib" },
     { name = "numpy" },
     { name = "pandas" },
     { name = "scipy" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/1b/4c/45deb7baba12a74feb31f496b241f1a128be98ed6773f1db0ee5832e9a29/ocelot_collab-25.7.1.tar.gz", hash = "sha256:88e906c7982a6ea09252f316845185f624b6461a968691457fa6bdc6950c9276", size = 1348170, upload-time = "2025-07-17T20:29:57.569Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b8/f0/42331b1ab3cd4d5d51c6ff7c90a575b2d882bd275a0282acba28c3228d46/ocelot_collab-25.7.1-py3-none-any.whl", hash = "sha256:87101f34c9aab495eb27bedb7a1460844a6cf5ee3d90f55d885ba06cfd03990b", size = 1439741, upload-time = "2025-07-17T20:29:56.161Z" },
 ]
 
 [[package]]

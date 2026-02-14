@@ -1,4 +1,4 @@
-# Converted from component_list_2026.01.21.xls @ 2026-02-14T21:25:01.227680
+# Converted from component_list_2026.01.21.xls
 
 from ocelot.cpbd.elements import Drift, Hcor, Marker, Monitor, Quadrupole, SBend, Vcor
 from ocelot.cpbd.beam import Twiss
@@ -32,12 +32,10 @@ d_16 = Drift(l=0.2589800000000222, eid="D_16")
 d_17 = Drift(l=0.224899999999991, eid="D_17")
 d_18 = Drift(l=0.23402000000000953, eid="D_18")
 d_19 = Drift(l=0.5136800000000361, eid="D_19")
-vcst40t98_478_b2d = Drift(eid="VCST40T98.478.B2D")
 d_20 = Drift(l=0.14999999999997726, eid="D_20")
 d_21 = Drift(l=0.22500000000002274, eid="D_21")
 d_22 = Drift(l=0.125, eid="D_22")
 d_23 = Drift(l=0.049999999999954525, eid="D_23")
-vcst98t60_479_b2d = Drift(eid="VCST98T60.479.B2D")
 d_24 = Drift(l=0.9632700000000227, eid="D_24")
 
 # Quadrupoles:
@@ -73,8 +71,10 @@ mbg_467d_b2d = Marker(eid="MBG.467d.B2D")
 otra_473_b2d = Marker(eid="OTRA.473.B2D")
 mbg_474a_b2d = Marker(eid="MBG.474a.B2D")
 mbg_474d_b2d = Marker(eid="MBG.474d.B2D")
+vcst40t98_478_b2d = Marker(eid="VCST40T98.478.B2D")
 otrd_478_b2d = Marker(eid="OTRD.478.B2D")
 torc_479_b2d = Marker(eid="TORC.479.B2D")
+vcst98t60_479_b2d = Marker(eid="VCST98T60.479.B2D")
 ensec_480_b2d = Marker(eid="ENSEC.480.B2D")
 
 # Sequence:

@@ -1,4 +1,4 @@
-# Converted from component_list_2026.01.21.xls @ 2026-02-14T21:25:01.543988
+# Converted from component_list_2026.01.21.xls
 
 from ocelot.cpbd.elements import (
     Drift,
