@@ -2,7 +2,11 @@ import inspect
 from collections import defaultdict
 from itertools import groupby
 from numbers import Number
-from typing import Any
+from typing import Any, Iterable
+import subprocess
+import sys
+from pathlib import Path
+
 
 from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.elements import Drift, RBend
@@ -191,11 +195,26 @@ class PythonSubsequenceWriter:
         return f"# Power Supply IDs:{"\n".join(lines)}"
 
     def make_import_string(self) -> str:
+        elements_to_import = ", ".join(
+            sorted(set(type(element).__name__ for element in self.sequence))
+        )
         lines = [
-            "from ocelot.cpbd.elements import *",
+            f"from ocelot.cpbd.elements import {elements_to_import}",
             "from ocelot.cpbd.beam import Twiss",
         ]
         return "\n".join(lines)
+
+    def write_module(self, fname: str, write_types_power_supplies: list[str] | None = None, comment: str = ""):
+        with open(fname, "w") as f:
+            f.write(
+                self.to_module(
+                    write_types_power_supplies=write_types_power_supplies,
+                    comment=comment,
+                )
+            )
+
+        # Tidy and format what we have just written to file.
+        subprocess.run([sys.executable, "-m", "ruff", "format", fname], check=True)
 
     def to_module(
         self, write_types_power_supplies: list[str] | None = None, comment: str = ""

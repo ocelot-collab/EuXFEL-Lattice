@@ -7,6 +7,7 @@ from enum import Enum, auto
 from importlib.resources import files
 from pathlib import Path
 from typing import Any, TypeVar, Union
+import datetime
 
 import ocelot.cpbd.elements as elements
 import polars as pl
@@ -1305,14 +1306,12 @@ def longlist_to_ocelot(
         outf = outdir / Path(f"{module_name}.py")
 
         writer = PythonSubsequenceWriter(sequence, twiss0)
+        writer.write_module(
+            fname=outf,
+            write_types_power_supplies=write_types_power_supplies,
+            comment=f"Converted from {fname} @ {datetime.datetime.now().isoformat()}",
+        )
 
-        with open(outf, "w") as f:
-            f.write(
-                writer.to_module(
-                    write_types_power_supplies=write_types_power_supplies,
-                    comment=f"Converted from {fname}",
-                )
-            )
 
     fname = Path(fpath).name
     init_path = Path(outdir) / "__init__.py"

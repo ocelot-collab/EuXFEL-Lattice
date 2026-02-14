@@ -24,35 +24,31 @@ try:
     from . import sase3
     from . import t4d
 
-    __all__ = [
-        "i1",
-        "i1d",
-        "l1",
-        "b1d",
-        "l2",
-        "b2d",
-        "l3",
-        "cl",
-        "tl2tld",
-        "tl2",
-        "tl34_sa2",
-        "t1",
-        "sase2",
-        "t3",
-        "t5",
-        "t5d",
-        "tl34",
-        "sase1",
-        "t4",
-        "sase3",
-        "t4d",
-    ]
+
+    __all__ = ["i1",
+               "i1d",
+               "l1",
+               "b1d",
+               "l2",
+               "b2d",
+               "l3",
+               "cl",
+               "tl2tld",
+               "tl2",
+               "tl34_sa2",
+               "t1",
+               "sase2",
+               "t3",
+               "t5",
+               "t5d",
+               "tl34",
+               "sase1",
+               "t4",
+               "sase3",
+               "t4d"]
 except Exception:
     import warnings
-
-    warnings.warn(
-        "Failed importing subsequence modules, so one or more modules will be missing.  Consider regenerating one or more of these files to correct this."
-    )
+    warnings.warn("Failed importing subsequence modules, so one or more modules will be missing.  Consider regenerating one or more of these files to correct this.")
     del warnings
 
 # The longlist file we used to generate the subsequences in this directory:
