@@ -66,7 +66,9 @@ def eval_slice_expr(expr: str, env: dict):
 
 
 class SlicedElement:
-    def __init__(self, elements: dict[str, Element | OpticElement], expression: str, eid=None):
+    def __init__(
+        self, elements: dict[str, Element | OpticElement], expression: str, eid=None
+    ):
         self.elements = elements
         self.expression = expression
         self.id = eid

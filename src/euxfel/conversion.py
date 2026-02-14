@@ -20,11 +20,14 @@ from euxfel.complist import ComponentList
 from euxfel.slicing import SlicedElement
 from euxfel.writer import PythonSubsequenceWriter
 
-DEFAULT_CONVERSION_CONFIG_PATH = str(files("euxfel.longlists") / "conversion-config.yaml")
+DEFAULT_CONVERSION_CONFIG_PATH = str(
+    files("euxfel.longlists") / "conversion-config.yaml"
+)
 
 logging.basicConfig()
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.INFO)
+
 
 @dataclass
 class RowSkips:
@@ -46,10 +49,12 @@ class RowSkips:
     name1 : set[str]
         Spreadsheet NAME1 values identifying rows to skip.
     """
+
     group: set[str] = field(default_factory=set)
     cls: set[str] = field(default_factory=set)
     type: set[str] = field(default_factory=set)
     name1: set[str] = field(default_factory=set)
+
 
 @dataclass
 class RowEdits:
@@ -73,7 +78,7 @@ class RowEdits:
 
     group: dict[str, Any] = field(default_factory=dict)
     cls: dict[str, Any] = field(default_factory=dict)
-    type: dict[str,  Any] = field(default_factory=dict)
+    type: dict[str, Any] = field(default_factory=dict)
 
     def apply_changes(self, row: dict[str, Any]) -> None:
         """
@@ -102,24 +107,29 @@ class AdjacentPositionType(Enum):
     BEFORE = auto()
     AFTER = auto()
 
+
 @dataclass
 class Placement:
     element: OpticElement
+
 
 @dataclass
 class AdjacentPlacement(Placement):
     before_after: AdjacentPositionType
     reference_name1: str
 
+
 @dataclass
 class OffsetPlacement(Placement):
     delta_s: float
     reference_name1: str = ""
 
+
 @dataclass
 class MatchingRequest:
     marker_name: str
     quadrupoles: list[str]
+
 
 @dataclass
 class SubsequenceModule:
@@ -312,10 +322,13 @@ class LongListConverter:
 
     MINIMUM_DRIFT_LENGTH = 1e-9
 
-    def __init__(self, clist: ComponentList, extra_properties=None,
-                 rowskips: RowSkips | None = None,
-                 rowedits: RowEdits | None = None
-                 ):
+    def __init__(
+        self,
+        clist: ComponentList,
+        extra_properties=None,
+        rowskips: RowSkips | None = None,
+        rowedits: RowEdits | None = None,
+    ):
         self.clist = clist
         self.extra_properties = extra_properties if extra_properties else {}
         # # to have unique drift names...
@@ -324,7 +337,9 @@ class LongListConverter:
 
         self.drift_counter = 0
 
-    def convert_sections(self, sections: list[SubsequenceModule]) -> dict[str, tuple[Twiss, list[OpticElement]]]:
+    def convert_sections(
+        self, sections: list[SubsequenceModule]
+    ) -> dict[str, tuple[Twiss, list[OpticElement]]]:
         """
         Convert multiple subsections of the component list into OCELOT sequences.
 
@@ -360,7 +375,7 @@ class LongListConverter:
             except Exception as e:
                 raise ComponentListToOcelotConversionError(
                     f"Conversion failed in {section.name} in sheet {section.sheet_name}"
-                    ) from e
+                ) from e
 
         return result
 
@@ -401,8 +416,12 @@ class LongListConverter:
 
         skipped = df.filter(full_bad)
 
-        for n1, s, t, cls, grp in skipped.select("NAME1", "S", "TYPE", "CLASS", "GROUP").iter_rows():
-            print(f"Skipping: NAME1 = {n1}, @ S = {s}, TYPE = {t}, CLASS = {cls}, GROUP = {grp}")
+        for n1, s, t, cls, grp in skipped.select(
+            "NAME1", "S", "TYPE", "CLASS", "GROUP"
+        ).iter_rows():
+            print(
+                f"Skipping: NAME1 = {n1}, @ S = {s}, TYPE = {t}, CLASS = {cls}, GROUP = {grp}"
+            )
 
         return df.filter(~full_bad)
 
@@ -444,16 +463,14 @@ class LongListConverter:
         thin = df.filter(pl.col("LENGTH") == 0).select(["NAME1", "S", "LENGTH"])
 
         starts = (df["S"] - df["LENGTH"] * 0.5).to_numpy()
-        stops  = (df["S"] + df["LENGTH"] * 0.5).to_numpy()
+        stops = (df["S"] + df["LENGTH"] * 0.5).to_numpy()
 
         bad_name1s: list[str] = []
         for row in thin.iter_rows(named=True):
             s = row["S"]
             is_inside = ((s > starts) & (s < stops)).any()
             if is_inside:
-                LOG.warning(
-                    f"Dropping bad row inside other element: {row['NAME1']}"
-                )
+                LOG.warning(f"Dropping bad row inside other element: {row['NAME1']}")
                 bad_name1s.append(row["NAME1"])
                 assert row["LENGTH"] == 0.0
 
@@ -517,31 +534,36 @@ class LongListConverter:
         """
 
         # Do the slicing of the longlist and extract the subsections we want based on the names
-        print(f"Converting section \"{pysec.name}\" from sheet \"{pysec.sheet_name}\"")
+        print(f'Converting section "{pysec.name}" from sheet "{pysec.sheet_name}"')
         df = self.clist.get_sheet(pysec.sheet_name)
         idx = df.with_row_index("row_nr")
         start_row = idx.filter(pl.col("NAME1") == pysec.start_marker_name1)
         stop_row = idx.filter(pl.col("NAME1") == pysec.stop_marker_name1)
 
         if start_row.is_empty():
-            raise MalformedConversionConfig(f"Start marker not found: {pysec.start_marker_name1}")
+            raise MalformedConversionConfig(
+                f"Start marker not found: {pysec.start_marker_name1}"
+            )
         if stop_row.is_empty():
-            raise MalformedConversionConfig(f"Stop marker not found: {pysec.stop_marker_name1}")
+            raise MalformedConversionConfig(
+                f"Stop marker not found: {pysec.stop_marker_name1}"
+            )
 
         idx_start = start_row.select("row_nr")[0, 0]
-        idx_stop  = stop_row.select("row_nr")[0, 0]
+        idx_stop = stop_row.select("row_nr")[0, 0]
         section_df = df.slice(idx_start, idx_stop - idx_start + 1)
 
         _raise_if_row_is_not_marker(df[idx_start])
         _raise_if_row_is_not_marker(df[idx_stop])
 
         start = section_df[0]
-        twiss0 = Twiss(beta_x=start["BETX"].item(),
-                  beta_y=start["BETY"].item(),
-                  alpha_x=start["ALFX"].item(),
-                  alpha_y=start["ALFY"].item(),
-                  E=start["ENERGY"].item())
-
+        twiss0 = Twiss(
+            beta_x=start["BETX"].item(),
+            beta_y=start["BETY"].item(),
+            alpha_x=start["ALFX"].item(),
+            alpha_y=start["ALFY"].item(),
+            E=start["ENERGY"].item(),
+        )
 
         # Get rid of bad elements
         section_df = self._filter_bad_rows(section_df)
@@ -555,7 +577,7 @@ class LongListConverter:
 
         rows_here = section_df.iter_rows(named=True)
         rows_there = section_df.iter_rows(named=True)
-        next(rows_there) # type: ignore
+        next(rows_there)  # type: ignore
         for row_here, row_there in zip(rows_here, rows_there):
             # row_here corresponds to the next row we will be building UP TO, but we do not
             # convert that element (if indeed we do) until the next.
@@ -565,11 +587,15 @@ class LongListConverter:
 
             # Convert to OCELOT element
             oelement_here = self.dispatch(row_here)
-            oelement_there = self.dispatch(row_there) # We convert next element to get e.g. correct lengths
+            oelement_there = self.dispatch(
+                row_there
+            )  # We convert next element to get e.g. correct lengths
 
             if oelement_here.id in pysec.extras:
                 for property_name, value in pysec.extras[oelement_here.id].items():
-                    print(f"Setting new value for element: {oelement_here.id}, {property_name} -> {value}")
+                    print(
+                        f"Setting new value for element: {oelement_here.id}, {property_name} -> {value}"
+                    )
                     setattr(oelement_here, property_name, value)
                     # Special handling for undulators...
                     if property_name == "nperiods" or property_name == "lperiod":
@@ -602,14 +628,17 @@ class LongListConverter:
             quadrupole_names = set(pysec.matching.quadrupoles)
             df = self.clist.get_sheet(pysec.sheet_name)
             first_row = self.clist.get_sheet(pysec.sheet_name)[0]
-            marker_row = self.clist.get_sheet(pysec.sheet_name).filter(pl.col("NAME1") == marker_name)
+            marker_row = self.clist.get_sheet(pysec.sheet_name).filter(
+                pl.col("NAME1") == marker_name
+            )
 
-            twiss0 = Twiss(beta_x=first_row["BETX"].item(),
-                           beta_y=first_row["BETY"].item(),
-                           alpha_x=first_row["ALFX"].item(),
-                           alpha_y=first_row["ALFY"].item(),
-                           E=first_row["ENERGY"].item())
-
+            twiss0 = Twiss(
+                beta_x=first_row["BETX"].item(),
+                beta_y=first_row["BETY"].item(),
+                alpha_x=first_row["ALFX"].item(),
+                alpha_y=first_row["ALFY"].item(),
+                E=first_row["ENERGY"].item(),
+            )
 
             marker = next(ele for ele in sequence if ele.id == marker_name)
             quadrupoles = []
@@ -622,14 +651,14 @@ class LongListConverter:
             print(f"Start matching @ {marker_name} with quads: {quadrupoles}")
             print(f"Initial quadrupole strengths: {initial_strengths}")
             match(
-                MagneticLattice(sequence), # type: ignore
+                MagneticLattice(sequence),  # type: ignore
                 {
                     marker: {
                         "beta_x": marker_row["BETX"].item(),
                         "beta_y": marker_row["BETY"].item(),
                         "alpha_x": marker_row["ALFX"].item(),
                         "alpha_y": marker_row["ALFY"].item(),
-                        "E": marker_row["ENERGY"].item()
+                        "E": marker_row["ENERGY"].item(),
                     }
                 },
                 quadrupoles,
@@ -638,18 +667,16 @@ class LongListConverter:
             print(f"End matching @ {marker_name} with quads: {quadrupoles}")
             print(f"New quadrupole strengths: { {q.id: q.k1 for q in quadrupoles} }")
 
-
-
         return twiss0, sequence
 
     def _expand_from_this_element_to_next(
-            self,
-            oelement0: OpticElement,
-            oelement1: OpticElement,
-            oelement_s_start: float,
-            next_element_s_start: float,
-            external_element_placer: ExternalElementPlacer,
-            ):
+        self,
+        oelement0: OpticElement,
+        oelement1: OpticElement,
+        oelement_s_start: float,
+        next_element_s_start: float,
+        external_element_placer: ExternalElementPlacer,
+    ):
         """
         Expand the lattice sequence between two consecutive elements by inserting
         external elements and required drift segments.
@@ -721,12 +748,18 @@ class LongListConverter:
 
         # Something impressive goes here for placing global and relative S elements...
         for s, placements_at_this_s in between:
-            if  oelement_s_start < s < oelement_s_start + oelement0.l:
-                raise MalformedConversionConfig(f"External placement {placements_at_this_s}"
-                                                f" is inside component list element {oelement0}.")
+            if oelement_s_start < s < oelement_s_start + oelement0.l:
+                raise MalformedConversionConfig(
+                    f"External placement {placements_at_this_s}"
+                    f" is inside component list element {oelement0}."
+                )
             # We are currently at in global s-space:
             # s_oelement_s_start + sum(x.l for x in expanded_sequence)
-            expanded_sequence.extend(self._next_drift_sequence(s - oelement_s_start - sum(x.l for x in expanded_sequence)))
+            expanded_sequence.extend(
+                self._next_drift_sequence(
+                    s - oelement_s_start - sum(x.l for x in expanded_sequence)
+                )
+            )
 
             for placement in placements_at_this_s:
                 print(placement.element)
@@ -734,7 +767,9 @@ class LongListConverter:
                 expanded_sequence.append(placement.element)
 
         length_so_far = sum(x.l for x in expanded_sequence)
-        expanded_sequence.extend(self._next_drift_sequence(length=final_length - length_so_far))
+        expanded_sequence.extend(
+            self._next_drift_sequence(length=final_length - length_so_far)
+        )
 
         for p in prepend1:
             print(f"Prepending {p} to element {oelement1}")
@@ -847,9 +882,7 @@ class LongListConverter:
                 f"{row["NAME1"]=}, {row["GROUP"]=}, {row["CLASS"]=}, {row["TYPE"]=}, {row["LENGTH"]=}"
             ) from e
 
-    def convert_magnet(
-        self, row: dict[str, Any]
-    ) -> Union[
+    def convert_magnet(self, row: dict[str, Any]) -> Union[
         elements.Quadrupole,
         elements.Hcor,
         elements.Vcor,
@@ -857,7 +890,7 @@ class LongListConverter:
         elements.Solenoid,
         elements.Sextupole,
         elements.Octupole,
-        elements.RBend
+        elements.RBend,
     ]:
         """
         Convert a magnet-related row from the component list into an OCELOT element.
@@ -916,7 +949,9 @@ class LongListConverter:
             common_kw["tilt"] = row["TILT"]
         common_kw["l"] = row["LENGTH"]
 
-        assert row["GROUP"] in {"RAMPKICK", "MAGNET", "FASTKICK", "FBKICK"}, row["GROUP"]
+        assert row["GROUP"] in {"RAMPKICK", "MAGNET", "FASTKICK", "FBKICK"}, row[
+            "GROUP"
+        ]
 
         if row["CLASS"] == "QUAD":
             if row["LENGTH"] == 0 and row["STRENGTH"] == 0:
@@ -949,7 +984,9 @@ class LongListConverter:
         ele.ps_id = row["NAME2"]
         return ele
 
-    def convert_pmagnet(self, row: dict[str, Any]) -> elements.RBend | elements.Quadrupole:
+    def convert_pmagnet(
+        self, row: dict[str, Any]
+    ) -> elements.RBend | elements.Quadrupole:
         """
         Convert a PMAGNET row from the component list into an OCELOT magnet element.
 
@@ -1024,7 +1061,9 @@ class LongListConverter:
 
         length = row["LENGTH"]
         nperiods = length / lperiod
-        undulator = elements.Undulator(lperiod=lperiod, nperiods=nperiods, eid=row["NAME1"])
+        undulator = elements.Undulator(
+            lperiod=lperiod, nperiods=nperiods, eid=row["NAME1"]
+        )
         undulator.ps_id = row["NAME2"]
         return undulator
 
@@ -1102,7 +1141,9 @@ class LongListConverter:
         ele.ps_id = row["NAME2"]
         return ele
 
-    def convert_cavity(self, row: dict[str, Any]) -> Union[elements.Cavity, elements.TDCavity]:
+    def convert_cavity(
+        self, row: dict[str, Any]
+    ) -> Union[elements.Cavity, elements.TDCavity]:
         """
         Convert a CAVITY row from the component list into an OCELOT cavity element.
 
@@ -1155,7 +1196,9 @@ class LongListConverter:
         ele.ps_id = row["NAME2"]
         return ele
 
-    def convert_diag(self, row: dict[str, Any]) -> Union[elements.Marker, elements.Monitor]:
+    def convert_diag(
+        self, row: dict[str, Any]
+    ) -> Union[elements.Marker, elements.Monitor]:
         """
         Convert a DIAG row from the component list into an OCELOT diagnostic element.
 
@@ -1240,7 +1283,9 @@ def longlist_to_ocelot(
     try:
         fname = config["component_list"]
     except KeyError:
-        raise MalformedConversionConfig("Missing longlist input file name in conversion config.")
+        raise MalformedConversionConfig(
+            "Missing longlist input file name in conversion config."
+        )
 
     fpath = files("euxfel.longlists") / fname
 
@@ -1248,14 +1293,12 @@ def longlist_to_ocelot(
     sections = _parse_config_dict(config)
     rowskips, rowedits = _parse_row_changes(config)
 
-    llcv = LongListConverter(ComponentList(fpath),
-                             rowskips=rowskips,
-                             rowedits=rowedits)
+    llcv = LongListConverter(ComponentList(fpath), rowskips=rowskips, rowedits=rowedits)
 
     sequences = llcv.convert_sections(sections)
 
     module_names = []
-    for (name, (twiss0, sequence)) in sequences.items():
+    for name, (twiss0, sequence) in sequences.items():
 
         module_name = name.lower()
         module_names.append(module_name)
@@ -1264,8 +1307,12 @@ def longlist_to_ocelot(
         writer = PythonSubsequenceWriter(sequence, twiss0)
 
         with open(outf, "w") as f:
-            f.write(writer.to_module(write_types_power_supplies=write_types_power_supplies,
-                                     comment=f"Converted from {fname}"))
+            f.write(
+                writer.to_module(
+                    write_types_power_supplies=write_types_power_supplies,
+                    comment=f"Converted from {fname}",
+                )
+            )
 
     fname = Path(fpath).name
     init_path = Path(outdir) / "__init__.py"
@@ -1285,14 +1332,18 @@ def longlist_to_ocelot(
         f.write(f'               "{module_names[-1]}"]\n')
         f.write("except Exception:\n")
         f.write("    import warnings\n")
-        f.write("    warnings.warn(\"Failed importing subsequence modules, so one or more modules will be missing.  Consider regenerating one or more of these files to correct this.\")\n")
+        f.write(
+            '    warnings.warn("Failed importing subsequence modules, so one or more modules will be missing.  Consider regenerating one or more of these files to correct this.")\n'
+        )
         f.write("    del warnings\n\n")
 
-
-        f.write("# The longlist file we used to generate the subsequences in this directory:\n")
+        f.write(
+            "# The longlist file we used to generate the subsequences in this directory:\n"
+        )
         f.write(f'USED_COMPONENT_LIST = files("euxfel.longlists") / "{fname}"\n')
 
     print("Written", init_path)
+
 
 def _parse_new_markers_dict(dconf: dict) -> dict[str, Placement]:
     markers = {}
@@ -1323,11 +1374,15 @@ def _parse_new_elements_dict(dconf: dict[str, dict[str, Any]]) -> dict[str, Plac
             raise ValueError("Unsupported element type, %s", etype)
     return new_elements
 
+
 def _parse_matching_dict(mconf: dict[str, str | list[str]]) -> MatchingRequest:
     try:
-        return MatchingRequest(marker_name=mconf["marker"], quadrupoles=mconf["quadrupoles"])
+        return MatchingRequest(
+            marker_name=mconf["marker"], quadrupoles=mconf["quadrupoles"]
+        )
     except KeyError as e:
         raise MalformedConversionConfig("Missing key(s) in matching section") from e
+
 
 def _parse_element_placement(element, dd: dict[str, str]) -> Placement:
     reference = dd.get("reference", "")
@@ -1340,7 +1395,9 @@ def _parse_element_placement(element, dd: dict[str, str]) -> Placement:
 
     if is_adjacent:
         assert reference is not None
-        placement = AdjacentPlacement(element, AdjacentPositionType[dd["adjacent"].upper()], reference)
+        placement = AdjacentPlacement(
+            element, AdjacentPositionType[dd["adjacent"].upper()], reference
+        )
     elif is_delta_s_pos:
         placement = OffsetPlacement(element, dd["delta_s"], reference_name1=reference)
     else:
@@ -1352,9 +1409,10 @@ def _parse_element_placement(element, dd: dict[str, str]) -> Placement:
 class MalformedConversionConfig(Exception):
     pass
 
+
 def _dict_to_element(name: str, dconf: dict[str, Any]):
     try:
-        etype = dconf.pop("type") # type: ignore
+        etype = dconf.pop("type")  # type: ignore
     except KeyError as e:
         raise MalformedConversionConfig("Missing type tag for new element") from e
 
@@ -1380,7 +1438,6 @@ def _parse_config_dict(dconf: dict) -> list[SubsequenceModule]:
         except KeyError:
             matching_request = None
 
-
         section = SubsequenceModule(
             start_marker_name1=info["start_marker_name1"],
             stop_marker_name1=info["stop_marker_name1"],
@@ -1388,11 +1445,12 @@ def _parse_config_dict(dconf: dict) -> list[SubsequenceModule]:
             sheet_name=info.get("sheet", "LONGLIST"),
             extras=info.get("extras", {}),
             new_elements=new_elements | new_markers,
-            matching=matching_request
+            matching=matching_request,
         )
         sections.append(section)
 
     return sections
+
 
 def _parse_row_changes(dconf: dict) -> tuple[RowSkips, RowEdits]:
     try:
@@ -1405,26 +1463,32 @@ def _parse_row_changes(dconf: dict) -> tuple[RowSkips, RowEdits]:
     except KeyError:
         skips = RowSkips()
     else:
-        skips = RowSkips(group=set(skipconf.get("GROUP", [])),
-                        cls=skipconf.get("CLASS", set()),
-                        type=skipconf.get("TYPE", set()),
-                        name1=skipconf.get("NAME1", set())
-                         )
-
+        skips = RowSkips(
+            group=set(skipconf.get("GROUP", [])),
+            cls=skipconf.get("CLASS", set()),
+            type=skipconf.get("TYPE", set()),
+            name1=skipconf.get("NAME1", set()),
+        )
 
     try:
         editconf = rconf["edit"]
     except KeyError:
         edits = RowEdits()
     else:
-        edits = RowEdits(group=editconf.get("GROUP", {}),
-                        cls=editconf.get("CLASS", {}),
-                        type=editconf.get("TYPE", {}))
+        edits = RowEdits(
+            group=editconf.get("GROUP", {}),
+            cls=editconf.get("CLASS", {}),
+            type=editconf.get("TYPE", {}),
+        )
     return skips, edits
 
 
 def _raise_if_row_is_not_marker(rowdict: dict[str, str | float]) -> None:
     if rowdict["GROUP"].item() != "MARK":
-        raise MalformedConversionConfig(f"Start/Stop element: {rowdict["NAME1"]} is not a marker")
+        raise MalformedConversionConfig(
+            f"Start/Stop element: {rowdict["NAME1"]} is not a marker"
+        )
     if rowdict["CLASS"].item() != "MARK":
-        raise MalformedConversionConfig(f"Start/Stop element: {rowdict["NAME1"]} is not a marker")
+        raise MalformedConversionConfig(
+            f"Start/Stop element: {rowdict["NAME1"]} is not a marker"
+        )

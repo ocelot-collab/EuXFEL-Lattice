@@ -22,7 +22,7 @@ FIXED_MATCH_POINTS: list[str] = [
     # Ask nina the precise meaning of these:
     "MATCH.2248.SA1",
     "MATCH.2813.SA3",
-    "MATCH.2197.SA2"
+    "MATCH.2197.SA2",
 ]
 
 _OCELOT_OPTICS_NAMES = ["beta_x", "alpha_x", "beta_y", "alpha_y"]
@@ -65,7 +65,9 @@ def _longlist_optics_column_names_to_ocelot_names(df: pl.DataFrame) -> pl.DataFr
     )
 
 
-def get_optics_at_points(twiss_df: pl.DataFrame, markers: list[str] | None = None) -> pl.DataFrame:
+def get_optics_at_points(
+    twiss_df: pl.DataFrame, markers: list[str] | None = None
+) -> pl.DataFrame:
     twiss_df = _longlist_optics_column_names_to_ocelot_names(twiss_df)
 
     markers = markers or []
@@ -81,7 +83,10 @@ def get_optics_at_points(twiss_df: pl.DataFrame, markers: list[str] | None = Non
         # Now just get the columsn corresponding to the optics that we care about.
         return df_at_ids.select(_OCELOT_TWISS_NAMES)
     except TypeError:
-        raise ValueError("Unable to extract, possibly duplicate names in twiss_df id column")
+        raise ValueError(
+            "Unable to extract, possibly duplicate names in twiss_df id column"
+        )
+
 
 def optics_at_points_from_longlist(markers: list[str] | None = None) -> pl.DataFrame:
     """
@@ -111,6 +116,7 @@ def optics_at_points_from_longlist(markers: list[str] | None = None) -> pl.DataF
     optics_just_at_points = df_just_at_points[_OCELOT_TWISS_NAMES]
     return optics_just_at_points
 
+
 def print_optics_at_points(
     twiss_or_twiss_df: pl.DataFrame, markers: list[str] | None = None
 ) -> None:
@@ -139,7 +145,9 @@ def print_optics_at_points(
         print(get_optics_with_bmags_at_points(twiss_or_twiss_df, markers=markers))
 
 
-def get_optics_with_bmags_at_points(twiss_df: pl.DataFrame, markers: list[str] | None = None) -> pl.DataFrame:
+def get_optics_with_bmags_at_points(
+    twiss_df: pl.DataFrame, markers: list[str] | None = None
+) -> pl.DataFrame:
     """
     Compute optics parameters at selected match points and evaluate mismatch
     (Bmag) relative to reference optics from the component longlist.
@@ -168,7 +176,9 @@ def get_optics_with_bmags_at_points(twiss_df: pl.DataFrame, markers: list[str] |
     # Calculate relative difference
     result = twiss_match.clone()
     # filter twiss_match_reference to keep only rows with ids in our twiss_df of interest
-    twiss_match_reference = twiss_match_reference.filter(pl.col("id").is_in(twiss_match["id"]))
+    twiss_match_reference = twiss_match_reference.filter(
+        pl.col("id").is_in(twiss_match["id"])
+    )
 
     # use id as index here so that the correct rows are used with each other.
     # twiss_match = twiss_match.set_index("id")
@@ -179,28 +189,36 @@ def get_optics_with_bmags_at_points(twiss_df: pl.DataFrame, markers: list[str] |
 
     # Calculate bmag_x for our calculated optics w.r.t the component list (reference) optics
     result = (
-        result
-        .join(twiss_match_reference, on="id", how="left", suffix="_right")
+        result.join(twiss_match_reference, on="id", how="left", suffix="_right")
         .with_columns(
             pl.struct(["beta_x", "alpha_x", "beta_x_right", "alpha_x_right"])
-            .map_elements(lambda r: bmag(r["beta_x"], r["alpha_x"], r["beta_x_right"], r["alpha_x_right"]),
-                          return_dtype=pl.Float64)
+            .map_elements(
+                lambda r: bmag(
+                    r["beta_x"], r["alpha_x"], r["beta_x_right"], r["alpha_x_right"]
+                ),
+                return_dtype=pl.Float64,
+            )
             .alias("bmag_x")
-            ).drop(pl.selectors.ends_with("_right"),
-                   )
+        )
+        .drop(
+            pl.selectors.ends_with("_right"),
+        )
     )
 
     # Calculate bmag_y
     result = (
-        result
-        .join(twiss_match_reference, on="id", how="left", suffix="_right")
+        result.join(twiss_match_reference, on="id", how="left", suffix="_right")
         .with_columns(
             pl.struct(["beta_y", "alpha_y", "beta_y_right", "alpha_y_right"])
-            .map_elements(lambda r: bmag(r["beta_y"], r["alpha_y"], r["beta_y_right"], r["alpha_y_right"]),
-                          return_dtype=pl.Float64)
+            .map_elements(
+                lambda r: bmag(
+                    r["beta_y"], r["alpha_y"], r["beta_y_right"], r["alpha_y_right"]
+                ),
+                return_dtype=pl.Float64,
+            )
             .alias("bmag_y")
-            ).drop(pl.selectors.ends_with("_right")# ,
-                   )
+        )
+        .drop(pl.selectors.ends_with("_right"))  # ,
     )
 
     # Ensure that it is sorted w.r.t s if it isn't..:
@@ -233,7 +251,10 @@ def bmag(beta: float, alpha: float, beta0: float, alpha0: float) -> float:
     )
     return result
 
-def compare_match_point_surveys(mlat: MagneticLattice, markers: list[str] | None = None) -> pl.DataFrame:
+
+def compare_match_point_surveys(
+    mlat: MagneticLattice, markers: list[str] | None = None
+) -> pl.DataFrame:
     """
     Compare surveyed match-point coordinates from an ocelot sequence against
     reference values from the Longlist.
@@ -347,10 +368,12 @@ def compare_match_point_surveys(mlat: MagneticLattice, markers: list[str] | None
         # columns["PHIPD"].append(lldf["PHIPD"].item())
         # columns["CHIPD"].append(lldf["CHIPD"].item())
 
-
     return pl.DataFrame(columns)
 
-def print_surveyed_match_points(mlat: MagneticLattice, markers: list[str] | None = None) -> None:
+
+def print_surveyed_match_points(
+    mlat: MagneticLattice, markers: list[str] | None = None
+) -> None:
     """
     Print a comparison of surveyed coordinates at specific points for a magnetic lattice.  By default,
     only the fixed match points (given by FIXED_MATCH_POINTS) are printed.

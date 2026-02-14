@@ -1,7 +1,30 @@
 import pytest
 from euxfel.sections import (
-    A1, AH1, LH, DL, I1D, BC0, L1, BC1, L2, BC2, B2D, L3, CL1, CL2, CL3,
-    TL, SASE1, T4, SASE3, T4D, T1, SASE2, T3, T3_chirper, T5
+    A1,
+    AH1,
+    LH,
+    DL,
+    I1D,
+    BC0,
+    L1,
+    BC1,
+    L2,
+    BC2,
+    B2D,
+    L3,
+    CL1,
+    CL2,
+    CL3,
+    TL,
+    SASE1,
+    T4,
+    SASE3,
+    T4D,
+    T1,
+    SASE2,
+    T3,
+    T3_chirper,
+    T5,
 )
 
 

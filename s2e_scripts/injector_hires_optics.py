@@ -1,7 +1,7 @@
-#ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
+# ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
 import sys
 
-#sys.path.append(ocelot_dir)
+# sys.path.append(ocelot_dir)
 
 from ocelot import *
 from ocelot.cpbd.physics_proc import IBS
@@ -13,15 +13,17 @@ lat = MagneticLattice(i1.cell + i1d.cell)
 
 tws = twiss(lat, i1.twiss0)
 
-plot_opt_func(lat, tws,fig_name="Design Optics", legend=False)
+plot_opt_func(lat, tws, fig_name="Design Optics", legend=False)
 plt.show()
 
 # different dispersions amplitude on screen OTRC.64.I1D
 # DDx = {Dx: ['QI.60.I1'.k1, 'QI.61.I1'.k1, 'QI.63.I1D'.k1]}
-DDx = {1.197: [-2.14371, 3.50288, -1.05],
-       1.024: [ -2.1415, 3.50095, 0.45],
-       0.801: [-2.14121, 3.45060, 2.45],
-       0.592: [-2.14030, 3.32194, 4.401795] }
+DDx = {
+    1.197: [-2.14371, 3.50288, -1.05],
+    1.024: [-2.1415, 3.50095, 0.45],
+    0.801: [-2.14121, 3.45060, 2.45],
+    0.592: [-2.14030, 3.32194, 4.401795],
+}
 
 quads_to_change = [i1.qi_60_i1, i1.qi_61_i1, i1d.qi_63_i1d]
 
@@ -33,14 +35,16 @@ for i, q in enumerate(quads_to_change):
 lat = MagneticLattice(i1.cell + i1d.cell, stop=i1d.otrc_64_i1d)
 tws = twiss(lat, i1.twiss0)
 
-plot_opt_func(lat, tws,fig_name="HiRes optics up to OTRC.64.I1D", legend=False)
+plot_opt_func(lat, tws, fig_name="HiRes optics up to OTRC.64.I1D", legend=False)
 plt.show()
 
 # TRACKING with collective effects
 navi = Navigator(lat, unit_step=0.01)
 
 sc_mesh = [63, 63, 63]
-bool_sc_rand_mesh = True # if True, SC effect shifts mesh randomly to avoid numerical 'MBI effect'
+bool_sc_rand_mesh = (
+    True  # if True, SC effect shifts mesh randomly to avoid numerical 'MBI effect'
+)
 
 sc = SpaceCharge(step=1, nmesh_xyz=sc_mesh, random_mesh=bool_sc_rand_mesh)
 
@@ -52,17 +56,21 @@ wake_sampling = 1000
 wake_filter_order = 10
 
 wake = Wake(step=10, factor=1, w_sampling=wake_sampling, filter_order=wake_filter_order)
-wake.wake_table = WakeTable('../src/euxfel/wakes/RF/wake_table_A1.dat')
+wake.wake_table = WakeTable("../src/euxfel/wakes/RF/wake_table_A1.dat")
 
 
-wake_ah1 = Wake(step=10, factor=1, w_sampling=wake_sampling, filter_order=wake_filter_order)
-wake_ah1.wake_table = WakeTable('../src/euxfel/wakes/RF/wake_table_AH1.dat')
+wake_ah1 = Wake(
+    step=10, factor=1, w_sampling=wake_sampling, filter_order=wake_filter_order
+)
+wake_ah1.wake_table = WakeTable("../src/euxfel/wakes/RF/wake_table_AH1.dat")
 
-wake_tds = Wake(step=10, factor=1, w_sampling=wake_sampling, filter_order=wake_filter_order)
-wake_tds.wake_table = WakeTable('../src/euxfel/wakes/RF/wake_table_TDS1.dat')
+wake_tds = Wake(
+    step=10, factor=1, w_sampling=wake_sampling, filter_order=wake_filter_order
+)
+wake_tds.wake_table = WakeTable("../src/euxfel/wakes/RF/wake_table_TDS1.dat")
 
 smooth_par = 1000
-smooth = SmoothBeam(mslice = smooth_par)
+smooth = SmoothBeam(mslice=smooth_par)
 
 ibs = IBS(step=10, method="Huang", bound=[-0.1, 0.1])
 acc1_1_stop = i1.a1_1_stop

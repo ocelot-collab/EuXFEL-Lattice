@@ -5,6 +5,7 @@ from matplotlib.axes import Axes
 
 from .complist import ComponentList
 
+
 def draw_to_target(ax: Axes, clist: ComponentList, sheet_name: str) -> None:
     """
     Draw components from the given sheet onto the provided Axes.
@@ -21,11 +22,13 @@ def draw_to_target(ax: Axes, clist: ComponentList, sheet_name: str) -> None:
     # Determine plotting extent and draw the baseline
     last_row = target_df[-1]
     s_end = last_row["S"].item() + last_row["LENGTH"].item() / 2
-    ax.set_prop_cycle(None) # reset cycle just in case, so that the
-                            # line always has the same colour.
+    ax.set_prop_cycle(None)  # reset cycle just in case, so that the
+    # line always has the same colour.
     ax.plot([0, s_end], [0, 0])
 
-    def _rect_params_from_row(row: dict) -> tuple[float, float, float, float, str, float] | None:
+    def _rect_params_from_row(
+        row: dict,
+    ) -> tuple[float, float, float, float, str, float] | None:
         """Return (start_z, start_x, length, width, colour, alpha) for a row dict."""
         length = row["LENGTH"]
         if not length:

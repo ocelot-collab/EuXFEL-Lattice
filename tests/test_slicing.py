@@ -39,16 +39,18 @@ def test_SlicedElement_init(sliced_fixture: SlicedFixture) -> None:
 def test_SlicedElement_read_l(sliced_fixture: SlicedFixture) -> None:
     assert sliced_fixture.se.l == 1.5
 
+
 def test_SlicedElement_l_cant_be_set(sliced_fixture: SlicedFixture) -> None:
     with pytest.raises(AttributeError):
         sliced_fixture.se.l = 2
+
 
 def test_SlicedEelment_expand(sliced_fixture: SlicedFixture) -> None:
     x = sliced_fixture.xslice
     y = sliced_fixture.yslice
     # We use standard Python list multiplication and flatten to
     # reproduce what we know we expect
-    expanded = list(flatten([2 * [y] + [x]] * 2)) # type: ignore
+    expanded = list(flatten([2 * [y] + [x]] * 2))  # type: ignore
 
     assert expanded[0] is y
     assert expanded[2] is x

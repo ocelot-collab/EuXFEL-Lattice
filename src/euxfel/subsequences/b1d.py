@@ -11,7 +11,6 @@ twiss0._alpha_x = -0.6959
 twiss0._alpha_y = -1.2903
 
 
-
 # Drifts:
 d_0 = Drift(l=0.2527499999999918, eid="D_0")
 d_1 = Drift(l=0.0018370000000231812, eid="D_1")
@@ -34,7 +33,9 @@ qd_231_b1d = Quadrupole(l=0.2367, k1=-3.0, eid="QD.231.B1D")
 qd_232_b1d = Quadrupole(l=0.2367, eid="QD.232.B1D")
 
 # SBends:
-bb_229_b1d = SBend(l=0.5, angle=0.2094395102, e2=0.20943951, tilt=1.570796327, eid="BB.229.B1D")
+bb_229_b1d = SBend(
+    l=0.5, angle=0.2094395102, e2=0.20943951, tilt=1.570796327, eid="BB.229.B1D"
+)
 
 # Hcors:
 ccx_233_b1d = Hcor(l=0.1, eid="CCX.233.B1D")
@@ -56,35 +57,37 @@ tora_236_b1d = Marker(eid="TORA.236.B1D")
 ensec_237_b1d = Marker(eid="ENSEC.237.B1D")
 
 # Sequence:
-cell = (stsec_229_b1d,
-        d_0,
-        mbb_229a_b1d,
-        d_1,
-        bb_229_b1d,
-        d_2,
-        mbb_229d_b1d,
-        d_3,
-        bpma_231_b1d,
-        d_4,
-        qd_231_b1d,
-        d_5,
-        ccy_231_b1d,
-        d_6,
-        qd_232_b1d,
-        d_7,
-        bpma_233_b1d,
-        d_8,
-        ccx_233_b1d,
-        d_9,
-        otrc_236_b1d,
-        d_10,
-        tora_236_b1d,
-        d_11,
-        bpma_236_b1d,
-        d_12,
-        vcst40t60_237_b1d,
-        d_13,
-        ensec_237_b1d)
+cell = (
+    stsec_229_b1d,
+    d_0,
+    mbb_229a_b1d,
+    d_1,
+    bb_229_b1d,
+    d_2,
+    mbb_229d_b1d,
+    d_3,
+    bpma_231_b1d,
+    d_4,
+    qd_231_b1d,
+    d_5,
+    ccy_231_b1d,
+    d_6,
+    qd_232_b1d,
+    d_7,
+    bpma_233_b1d,
+    d_8,
+    ccx_233_b1d,
+    d_9,
+    otrc_236_b1d,
+    d_10,
+    tora_236_b1d,
+    d_11,
+    bpma_236_b1d,
+    d_12,
+    vcst40t60_237_b1d,
+    d_13,
+    ensec_237_b1d,
+)
 
 # Power Supply IDs:
 # Quadrupole power supplies:

@@ -1,17 +1,40 @@
-
 from ocelot.cpbd.magnetic_lattice import flatten
 
 from . import subsequences
-
 
 TARGET_NAMES = ["I1D", "B1D", "B2D", "TLD", "T4D", "T5D"]
 
 I1D_SUBSEQUENCES = ["i1", "i1d"]
 B1D_SUBSEQUENCES = ["i1", "l1", "b1d"]
-B2D_SUBSEQUENCES = ["i1", "l1",  "l2", "b2d"]
+B2D_SUBSEQUENCES = ["i1", "l1", "l2", "b2d"]
 TLD_SUBSEQUENCES = ["i1", "l1", "l2", "l3", "cl", "tl2tld"]
-T4D_SUBSEQUENCES = ["i1", "l1", "l2", "l3", "cl", "tl2", "tl34", "sase1", "t4", "sase3", "t4d"]
-T5D_SUBSEQUENCES = ["i1", "l1", "l2", "l3", "cl", "tl2", "tl34_sa2", "t1", "sase2", "t3", "t5", "t5d"]
+T4D_SUBSEQUENCES = [
+    "i1",
+    "l1",
+    "l2",
+    "l3",
+    "cl",
+    "tl2",
+    "tl34",
+    "sase1",
+    "t4",
+    "sase3",
+    "t4d",
+]
+T5D_SUBSEQUENCES = [
+    "i1",
+    "l1",
+    "l2",
+    "l3",
+    "cl",
+    "tl2",
+    "tl34_sa2",
+    "t1",
+    "sase2",
+    "t3",
+    "t5",
+    "t5d",
+]
 
 
 def _init_module_level_cells(module_names):
@@ -28,5 +51,8 @@ try:
     cathode_to_t5d = _init_module_level_cells(T5D_SUBSEQUENCES)
 except Exception:
     import warnings
-    warnings.warn("Failed importing subsequence modules, so one or more modules will be missing.  Consider regenerating one or more of these files to correct this.")
+
+    warnings.warn(
+        "Failed importing subsequence modules, so one or more modules will be missing.  Consider regenerating one or more of these files to correct this."
+    )
     del warnings

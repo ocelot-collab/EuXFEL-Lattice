@@ -31,9 +31,13 @@ def main():
     echo("=" * len(name))
     echo("Package for the OCELOT simulations of the EuXFEL")
 
+
 @main.command(help="Convert Component List files to a set of Python modules")
 @option("--outdir", help="Directory in which to write the Python modules")
-@option("--config", help="Configuration file for altering the Component List to Python conversion")
+@option(
+    "--config",
+    help="Configuration file for altering the Component List to Python conversion",
+)
 def convert(outdir, config):
     if not outdir:
         outdir = files("euxfel.subsequences")
@@ -75,7 +79,6 @@ def plot(targets: list[str]):
     for target in selected_targets:
         plot_cathode_to_target(target)
     plt.show()
-
 
 
 if __name__ == "__main__":

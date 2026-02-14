@@ -1,7 +1,8 @@
-#ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
+# ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
 import sys
 import matplotlib.pyplot as plt
-#sys.path.append(ocelot_dir)
+
+# sys.path.append(ocelot_dir)
 
 from euxfel.sections import *
 from ocelot.utils.section_track import *
@@ -9,13 +10,14 @@ from ocelot.gui.accelerator import *
 import time
 from ocelot.common.globals import *
 from ocelot import *
+
 c = 299792458
 
 data_dir = "../beam_files/"
 
 ####################  Physics Effects control globaly ##################
-match_exec = True # artificially (kick) match beam to design optics
-smooth_exec = True # filtering
+match_exec = True  # artificially (kick) match beam to design optics
+smooth_exec = True  # filtering
 wake_exec = True
 SC_exec = True
 CSR_exec = True
@@ -23,41 +25,60 @@ coupler_kick_exec = False  # coupler effect in RF modules, quadrupole and dipole
 
 
 # all sections which can be potentially used in s2e
-all_sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL, SASE1, T4, SASE3, T4D]
+all_sections = [
+    A1,
+    AH1,
+    LH,
+    DL,
+    BC0,
+    L1,
+    BC1,
+    L2,
+    BC2,
+    L3,
+    CL1,
+    CL2,
+    CL3,
+    TL,
+    SASE1,
+    T4,
+    SASE3,
+    T4D,
+]
 
 ######################### Initial Twiss paramters for design optics ##################
 tws0 = Twiss()
 tws0.E = 0.005
-tws0.beta_x  =  0.2865426867699372
-tws0.beta_y  =  0.2865426867699381
+tws0.beta_x = 0.2865426867699372
+tws0.beta_y = 0.2865426867699381
 tws0.alpha_x = -0.8390696483216487
 tws0.alpha_y = -0.8390696483216522
 start = time.time()
 
 #################################### Compression Working Point ################################
-E40 = 14 
-r1 = 4.1218                 # deflecting radius in BC0
-r2 = 8.3934                 # deflecting radius in BC1
-r3 = 14.4111                # deflecting radius in BC2
+E40 = 14
+r1 = 4.1218  # deflecting radius in BC0
+r2 = 8.3934  # deflecting radius in BC1
+r3 = 14.4111  # deflecting radius in BC2
 # RF settings
 v11 = 0.148  # GV
 phi11 = -12.07
-v13 = 0.031384   # GV
+v13 = 0.031384  # GV
 phi13 = 131.85
 v21 = 0.659  # GV
 phi21 = 30.13
 v31 = 1.7052  # GV
 phi31 = -3.078
-v41 = E40-2.4
+v41 = E40 - 2.4
 phi41 = 0
 # BC magnet radius
-#r1 = 0.5 / 0.1366592804  # 3.6587343247857467
-#r2 = 0.5 / 0.0532325422  # 9.392750737348779
-#r3 = 0.5 / 0.0411897704  # 12.138936321917445
+# r1 = 0.5 / 0.1366592804  # 3.6587343247857467
+# r2 = 0.5 / 0.0532325422  # 9.392750737348779
+# r3 = 0.5 / 0.0411897704  # 12.138936321917445
 #################################### Compression WP ################################
 
 # init sections which can be used for tracking
-#all_sections = [TL, SASE1]#, T4, SASE3, T4D]
+# all_sections = [TL, SASE1]#, T4, SASE3, T4D]
 section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
 # plot twiss parameters
 lat = MagneticLattice(section_lat.elem_seq)
@@ -74,33 +95,70 @@ plt.show()
 
 
 config = {
-    A1:    {"phi": phi11, "v": v11 / 8,
-           "SC": SC_exec, "smooth": True, "wake": wake_exec},
-    AH1:   {"phi": phi13, "v": v13 / 8,
-           "match": False, "SC": SC_exec, "wake": wake_exec}, ######### ************ "bounds": [-5, 5], 
-    LH:    {"SC": SC_exec, "CSR": False, "wake": wake_exec, "match": match_exec},
-    DL:    {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    BC0:   {"rho": r1,
-           "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    L1:    {"phi": phi21, "v": v21 / 32, "match": match_exec,
-           "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
-    BC1:   {"rho": r2,
-           "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    L2:    {"phi": phi31, "v": v31 / 96, "match": match_exec,
-            "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
-    BC2:   {"rho": r3,
-            "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    L3:    {"phi": phi41, "v": v41 / 640,
-            "match": match_exec, #"bounds":[-1,1],
-            "SC": SC_exec, "wake": wake_exec},# "smooth": smooth_exec},
-    CL1:   {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    CL2:   {"match": match_exec}, ####### ******, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    CL3:   {"SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    TL:    {"match": match_exec, "SC": False,  "wake": wake_exec},#"CSR": CSR_exec,
-    SASE1: {"match": match_exec, "SC": False, "wake": wake_exec},#"CSR": CSR_exec,
-    T4:    {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
-    T1:    {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
-    T3:    {"match": match_exec, "SC": False, "wake": wake_exec},#"CSR": CSR_exec,
+    A1: {"phi": phi11, "v": v11 / 8, "SC": SC_exec, "smooth": True, "wake": wake_exec},
+    AH1: {
+        "phi": phi13,
+        "v": v13 / 8,
+        "match": False,
+        "SC": SC_exec,
+        "wake": wake_exec,
+    },  ######### ************ "bounds": [-5, 5],
+    LH: {"SC": SC_exec, "CSR": False, "wake": wake_exec, "match": match_exec},
+    DL: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
+    BC0: {
+        "rho": r1,
+        "match": match_exec,
+        "SC": SC_exec,
+        "CSR": CSR_exec,
+        "wake": wake_exec,
+    },
+    L1: {
+        "phi": phi21,
+        "v": v21 / 32,
+        "match": match_exec,
+        "SC": SC_exec,
+        "wake": wake_exec,
+        "smooth": smooth_exec,
+    },
+    BC1: {
+        "rho": r2,
+        "match": match_exec,
+        "SC": SC_exec,
+        "CSR": CSR_exec,
+        "wake": wake_exec,
+    },
+    L2: {
+        "phi": phi31,
+        "v": v31 / 96,
+        "match": match_exec,
+        "SC": SC_exec,
+        "wake": wake_exec,
+        "smooth": smooth_exec,
+    },
+    BC2: {
+        "rho": r3,
+        "match": match_exec,
+        "SC": SC_exec,
+        "CSR": CSR_exec,
+        "wake": wake_exec,
+    },
+    L3: {
+        "phi": phi41,
+        "v": v41 / 640,
+        "match": match_exec,  # "bounds":[-1,1],
+        "SC": SC_exec,
+        "wake": wake_exec,
+    },  # "smooth": smooth_exec},
+    CL1: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
+    CL2: {
+        "match": match_exec
+    },  ####### ******, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
+    CL3: {"SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
+    TL: {"match": match_exec, "SC": False, "wake": wake_exec},  # "CSR": CSR_exec,
+    SASE1: {"match": match_exec, "SC": False, "wake": wake_exec},  # "CSR": CSR_exec,
+    T4: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
+    T1: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
+    T3: {"match": match_exec, "SC": False, "wake": wake_exec},  # "CSR": CSR_exec,
     SASE2: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
 }
 
@@ -108,8 +166,13 @@ p_array = load_particle_array(data_dir + "gun/gun.npz")
 show_e_beam(p_array)
 plt.show()
 s_start = deepcopy(p_array.s)
-p_array = section_lat.track_sections(sections=all_sections, p_array=p_array, config=config, force_ext_p_array=True,
-                                     coupler_kick=coupler_kick_exec)
+p_array = section_lat.track_sections(
+    sections=all_sections,
+    p_array=p_array,
+    config=config,
+    force_ext_p_array=True,
+    coupler_kick=coupler_kick_exec,
+)
 
 # collect tws for all sections
 seq_global = []
@@ -124,8 +187,8 @@ for s in all_sections:
     L += sec.lattice.totalLen
 
 # postprocessing
-S = [tw.s+3.2 for tw in section_lat.tws]
-s_max=max(S)
+S = [tw.s + 3.2 for tw in section_lat.tws]
+s_max = max(S)
 BetaX = [tw.beta_x for tw in section_lat.tws]
 BetaY = [tw.beta_y for tw in section_lat.tws]
 AlphaX = [tw.alpha_x for tw in section_lat.tws]
@@ -143,57 +206,76 @@ AlphaX_tr = [tw.alpha_x for tw in tws_track_global]
 AlphaY_tr = [tw.alpha_y for tw in tws_track_global]
 EmitX_tr = [tw.emit_x for tw in tws_track_global]
 EmitY_tr = [tw.emit_y for tw in tws_track_global]
-E_tr=[tw.E for tw in tws_track_global]
+E_tr = [tw.E for tw in tws_track_global]
 sig_tau = np.sqrt([tw.tautau for tw in tws_track_global])
-Q=np.sum(p_array.q_array)
-I = c*Q/np.sqrt(2*pi)/sig_tau
-Sx=np.zeros(len(S_tr))
-Sy=np.zeros(len(S_tr))
+Q = np.sum(p_array.q_array)
+I = c * Q / np.sqrt(2 * pi) / sig_tau
+Sx = np.zeros(len(S_tr))
+Sy = np.zeros(len(S_tr))
 for i in range(len(S_tr)):
-    gamma=E_tr[i-1]/m_e_GeV
-    EmitX_tr[i-1]=EmitX_tr[i-1]*gamma*1e6
-    EmitY_tr[i-1]=EmitY_tr[i-1]*gamma*1e6
-    Sx[i-1] = I[i-1]  * BetaX_tr[i-1] / (1.7045e+04 * gamma * gamma * EmitX_tr[i-1]*1e-6)
-    Sy[i - 1] = I[i - 1] * BetaY_tr[i - 1] / (1.7045e+04 * gamma * gamma * EmitY_tr[i - 1] * 1e-6)
+    gamma = E_tr[i - 1] / m_e_GeV
+    EmitX_tr[i - 1] = EmitX_tr[i - 1] * gamma * 1e6
+    EmitY_tr[i - 1] = EmitY_tr[i - 1] * gamma * 1e6
+    Sx[i - 1] = (
+        I[i - 1]
+        * BetaX_tr[i - 1]
+        / (1.7045e04 * gamma * gamma * EmitX_tr[i - 1] * 1e-6)
+    )
+    Sy[i - 1] = (
+        I[i - 1]
+        * BetaY_tr[i - 1]
+        / (1.7045e04 * gamma * gamma * EmitY_tr[i - 1] * 1e-6)
+    )
 
-s0 = 0; s1 = s_max
+s0 = 0
+s1 = s_max
 plt.figure()
 plt.subplot(221)
-plt.plot(S,BetaX,label='design');plt.plot(S_tr,BetaX_tr,label='beam')
-plt.legend(); plt.ylabel(r"$\beta_x$[m]")
-plt.axis([s0, s1,-1,100])
+plt.plot(S, BetaX, label="design")
+plt.plot(S_tr, BetaX_tr, label="beam")
+plt.legend()
+plt.ylabel(r"$\beta_x$[m]")
+plt.axis([s0, s1, -1, 100])
 plt.subplot(222)
-plt.plot(S,BetaY,S_tr,BetaY_tr)
+plt.plot(S, BetaY, S_tr, BetaY_tr)
 plt.xlim([s0, s1])
 plt.subplot(223)
-plt.plot(S,AlphaX,S_tr,AlphaX_tr)
-plt.xlabel("s[m]");plt.ylabel(r"$\alpha_x$")
+plt.plot(S, AlphaX, S_tr, AlphaX_tr)
+plt.xlabel("s[m]")
+plt.ylabel(r"$\alpha_x$")
 plt.xlim([s0, s1])
 plt.subplot(224)
-plt.plot(S,AlphaY,S_tr,AlphaY_tr)
+plt.plot(S, AlphaY, S_tr, AlphaY_tr)
 plt.xlabel("s[m]")
 plt.xlim([s0, s1])
 
 plt.figure()
 plt.subplot(211)
-plt.plot(S_tr,EmitX_tr,S_tr,EmitY_tr)
-plt.grid(True); plt.title("Emittances"); plt.xlabel("s[m]"); plt.ylabel(r"$\epsilon_x,\epsilon_y [\mu m]$")
+plt.plot(S_tr, EmitX_tr, S_tr, EmitY_tr)
+plt.grid(True)
+plt.title("Emittances")
+plt.xlabel("s[m]")
+plt.ylabel(r"$\epsilon_x,\epsilon_y [\mu m]$")
 plt.xlim([s0, s1])
 plt.subplot(212)
-plt.plot(S,E,S_tr,E_tr)
-plt.grid(True); plt.title("Energy"); plt.xlabel("s[m]"); plt.ylabel(r"E [GeV]")
-#plt.axis([s0, s1, 0, 3])
+plt.plot(S, E, S_tr, E_tr)
+plt.grid(True)
+plt.title("Energy")
+plt.xlabel("s[m]")
+plt.ylabel(r"E [GeV]")
+# plt.axis([s0, s1, 0, 3])
 
 plt.figure()
 plt.subplot(211)
-plt.plot(S_tr,sig_tau*1e3)
-plt.grid(False); #plt.title("Sigma_tau");
+plt.plot(S_tr, sig_tau * 1e3)
+plt.grid(False)
+# plt.title("Sigma_tau");
 plt.ylabel("$\sigma_z$ [mm]")
 plt.xlim([s0, s1])
 plt.subplot(212)
-plt.plot(S_tr,Sx,S_tr,Sy)
-plt.plot(S_tr,Sx, "b", label=r"$k_x^{sc}$")
-plt.plot(S_tr,Sy, "r", label=r"$k_y^{sc}$")
+plt.plot(S_tr, Sx, S_tr, Sy)
+plt.plot(S_tr, Sx, "b", label=r"$k_x^{sc}$")
+plt.plot(S_tr, Sy, "r", label=r"$k_y^{sc}$")
 plt.legend()
 plt.grid(False)
 plt.xlabel("z[m]")

@@ -7,15 +7,19 @@ from euxfel.subsequences import *
 
 from importlib.resources import files
 
-
-WAKE_DIR = files('euxfel.wakes')
+WAKE_DIR = files("euxfel.wakes")
 
 # GLOBAL parameters
 
 # Longitudinal beam size after BCx
 # Sig_Z=(0.0019996320155001497, 0.0006893836215002082, 0.0001020391309281775, 1.25044082708419e-05) #500pC 5kA
 # Sig_Z=(0.0019996320155001497, 0.0006817907866411071, 9.947650872824487e-05, 7.13045869665955e-06)  #500pC 10kA
-Sig_Z = (0.0018761888067590127, 0.0006359220169656093, 9.204477386791353e-05, 7.032551498646372e-06)  # 250pC 5kA
+Sig_Z = (
+    0.0018761888067590127,
+    0.0006359220169656093,
+    9.204477386791353e-05,
+    7.032551498646372e-06,
+)  # 250pC 5kA
 
 # Global parameters for various Physics processes
 SmoothPar = 1000
@@ -27,8 +31,9 @@ CSRBin = 400
 CSRSigmaFactor = 0.1
 SCmesh = [63, 63, 63]
 bISR = True
-bool_sc_rand_mesh = True  # if True, SC effect shifts mesh randomly to avoid numerical 'MBI effect'
-
+bool_sc_rand_mesh = (
+    True  # if True, SC effect shifts mesh randomly to avoid numerical 'MBI effect'
+)
 
 
 class A1(SectionTrack):
@@ -36,17 +41,19 @@ class A1(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'A1'
+        self.lattice_name = "A1"
         self.unit_step = 0.02
         self.input_beam_file = self.particle_dir + "gun/gun.npz"
-        self.output_beam_file = self.particle_dir + 'section_A1.npz'
+        self.output_beam_file = self.particle_dir + "section_A1.npz"
         self.tws_file = self.tws_dir + "tws_section_A1.npz"
         # init tracking lattice
         ocelot_start = i1.ocelot_start
         acc1_stop = i1.a1_sim_stop
         # ocelot_start = i1.id_22433449_
         # acc1_stop = i1.id_68749308_
-        self.lattice = MagneticLattice(i1.cell, start=ocelot_start, stop=acc1_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            i1.cell, start=ocelot_start, stop=acc1_stop, method=self.method
+        )
         # init physics processes
         sc = SpaceCharge(step=1, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
@@ -55,7 +62,7 @@ class A1(SectionTrack):
         sc2.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
 
         wake = Wake()
-        wake.wake_table = WakeTable(WAKE_DIR / 'RF/wake_table_A1.dat')
+        wake.wake_table = WakeTable(WAKE_DIR / "RF/wake_table_A1.dat")
         wake.factor = 1
         wake.step = 50  ####### ******
         wake.w_sampling = WakeSampling
@@ -76,26 +83,30 @@ class AH1(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
         # setting parameters
-        self.lattice_name = 'Injector AH1'
+        self.lattice_name = "Injector AH1"
         self.unit_step = 0.02
-        self.input_beam_file = self.particle_dir + 'section_A1.npz'
-        self.output_beam_file = self.particle_dir + 'section_AH1.npz'
+        self.input_beam_file = self.particle_dir + "section_A1.npz"
+        self.output_beam_file = self.particle_dir + "section_AH1.npz"
         self.tws_file = self.tws_dir + "tws_section_AH1.npz"
         # init tracking lattice
         acc1_stop = i1.a1_sim_stop
         # acc1_stop = i1.id_68749308_
         acc39_stop = i1.stlat_47_i1
-        self.lattice = MagneticLattice(i1.cell, start=acc1_stop, stop=acc39_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            i1.cell, start=acc1_stop, stop=acc39_stop, method=self.method
+        )
         # init physics processes
         sc = SpaceCharge(step=5, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
 
         wake = Wake(step=50, w_sampling=WakeSampling, filter_order=WakeFilterOrder)
-        wake.wake_table = WakeTable(WAKE_DIR / 'RF/wake_table_AH1.dat')
+        wake.wake_table = WakeTable(WAKE_DIR / "RF/wake_table_AH1.dat")
         # wake.factor = 2 ####### ******
 
         wake_add = Wake(factor=1, w_sampling=WakeSampling, filter_order=WakeFilterOrder)
-        wake_add.wake_table = WakeTable(WAKE_DIR / 'mod_wake_0002.700_0024.770_MONO.dat')
+        wake_add.wake_table = WakeTable(
+            WAKE_DIR / "mod_wake_0002.700_0024.770_MONO.dat"
+        )
 
         # adding physics processes
 
@@ -109,32 +120,40 @@ class LH(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'LASER HEATER MAGNETS'
+        self.lattice_name = "LASER HEATER MAGNETS"
         self.unit_step = 0.02
-        self.input_beam_file = self.particle_dir + 'section_AH1.npz'
-        self.output_beam_file = self.particle_dir + 'section_LH.npz'
+        self.input_beam_file = self.particle_dir + "section_AH1.npz"
+        self.output_beam_file = self.particle_dir + "section_LH.npz"
         self.tws_file = self.tws_dir + "tws_section_LH.npz"
         # init tracking lattice
         acc39_stop = i1.stlat_47_i1
         # lhm_stop = l1.match_73_i1 #start of dl #
         lhm_stop = i1.ensub_62_i1
         # lhm_stop = l1.id_90904668_
-        self.lattice = MagneticLattice(i1.cell, start=acc39_stop, stop=lhm_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            i1.cell, start=acc39_stop, stop=lhm_stop, method=self.method
+        )
         # init physics processes
         csr = CSR()
         csr.n_bin = self.init_parameters.get("CSR_n_bin", CSRBin)
-        csr.sigma_min = self.init_parameters.get("CSR_sigma_min", Sig_Z[0] * CSRSigmaFactor)
+        csr.sigma_min = self.init_parameters.get(
+            "CSR_sigma_min", Sig_Z[0] * CSRSigmaFactor
+        )
         csr.traj_step = 0.0005
         csr.apply_step = 0.005
 
         sc = SpaceCharge(step=50, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
 
-        wake = Wake(step=10, factor=1, w_sampling=WakeSampling, filter_order=WakeFilterOrder)
-        wake.wake_table = WakeTable(WAKE_DIR / 'RF/wake_table_TDS1.dat')
+        wake = Wake(
+            step=10, factor=1, w_sampling=WakeSampling, filter_order=WakeFilterOrder
+        )
+        wake.wake_table = WakeTable(WAKE_DIR / "RF/wake_table_TDS1.dat")
 
         wake_add = Wake(factor=1, w_sampling=WakeSampling, filter_order=WakeFilterOrder)
-        wake_add.wake_table = WakeTable(WAKE_DIR / 'mod_wake_0027.390_0050.080_MONO.dat')
+        wake_add.wake_table = WakeTable(
+            WAKE_DIR / "mod_wake_0027.390_0050.080_MONO.dat"
+        )
 
         lh = LaserModulator()
         lh.dE = self.init_parameters.get("laser_modulator_dE", LHE_default)
@@ -155,26 +174,32 @@ class DL(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
         # setting parameters
-        self.lattice_name = 'DOGLEG'
+        self.lattice_name = "DOGLEG"
         self.unit_step = 0.02
-        self.input_beam_file = self.particle_dir + 'section_LH.npz'
-        self.output_beam_file = self.particle_dir + 'section_DL.npz'
+        self.input_beam_file = self.particle_dir + "section_LH.npz"
+        self.output_beam_file = self.particle_dir + "section_DL.npz"
         self.tws_file = self.tws_dir + "tws_section_DL.npz"
 
         # init tracking lattice
         # st2_stop = l1.id_90904668_ #i1.stsub_62_i1
         st2_stop = i1.ensub_62_i1  #
         dogleg_stop = l1.stlat_96_i1
-        self.lattice = MagneticLattice(i1.cell + l1.cell, start=st2_stop, stop=dogleg_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            i1.cell + l1.cell, start=st2_stop, stop=dogleg_stop, method=self.method
+        )
         # init physics processes
         csr = CSR()
         csr.n_bin = self.init_parameters.get("CSR_n_bin", CSRBin)
-        csr.sigma_min = self.init_parameters.get("CSR_sigma_min", Sig_Z[0] * CSRSigmaFactor)
+        csr.sigma_min = self.init_parameters.get(
+            "CSR_sigma_min", Sig_Z[0] * CSRSigmaFactor
+        )
         csr.traj_step = 0.0005
         csr.apply_step = 0.005
 
         wake_add = Wake(factor=1, w_sampling=WakeSampling, filter_order=WakeFilterOrder)
-        wake_add.wake_table = WakeTable(WAKE_DIR / 'mod_wake_0070.030_0073.450_MONO.dat')
+        wake_add.wake_table = WakeTable(
+            WAKE_DIR / "mod_wake_0070.030_0073.450_MONO.dat"
+        )
 
         sc = SpaceCharge(step=25, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
@@ -188,20 +213,24 @@ class I1D(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
         # setting parameters
-        self.lattice_name = 'I1D'
+        self.lattice_name = "I1D"
         self.unit_step = 0.02
-        self.input_beam_file = self.particle_dir + 'section_LH.npz'
-        self.output_beam_file = self.particle_dir + 'section_I1D.npz'
+        self.input_beam_file = self.particle_dir + "section_LH.npz"
+        self.output_beam_file = self.particle_dir + "section_I1D.npz"
         self.tws_file = self.tws_dir + "tws_section_I1D.npz"
 
         # init tracking lattice
         st2_stop = i1.ensub_62_i1
         dogleg_stop = i1d.ensec_66_i1d
-        self.lattice = MagneticLattice(i1.cell + i1d.cell, start=st2_stop, stop=dogleg_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            i1.cell + i1d.cell, start=st2_stop, stop=dogleg_stop, method=self.method
+        )
         # init physics processes
         csr = CSR()
         csr.n_bin = self.init_parameters.get("CSR_n_bin", CSRBin)
-        csr.sigma_min = self.init_parameters.get("CSR_sigma_min", Sig_Z[0] * CSRSigmaFactor)
+        csr.sigma_min = self.init_parameters.get(
+            "CSR_sigma_min", Sig_Z[0] * CSRSigmaFactor
+        )
         csr.traj_step = 0.0005
         csr.apply_step = 0.005
 
@@ -216,22 +245,26 @@ class BC0(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'BC0'
+        self.lattice_name = "BC0"
         self.unit_step = 0.02
 
-        self.input_beam_file = self.particle_dir + 'section_DL.npz'
-        self.output_beam_file = self.particle_dir + 'section_BC0.npz'
+        self.input_beam_file = self.particle_dir + "section_DL.npz"
+        self.output_beam_file = self.particle_dir + "section_BC0.npz"
         self.tws_file = self.tws_dir + "tws_section_BC0.npz"
 
         # init tracking lattice
         st4_stop = l1.stlat_96_i1
         bc0_stop = l1.enlat_101_i1
-        self.lattice = MagneticLattice(l1.cell, start=st4_stop, stop=bc0_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            l1.cell, start=st4_stop, stop=bc0_stop, method=self.method
+        )
 
         # init physics processes
         csr = CSR(step=1, traj_step=0.0005, apply_step=0.001)
         csr.n_bin = self.init_parameters.get("CSR_n_bin", CSRBin)
-        csr.sigma_min = self.init_parameters.get("CSR_sigma_min", Sig_Z[1] * CSRSigmaFactor)
+        csr.sigma_min = self.init_parameters.get(
+            "CSR_sigma_min", Sig_Z[1] * CSRSigmaFactor
+        )
 
         sc = SpaceCharge(step=40, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
@@ -250,11 +283,11 @@ class L1(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'L1'
+        self.lattice_name = "L1"
         self.unit_step = 0.02
 
-        self.input_beam_file = self.particle_dir + 'section_BC0.npz'
-        self.output_beam_file = self.particle_dir + 'section_L1.npz'
+        self.input_beam_file = self.particle_dir + "section_BC0.npz"
+        self.output_beam_file = self.particle_dir + "section_L1.npz"
         self.tws_file = self.tws_dir + "tws_section_L1.npz"
 
         bc0_stop = l1.enlat_101_i1
@@ -266,7 +299,9 @@ class L1(SectionTrack):
         #    self.coupler_kick = True
 
         # init tracking lattice
-        self.lattice = MagneticLattice(l1.cell, start=bc0_stop, stop=acc2_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            l1.cell, start=bc0_stop, stop=acc2_stop, method=self.method
+        )
 
         # init physics processes
         smooth = SmoothBeam()
@@ -277,7 +312,8 @@ class L1(SectionTrack):
 
         wake = Wake()
         wake.wake_table = WakeTable(
-            WAKE_DIR / 'RF/mod_TESLA_MODULE_WAKE_TAYLOR.dat')  ###### ************ /wake_table_A1.dat')
+            WAKE_DIR / "RF/mod_TESLA_MODULE_WAKE_TAYLOR.dat"
+        )  ###### ************ /wake_table_A1.dat')
         wake.factor = 4
         wake.step = 100
         wake.w_sampling = WakeSampling
@@ -285,7 +321,8 @@ class L1(SectionTrack):
 
         wake_add = Wake(factor=1, w_sampling=WakeSampling, filter_order=WakeFilterOrder)
         wake_add.wake_table = WakeTable(
-            WAKE_DIR / 'mod_wake_0078.970_0159.280_MONO.dat')  ######### ************ RF/wake_table_A1.dat')
+            WAKE_DIR / "mod_wake_0078.970_0159.280_MONO.dat"
+        )  ######### ************ RF/wake_table_A1.dat')
 
         match_acc2 = bc0_stop
         L1_wake_kick = acc2_stop
@@ -301,22 +338,26 @@ class BC1(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'BC1'
+        self.lattice_name = "BC1"
         self.unit_step = 0.02
 
-        self.input_beam_file = self.particle_dir + 'section_L1.npz'
-        self.output_beam_file = self.particle_dir + 'section_BC1.npz'
+        self.input_beam_file = self.particle_dir + "section_L1.npz"
+        self.output_beam_file = self.particle_dir + "section_BC1.npz"
         self.tws_file = self.tws_dir + "tws_section_BC1.npz"
 
         acc2_stop = l1.stlat_182_b1
         bc1_stop = l1.tora_203_b1
         # init tracking lattice
-        self.lattice = MagneticLattice(l1.cell, start=acc2_stop, stop=bc1_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            l1.cell, start=acc2_stop, stop=bc1_stop, method=self.method
+        )
 
         # init physics processes
         csr = CSR(step=1, traj_step=0.0005, apply_step=0.001)
         csr.n_bin = self.init_parameters.get("CSR_n_bin", CSRBin)
-        csr.sigma_min = self.init_parameters.get("CSR_sigma_min", Sig_Z[2] * CSRSigmaFactor)
+        csr.sigma_min = self.init_parameters.get(
+            "CSR_sigma_min", Sig_Z[2] * CSRSigmaFactor
+        )
 
         sc = SpaceCharge(step=40, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
@@ -335,11 +376,11 @@ class L2(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'L2'
+        self.lattice_name = "L2"
         self.unit_step = 0.02
 
-        self.input_beam_file = self.particle_dir + 'section_BC1.npz'
-        self.output_beam_file = self.particle_dir + 'section_L2.npz'
+        self.input_beam_file = self.particle_dir + "section_BC1.npz"
+        self.output_beam_file = self.particle_dir + "section_L2.npz"
         self.tws_file = self.tws_dir + "tws_section_L2.npz"
 
         bc1_stop = l1.tora_203_b1
@@ -351,7 +392,9 @@ class L2(SectionTrack):
         #    self.coupler_kick = True
 
         # init tracking lattice
-        self.lattice = MagneticLattice(l1.cell + l2.cell, start=bc1_stop, stop=acc3t5_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            l1.cell + l2.cell, start=bc1_stop, stop=acc3t5_stop, method=self.method
+        )
 
         # init physics processes
         smooth = SmoothBeam()
@@ -360,13 +403,20 @@ class L2(SectionTrack):
         sc = SpaceCharge(step=50, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
 
-        wake = Wake(step=200, factor=4 * 3, w_sampling=WakeSampling, filter_order=WakeFilterOrder)
+        wake = Wake(
+            step=200,
+            factor=4 * 3,
+            w_sampling=WakeSampling,
+            filter_order=WakeFilterOrder,
+        )
         wake.wake_table = WakeTable(
-            WAKE_DIR / 'RF/mod_TESLA_MODULE_WAKE_TAYLOR.dat')  ####### ********* wake_table_A1.dat')
+            WAKE_DIR / "RF/mod_TESLA_MODULE_WAKE_TAYLOR.dat"
+        )  ####### ********* wake_table_A1.dat')
 
         wake_add = Wake(factor=1)
         wake_add.wake_table = WakeTable(
-            WAKE_DIR / 'mod_wake_0179.810_0370.840_MONO.dat')  ########## ******** RF/wake_table_A1.dat')
+            WAKE_DIR / "mod_wake_0179.810_0370.840_MONO.dat"
+        )  ########## ******** RF/wake_table_A1.dat')
 
         self.add_physics_process(smooth, start=bc1_stop, stop=bc1_stop)
         self.add_physics_process(sc, start=bc1_stop, stop=acc3t5_stop)
@@ -380,28 +430,32 @@ class BC2(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'BC2'
+        self.lattice_name = "BC2"
         self.dipoles = [l2.bb_393_b2, l2.bb_402_b2, l2.bb_404_b2, l2.bb_413_b2]
         self.dipole_len = 0.5
         self.bc_gap = 8.5
 
         self.unit_step = 0.02
         suffix = kwargs.get("suffix", "")
-        self.input_beam_file = self.particle_dir + 'section_L2.npz'
-        self.output_beam_file = self.particle_dir + f'section_BC2_{suffix}.npz'
+        self.input_beam_file = self.particle_dir + "section_L2.npz"
+        self.output_beam_file = self.particle_dir + f"section_BC2_{suffix}.npz"
 
         self.tws_file = self.tws_dir + "tws_section_BC2.npz"
 
         acc3t5_stop = l2.stlat_393_b2
         bc2_stop = l2.tora_415_b2
         # init tracking lattice
-        self.lattice = MagneticLattice(l2.cell, start=acc3t5_stop, stop=bc2_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            l2.cell, start=acc3t5_stop, stop=bc2_stop, method=self.method
+        )
 
         # init physics processes
 
         csr = CSR(step=1, traj_step=0.0005, apply_step=0.001)
         csr.n_bin = self.init_parameters.get("CSR_n_bin", CSRBin)
-        csr.sigma_min = self.init_parameters.get("CSR_sigma_min", Sig_Z[3] * CSRSigmaFactor)
+        csr.sigma_min = self.init_parameters.get(
+            "CSR_sigma_min", Sig_Z[3] * CSRSigmaFactor
+        )
 
         sc = SpaceCharge(step=50, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
@@ -415,24 +469,28 @@ class B2D(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'B2D'
+        self.lattice_name = "B2D"
         self.unit_step = 0.02
         suffix = kwargs.get("suffix", "")
-        self.input_beam_file = self.particle_dir + f'section_BC2_{suffix}.npz'
-        self.output_beam_file = self.particle_dir + 'section_B2D.npz'
+        self.input_beam_file = self.particle_dir + f"section_BC2_{suffix}.npz"
+        self.output_beam_file = self.particle_dir + "section_B2D.npz"
 
         self.tws_file = self.tws_dir + "tws_section_B2D.npz"
 
         bc2_stop = l2.tora_415_b2
         b2d_stop = b2d.otra_473_b2d
         # init tracking lattice
-        self.lattice = MagneticLattice(l2.cell + b2d.cell, start=bc2_stop, stop=b2d_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            l2.cell + b2d.cell, start=bc2_stop, stop=b2d_stop, method=self.method
+        )
 
         # init physics processes
 
         csr = CSR(step=1, traj_step=0.0005, apply_step=0.001)
         csr.n_bin = self.init_parameters.get("CSR_n_bin", CSRBin)
-        csr.sigma_min = self.init_parameters.get("CSR_sigma_min", Sig_Z[3] * CSRSigmaFactor)
+        csr.sigma_min = self.init_parameters.get(
+            "CSR_sigma_min", Sig_Z[3] * CSRSigmaFactor
+        )
 
         sc = SpaceCharge(step=50, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
@@ -446,12 +504,12 @@ class L3(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'L3'
+        self.lattice_name = "L3"
         self.unit_step = 0.2  ########### ************ 5.0
 
         suffix = kwargs.get("suffix", "")
-        self.input_beam_file = self.particle_dir + f'section_BC2_{suffix}.npz'
-        self.output_beam_file = self.particle_dir + 'section_L3.npz'
+        self.input_beam_file = self.particle_dir + f"section_BC2_{suffix}.npz"
+        self.output_beam_file = self.particle_dir + "section_L3.npz"
         self.tws_file = self.tws_dir + "tws_section_L3.npz"
 
         bc2_stop = l2.tora_415_b2
@@ -459,7 +517,9 @@ class L3(SectionTrack):
         # acc6t26_stop =l3.stop_l3
 
         # init tracking lattice
-        self.lattice = MagneticLattice(l2.cell + l3.cell, start=bc2_stop, stop=acc6t26_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            l2.cell + l3.cell, start=bc2_stop, stop=acc6t26_stop, method=self.method
+        )
 
         # init physics processes
         smooth = SmoothBeam()
@@ -469,11 +529,14 @@ class L3(SectionTrack):
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
 
         wake = Wake(step=10, factor=4 * 21, w_sampling=1000)
-        wake.wake_table = WakeTable(WAKE_DIR / 'RF/mod_TESLA_MODULE_WAKE_TAYLOR.dat')  ##### ******wake_table_A1.dat')
+        wake.wake_table = WakeTable(
+            WAKE_DIR / "RF/mod_TESLA_MODULE_WAKE_TAYLOR.dat"
+        )  ##### ******wake_table_A1.dat')
 
         wake_add = Wake(factor=1)
         wake_add.wake_table = WakeTable(
-            WAKE_DIR / 'mod_wake_0391.350_1629.700_MONO.dat')  ############# ************** RF/wake_table_A1.dat')
+            WAKE_DIR / "mod_wake_0391.350_1629.700_MONO.dat"
+        )  ############# ************** RF/wake_table_A1.dat')
 
         app = PhaseSpaceAperture()
         app.taumin = self.init_parameters.get("taumin", -5)
@@ -491,18 +554,23 @@ class CL1(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'CL1'
+        self.lattice_name = "CL1"
         self.unit_step = 0.2
 
-        self.input_beam_file = self.particle_dir + 'section_L3.npz'
-        self.output_beam_file = self.particle_dir + 'section_CL1.npz'
+        self.input_beam_file = self.particle_dir + "section_L3.npz"
+        self.output_beam_file = self.particle_dir + "section_CL1.npz"
         self.tws_file = self.tws_dir + "tws_section_CL1.npz"
 
         acc6t26_stop = l3.ensec_1652_l3
         # acc6t26_stop = l3.stop_l3
         collimator1_stop = cl.bpma_1746_cl
         # init tracking lattice
-        self.lattice = MagneticLattice(l3.cell + cl.cell, start=acc6t26_stop, stop=collimator1_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            l3.cell + cl.cell,
+            start=acc6t26_stop,
+            stop=collimator1_stop,
+            method=self.method,
+        )
 
         # init physics processes
 
@@ -512,67 +580,70 @@ class CL1(SectionTrack):
 
         csr = CSR(step=1, traj_step=0.0005, apply_step=0.001)
         csr.n_bin = self.init_parameters.get("CSR_n_bin", CSRBin)
-        csr.sigma_min = self.init_parameters.get("CSR_sigma_min", Sig_Z[3] * CSRSigmaFactor)
+        csr.sigma_min = self.init_parameters.get(
+            "CSR_sigma_min", Sig_Z[3] * CSRSigmaFactor
+        )
 
         self.add_physics_process(csr, start=acc6t26_stop, stop=collimator1_stop)
 
         if bISR:
-            LD = cl.be_1678_cl.l;
-            teta = cl.be_1678_cl.angle;
-            ro = LD / np.sin(teta);
-            sre1 = SpontanRadEffects();
-            sre1.radius = ro;
-            sre1.type = 'dipole';
+            LD = cl.be_1678_cl.l
+            teta = cl.be_1678_cl.angle
+            ro = LD / np.sin(teta)
+            sre1 = SpontanRadEffects()
+            sre1.radius = ro
+            sre1.type = "dipole"
             self.add_physics_process(sre1, cl.mbe_1678a_cl, cl.mbe_1678d_cl)
-            LD = cl.bl_1688_cl.l;
-            teta = cl.bl_1688_cl.angle;
-            ro = LD / np.sin(teta);
-            sre2 = SpontanRadEffects();
-            sre2.radius = ro;
-            sre2.type = 'dipole';
+            LD = cl.bl_1688_cl.l
+            teta = cl.bl_1688_cl.angle
+            ro = LD / np.sin(teta)
+            sre2 = SpontanRadEffects()
+            sre2.radius = ro
+            sre2.type = "dipole"
             self.add_physics_process(sre2, cl.mbl_1688a_cl, cl.mbl_1688d_cl)
-            LD = cl.bl_1695_cl.l;
-            teta = cl.bl_1695_cl.angle;
-            ro = LD / np.sin(teta);
-            sre3 = SpontanRadEffects();
-            sre3.radius = ro;
-            sre3.type = 'dipole';
+            LD = cl.bl_1695_cl.l
+            teta = cl.bl_1695_cl.angle
+            ro = LD / np.sin(teta)
+            sre3 = SpontanRadEffects()
+            sre3.radius = ro
+            sre3.type = "dipole"
             self.add_physics_process(sre3, cl.mbl_1695a_cl, cl.mbl_1695d_cl)
-            LD = cl.be_1705_cl.l;
-            teta = cl.be_1705_cl.angle;
-            ro = LD / np.sin(teta);
-            sre4 = SpontanRadEffects();
-            sre4.radius = ro;
-            sre4.type = 'dipole';
+            LD = cl.be_1705_cl.l
+            teta = cl.be_1705_cl.angle
+            ro = LD / np.sin(teta)
+            sre4 = SpontanRadEffects()
+            sre4.radius = ro
+            sre4.type = "dipole"
             self.add_physics_process(sre4, cl.mbe_1705a_cl, cl.mbe_1705d_cl)
-            LD = cl.be_1714_cl.l;
-            teta = cl.be_1714_cl.angle;
-            ro = LD / np.sin(teta);
-            sre5 = SpontanRadEffects();
-            sre5.radius = ro;
-            sre5.type = 'dipole';
+            LD = cl.be_1714_cl.l
+            teta = cl.be_1714_cl.angle
+            ro = LD / np.sin(teta)
+            sre5 = SpontanRadEffects()
+            sre5.radius = ro
+            sre5.type = "dipole"
             self.add_physics_process(sre5, cl.mbe_1714a_cl, cl.mbe_1714d_cl)
-            LD = cl.bl_1724_cl.l;
-            teta = cl.bl_1724_cl.angle;
-            ro = LD / np.sin(teta);
-            sre6 = SpontanRadEffects();
-            sre6.radius = ro;
-            sre6.type = 'dipole';
+            LD = cl.bl_1724_cl.l
+            teta = cl.bl_1724_cl.angle
+            ro = LD / np.sin(teta)
+            sre6 = SpontanRadEffects()
+            sre6.radius = ro
+            sre6.type = "dipole"
             self.add_physics_process(sre6, cl.mbl_1724a_cl, cl.mbl_1724d_cl)
-            LD = cl.bl_1731_cl.l;
-            teta = cl.bl_1731_cl.angle;
-            ro = LD / np.sin(teta);
-            sre7 = SpontanRadEffects();
-            sre7.radius = ro;
-            sre7.type = 'dipole';
+            LD = cl.bl_1731_cl.l
+            teta = cl.bl_1731_cl.angle
+            ro = LD / np.sin(teta)
+            sre7 = SpontanRadEffects()
+            sre7.radius = ro
+            sre7.type = "dipole"
             self.add_physics_process(sre7, cl.mbl_1731a_cl, cl.mbl_1731d_cl)
-            LD = cl.be_1741_cl.l;
-            teta = cl.be_1741_cl.angle;
-            ro = LD / np.sin(teta);
-            sre8 = SpontanRadEffects();
-            sre8.radius = ro;
-            sre8.type = 'dipole';
+            LD = cl.be_1741_cl.l
+            teta = cl.be_1741_cl.angle
+            ro = LD / np.sin(teta)
+            sre8 = SpontanRadEffects()
+            sre8.radius = ro
+            sre8.type = "dipole"
             self.add_physics_process(sre8, cl.mbe_1741a_cl, cl.mbe_1741d_cl)
+
     #    if bISR:
     #        LD = cl.be_1678_cl.l;  teta = cl.be_1678_cl.angle; ro = LD / np.sin(teta);
     #        sre1 = SpontanRadEffects(); sre1.radius = ro;  sre1.type = 'dipole';
@@ -602,27 +673,32 @@ class CL1(SectionTrack):
 
 #
 
+
 class CL2(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'CL2'
+        self.lattice_name = "CL2"
         self.unit_step = 1
 
-        self.input_beam_file = self.particle_dir + 'section_CL1.npz'
-        self.output_beam_file = self.particle_dir + 'section_CL2.npz'
+        self.input_beam_file = self.particle_dir + "section_CL1.npz"
+        self.output_beam_file = self.particle_dir + "section_CL2.npz"
         self.tws_file = self.tws_dir + "tws_section_CL2.npz"
 
         collimator1_stop = cl.bpma_1746_cl
         collimator2_stop = cl.bpma_1783_cl
         # init tracking lattice
-        self.lattice = MagneticLattice(cl.cell, start=collimator1_stop, stop=collimator2_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            cl.cell, start=collimator1_stop, stop=collimator2_stop, method=self.method
+        )
 
         # init physics processes
 
         sc = SpaceCharge(step=1, random_mesh=bool_sc_rand_mesh)
-        sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)  ############ ************* [31, 31, 31]
+        sc.nmesh_xyz = self.init_parameters.get(
+            "SC_mesh", SCmesh
+        )  ############ ************* [31, 31, 31]
 
         self.add_physics_process(sc, start=collimator1_stop, stop=collimator2_stop)
 
@@ -632,11 +708,11 @@ class CL3(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'CL3'
+        self.lattice_name = "CL3"
         self.unit_step = 0.2
 
-        self.input_beam_file = self.particle_dir + 'section_CL2.npz'
-        self.output_beam_file = self.particle_dir + 'section_CL3.npz'
+        self.input_beam_file = self.particle_dir + "section_CL2.npz"
+        self.output_beam_file = self.particle_dir + "section_CL3.npz"
         self.tws_file = self.tws_dir + "tws_section_CL3.npz"
 
         # if "suffix" in kwargs:
@@ -650,81 +726,92 @@ class CL3(SectionTrack):
         collimator2_stop = cl.bpma_1783_cl
         collimator3_stop = cl.ensec_1854_cl
         # init tracking lattice
-        self.lattice = MagneticLattice(cl.cell, start=collimator2_stop, stop=collimator3_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            cl.cell, start=collimator2_stop, stop=collimator3_stop, method=self.method
+        )
 
         # init physics processes
 
         sc = SpaceCharge(step=10, random_mesh=bool_sc_rand_mesh)
-        sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)  ############ ************* [31, 31, 31]
+        sc.nmesh_xyz = self.init_parameters.get(
+            "SC_mesh", SCmesh
+        )  ############ ************* [31, 31, 31]
 
         csr = CSR(step=1, traj_step=0.0005, apply_step=0.001)
         csr.n_bin = self.init_parameters.get("CSR_n_bin", CSRBin)
-        csr.sigma_min = self.init_parameters.get("CSR_sigma_min", Sig_Z[3] * CSRSigmaFactor)
+        csr.sigma_min = self.init_parameters.get(
+            "CSR_sigma_min", Sig_Z[3] * CSRSigmaFactor
+        )
 
         wake_add = Wake(factor=1)
-        wake_add.wake_table = WakeTable(WAKE_DIR / 'mod_wake_1629.700_1831.200_MONO.dat')
+        wake_add.wake_table = WakeTable(
+            WAKE_DIR / "mod_wake_1629.700_1831.200_MONO.dat"
+        )
 
         self.add_physics_process(csr, start=collimator2_stop, stop=collimator3_stop)
         self.add_physics_process(sc, start=collimator2_stop, stop=collimator3_stop)
-        self.add_physics_process(wake_add, start=collimator3_stop, stop=collimator3_stop)
+        self.add_physics_process(
+            wake_add, start=collimator3_stop, stop=collimator3_stop
+        )
 
         if bISR:
-            LD = cl.be_1786_cl.l;
-            teta = cl.be_1786_cl.angle;
-            ro = LD / np.sin(teta);
-            sre1 = SpontanRadEffects();
-            sre1.radius = ro;
-            sre1.type = 'dipole';
+            LD = cl.be_1786_cl.l
+            teta = cl.be_1786_cl.angle
+            ro = LD / np.sin(teta)
+            sre1 = SpontanRadEffects()
+            sre1.radius = ro
+            sre1.type = "dipole"
             self.add_physics_process(sre1, cl.mbe_1786a_cl, cl.mbe_1786d_cl)
-            LD = cl.bl_1796_cl.l;
-            teta = cl.bl_1796_cl.angle;
-            ro = LD / np.sin(teta);
-            sre2 = SpontanRadEffects();
-            sre2.radius = ro;
-            sre2.type = 'dipole';
+            LD = cl.bl_1796_cl.l
+            teta = cl.bl_1796_cl.angle
+            ro = LD / np.sin(teta)
+            sre2 = SpontanRadEffects()
+            sre2.radius = ro
+            sre2.type = "dipole"
             self.add_physics_process(sre2, cl.mbl_1796a_cl, cl.mbl_1796d_cl)
-            LD = cl.bl_1803_cl.l;
-            teta = cl.bl_1803_cl.angle;
-            ro = LD / np.sin(teta);
-            sre3 = SpontanRadEffects();
-            sre3.radius = ro;
-            sre3.type = 'dipole';
+            LD = cl.bl_1803_cl.l
+            teta = cl.bl_1803_cl.angle
+            ro = LD / np.sin(teta)
+            sre3 = SpontanRadEffects()
+            sre3.radius = ro
+            sre3.type = "dipole"
             self.add_physics_process(sre3, cl.mbl_1803a_cl, cl.mbl_1803d_cl)
-            LD = cl.be_1813_cl.l;
-            teta = cl.be_1813_cl.angle;
-            ro = LD / np.sin(teta);
-            sre4 = SpontanRadEffects();
-            sre4.radius = ro;
-            sre4.type = 'dipole';
+            LD = cl.be_1813_cl.l
+            teta = cl.be_1813_cl.angle
+            ro = LD / np.sin(teta)
+            sre4 = SpontanRadEffects()
+            sre4.radius = ro
+            sre4.type = "dipole"
             self.add_physics_process(sre4, cl.mbe_1813a_cl, cl.mbe_1813d_cl)
-            LD = cl.be_1822_cl.l;
-            teta = cl.be_1822_cl.angle;
-            ro = LD / np.sin(teta);
-            sre5 = SpontanRadEffects();
-            sre5.radius = ro;
-            sre5.type = 'dipole';
+            LD = cl.be_1822_cl.l
+            teta = cl.be_1822_cl.angle
+            ro = LD / np.sin(teta)
+            sre5 = SpontanRadEffects()
+            sre5.radius = ro
+            sre5.type = "dipole"
             self.add_physics_process(sre5, cl.mbe_1822a_cl, cl.mbe_1822d_cl)
-            LD = cl.bl_1832_cl.l;
-            teta = cl.bl_1832_cl.angle;
-            ro = LD / np.sin(teta);
-            sre6 = SpontanRadEffects();
-            sre6.radius = ro;
-            sre6.type = 'dipole';
+            LD = cl.bl_1832_cl.l
+            teta = cl.bl_1832_cl.angle
+            ro = LD / np.sin(teta)
+            sre6 = SpontanRadEffects()
+            sre6.radius = ro
+            sre6.type = "dipole"
             self.add_physics_process(sre6, cl.mbl_1832a_cl, cl.mbl_1832d_cl)
-            LD = cl.bl_1839_cl.l;
-            teta = cl.bl_1839_cl.angle;
-            ro = LD / np.sin(teta);
-            sre7 = SpontanRadEffects();
-            sre7.radius = ro;
-            sre7.type = 'dipole';
+            LD = cl.bl_1839_cl.l
+            teta = cl.bl_1839_cl.angle
+            ro = LD / np.sin(teta)
+            sre7 = SpontanRadEffects()
+            sre7.radius = ro
+            sre7.type = "dipole"
             self.add_physics_process(sre7, cl.mbl_1839a_cl, cl.mbl_1839d_cl)
-            LD = cl.be_1849_cl.l;
-            teta = cl.be_1849_cl.angle;
-            ro = LD / np.sin(teta);
-            sre8 = SpontanRadEffects();
-            sre8.radius = ro;
-            sre8.type = 'dipole';
+            LD = cl.be_1849_cl.l
+            teta = cl.be_1849_cl.angle
+            ro = LD / np.sin(teta)
+            sre8 = SpontanRadEffects()
+            sre8.radius = ro
+            sre8.type = "dipole"
             self.add_physics_process(sre8, cl.mbe_1849a_cl, cl.mbe_1849d_cl)
+
     #   if bISR:
     #       LD = cl.be_1786_cl.l;  teta = cl.be_1786_cl.angle; ro = LD / np.sin(teta);
     #       sre1 = SpontanRadEffects(); sre1.radius = ro;  sre1.type = 'dipole';
@@ -757,11 +844,11 @@ class TL(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'TL'
+        self.lattice_name = "TL"
         self.unit_step = 10
         suffix = kwargs.get("suffix", "")
-        self.input_beam_file = self.particle_dir + 'section_CL3.npz'
-        self.output_beam_file = self.particle_dir + f'section_TL{suffix}.npz'
+        self.input_beam_file = self.particle_dir + "section_CL3.npz"
+        self.output_beam_file = self.particle_dir + f"section_TL{suffix}.npz"
         self.tws_file = self.tws_dir + "tws_section_TL.npz"
 
         # collimator3_stop = cl.bpma_1853_cl
@@ -770,21 +857,33 @@ class TL(SectionTrack):
         stN10_stop = tl34.ensub_2025_tl  # sase1.ensec_2235_t2
         # stN10_stop = sase1.bpme_2241_sa1
         # init tracking lattice
-        self.lattice = MagneticLattice(cl.cell + tl2.cell + tl34.cell + sase1.cell, start=collimator3_stop,
-                                       stop=stN10_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            cl.cell + tl2.cell + tl34.cell + sase1.cell,
+            start=collimator3_stop,
+            stop=stN10_stop,
+            method=self.method,
+        )
         # self.lattice = MagneticLattice(cl.cell + tl34.cell, start=collimator3_stop, stop=stN10_stop, method=self.method)
         # init physics processes
 
         sc = SpaceCharge(step=1, random_mesh=bool_sc_rand_mesh)
-        sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)  ########### *************** [31, 31, 31]
+        sc.nmesh_xyz = self.init_parameters.get(
+            "SC_mesh", SCmesh
+        )  ########### *************** [31, 31, 31]
 
         wake_add = Wake(factor=1)
-        wake_add.wake_table = WakeTable(WAKE_DIR / 'mod_wake_1831.200_2035.190_MONO.dat')
+        wake_add.wake_table = WakeTable(
+            WAKE_DIR / "mod_wake_1831.200_2035.190_MONO.dat"
+        )
         wake_add1 = Wake(factor=1)
-        wake_add1.wake_table = WakeTable(WAKE_DIR / 'mod_wake_2035.190_2213.000_MONO.dat')
+        wake_add1.wake_table = WakeTable(
+            WAKE_DIR / "mod_wake_2035.190_2213.000_MONO.dat"
+        )
 
         self.add_physics_process(sc, start=collimator3_stop, stop=stN10_stop)
-        self.add_physics_process(wake_add, start=collimator3_stop, stop=collimator3_stop)
+        self.add_physics_process(
+            wake_add, start=collimator3_stop, stop=collimator3_stop
+        )
         self.add_physics_process(wake_add1, start=stN10_stop, stop=stN10_stop)
 
 
@@ -792,11 +891,11 @@ class SASE1(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
         # setting parameters
-        self.lattice_name = 'SASE1'
+        self.lattice_name = "SASE1"
         self.unit_step = 5
 
-        self.input_beam_file = self.particle_dir + 'section_TL.npz'
-        self.output_beam_file = self.particle_dir + 'section_SASE1.npz'
+        self.input_beam_file = self.particle_dir + "section_TL.npz"
+        self.output_beam_file = self.particle_dir + "section_SASE1.npz"
         self.tws_file = self.tws_dir + "tws_section_SASE1.npz"
         # last element sase1 - stsec_2461_t4
         # stN10_stop = sase1.bpme_2235_t2
@@ -806,11 +905,16 @@ class SASE1(SectionTrack):
         # stop ~1m before SASE1
         # sase1_stop = sase1.bpme_2241_sa1
         # init tracking lattice
-        self.lattice = MagneticLattice(tl34.cell + sase1.cell, start=stN10_stop, stop=sase1_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            tl34.cell + sase1.cell,
+            start=stN10_stop,
+            stop=sase1_stop,
+            method=self.method,
+        )
 
         # init physics processes
         wake = Wake(step=1, factor=38 * 6.1, w_sampling=WakeSampling)
-        wake.wake_table = WakeTable(WAKE_DIR / 'Undulator/wake_undulator_OCELOTnew.txt')
+        wake.wake_table = WakeTable(WAKE_DIR / "Undulator/wake_undulator_OCELOTnew.txt")
 
         sc = SpaceCharge(step=1, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
@@ -829,11 +933,11 @@ class T4(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
         # setting parameters
-        self.lattice_name = 'T4'
+        self.lattice_name = "T4"
         self.unit_step = 0.05
         suffix = kwargs.get("suffix", "")
-        self.input_beam_file = self.particle_dir + 'section_SASE1.npz'
-        self.output_beam_file = self.particle_dir + f'section_T4_{suffix}.npz'
+        self.input_beam_file = self.particle_dir + "section_SASE1.npz"
+        self.output_beam_file = self.particle_dir + f"section_T4_{suffix}.npz"
         self.tws_file = self.tws_dir + "tws_section_T4.npz"
         # last element sase1 - stsec_2461_t4
         sase1_stop = sase1.ensec_2461_sa1
@@ -846,12 +950,16 @@ class T4(SectionTrack):
         t4.qm_2592_t4.k1 = self.init_parameters.get("qm_2592_t4", 0.28822914539964134)
         t4.qm_2602_t4.k1 = self.init_parameters.get("qm_2602_t4", 0.28822914539964134)
 
-        self.lattice = MagneticLattice(sase1.cell + t4.cell, start=sase1_stop, stop=t4_stop, method=self.method)
+        self.lattice = MagneticLattice(
+            sase1.cell + t4.cell, start=sase1_stop, stop=t4_stop, method=self.method
+        )
 
         # init physics processes
 
         sc = SpaceCharge(step=40, random_mesh=bool_sc_rand_mesh)
-        sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)  ########### ********** [31, 31, 31]
+        sc.nmesh_xyz = self.init_parameters.get(
+            "SC_mesh", SCmesh
+        )  ########### ********** [31, 31, 31]
 
         csr = CSR()
         csr.traj_step = 0.0005
@@ -867,13 +975,15 @@ class T4(SectionTrack):
 
         # creation of wake object with parameters
         wake = Wake(step=1, factor=1, w_sampling=500)
-        wake.wake_table = WakeTable(WAKE_DIR / 'Dechirper/wake_hor_axis_500um.txt')
+        wake.wake_table = WakeTable(WAKE_DIR / "Dechirper/wake_hor_axis_500um.txt")
         # w_sampling - defines the number of the equidistant sampling points for the one-dimensional
         # wake coefficients in the Taylor expansion of the 3D wake function.
 
         # creation of wake object with parameters
         wake_vert = Wake(step=1, factor=1, w_sampling=500)
-        wake_vert.wake_table = WakeTable(WAKE_DIR / 'Dechirper/wake_vert_axis_500um.txt')
+        wake_vert.wake_table = WakeTable(
+            WAKE_DIR / "Dechirper/wake_vert_axis_500um.txt"
+        )
 
         # wake_start=t4.d_16
         # self.add_physics_process(wake, start=wake_start, stop=t4.m_tds)#t4.wake_start
@@ -899,11 +1009,11 @@ class SASE3(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
         # setting parameters
-        self.lattice_name = 'SASE3'
+        self.lattice_name = "SASE3"
         self.unit_step = 1
 
-        self.input_beam_file = self.particle_dir + 'section_T4.npz'
-        self.output_beam_file = self.particle_dir + 'section_SASE3.npz'
+        self.input_beam_file = self.particle_dir + "section_T4.npz"
+        self.output_beam_file = self.particle_dir + "section_SASE3.npz"
         self.tws_file = self.tws_dir + "tws_section_SASE3.npz"
 
         start = sase3.stsec_2800_sa3
@@ -911,7 +1021,9 @@ class SASE3(SectionTrack):
         # stop ~1m befpre SASE3
         stop = sase3.bpme_2806_sa3
         # init tracking lattice
-        self.lattice = MagneticLattice(sase3.cell, start=start, stop=stop, method=self.method)
+        self.lattice = MagneticLattice(
+            sase3.cell, start=start, stop=stop, method=self.method
+        )
 
         # init physics processes
 
@@ -925,17 +1037,19 @@ class T4D(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
         # setting parameters
-        self.lattice_name = 'T4D'
+        self.lattice_name = "T4D"
         self.unit_step = 1
 
-        self.input_beam_file = self.particle_dir + 'section_SASE3.npz'
-        self.output_beam_file = self.particle_dir + 'section_T4D.npz'
+        self.input_beam_file = self.particle_dir + "section_SASE3.npz"
+        self.output_beam_file = self.particle_dir + "section_T4D.npz"
         self.tws_file = self.tws_dir + "tws_section_tT4D.npz"
 
         start = sase3.bpme_2806_sa3
         stop = t4d.ensec_3106_t4d
         # init tracking lattice
-        self.lattice = MagneticLattice(sase3.cell + t4d.cell, start=start, stop=stop, method=self.method)
+        self.lattice = MagneticLattice(
+            sase3.cell + t4d.cell, start=start, stop=stop, method=self.method
+        )
 
         # init physics processes
 
@@ -960,20 +1074,23 @@ class T1(SectionTrack):
         super().__init__(data_dir, *args, **kwargs)
 
         # setting parameters
-        self.lattice_name = 'T1'
+        self.lattice_name = "T1"
         self.unit_step = 0.2
 
-        self.input_beam_file = self.particle_dir + 'section_CL3.npz'
-        self.output_beam_file = self.particle_dir + 'section_T1.npz'
+        self.input_beam_file = self.particle_dir + "section_CL3.npz"
+        self.output_beam_file = self.particle_dir + "section_T1.npz"
         self.tws_file = self.tws_dir + "tws_section_T1.npz"
 
         collimator3_stop = cl.ensec_1854_cl
         t1_stop = t1.ensec_2197_t1
         # init tracking lattice
 
-        self.lattice = MagneticLattice(cl.cell + tl2.cell + tl34_sa2.cell + t1.cell, start=collimator3_stop,
-                                       stop=t1_stop,
-                                       method={"global": SecondTM, Octupole: KickTM, "nkick": 5})
+        self.lattice = MagneticLattice(
+            cl.cell + tl2.cell + tl34_sa2.cell + t1.cell,
+            start=collimator3_stop,
+            stop=t1_stop,
+            method={"global": SecondTM, Octupole: KickTM, "nkick": 5},
+        )
 
         # init physics processes
         csr = CSR()
@@ -999,13 +1116,19 @@ class T1(SectionTrack):
         csr3.sigma_min = Sig_Z[3] * 0.1
 
         wake_add = Wake()
-        wake_add.wake_table = WakeTable(WAKE_DIR / 'mod_wake_1831.200_2035.190_MONO.dat')
+        wake_add.wake_table = WakeTable(
+            WAKE_DIR / "mod_wake_1831.200_2035.190_MONO.dat"
+        )
         wake_add.factor = 1
         wake_add1 = Wake()
-        wake_add1.wake_table = WakeTable(WAKE_DIR / 'mod_wake_2035.190_2213.000_MONO.dat')
+        wake_add1.wake_table = WakeTable(
+            WAKE_DIR / "mod_wake_2035.190_2213.000_MONO.dat"
+        )
         wake_add1.factor = 1
 
-        self.add_physics_process(wake_add, start=collimator3_stop, stop=collimator3_stop)
+        self.add_physics_process(
+            wake_add, start=collimator3_stop, stop=collimator3_stop
+        )
         self.add_physics_process(wake_add1, start=t1_stop, stop=t1_stop)
         self.add_physics_process(csr, start=tl34_sa2.chy_1997_tl, stop=t1.cfx_2098_t1)
         # self.add_physics_process(csr, start=tl34_sa2.chy_1997_tl, stop=t1.before_XYQuad_sa2)
@@ -1017,20 +1140,21 @@ class SASE2(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
         # setting parameters
-        self.lattice_name = 'SASE2'
+        self.lattice_name = "SASE2"
         self.unit_step = 2
-        self.input_beam_file = self.particle_dir + 'section_T1.npz'
-        self.output_beam_file = self.particle_dir + 'section_SASE2.npz'
+        self.input_beam_file = self.particle_dir + "section_T1.npz"
+        self.output_beam_file = self.particle_dir + "section_SASE2.npz"
         self.tws_file = self.tws_dir + "tws_section_SASE2.npz"
 
         sase2_start = t1.ensec_2197_t1
         sase2_stop = sase2.ensec_2473_sa2
 
-        self.lattice = MagneticLattice(t1.cell + sase2.cell, start=sase2_start, stop=sase2_stop,
-                                       method=self.method)
+        self.lattice = MagneticLattice(
+            t1.cell + sase2.cell, start=sase2_start, stop=sase2_stop, method=self.method
+        )
         # init physics processes
         wake = Wake()
-        wake.wake_table = WakeTable(WAKE_DIR / 'Undulator/wake_undulator_OCELOT.txt')
+        wake.wake_table = WakeTable(WAKE_DIR / "Undulator/wake_undulator_OCELOT.txt")
         wake.step = 10
         wake.w_sampling = 1000
         wake.factor = 35 * 6.1
@@ -1051,15 +1175,16 @@ class T3(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
         # setting parameters
-        self.lattice_name = 'T3'
+        self.lattice_name = "T3"
         self.unit_step = 10
-        self.input_beam_file = self.particle_dir + 'section_SASE2.npz'
-        self.output_beam_file = self.particle_dir + 'section_T3.npz'
+        self.input_beam_file = self.particle_dir + "section_SASE2.npz"
+        self.output_beam_file = self.particle_dir + "section_T3.npz"
         self.tws_file = self.tws_dir + "tws_section_T3.npz"
         sase2_stop = sase2.ensec_2473_sa2
         t3_stop = t3.ensec_2743_un1
-        self.lattice = MagneticLattice(sase2.cell + t3.cell, start=sase2_stop, stop=t3_stop,
-                                       method=self.method)
+        self.lattice = MagneticLattice(
+            sase2.cell + t3.cell, start=sase2_stop, stop=t3_stop, method=self.method
+        )
 
         csr = CSR()
         csr.traj_step = 0.0005
@@ -1083,16 +1208,17 @@ class T3_chirper(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
         # setting parameters
-        self.lattice_name = 'T3_chirper'
+        self.lattice_name = "T3_chirper"
         self.unit_step = 0.5
-        self.input_beam_file = self.particle_dir + 'section_SASE2.npz'
-        self.output_beam_file = self.particle_dir + 'section_T3.npz'
+        self.input_beam_file = self.particle_dir + "section_SASE2.npz"
+        self.output_beam_file = self.particle_dir + "section_T3.npz"
         self.tws_file = self.tws_dir + "tws_section_T3.npz"
         sase2_stop = sase2.ensec_2473_sa2
         # t3_stop = t3.ensec_2743_un1
         t3_stop = t3.chy_2569_t3
-        self.lattice = MagneticLattice(sase2.cell + t3.cell, start=sase2_stop, stop=t3_stop,
-                                       method=self.method)
+        self.lattice = MagneticLattice(
+            sase2.cell + t3.cell, start=sase2_stop, stop=t3_stop, method=self.method
+        )
 
         csr = CSR()
         csr.traj_step = 0.0005
@@ -1129,21 +1255,25 @@ class T3_chirper(SectionTrack):
         svb4 = SaveBeam(filename=self.particle_dir + "center_ws.npz")
         self.add_physics_process(svb4, start=t3.ws_center, stop=t3.ws_center)
 
-        wk_tv_kick = WakeTableDechirperOffAxis(b=700 * 1e-6,  # distance from the plate in [m]
-                                               a=0.01,  # half gap between plates in [m]
-                                               width=0.02,  # width of the corrugated structure in [m]
-                                               t=0.25 * 1e-3,  # longitudinal gap in [m]
-                                               p=0.5 * 1e-3,  # period of corrugation in [m]
-                                               length=5.,  # length of the corrugated structure in [m]
-                                               sigma=42e-6,  # characteristic (rms) longitudinal beam size in [m]
-                                               orient="horz")  # "horz" or "vert" plate orientation
+        wk_tv_kick = WakeTableDechirperOffAxis(
+            b=700 * 1e-6,  # distance from the plate in [m]
+            a=0.01,  # half gap between plates in [m]
+            width=0.02,  # width of the corrugated structure in [m]
+            t=0.25 * 1e-3,  # longitudinal gap in [m]
+            p=0.5 * 1e-3,  # period of corrugation in [m]
+            length=5.0,  # length of the corrugated structure in [m]
+            sigma=42e-6,  # characteristic (rms) longitudinal beam size in [m]
+            orient="horz",
+        )  # "horz" or "vert" plate orientation
 
         ws = Wake()
         # w_sampling - defines the number of the equidistant sampling points for the one-dimensional
         # wake coefficients in the Taylor expansion of the 3D wake function.
         ws.w_sampling = 500
         ws.wake_table = wk_tv_kick
-        ws.step = 1  # step in Navigator.unit_step, dz = Navigator.unit_step * wake.step [m]
+        ws.step = (
+            1  # step in Navigator.unit_step, dz = Navigator.unit_step * wake.step [m]
+        )
         self.add_physics_process(ws, start=t3.ws_start, stop=t3.ws_stop)
 
 
@@ -1151,11 +1281,12 @@ class T5(SectionTrack):
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
         # setting parameters
-        self.lattice_name = 'T5'
+        self.lattice_name = "T5"
         self.unit_step = 10
-        self.input_beam_file = self.particle_dir + 'section_T3.npz'
-        self.output_beam_file = self.particle_dir + 'section_T5.npz'
+        self.input_beam_file = self.particle_dir + "section_T3.npz"
+        self.output_beam_file = self.particle_dir + "section_T5.npz"
         self.tws_file = self.tws_dir + "tws_section_T5.npz"
 
-        self.lattice = MagneticLattice(t5.cell, start=t5.stsec_2743_t5, stop=t5.ensec_3039_un2,
-                                       method=self.method)
+        self.lattice = MagneticLattice(
+            t5.cell, start=t5.stsec_2743_t5, stop=t5.ensec_3039_un2, method=self.method
+        )

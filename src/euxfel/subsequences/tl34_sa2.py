@@ -11,7 +11,6 @@ twiss0._alpha_x = -2.1712
 twiss0._alpha_y = 0.689
 
 
-
 # Drifts:
 vcst98t40_1980_tl = Drift(eid="VCST98T40.1980.TL")
 d_0 = Drift(l=1.4724009999999907, eid="D_0")
@@ -51,14 +50,32 @@ qk_1982_tl = Quadrupole(l=1.0552, k1=0.09035960007960576, eid="QK.1982.TL")
 qf_1997_tl = Quadrupole(l=0.5321, k1=-0.17919084760007517, eid="QF.1997.TL")
 
 # SBends:
-qf_2012_tl = SBend(l=0.5321, angle=-0.000571520488, k1=-0.1791908476, e1=0.000144449, e2=0.00071597, tilt=1.570796327, eid="QF.2012.TL")
+qf_2012_tl = SBend(
+    l=0.5321,
+    angle=-0.000571520488,
+    k1=-0.1791908476,
+    e1=0.000144449,
+    e2=0.00071597,
+    tilt=1.570796327,
+    eid="QF.2012.TL",
+)
 
 # RBends:
-kl_1998_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.1998.TL")
-kl_1999_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.1999.TL")
-kl_2000_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2000.TL")
-kl_2001_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2001.TL")
-kl_2002_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2002.TL")
+kl_1998_tl = RBend(
+    l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.1998.TL"
+)
+kl_1999_tl = RBend(
+    l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.1999.TL"
+)
+kl_2000_tl = RBend(
+    l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2000.TL"
+)
+kl_2001_tl = RBend(
+    l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2001.TL"
+)
+kl_2002_tl = RBend(
+    l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2002.TL"
+)
 kl_2003_tl = RBend(l=0.93, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2003.TL")
 kl_2005_tl = RBend(l=0.93, e1=0.0, e2=0.0, eid="KL.2005.TL")
 kl_2006_tl = RBend(l=0.93, e1=0.0, e2=0.0, eid="KL.2006.TL")
@@ -98,75 +115,77 @@ otre_2023_tl = Marker(eid="OTRE.2023.TL")
 ensub_2025_tl = Marker(eid="ENSUB.2025.TL")
 
 # Sequence:
-cell = (stsub_1980_tl,
-        vcst98t40_1980_tl,
-        d_0,
-        qk_1982_tl,
-        d_1,
-        bpma_1995_tl,
-        d_2,
-        qf_1997_tl,
-        d_3,
-        chy_1997_tl,
-        ensub_1997_tl,
-        stsub_1997_tl,
-        d_4,
-        mkl_1998a_tl,
-        kl_1998_tl,
-        mkl_1998d_tl,
-        d_5,
-        mkl_1999a_tl,
-        kl_1999_tl,
-        mkl_1999d_tl,
-        d_6,
-        mkl_2000a_tl,
-        kl_2000_tl,
-        mkl_2000d_tl,
-        d_7,
-        mkl_2001a_tl,
-        kl_2001_tl,
-        mkl_2001d_tl,
-        d_8,
-        mkl_2002a_tl,
-        kl_2002_tl,
-        mkl_2002d_tl,
-        d_9,
-        kl_2003_tl,
-        d_10,
-        chy_2004_tl,
-        d_11,
-        kl_2005_tl,
-        d_12,
-        kl_2006_tl,
-        d_13,
-        cfy_2010_tl,
-        d_14,
-        tora_2011_tl,
-        d_15,
-        bpma_2011_tl,
-        d_16,
-        qf_2012_tl,
-        d_17,
-        chx_2012_tl,
-        d_18,
-        chy_2012_tl,
-        d_19,
-        vcst40t98_2014_tl,
-        d_20,
-        cnx_2021_tl,
-        d_21,
-        cny_2021_tl,
-        d_22,
-        bpmd_2022_tl,
-        d_23,
-        otre_2023_tl,
-        d_24,
-        vcv100_2023_tl,
-        d_25,
-        vcb100_2024_tl,
-        vcabsa_2024_tl,
-        d_26,
-        ensub_2025_tl)
+cell = (
+    stsub_1980_tl,
+    vcst98t40_1980_tl,
+    d_0,
+    qk_1982_tl,
+    d_1,
+    bpma_1995_tl,
+    d_2,
+    qf_1997_tl,
+    d_3,
+    chy_1997_tl,
+    ensub_1997_tl,
+    stsub_1997_tl,
+    d_4,
+    mkl_1998a_tl,
+    kl_1998_tl,
+    mkl_1998d_tl,
+    d_5,
+    mkl_1999a_tl,
+    kl_1999_tl,
+    mkl_1999d_tl,
+    d_6,
+    mkl_2000a_tl,
+    kl_2000_tl,
+    mkl_2000d_tl,
+    d_7,
+    mkl_2001a_tl,
+    kl_2001_tl,
+    mkl_2001d_tl,
+    d_8,
+    mkl_2002a_tl,
+    kl_2002_tl,
+    mkl_2002d_tl,
+    d_9,
+    kl_2003_tl,
+    d_10,
+    chy_2004_tl,
+    d_11,
+    kl_2005_tl,
+    d_12,
+    kl_2006_tl,
+    d_13,
+    cfy_2010_tl,
+    d_14,
+    tora_2011_tl,
+    d_15,
+    bpma_2011_tl,
+    d_16,
+    qf_2012_tl,
+    d_17,
+    chx_2012_tl,
+    d_18,
+    chy_2012_tl,
+    d_19,
+    vcst40t98_2014_tl,
+    d_20,
+    cnx_2021_tl,
+    d_21,
+    cny_2021_tl,
+    d_22,
+    bpmd_2022_tl,
+    d_23,
+    otre_2023_tl,
+    d_24,
+    vcv100_2023_tl,
+    d_25,
+    vcb100_2024_tl,
+    vcabsa_2024_tl,
+    d_26,
+    ensub_2025_tl,
+)
 
 # Power Supply IDs:
 # Quadrupole power supplies:

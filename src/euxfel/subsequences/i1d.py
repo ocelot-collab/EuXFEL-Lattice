@@ -11,7 +11,6 @@ twiss0._alpha_x = 0.2396
 twiss0._alpha_y = -2.1842
 
 
-
 # Drifts:
 d_0 = Drift(l=0.002879000000000076, eid="D_0")
 d_1 = Drift(l=0.002879000000000076, eid="D_1")
@@ -34,7 +33,9 @@ qi_63_i1d = Quadrupole(l=0.2377, k1=4.401795, eid="QI.63.I1D")
 qi_64_i1d = Quadrupole(l=0.2377, eid="QI.64.I1D")
 
 # SBends:
-bb_62_i1d = SBend(l=0.5, angle=0.5235987756, e1=0.261799388, e2=0.261799388, eid="BB.62.I1D")
+bb_62_i1d = SBend(
+    l=0.5, angle=0.5235987756, e1=0.261799388, e2=0.261799388, eid="BB.62.I1D"
+)
 
 # Monitors:
 bpma_63_i1d = Monitor(eid="BPMA.63.I1D")
@@ -51,34 +52,36 @@ bhm_66_i1d = Marker(eid="BHM.66.I1D")
 ensec_66_i1d = Marker(eid="ENSEC.66.I1D")
 
 # Sequence:
-cell = (stsec_62_i1d,
-        mbb_62a_i1d,
-        d_0,
-        bb_62_i1d,
-        d_1,
-        mbb_62d_i1d,
-        d_2,
-        qi_63_i1d,
-        d_3,
-        bpma_63_i1d,
-        d_4,
-        otrc_64_i1d,
-        d_5,
-        qi_64_i1d,
-        d_6,
-        vcst40t98_64_i1d,
-        d_7,
-        otrd_64_i1d,
-        d_8,
-        torc_64_i1d,
-        d_9,
-        bpmd_64_i1d,
-        d_10,
-        vcst98t60_64_i1d,
-        d_11,
-        bhm_66_i1d,
-        d_12,
-        ensec_66_i1d)
+cell = (
+    stsec_62_i1d,
+    mbb_62a_i1d,
+    d_0,
+    bb_62_i1d,
+    d_1,
+    mbb_62d_i1d,
+    d_2,
+    qi_63_i1d,
+    d_3,
+    bpma_63_i1d,
+    d_4,
+    otrc_64_i1d,
+    d_5,
+    qi_64_i1d,
+    d_6,
+    vcst40t98_64_i1d,
+    d_7,
+    otrd_64_i1d,
+    d_8,
+    torc_64_i1d,
+    d_9,
+    bpmd_64_i1d,
+    d_10,
+    vcst98t60_64_i1d,
+    d_11,
+    bhm_66_i1d,
+    d_12,
+    ensec_66_i1d,
+)
 
 # Power Supply IDs:
 # Quadrupole power supplies:

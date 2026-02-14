@@ -5,9 +5,21 @@ import pytest
 from euxfel.slicing import SlicedElement
 from euxfel.writer import PythonSubsequenceWriter
 from ocelot.cpbd.beam import Twiss
-from ocelot.cpbd.elements import (Cavity, Drift, Hcor, Marker, Monitor,
-                                  Octupole, Quadrupole, RBend, SBend,
-                                  Sextupole, TDCavity, Undulator, Vcor)
+from ocelot.cpbd.elements import (
+    Cavity,
+    Drift,
+    Hcor,
+    Marker,
+    Monitor,
+    Octupole,
+    Quadrupole,
+    RBend,
+    SBend,
+    Sextupole,
+    TDCavity,
+    Undulator,
+    Vcor,
+)
 from ocelot.cpbd.elements.optic_element import OpticElement
 
 
@@ -26,12 +38,11 @@ def writer_fix() -> WriterFixture:
     q0 = Quadrupole(l=0.5, k1=1)
     sequence = [d0, r0, q0]
     twiss0 = Twiss(beta_x=3, beta_y=5, alpha_x=10, alpha_y=-0.5, E=5)
-    cls_names_to_eles = {"Drift": [d0],
-                         "RBend": [r0],
-                         "Quadrupole": [q0]
-                         }
+    cls_names_to_eles = {"Drift": [d0], "RBend": [r0], "Quadrupole": [q0]}
 
-    return WriterFixture(PythonSubsequenceWriter(sequence, twiss0), sequence, twiss0, cls_names_to_eles)
+    return WriterFixture(
+        PythonSubsequenceWriter(sequence, twiss0), sequence, twiss0, cls_names_to_eles
+    )
 
 
 def test_PythonSubsequenceWriter_init(writer_fix: WriterFixture) -> None:
@@ -66,7 +77,7 @@ def test_PythonSubsequenceWriter_twiss_to_string(writer_fix: WriterFixture) -> N
         ),
         (
             "qi_63_i1d",
-            Quadrupole(l=0.2377, k1=4.401795, eid="QI.63.I1D"), # type: ignore
+            Quadrupole(l=0.2377, k1=4.401795, eid="QI.63.I1D"),  # type: ignore
             'qi_63_i1d = Quadrupole(l=0.2377, k1=4.401795, eid="QI.63.I1D")',
         ),
         (
@@ -152,14 +163,18 @@ def test_PythonSubsequenceWriter_twiss_to_string(writer_fix: WriterFixture) -> N
                     ),
                 },
             ),
-            dedent("""\
+            dedent(
+                """\
             xslice1982 = RBend(l=0.005276, angle=1.180477777265855e-05, k1=0.090359600075815, e1=0.0, e2=0.0, eid="xslice1982")
             yslice1982 = RBend(l=0.005276, angle=-7.780804909999998e-05, k1=-0.090359600075815, e1=0.0, e2=0.0, tilt=1.570796327, eid="yslice1982")
             qk_1982_tl = (19 * [xslice1982] + [yslice1982]) * 10""",
-        )),
+            ),
+        ),
     ],
 )
-def test_PythonSubsequenceWriter_element_to_string(var_name: str, element: OpticElement, expected_string: str):
+def test_PythonSubsequenceWriter_element_to_string(
+    var_name: str, element: OpticElement, expected_string: str
+):
     # Not hugely exhaustitive, doesn't consider all possible combinations of kwargs
     # show that every element type is in principle writable.
     writer = PythonSubsequenceWriter([], Twiss())
