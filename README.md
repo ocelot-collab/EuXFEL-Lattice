@@ -1,6 +1,6 @@
 ![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Focelot-collab%2FEuXFEL-Lattice%2Frefs%2Fheads%2Fmain%2Fpyproject.toml&style=flat&logo=python)
 ![Static Badge](https://img.shields.io/badge/10.1103%2FPhysRevAccelBeams.22.024401-purple?label=PRAB&link=https%3A%2F%2Fdoi.org%2F10.1103%2FPhysRevAccelBeams.22.024401)
-![Static Badge](https://img.shields.io/badge/10.18429%2FJACoW--IPAC2017--WEPAB031-purple?label=IPAC&link=https%3A%2F%2Fdoi.org%2F10.18429%2FJACoW-IPAC2017-WEPAB031)od
+![Static Badge](https://img.shields.io/badge/10.18429%2FJACoW--IPAC2017--WEPAB031-purple?label=IPAC&link=https%3A%2F%2Fdoi.org%2F10.18429%2FJACoW-IPAC2017-WEPAB031)
 
 
 # EuXFEL-Lattice
