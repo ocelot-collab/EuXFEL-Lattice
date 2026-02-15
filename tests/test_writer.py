@@ -57,11 +57,11 @@ def test_PythonSubsequenceWriter_twiss_to_string(writer_fix: WriterFixture) -> N
 
     expected = dedent(f"""\
     twiss0 = Twiss()
-    twiss0._E = {twiss0.E}
-    twiss0._beta_x = {twiss0.beta_x}
-    twiss0._beta_y = {twiss0.beta_y}
-    twiss0._alpha_x = {twiss0.alpha_x}
-    twiss0._alpha_y = {twiss0.alpha_y}
+    twiss0.E = {twiss0.E}
+    twiss0.alpha_x = {twiss0.alpha_x}
+    twiss0.alpha_y = {twiss0.alpha_y}
+    twiss0.beta_x = {twiss0.beta_x}
+    twiss0.beta_y = {twiss0.beta_y}
     """)
 
     assert writer.twiss_to_string() == expected
