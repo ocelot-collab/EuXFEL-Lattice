@@ -1,11 +1,47 @@
-from ocelot import *
-from ocelot.cpbd.physics_proc import *
-import os
-from ocelot.utils.section_track import *
-
-from euxfel.subsequences import *
-
 from importlib.resources import files
+
+import numpy as np
+from ocelot import (
+    CSR,
+    KickTM,
+    LaserModulator,
+    MagneticLattice,
+    PhaseSpaceAperture,
+    SaveBeam,
+    SecondTM,
+    SmoothBeam,
+    SpaceCharge,
+    SpontanRadEffects,
+    Wake,
+    WakeTable,
+    WakeTableDechirperOffAxis,
+)
+from ocelot.cpbd.elements import Octupole
+from ocelot.utils.section_track import SectionTrack
+
+from euxfel.subsequences import (
+    b1d,  # noqa: F401
+    b2d,
+    cl,
+    i1,
+    i1d,
+    l1,
+    l2,
+    l3,
+    sase1,
+    sase2,
+    sase3,
+    t1,
+    t3,
+    t4,
+    t4d,
+    t5,
+    t5d,  # noqa: F401
+    tl2,
+    tl2tld,  # noqa: F401
+    tl34,
+    tl34_sa2,
+)
 
 WAKE_DIR = files("euxfel.wakes")
 
@@ -240,7 +276,6 @@ class I1D(SectionTrack):
 
 
 class BC0(SectionTrack):
-
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
 
@@ -278,7 +313,6 @@ class BC0(SectionTrack):
 
 
 class L1(SectionTrack):
-
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
 
@@ -333,7 +367,6 @@ class L1(SectionTrack):
 
 
 class BC1(SectionTrack):
-
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
 
@@ -371,7 +404,6 @@ class BC1(SectionTrack):
 
 
 class L2(SectionTrack):
-
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
 
@@ -425,7 +457,6 @@ class L2(SectionTrack):
 
 
 class BC2(SectionTrack):
-
     def __init__(self, data_dir, *args, **kwargs):
         super().__init__(data_dir, *args, **kwargs)
 
@@ -988,15 +1019,15 @@ class T4(SectionTrack):
         # wake_start=t4.d_16
         # self.add_physics_process(wake, start=wake_start, stop=t4.m_tds)#t4.wake_start
 
-        svb4 = SaveBeam(filename=self.particle_dir + "before_structure.npz")
+        # svb4 = SaveBeam(filename=self.particle_dir + "before_structure.npz")
         # self.add_physics_process(svb4, start=wake_start, stop=wake_start) #t4.wake_stop
 
         # self.add_physics_process(wake_vert, start=t4.m_tds, stop=wake_start)
 
-        svb3 = SaveBeam(filename=self.particle_dir + "after_structure.npz")
+        # svb3 = SaveBeam(filename=self.particle_dir + "after_structure.npz")
         # self.add_physics_process(svb3, start=wake_start, stop=wake_start)
 
-        svb1 = SaveBeam(filename=self.particle_dir + "screen1.npz")
+        # svb1 = SaveBeam(filename=self.particle_dir + "screen1.npz")
         # self.add_physics_process(svb1, start=t4.m_img1, stop=t4.m_img1)
 
         # self.add_physics_process(sc, start=sase1_stop, stop=csr_start)

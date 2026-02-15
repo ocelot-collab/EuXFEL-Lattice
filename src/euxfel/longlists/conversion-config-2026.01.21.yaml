@@ -29,11 +29,20 @@ rows:
     CLASS: {}
     GROUP: {}
 
+targets: # Each subsequence corresponds to the name of a section below (case insensitive)
+  i1d: ["i1", "i1d"]
+  b1d: ["i1", "l1", "b1d"]
+  b2d: ["i1", "l1", "l2", "b2d"]
+  tld: ["i1", "l1", "l2", "l3", "cl", "tl2tld"]
+  t4d: ["i1", "l1", "l2", "l3", "cl", "tl2", "tl34", "sase1", "t4", "sase3", "t4d"]
+  t5d: ["i1", "l1", "l2", "l3", "cl", "tl2", "tl34_sa2", "t1", "sase2", "t3", "t5", "t5d"]
+
 sections:
   I1:
     sheet: I1toI1D
     start_marker_name1: STSEC.23.I1
     stop_marker_name1: ENSUB.62.I1
+    sequence_before: null
     extras:
       TDSA.52.I1:
         tilt: 1.570796327

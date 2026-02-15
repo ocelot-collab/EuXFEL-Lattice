@@ -31,3 +31,5 @@ filed_map.txt
 src/.coverage
 
 .envrc
+.tox
+.aider*

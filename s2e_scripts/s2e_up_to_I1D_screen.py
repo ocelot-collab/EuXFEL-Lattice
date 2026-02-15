@@ -1,5 +1,4 @@
 # ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
-import sys
 
 # sys.path.append(ocelot_dir)
 # print(sys.path)

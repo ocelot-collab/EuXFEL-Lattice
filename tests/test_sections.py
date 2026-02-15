@@ -23,7 +23,6 @@ from euxfel.sections import (
     T1,
     SASE2,
     T3,
-    T3_chirper,
     T5,
 )
 

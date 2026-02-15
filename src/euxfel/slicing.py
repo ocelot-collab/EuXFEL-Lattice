@@ -1,7 +1,6 @@
 import ast
 import operator
 
-from ocelot import *
 from ocelot.cpbd.elements.element import Element
 from ocelot.cpbd.elements.optic_element import OpticElement
 
@@ -77,7 +76,7 @@ class SlicedElement:
         return eval_slice_expr(self.expression, self.elements)
 
     @property
-    def l(self):
+    def l(self):  # noqa: E743
         return sum(e.l for e in self.expand())
 
     def __iter__(self):

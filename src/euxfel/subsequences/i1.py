@@ -1,5 +1,6 @@
 # Converted from component_list_2026.01.21.xls
 
+from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.elements import (
     Cavity,
     Drift,
@@ -13,7 +14,6 @@ from ocelot.cpbd.elements import (
     Undulator,
     Vcor,
 )
-from ocelot.cpbd.beam import Twiss
 
 twiss0 = Twiss()
 twiss0.E = 0.005

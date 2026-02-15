@@ -1,26 +1,26 @@
 import pathlib
-import pickle
-import tomllib
 from importlib.resources import files
-from euxfel.complist_draw import draw_to_target
-from euxfel.subsequences import USED_COMPONENT_LIST
 
 import click
-import latdraw
 import matplotlib.pyplot as plt
-from click import Path, argument, echo, group, option
-from ocelot.cpbd.magnetic_lattice import MagneticLattice
+from click import argument, echo, option
 
+from euxfel import sequences
 from euxfel.complist import (
     ComponentList,
 )
-from euxfel.sequences import TARGET_NAMES
 from euxfel.conversion import (
+    DEFAULT_CONVERSION_CONFIG_PATH,
     longlist_to_ocelot,
 )
-from euxfel.conversion import DEFAULT_CONVERSION_CONFIG_PATH
 from euxfel.optics import print_optics_at_points, print_surveyed_match_points
-from euxfel.plot import compare_cathode_to_target, plot_cathode_to_target
+from euxfel.plot import (
+    compare_cathode_to_target,
+    plot_cathode_to_target,
+    plot_subsequence,
+)
+from euxfel.sequences import TARGET_NAMES
+from euxfel.subsequences import USED_COMPONENT_LIST
 
 
 @click.group()
@@ -40,7 +40,7 @@ def main():
 )
 def convert(outdir, config):
     if not outdir:
-        outdir = files("euxfel.subsequences")
+        outdir = str(files("euxfel.subsequences"))
 
     if not config:
         config = DEFAULT_CONVERSION_CONFIG_PATH
@@ -58,7 +58,7 @@ def convert(outdir, config):
     help="One or more marker strings",
 )
 def compare(targets, marker):
-    clist = ComponentList(USED_COMPONENT_LIST)
+    clist = ComponentList(str(USED_COMPONENT_LIST))
     selected_targets = targets or reversed(TARGET_NAMES)
     for target in selected_targets:
         print(f"Target: {target}")
@@ -78,6 +78,25 @@ def plot(targets: list[str]):
     selected_targets = targets or reversed(TARGET_NAMES)
     for target in selected_targets:
         plot_cathode_to_target(target)
+    plt.show()
+
+
+@main.command(help="Plot the OCELOT model's optics")
+@argument("names", nargs=-1)
+@option("--list", "list_", is_flag=True, help="List available subsequences")
+def subsequence(names: list[str], list_):
+    if list_:
+        for target_name in TARGET_NAMES:
+            echo(f"{target_name}:")
+            for i, subseq_name in enumerate(
+                getattr(sequences, f"{target_name}_SUBSEQUENCES"), start=1
+            ):
+                echo(f"  {i}. {subseq_name}")
+        return
+
+    names = names or []
+    for name in names:
+        plot_subsequence(name)
     plt.show()
 
 

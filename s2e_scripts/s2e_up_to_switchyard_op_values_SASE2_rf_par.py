@@ -1,5 +1,4 @@
 # ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
-import sys
 import matplotlib.pyplot as plt
 
 # sys.path.append(ocelot_dir)

@@ -4,10 +4,8 @@ sys.path.insert(1, "../")
 import copy
 from ocelot import *
 from ocelot.cpbd.match import beam_matching, match_beam
-from ocelot.cpbd.physics_proc import IBS
 from ocelot.gui import *
 import lattices.longlist_2024_07_04.i1 as i1
-import lattices.longlist_2024_07_04.i1d as i1d
 
 parray = load_particle_array("../beam_files/gun/gun.npz")
 

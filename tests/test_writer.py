@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from textwrap import dedent
 
 import pytest
@@ -17,7 +17,6 @@ from ocelot.cpbd.elements import (
     SBend,
     Sextupole,
     TDCavity,
-    Undulator,
     Vcor,
 )
 from ocelot.cpbd.elements.optic_element import OpticElement

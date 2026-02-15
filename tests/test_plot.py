@@ -1,6 +1,6 @@
 import pytest
 
-from euxfel.plot import compare_cathode_to_target, plot_cathode_to_target
+from euxfel.plot import plot_cathode_to_target
 from euxfel.sequences import TARGET_NAMES
 
 

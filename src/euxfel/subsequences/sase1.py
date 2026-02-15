@@ -1,5 +1,6 @@
 # Converted from component_list_2026.01.21.xls
 
+from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.elements import (
     Drift,
     Hcor,
@@ -11,14 +12,15 @@ from ocelot.cpbd.elements import (
     Undulator,
     Vcor,
 )
-from ocelot.cpbd.beam import Twiss
 
 twiss0 = Twiss()
-twiss0.E = 14.0
-twiss0.alpha_x = 0.6814
-twiss0.alpha_y = -2.1571
-twiss0.beta_x = 10.5532
-twiss0.beta_y = 42.1425
+twiss0.E = 14.0000000004506
+twiss0.alpha_x = 0.6814574153540696
+twiss0.alpha_y = -2.156959231666446
+twiss0.beta_x = 10.537014089872981
+twiss0.beta_y = 42.138627119980995
+twiss0.Dy = -1.4862242485372763e-06
+twiss0.s = 2002.1858230000016
 
 
 # Drifts:

@@ -3,17 +3,15 @@ import matplotlib.pyplot as plt
 import polars as pl
 from latdraw.convert import from_ocelot
 from latdraw.lattice import Beamline
-from latdraw.plot import subplots_with_lattices
+from latdraw.plot import s_label, subplots_with_lattices
 from ocelot.cpbd.magnetic_lattice import MagneticLattice
 from ocelot.cpbd.track import twiss
 
+from euxfel import subsequences
 from euxfel.complist import ComponentList
 from euxfel.complist_draw import draw_to_target
 
-from . import complist_draw, sequences
-from .complist import ComponentList
-
-from latdraw.plot import s_label
+from . import sequences
 
 
 def plot_cathode_to_target(
@@ -91,16 +89,24 @@ def compare_cathode_to_target(
     )
 
     (l1,) = ax2.plot(
-        lldf["S"], lldf["DX"], linestyle="--"  # label=r"$D_x$, Long List",
+        lldf["S"],
+        lldf["DX"],
+        linestyle="--",  # label=r"$D_x$, Long List",
     )
     ax2.plot(
-        optics_df["s"], optics_df["Dx"], color=l1.get_color()  # , label="$D_x$, OCELOT"
+        optics_df["s"],
+        optics_df["Dx"],
+        color=l1.get_color(),  # , label="$D_x$, OCELOT"
     )
     (l1,) = ax2.plot(
-        lldf["S"], lldf["DY"], linestyle="--"  # label=r"$D_y$, Long List",
+        lldf["S"],
+        lldf["DY"],
+        linestyle="--",  # label=r"$D_y$, Long List",
     )
     ax2.plot(
-        optics_df["s"], optics_df["Dy"], color=l1.get_color()  # , label="$D_y$, OCELOT"
+        optics_df["s"],
+        optics_df["Dy"],
+        color=l1.get_color(),  # , label="$D_y$, OCELOT"
     )
 
     ax1.legend(ncol=2)
@@ -122,3 +128,36 @@ def compare_cathode_to_target(
     s_label(ax3)
 
     return optics_df, mlat, fig
+
+
+def plot_subsequence(name: str) -> plt.Figure:
+    module = getattr(subsequences, name)
+    sequence = module.cell
+    twiss0 = module.twiss0
+
+    mlat = MagneticLattice(sequence)  # type: ignore
+    optics_df = twiss(mlat, tws0=twiss0, return_df=True)
+    optics_df = pl.from_pandas(optics_df)  # type: ignore
+
+    fig, (mx, ax1, ax2, ax3) = latdraw.plot.subplots_with_lattices(
+        [from_ocelot(sequence), None, None, None], s_offset=twiss0.s
+    )
+
+    ax1.plot(optics_df["s"], optics_df["beta_x"], label=r"$x$")
+    ax1.plot(optics_df["s"], optics_df["beta_y"], label=r"$y$")
+
+    ax2.plot(optics_df["s"], optics_df["Dx"])
+    ax2.plot(optics_df["s"], optics_df["Dy"])
+
+    ax1.legend()
+
+    ax3.plot(optics_df["s"], optics_df["E"])
+
+    mx.set_title(name.upper())
+    ax1.set_ylabel(r"$\beta$ / m")
+    ax2.set_ylabel("$D$ / m")
+    ax3.set_ylabel("$E$ / GeV")
+    latdraw.plot.beta_label(ax1)
+    latdraw.plot.s_label(ax3)
+
+    return fig

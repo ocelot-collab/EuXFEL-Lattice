@@ -13,7 +13,7 @@ requires-python = ">=3.12"
 dependencies = [
     "click>=8.3.1",
     "fastexcel>=0.18.0",
-    "latdraw>=0.3.0",
+    "latdraw>=0.3.1",
     "matplotlib>=3.10.7",
     "polars>=1.36.1",
     "pyarrow>=22.0.0",

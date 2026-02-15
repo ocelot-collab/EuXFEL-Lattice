@@ -1,10 +1,9 @@
-import sys
 
 from ocelot import *
 from ocelot.cpbd.physics_proc import IBS
 from ocelot.gui import *
 from euxfel.subsequences import i1, i1d
-from ocelot.utils.acc_utils import beam2rf, beam2rf_xfel_linac
+from ocelot.utils.acc_utils import beam2rf
 
 i1.q_37_i1.k1 = -1.624560e00
 i1.q_38_i1.k1 = 1.823629e00

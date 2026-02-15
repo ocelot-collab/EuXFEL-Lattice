@@ -1,12 +1,15 @@
 from __future__ import annotations
+
 import logging
 import re
+import subprocess
+import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
 from enum import Enum, auto
 from importlib.resources import files
 from pathlib import Path
-from typing import Any, TypeVar, Union
+from typing import Any, Union
 
 import ocelot.cpbd.elements as elements
 import polars as pl
@@ -15,6 +18,7 @@ from ocelot import MagneticLattice
 from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.elements.optic_element import OpticElement
 from ocelot.cpbd.match import match
+from ocelot.cpbd.optics import twiss as calc_twiss
 
 from euxfel.complist import ComponentList
 from euxfel.slicing import SlicedElement
@@ -334,13 +338,14 @@ class LongListConverter:
         extra_properties=None,
         rowskips: RowFilter | None = None,
         rowedits: RowEdits | None = None,
+        targets: dict[str, list[str]] | None = None,
     ):
         self.clist = clist
         self.extra_properties = extra_properties if extra_properties else {}
         # # to have unique drift names...
         self.rowskips: RowFilter = rowskips or RowFilter()
         self.rowedits: RowEdits = rowedits or RowEdits()
-
+        self.targets = targets or {}
         self.drift_counter = 0
 
     def convert_sections(
@@ -377,12 +382,41 @@ class LongListConverter:
         for section in sections:
             self.drift_counter = 0
             try:
-                result[section.name] = self.convert_section(section)
+                result[section.name.lower()] = self.convert_section(section)
             except Exception as e:
                 raise ComponentListToOcelotConversionError(
                     f"Conversion failed in {section.name} in sheet {section.sheet_name}"
                 ) from e
 
+        # Now we recalculate the optics for each of the subsequences
+        # so that we have the correct twiss0.  This is necessary
+        # because we have possibly added elements to the lattice, so
+        # we cannot actually necessarily rely on the optics provided
+        # by the longlist.
+        result = self._recalculate_twiss0s_for_subsequences(result)
+
+        return result
+
+    def _recalculate_twiss0s_for_subsequences(
+        self, subsequences: dict[str, tuple[Twiss, list[OpticElement]]]
+    ) -> None:
+        new_twiss0s = {}
+        # breakpoint()
+        for target_name, ordered_subsequences in self.targets.items():
+            # {I1: ["i1", "i1d"] ...} etc.
+            for i, (name_subsequence0, name_subsequence1) in enumerate(
+                zip(ordered_subsequences, ordered_subsequences[1:])
+            ):
+                if name_subsequence1 in new_twiss0s:
+                    continue
+                twiss0, subsequence0 = subsequences[name_subsequence0]
+                twiss0 = new_twiss0s.get(name_subsequence0, twiss0)
+                twiss10 = calc_twiss(MagneticLattice(subsequence0), tws0=twiss0)[-1]
+                new_twiss0s[name_subsequence1] = twiss10
+        result = {}
+        for name, (twiss0, subsequence) in subsequences.items():
+            new_twiss0 = new_twiss0s.get(name, twiss0)
+            result[name] = (new_twiss0, subsequence)
         return result
 
     def _filter_skippables(self, df: pl.DataFrame) -> pl.DataFrame:
@@ -483,7 +517,9 @@ class LongListConverter:
 
         return df_no_bad
 
-    def convert_section(self, pysec: SubsequenceModule) -> tuple[Twiss, list[ElementT]]:
+    def convert_section(
+        self, pysec: SubsequenceModule
+    ) -> tuple[Twiss, list[OpticElement]]:
         """
         Convert a named subsection of a component-list sheet into an OCELOT sequence.
 
@@ -521,7 +557,7 @@ class LongListConverter:
         pysec : SubsequenceModule
             Configuration describing which sheet to convert, the start/stop marker
             NAME1 values, any external elements to insert, optional per-element
-            overrides, and optional matching configuration.
+            overrides, and optional matching configuration.w
 
         Returns
         -------
@@ -568,6 +604,7 @@ class LongListConverter:
             alpha_x=start["ALFX"].item(),
             alpha_y=start["ALFY"].item(),
             E=start["ENERGY"].item(),
+            s=start["S"].item(),
         )
 
         # Get rid of bad elements
@@ -643,6 +680,7 @@ class LongListConverter:
                 alpha_x=first_row["ALFX"].item(),
                 alpha_y=first_row["ALFY"].item(),
                 E=first_row["ENERGY"].item(),
+                s=first_row["S"].item(),
             )
 
             marker = next(ele for ele in sequence if ele.id == marker_name)
@@ -931,7 +969,9 @@ class LongListConverter:
         element.ps_id = name2
         return element
 
-    def convert_magnet(self, row: dict[str, Any]) -> Union[
+    def convert_magnet(
+        self, row: dict[str, Any]
+    ) -> Union[
         elements.Quadrupole,
         elements.Hcor,
         elements.Vcor,
@@ -1292,14 +1332,16 @@ def longlist_to_ocelot(
     # Parse the config dictionary
     sections = _parse_config_dict(config)
     rowskips, rowedits = _parse_row_changes(config)
+    targets = config.get("targets", {})
 
-    llcv = LongListConverter(ComponentList(fpath), rowskips=rowskips, rowedits=rowedits)
+    llcv = LongListConverter(
+        ComponentList(fpath), rowskips=rowskips, rowedits=rowedits, targets=targets
+    )
 
     sequences = llcv.convert_sections(sections)
 
     module_names = []
     for name, (twiss0, sequence) in sequences.items():
-
         module_name = name.lower()
         module_names.append(module_name)
         outf = outdir / Path(f"{module_name}.py")
@@ -1314,7 +1356,6 @@ def longlist_to_ocelot(
     fname = Path(fpath).name
     init_path = Path(outdir) / "__init__.py"
     with open(init_path, "w") as f:
-
         f.write(f"# Automatically generated __init__.py from {fname}\n")
         f.write("from importlib.resources import files\n\n")
 
@@ -1340,6 +1381,13 @@ def longlist_to_ocelot(
         f.write(f'USED_COMPONENT_LIST = files("euxfel.longlists") / "{fname}"\n')
 
     print("Written", init_path)
+    # Tidy and format what we have just written to file.
+    subprocess.run(
+        [sys.executable, "-m", "ruff", "check", "--select", "I", "--fix", str(init_path)],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run([sys.executable, "-m", "ruff", "format", str(init_path)], check=True)
 
 
 def _parse_new_markers_dict(dconf: dict) -> dict[str, Placement]:
@@ -1449,6 +1497,10 @@ def _parse_config_dict(dconf: dict) -> list[SubsequenceModule]:
     return sections
 
 
+# def _parse_target_definitions(dconf: dict[str, list[str]]) -> dict[str, list[str]]:
+#     return dconf
+
+
 def _parse_row_changes(dconf: dict) -> tuple[RowFilter, RowEdits]:
     try:
         rconf = dconf["rows"]
@@ -1486,9 +1538,9 @@ def _parse_row_changes(dconf: dict) -> tuple[RowFilter, RowEdits]:
 def _raise_if_row_is_not_marker(rowdict: dict[str, str | float]) -> None:
     if rowdict["GROUP"].item() != "MARK":
         raise MalformedConversionConfig(
-            f"Start/Stop element: {rowdict["NAME1"]} is not a marker"
+            f"Start/Stop element: {rowdict['NAME1']} is not a marker"
         )
     if rowdict["CLASS"].item() != "MARK":
         raise MalformedConversionConfig(
-            f"Start/Stop element: {rowdict["NAME1"]} is not a marker"
+            f"Start/Stop element: {rowdict['NAME1']} is not a marker"
         )

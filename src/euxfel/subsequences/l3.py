@@ -1,14 +1,15 @@
 # Converted from component_list_2026.01.21.xls
 
-from ocelot.cpbd.elements import Cavity, Drift, Hcor, Marker, Monitor, Quadrupole, Vcor
 from ocelot.cpbd.beam import Twiss
+from ocelot.cpbd.elements import Cavity, Drift, Hcor, Marker, Monitor, Quadrupole, Vcor
 
 twiss0 = Twiss()
-twiss0.E = 2.4
-twiss0.alpha_x = 2.5552
-twiss0.alpha_y = -1.1692
-twiss0.beta_x = 28.6148
-twiss0.beta_y = 5.0704
+twiss0.E = 2.4000000004506834
+twiss0.alpha_x = 2.5502449340013302
+twiss0.alpha_y = -1.1693414690367419
+twiss0.beta_x = 28.56117823297485
+twiss0.beta_y = 5.0705968370388
+twiss0.s = 443.619226
 
 
 # Drifts:

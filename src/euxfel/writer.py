@@ -1,15 +1,13 @@
 import inspect
-from collections import defaultdict
-from itertools import groupby
-from numbers import Number
-from typing import Any, Iterable
 import subprocess
 import sys
-from pathlib import Path
-
+from collections import defaultdict
+from math import isclose
+from numbers import Number
+from typing import Any
 
 from ocelot.cpbd.beam import Twiss
-from ocelot.cpbd.elements import Drift, RBend
+from ocelot.cpbd.elements import RBend
 from ocelot.cpbd.elements.optic_element import OpticElement
 
 DEFAULT_ELEMENT_ORDER = [
@@ -39,35 +37,47 @@ class PythonSubsequenceWriter:
     PARAMETER_NAME_TO_ATTRIBUTE_DICT = {"eid": "id"}
     SKIPPABLE_PARAMETERS = set(["tm"])  # I just don't write these for some reason
     NAMES_TO_VARIABLES_MAP = {":": "_", ".": "_", "-": "_", "'": "_"}
+    BEAM_PARAMETERS_TO_WRITE = [
+        "E",
+        "alpha_x",
+        "alpha_y",
+        "beta_x",
+        "beta_y",
+        "Dx",
+        "Dxp",
+        "Dy",
+        "Dyp",
+        "s",
+    ]
+    ABS_TOL_FOR_DEFAULT_BEAM_PARAMETERS = 1e-6
+    # REL_TOL_FOR_DEFAULT_BEAM_PARAMETERS = 1e-
 
     def __init__(self, sequence: list[OpticElement], twiss0: Twiss):
         self.sequence = sequence
         self.twiss0 = twiss0
 
     def twiss_to_string(self):
-        """
-        Generates a string, in a python readable format, that contains the Twiss parameter to store it in a python file.
-        :param twiss: Input twiss
-        :return: A string that contains Twiss parameter in a python readable format
+        """Generates a string, in a python readable format, that
+        contains the Twiss parameter to store it in a python file.
+        :param twiss: Input twiss :return: A string that contains
+        Twiss parameter in a python readable format
+
         """
         lines = []
         twiss_ref = Twiss()
         lines.append("twiss0 = Twiss()\n")
         twiss = self.twiss0
-        for name in dir(twiss):
-            if name.startswith("_"):
-                continue
+        for name in self.BEAM_PARAMETERS_TO_WRITE:
             value = getattr(twiss, name)  # Just to check that it doesn't raise an error
-            if callable(value):
-                continue
-
-            if not hasattr(twiss, f"_{name}"):
-                # Then this attribute is dynamically calculated (i.e. it is a property).
-                # We assume this!  I hope it does not change...
-                continue
-
             ref_value = getattr(twiss_ref, name)
-            if value == ref_value:
+            # If it's the default value or close to it in absolute
+            # terms (the defaults I know are always 0.0 for Twiss
+            # instances).  This is to avoid specious dispersion values
+            # being written out on the order of a few 10s of
+            # nanometres, for example.
+            if isclose(
+                value, ref_value, abs_tol=self.ABS_TOL_FOR_DEFAULT_BEAM_PARAMETERS
+            ):
                 continue
 
             lines.append(f"twiss0.{name} = {value}\n")
@@ -106,7 +116,7 @@ class PythonSubsequenceWriter:
 
             set_params.append(self.handle_strings_and_numbers(parameter, value))
 
-        return f"{variable_name} = {cls_name}({", ".join(set_params)})"
+        return f"{variable_name} = {cls_name}({', '.join(set_params)})"
 
     def make_element_class_names_to_instances_map(self):
         elements_by_type = defaultdict(list)
@@ -144,7 +154,7 @@ class PythonSubsequenceWriter:
         if variable_names is None:
             variable_names = self.make_var_names(self.sequence)
         ordered_var_names = [variable_names[element] for element in self.sequence]
-        return f"# Sequence:\ncell = ({",\n        ".join(ordered_var_names)})"
+        return f"# Sequence:\ncell = ({',\n        '.join(ordered_var_names)})"
 
     def make_var_names(self, elements: list[OpticElement]) -> dict[OpticElement, str]:
         # Remove duplicate elements in the sequence (i.e. literal
@@ -192,7 +202,7 @@ class PythonSubsequenceWriter:
                 variable_name = variable_names[element]
                 lines.append(f'{variable_name}.ps_id = "{element.ps_id}"')
 
-        return f"# Power Supply IDs:{"\n".join(lines)}"
+        return f"# Power Supply IDs:{'\n'.join(lines)}"
 
     def make_import_string(self) -> str:
         class_names = set(type(element).__name__ for element in self.sequence)
@@ -201,8 +211,8 @@ class PythonSubsequenceWriter:
         class_names.discard("SlicedElement")
         elements_to_import = ", ".join(sorted(class_names))
         lines = [
-            f"from ocelot.cpbd.elements import {elements_to_import}",
             "from ocelot.cpbd.beam import Twiss",
+            f"from ocelot.cpbd.elements import {elements_to_import}",
         ]
         return "\n".join(lines)
 
@@ -221,6 +231,11 @@ class PythonSubsequenceWriter:
             )
 
         # Tidy and format what we have just written to file.
+        subprocess.run(
+            [sys.executable, "-m", "ruff", "check", "--select", "I", "--fix", fname],
+            check=True,
+            capture_output=True,
+        )
         subprocess.run([sys.executable, "-m", "ruff", "format", fname], check=True)
 
     def to_module(
@@ -263,7 +278,7 @@ class PythonSubsequenceWriter:
                 continue
 
             set_params.append(self.handle_strings_and_numbers(parameter, value))
-        return f"{variable_name} = {type(element).__name__}({", ".join(set_params)})"
+        return f"{variable_name} = {type(element).__name__}({', '.join(set_params)})"
 
     def handle_strings_and_numbers(self, parameter: str, value: Number | str) -> str:
         if isinstance(value, Number):

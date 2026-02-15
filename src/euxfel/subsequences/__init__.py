@@ -2,27 +2,29 @@
 from importlib.resources import files
 
 try:
-    from . import i1
-    from . import i1d
-    from . import l1
-    from . import b1d
-    from . import l2
-    from . import b2d
-    from . import l3
-    from . import cl
-    from . import tl2tld
-    from . import tl2
-    from . import tl34_sa2
-    from . import t1
-    from . import sase2
-    from . import t3
-    from . import t5
-    from . import t5d
-    from . import tl34
-    from . import sase1
-    from . import t4
-    from . import sase3
-    from . import t4d
+    from . import (
+        b1d,
+        b2d,
+        cl,
+        i1,
+        i1d,
+        l1,
+        l2,
+        l3,
+        sase1,
+        sase2,
+        sase3,
+        t1,
+        t3,
+        t4,
+        t4d,
+        t5,
+        t5d,
+        tl2,
+        tl2tld,
+        tl34,
+        tl34_sa2,
+    )
 
     __all__ = [
         "i1",
