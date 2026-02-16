@@ -11,6 +11,8 @@ rows:
   skip:
     TYPE: ["CUX" # Actually not sure what these are, but they're almost entirely inside other elements
                  # except for one single element so for simplicity we just drop them all.
+                 # Also they're converted to HCor which will mess with Sergey's orbit correction gui.
+                 # So another reason to drop them all for now.
            ]
     CLASS: []
     GROUP: []
