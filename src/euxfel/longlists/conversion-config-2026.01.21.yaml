@@ -10,10 +10,8 @@ writer:
 rows:
   skip:
     TYPE: ["RF", "CTBI", "CUX", "VCCHIRP_S"]
-    CLASS: ["CRYO", "UNDPLACEH"]
-    GROUP: ["CRYO",
-            "MOVER",
-            "PHOTON"]
+    CLASS: ["UNDPLACEH"]
+    GROUP: ["MOVER", "PHOTON"]
     NAME1: []
 
   keep:

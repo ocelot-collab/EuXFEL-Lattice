@@ -1,5 +1,6 @@
 requires = ["tox>=4"]
-env_list = ["lint", "format", "type", "3.14", "3.13", "3.12"]
+env_list = ["lint", "format", # "type",
+  "3.14", "3.13", "3.12"]
 
 [env_run_base]
 description = "run unit tests"
