@@ -9,13 +9,16 @@ writer:
 
 rows:
   skip:
-    TYPE: ["RF", "CTBI", "CUX", "VCCHIRP_S"]
-    CLASS: ["UNDPLACEH"]
-    GROUP: ["PHOTON"]
-    NAME1: []
+    TYPE: ["CUX" # Actually not sure what these are, but they're almost entirely inside other elements
+                 # except for one single element so for simplicity we just drop them all.
+           ]
+    CLASS: []
+    GROUP: []
+    NAME1: ["CTBI.26.I1" # We omit this in order to make room for the ocelot_start marker @ 3.2m.
+            ]
 
   keep:
-    NAME1: ["VCCHIRP.2490.T3"]
+    NAME1: []
 
   edit:
     TYPE:

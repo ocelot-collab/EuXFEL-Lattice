@@ -330,7 +330,7 @@ class LongListConverter:
     """
 
     MINIMUM_DRIFT_LENGTH = 1e-9
-    DRIFTABLE_GROUPS = ["CRYO", "VACUUM", "DUMP", "CRYO", "MOVER"]
+    DRIFTABLE_GROUPS = ["CRYO", "VACUUM", "DUMP", "MOVER", "PHOTON"]
 
     def __init__(
         self,
@@ -455,11 +455,11 @@ class LongListConverter:
 
         skipped = df.filter(filter_rows_expr & ~but_keep_rows_expr)
 
-        for n1, s, t, cls, grp, l in skipped.select(
-                "NAME1", "S", "TYPE", "CLASS", "GROUP", "LENGTH"
+        for n1, s, t, cls, grp, len in skipped.select(
+            "NAME1", "S", "TYPE", "CLASS", "GROUP", "LENGTH"
         ).iter_rows():
             print(
-                f"Skipping: NAME1 = {n1}, @ S = {s}, TYPE = {t}, CLASS = {cls}, GROUP = {grp}, L = {l}"
+                f"Skipping: user-excluded row: NAME1 = {n1}, @ S = {s}, TYPE = {t}, CLASS = {cls}, GROUP = {grp}, L = {len}"
             )
 
         return df.filter(~filter_rows_expr | but_keep_rows_expr)
@@ -493,13 +493,15 @@ class LongListConverter:
         neg_s = df.filter(pl.col("S") < 0)
 
         for name1, s in neg_s.select("NAME1", "S").iter_rows():
-            LOG.warning(f"Dropping element with negative S: {name1 = }, {s = }")
+            print(f"Skipping: element with negative S: {name1 = }, {s = }")
 
         df = df.filter(pl.col("S") >= 0)
         df = self._filter_skippables(df)
 
         # "markers" (zero length) that are inside other elements
-        thin = df.filter(pl.col("LENGTH") == 0).select(["NAME1", "S", "LENGTH"])
+        thin = df.filter(pl.col("LENGTH") == 0).select(
+            ["NAME1", "S", "LENGTH", "GROUP", "CLASS", "TYPE"]
+        )
 
         starts = (df["S"] - df["LENGTH"] * 0.5).to_numpy()
         stops = (df["S"] + df["LENGTH"] * 0.5).to_numpy()
@@ -509,7 +511,14 @@ class LongListConverter:
             s = row["S"]
             is_inside = ((s > starts) & (s < stops)).any()
             if is_inside:
-                LOG.warning(f"Dropping bad row inside other element: {row['NAME1']}")
+                n1 = row["NAME1"]
+                len = row["LENGTH"]
+                grp = row["GROUP"]
+                cls = row["CLASS"]
+                typ = row["TYPE"]
+                print(
+                    f"Skipping: row inside other element: NAME1={n1}, L={len} GROUP={grp}, CLASS={cls}, TYPE={typ}"
+                )
                 bad_name1s.append(row["NAME1"])
                 assert row["LENGTH"] == 0.0
 
@@ -575,7 +584,9 @@ class LongListConverter:
         """
 
         # Do the slicing of the longlist and extract the subsections we want based on the names
-        print(f'Converting section "{pysec.name}" from sheet "{pysec.sheet_name}"')
+        print(
+            f'\n-----> Converting section "{pysec.name}" from sheet "{pysec.sheet_name}"'
+        )
         df = self.clist.get_sheet(pysec.sheet_name)
         idx = df.with_row_index("row_nr")
         start_row = idx.filter(pl.col("NAME1") == pysec.start_marker_name1)
@@ -636,7 +647,7 @@ class LongListConverter:
             if oelement_here.id in pysec.extras:
                 for property_name, value in pysec.extras[oelement_here.id].items():
                     print(
-                        f"Setting new value for element: {oelement_here.id}, {property_name} -> {value}"
+                        f"Setting: new value for property of element: {oelement_here.id}, {property_name} -> {value}"
                     )
                     setattr(oelement_here, property_name, value)
                     # Special handling for undulators...
@@ -786,7 +797,7 @@ class LongListConverter:
         expanded_sequence = [oelement0]
 
         for p in append0:
-            print(f"Appending {p} to element {oelement0}")
+            print(f"Placement: appending {p} to element {oelement0}")
             expanded_sequence.append(p)
 
         # Something impressive goes here for placing global and relative S elements...
@@ -805,8 +816,7 @@ class LongListConverter:
             )
 
             for placement in placements_at_this_s:
-                print(placement.element)
-                print(f"Placing {placement} @ {s}")
+                print(f"Placement: inserting {placement} @ {s}")
                 expanded_sequence.append(placement.element)
 
         length_so_far = sum(x.l for x in expanded_sequence)
@@ -815,7 +825,7 @@ class LongListConverter:
         )
 
         for p in prepend1:
-            print(f"Prepending {p} to element {oelement1}")
+            print(f"Placement: prepending {p} to element {oelement1}")
             expanded_sequence.append(p)
 
         return expanded_sequence
@@ -1114,13 +1124,15 @@ class LongListConverter:
         ele.ps_id = row["NAME2"]
         return ele
 
-    def convert_undu(self, row: dict[str, Any]) -> elements.Undulator | elements.Drift:
+    def convert_undu(
+        self, row: dict[str, Any]
+    ) -> elements.Undulator | elements.Drift | elements.Marker:
         """
         Convert a UNDU row from the component list into an OCELOT undulator element.
 
         This method expects a row originating from the component list model
         with GROUP equal to "UNDU". The conversion depends on the CLASS field:
-        - "PHASESHIFTER" → delegated to `convert_phaseshifter`, producing a Drift
+        - "PHASESHIFTER" → delegated to `convert_drift_equivalent` (currently modeled as a drift/marker)
         - "UNDULATOR"    → converted to an OCELOT Undulator
 
         For undulators, the period length is extracted from the TYPE field,
@@ -1141,8 +1153,8 @@ class LongListConverter:
         """
         assert row["GROUP"] == "UNDU"
 
-        if row["CLASS"] == "PHASESHIFTER":
-            return self.convert_phaseshifter(row)
+        if row["CLASS"] in {"PHASESHIFTER", "UNDPLACEH"}:
+            return self.convert_drift_equivalent(row)
         assert row["CLASS"] == "UNDULATOR"
         # Extract sequences of numbers from the TYPE
         type_numbers = re.findall(r"\d+", row["TYPE"])
@@ -1155,31 +1167,6 @@ class LongListConverter:
         )
         undulator.ps_id = row["NAME2"]
         return undulator
-
-    def convert_phaseshifter(self, row: dict[str, Any]) -> elements.Drift:
-        """
-        Convert a PHASESHIFTER row entry into an OCELOT Drift element.
-
-        Phase shifters from the component list are currently modeled as simple
-        drifts in OCELOT. This method expects a row with GROUP "UNDU" and
-        CLASS "PHASESHIFTER".
-
-        Parameters
-        ----------
-        row : dict[str, Any]
-            Dictionary representing a single component-list row with phase shifter
-            semantics.
-
-        Returns
-        -------
-        elements.Drift
-            Drift element representing the phase shifter.
-        """
-        assert row["GROUP"] == "UNDU"
-        assert row["CLASS"] == "PHASESHIFTER"
-        ele = elements.Drift(l=row["LENGTH"], eid=row["NAME1"])
-        ele.ps_id = row["NAME2"]
-        return ele
 
     def convert_cavity(
         self, row: dict[str, Any]
@@ -1314,7 +1301,7 @@ class LongListConverter:
             angle=row["STRENGTH"],
             e1=row["E1/LAG"],
             e2=row["E2/FREQ"],
-            tilt=row["TILT"]
+            tilt=row["TILT"],
         )
         element.ps_id = row["NAME2"]
         return element
@@ -1401,7 +1388,16 @@ def longlist_to_ocelot(
     print("Written", init_path)
     # Tidy and format what we have just written to file.
     subprocess.run(
-        [sys.executable, "-m", "ruff", "check", "--select", "I", "--fix", str(init_path)],
+        [
+            sys.executable,
+            "-m",
+            "ruff",
+            "check",
+            "--select",
+            "I",
+            "--fix",
+            str(init_path),
+        ],
         check=True,
         capture_output=True,
     )
@@ -1436,6 +1432,7 @@ def _parse_new_elements_dict(dconf: dict[str, dict[str, Any]]) -> dict[str, Plac
             # I could add the rest relatively easily, but not necessary atm.
             raise ValueError("Unsupported element type, %s", etype)
     return new_elements
+
 
 def _parse_matching_dict(mconf: dict[str, str | list[str]]) -> MatchingRequest:
     try:
