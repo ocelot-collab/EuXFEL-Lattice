@@ -5,10 +5,10 @@ from ocelot.cpbd.elements import Drift, Marker, Monitor, Quadrupole, SBend
 
 twiss0 = Twiss()
 twiss0.E = 0.12999999999999998
-twiss0.alpha_x = 0.239632749673836
-twiss0.alpha_y = -2.1841621855226996
-twiss0.beta_x = 3.0206082389377986
-twiss0.beta_y = 7.034952481825315
+twiss0.alpha_x = 0.23963274967383724
+twiss0.alpha_y = -2.1841621855227062
+twiss0.beta_x = 3.0206082389378044
+twiss0.beta_y = 7.034952481825338
 twiss0.s = 38.889005
 
 

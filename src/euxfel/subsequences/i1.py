@@ -68,12 +68,12 @@ d_39 = Drift(l=0.1549999999999977, eid="D_39")
 cfbi_44_i1 = Drift(l=1.04, eid="CFBI.44.I1")
 d_40 = Drift(l=1.2963999999999984, eid="D_40")
 d_41 = Drift(l=0.3330500000000036, eid="D_41")
-d_42 = Drift(l=0.08614999999999665, eid="D_42")
+d_42 = Drift(l=0.08614999999999995, eid="D_42")
 d_43 = Drift(l=0.12150000000000105, eid="D_43")
 d_44 = Drift(l=0.09600000000000009, eid="D_44")
 d_45 = Drift(l=0.21369999999999933, eid="D_45")
 d_46 = Drift(l=0.12345000000000184, eid="D_46")
-d_47 = Drift(l=0.08114999999999764, eid="D_47")
+d_47 = Drift(l=0.08114999999999739, eid="D_47")
 d_48 = Drift(l=0.05100000000000193, eid="D_48")
 d_49 = Drift(l=0.00016499999999908255, eid="D_49")
 d_50 = Drift(l=0.00016500000000191362, eid="D_50")
@@ -268,9 +268,11 @@ enac_44_i1 = Marker(eid="ENAC.44.I1")
 vcst30t78_44_i1 = Marker(eid="VCST30T78.44.I1")
 vcst78t40_45_i1 = Marker(eid="VCST78T40.45.I1")
 tora_46_i1 = Marker(eid="TORA.46.I1")
+cmvqi_46_i1 = Marker(eid="CMVQI.46.I1")
 bam_47_i1 = Marker(eid="BAM.47.I1")
 midbpmf_47_i1 = Marker(eid="MIDBPMF.47.I1")
 dcm_47_i1 = Marker(eid="DCM.47.I1")
+cmvqi_47_i1 = Marker(eid="CMVQI.47.I1")
 stlat_47_i1 = Marker(eid="STLAT.47.I1")
 vcst40t35_47_i1 = Marker(eid="VCST40T35.47.I1")
 mbl_48ia_i1 = Marker(eid="MBL.48Ia.I1")
@@ -414,6 +416,7 @@ cell = (
     tora_46_i1,
     d_41,
     qi_46_i1,
+    cmvqi_46_i1,
     d_42,
     bam_47_i1,
     d_43,
@@ -426,6 +429,7 @@ cell = (
     dcm_47_i1,
     d_46,
     qi_47_i1,
+    cmvqi_47_i1,
     d_47,
     stlat_47_i1,
     vcst40t35_47_i1,

@@ -11,7 +11,7 @@ rows:
   skip:
     TYPE: ["RF", "CTBI", "CUX", "VCCHIRP_S"]
     CLASS: ["UNDPLACEH"]
-    GROUP: ["MOVER", "PHOTON"]
+    GROUP: ["PHOTON"]
     NAME1: []
 
   keep:

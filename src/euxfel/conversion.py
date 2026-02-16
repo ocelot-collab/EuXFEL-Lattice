@@ -330,7 +330,7 @@ class LongListConverter:
     """
 
     MINIMUM_DRIFT_LENGTH = 1e-9
-    DRIFTABLE_GROUPS = ["CRYO", "VACUUM", "DUMP", "CRYO"]
+    DRIFTABLE_GROUPS = ["CRYO", "VACUUM", "DUMP", "CRYO", "MOVER"]
 
     def __init__(
         self,
