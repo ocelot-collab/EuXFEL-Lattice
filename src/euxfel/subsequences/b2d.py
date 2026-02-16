@@ -5,10 +5,10 @@ from ocelot.cpbd.elements import Drift, Hcor, Marker, Monitor, Quadrupole, SBend
 
 twiss0 = Twiss()
 twiss0.E = 2.4000000004506834
-twiss0.alpha_x = 2.5502449340013302
-twiss0.alpha_y = -1.1693414690367419
-twiss0.beta_x = 28.56117823297485
-twiss0.beta_y = 5.0705968370388
+twiss0.alpha_x = 2.5502449340013458
+twiss0.alpha_y = -1.1693414690367425
+twiss0.beta_x = 28.5611782329749
+twiss0.beta_y = 5.070596837038802
 twiss0.s = 443.619226
 
 
@@ -37,7 +37,8 @@ d_20 = Drift(l=0.14999999999997726, eid="D_20")
 d_21 = Drift(l=0.22500000000002274, eid="D_21")
 d_22 = Drift(l=0.125, eid="D_22")
 d_23 = Drift(l=0.049999999999954525, eid="D_23")
-d_24 = Drift(l=0.9632700000000227, eid="D_24")
+d_24 = Drift(l=0.23527000000001408, eid="D_24")
+d_25 = Drift(l=0.7280000000000086, eid="D_25")
 
 # Quadrupoles:
 qf_469_b2d = Quadrupole(l=0.5321, k1=-2.19942871499906, eid="QF.469.B2D")
@@ -76,6 +77,8 @@ vcst40t98_478_b2d = Marker(eid="VCST40T98.478.B2D")
 otrd_478_b2d = Marker(eid="OTRD.478.B2D")
 torc_479_b2d = Marker(eid="TORC.479.B2D")
 vcst98t60_479_b2d = Marker(eid="VCST98T60.479.B2D")
+duflange_479_b2d = Marker(eid="DUFLANGE.479.B2D")
+duabsorb_480_b2d = Marker(eid="DUABSORB.480.B2D")
 ensec_480_b2d = Marker(eid="ENSEC.480.B2D")
 
 # Sequence:
@@ -131,6 +134,9 @@ cell = (
     d_23,
     vcst98t60_479_b2d,
     d_24,
+    duflange_479_b2d,
+    d_25,
+    duabsorb_480_b2d,
     ensec_480_b2d,
 )
 

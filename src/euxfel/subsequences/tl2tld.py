@@ -15,9 +15,9 @@ from ocelot.cpbd.elements import (
 
 twiss0 = Twiss()
 twiss0.E = 14.0000000004506
-twiss0.alpha_x = -1.3640112588025124
+twiss0.alpha_x = -1.3640112588024842
 twiss0.alpha_y = 0.14965590342574223
-twiss0.beta_x = 0.5596874380743241
+twiss0.beta_x = 0.559687438074322
 twiss0.beta_y = 2.9598582081767035
 twiss0.s = 1831.2118050000004
 
@@ -49,170 +49,176 @@ d_22 = Drift(l=0.09600000000000364, eid="D_22")
 d_23 = Drift(l=0.38149999999996, eid="D_23")
 kfb0_1880_tl = Drift(l=2.0, eid="KFB0.1880.TL")
 d_24 = Drift(l=0.23395000000004984, eid="D_24")
-d_25 = Drift(l=2.5039500000001595, eid="D_25")
-d_26 = Drift(l=4.352499999999873, eid="D_26")
-d_27 = Drift(l=0.09600000000000364, eid="D_27")
-d_28 = Drift(l=0.38149999999996, eid="D_28")
+d_25 = Drift(l=0.23394999999995014, eid="D_25")
+d_26 = Drift(l=0.2700000000002092, eid="D_26")
+d_27 = Drift(l=4.352499999999873, eid="D_27")
+d_28 = Drift(l=0.09600000000000364, eid="D_28")
+d_29 = Drift(l=0.38149999999996, eid="D_29")
 kfb0_1890_tl = Drift(l=2.0, eid="KFB0.1890.TL")
-d_29 = Drift(l=0.23395000000004984, eid="D_29")
-d_30 = Drift(l=2.5339500000001323, eid="D_30")
-d_31 = Drift(l=4.0999999999998185, eid="D_31")
-d_32 = Drift(l=5.5, eid="D_32")
+d_30 = Drift(l=0.23395000000004984, eid="D_30")
+d_31 = Drift(l=0.23394999999995014, eid="D_31")
+d_32 = Drift(l=0.3000000000001819, eid="D_32")
+d_33 = Drift(l=4.0999999999998185, eid="D_33")
+d_34 = Drift(l=5.5, eid="D_34")
 kfb0_1905_tl = Drift(l=2.0, eid="KFB0.1905.TL")
-d_33 = Drift(l=0.23395000000004984, eid="D_33")
-d_34 = Drift(l=2.711449999999914, eid="D_34")
-d_35 = Drift(l=0.09600000000000364, eid="D_35")
-d_36 = Drift(l=0.30150000000003274, eid="D_36")
-d_37 = Drift(l=3.525, eid="D_37")
-d_38 = Drift(l=5.5, eid="D_38")
+d_35 = Drift(l=0.23395000000004984, eid="D_35")
+d_36 = Drift(l=0.23394999999995014, eid="D_36")
+d_37 = Drift(l=0.4774999999999636, eid="D_37")
+d_38 = Drift(l=0.09600000000000364, eid="D_38")
+d_39 = Drift(l=0.30150000000003274, eid="D_39")
+d_40 = Drift(l=3.525, eid="D_40")
+d_41 = Drift(l=5.5, eid="D_41")
 kfb0_1920_tl = Drift(l=2.0, eid="KFB0.1920.TL")
-d_39 = Drift(l=0.23395000000004984, eid="D_39")
-d_40 = Drift(l=2.711449999999914, eid="D_40")
-d_41 = Drift(l=0.09600000000000364, eid="D_41")
-d_42 = Drift(l=0.30150000000003274, eid="D_42")
-d_43 = Drift(l=3.525, eid="D_43")
-d_44 = Drift(l=1.2774999999999181, eid="D_44")
+d_42 = Drift(l=0.23395000000004984, eid="D_42")
+d_43 = Drift(l=0.23394999999995014, eid="D_43")
+d_44 = Drift(l=0.4774999999999636, eid="D_44")
 d_45 = Drift(l=0.09600000000000364, eid="D_45")
-d_46 = Drift(l=1.0715000000000146, eid="D_46")
-d_47 = Drift(l=0.3000000000001819, eid="D_47")
-d_48 = Drift(l=2.677500000000009, eid="D_48")
-d_49 = Drift(l=2.3114499999999225, eid="D_49")
-d_50 = Drift(l=0.1539500000000229, eid="D_50")
-d_51 = Drift(l=0.29000000000010007, eid="D_51")
-d_52 = Drift(l=0.2825000000000236, eid="D_52")
-d_53 = Drift(l=0.09600000000000364, eid="D_53")
-d_54 = Drift(l=0.4815000000000964, eid="D_54")
-d_55 = Drift(l=0.2699999999997999, eid="D_55")
-d_56 = Drift(l=0.10000000000013642, eid="D_56")
-d_57 = Drift(l=0.31999999999993634, eid="D_57")
-d_58 = Drift(l=0.31999999999993634, eid="D_58")
-d_59 = Drift(l=0.3200000000001637, eid="D_59")
-d_60 = Drift(l=0.31999999999993634, eid="D_60")
-d_61 = Drift(l=0.2839510000001155, eid="D_61")
-d_62 = Drift(l=0.28395099999978846, eid="D_62")
+d_46 = Drift(l=0.30150000000003274, eid="D_46")
+d_47 = Drift(l=3.525, eid="D_47")
+d_48 = Drift(l=1.2774999999999181, eid="D_48")
+d_49 = Drift(l=0.09600000000000364, eid="D_49")
+d_50 = Drift(l=1.0715000000000146, eid="D_50")
+d_51 = Drift(l=0.3000000000001819, eid="D_51")
+d_52 = Drift(l=2.677500000000009, eid="D_52")
+d_53 = Drift(l=2.3114499999999225, eid="D_53")
+d_54 = Drift(l=0.1539500000000229, eid="D_54")
+d_55 = Drift(l=0.29000000000010007, eid="D_55")
+d_56 = Drift(l=0.2825000000000236, eid="D_56")
+d_57 = Drift(l=0.09600000000000364, eid="D_57")
+d_58 = Drift(l=0.4815000000000964, eid="D_58")
+d_59 = Drift(l=0.2699999999997999, eid="D_59")
+d_60 = Drift(l=0.10000000000013642, eid="D_60")
+d_61 = Drift(l=0.31999999999993634, eid="D_61")
+d_62 = Drift(l=0.31999999999993634, eid="D_62")
 d_63 = Drift(l=0.3200000000001637, eid="D_63")
 d_64 = Drift(l=0.31999999999993634, eid="D_64")
-d_65 = Drift(l=0.31999999999993634, eid="D_65")
-d_66 = Drift(l=0.31999999999993634, eid="D_66")
-d_67 = Drift(l=0.10000000000013642, eid="D_67")
-d_68 = Drift(l=0.2699999999999818, eid="D_68")
-d_69 = Drift(l=0.49000000000005456, eid="D_69")
-d_70 = Drift(l=0.14500000000002727, eid="D_70")
-d_71 = Drift(l=0.36000000000012367, eid="D_71")
-d_72 = Drift(l=0.20895100000007005, eid="D_72")
-d_73 = Drift(l=0.1539509999999067, eid="D_73")
-d_74 = Drift(l=0.20000000000009094, eid="D_74")
-d_75 = Drift(l=1.4799999999998363, eid="D_75")
-d_76 = Drift(l=7.589199999999892, eid="D_76")
-d_77 = Drift(l=0.10000000000009096, eid="D_77")
-d_78 = Drift(l=0.15000000000004549, eid="D_78")
-d_79 = Drift(l=0.20000000000004547, eid="D_79")
-d_80 = Drift(l=0.820699999999988, eid="D_80")
+d_65 = Drift(l=0.2839510000001155, eid="D_65")
+d_66 = Drift(l=0.28395099999978846, eid="D_66")
+d_67 = Drift(l=0.3200000000001637, eid="D_67")
+d_68 = Drift(l=0.31999999999993634, eid="D_68")
+d_69 = Drift(l=0.31999999999993634, eid="D_69")
+d_70 = Drift(l=0.31999999999993634, eid="D_70")
+d_71 = Drift(l=0.10000000000013642, eid="D_71")
+d_72 = Drift(l=0.2699999999999818, eid="D_72")
+d_73 = Drift(l=0.49000000000005456, eid="D_73")
+d_74 = Drift(l=0.14500000000002727, eid="D_74")
+d_75 = Drift(l=0.36000000000012367, eid="D_75")
+d_76 = Drift(l=0.20895100000007005, eid="D_76")
+d_77 = Drift(l=0.1539509999999067, eid="D_77")
+d_78 = Drift(l=0.20000000000009094, eid="D_78")
+d_79 = Drift(l=1.4799999999998363, eid="D_79")
+d_80 = Drift(l=7.589199999999892, eid="D_80")
+d_81 = Drift(l=0.10000000000009096, eid="D_81")
+d_82 = Drift(l=0.15000000000004549, eid="D_82")
+d_83 = Drift(l=0.20000000000004547, eid="D_83")
+d_84 = Drift(l=0.820699999999988, eid="D_84")
 vcb100_1979_tl = Drift(l=0.18, eid="VCB100.1979.TL")
 vcabsa_1979_tl = Drift(l=0.61, eid="VCABSA.1979.TL")
-d_81 = Drift(l=0.2500400000002537, eid="D_81")
-d_82 = Drift(l=4.999999873689376e-06, eid="D_82")
-d_83 = Drift(l=0.47240000000010696, eid="D_83")
-d_84 = Drift(l=0.47239700000001417, eid="D_84")
-d_85 = Drift(l=5.999999984851456e-06, eid="D_85")
-d_86 = Drift(l=0.49999400000001515, eid="D_86")
-d_87 = Drift(l=7.999999979801942e-06, eid="D_87")
-d_88 = Drift(l=0.4999920000000202, eid="D_88")
-d_89 = Drift(l=8.999999863590347e-06, eid="D_89")
-d_90 = Drift(l=8.049999999999955, eid="D_90")
-d_91 = Drift(l=0.14830000000006294, eid="D_91")
-d_92 = Drift(l=0.15429999999992106, eid="D_92")
-d_93 = Drift(l=0.3813500000001113, eid="D_93")
-d_94 = Drift(l=4.237950000000083, eid="D_94")
-d_95 = Drift(l=0.19999999999995452, eid="D_95")
-d_96 = Drift(l=3.545999999999958, eid="D_96")
-d_97 = Drift(l=9.99999883788405e-07, eid="D_97")
-d_98 = Drift(l=1.0000001111620804e-06, eid="D_98")
-d_99 = Drift(l=0.5, eid="D_99")
-d_100 = Drift(l=9.99999883788405e-07, eid="D_100")
-d_101 = Drift(l=1.0000001111620804e-06, eid="D_101")
-d_102 = Drift(l=0.5, eid="D_102")
-d_103 = Drift(l=9.99999883788405e-07, eid="D_103")
-d_104 = Drift(l=1.0000001111620804e-06, eid="D_104")
-d_105 = Drift(l=0.3123490000000402, eid="D_105")
-d_106 = Drift(l=0.2089499999999589, eid="D_106")
-d_107 = Drift(l=0.1539500000000229, eid="D_107")
-d_108 = Drift(l=6.021799999999894, eid="D_108")
-d_109 = Drift(l=0.2607930000000793, eid="D_109")
+d_85 = Drift(l=0.2500400000002537, eid="D_85")
+d_86 = Drift(l=4.999999873689376e-06, eid="D_86")
+d_87 = Drift(l=0.47240000000010696, eid="D_87")
+d_88 = Drift(l=0.47239700000001417, eid="D_88")
+d_89 = Drift(l=5.999999984851456e-06, eid="D_89")
+d_90 = Drift(l=0.49999400000001515, eid="D_90")
+d_91 = Drift(l=7.999999979801942e-06, eid="D_91")
+d_92 = Drift(l=0.4999920000000202, eid="D_92")
+d_93 = Drift(l=8.999999863590347e-06, eid="D_93")
+d_94 = Drift(l=8.049999999999955, eid="D_94")
+d_95 = Drift(l=0.14830000000006294, eid="D_95")
+d_96 = Drift(l=0.15429999999992106, eid="D_96")
+d_97 = Drift(l=0.3813500000001113, eid="D_97")
+d_98 = Drift(l=4.237950000000083, eid="D_98")
+d_99 = Drift(l=0.19999999999995452, eid="D_99")
+d_100 = Drift(l=3.545999999999958, eid="D_100")
+d_101 = Drift(l=9.99999883788405e-07, eid="D_101")
+d_102 = Drift(l=1.0000001111620804e-06, eid="D_102")
+d_103 = Drift(l=0.5, eid="D_103")
+d_104 = Drift(l=9.99999883788405e-07, eid="D_104")
+d_105 = Drift(l=1.0000001111620804e-06, eid="D_105")
+d_106 = Drift(l=0.5, eid="D_106")
+d_107 = Drift(l=9.99999883788405e-07, eid="D_107")
+d_108 = Drift(l=1.0000001111620804e-06, eid="D_108")
+d_109 = Drift(l=0.3123490000000402, eid="D_109")
 d_110 = Drift(l=0.2089499999999589, eid="D_110")
 d_111 = Drift(l=0.1539500000000229, eid="D_111")
-d_112 = Drift(l=3.880000000000018, eid="D_112")
-d_113 = Drift(l=0.20000000000004547, eid="D_113")
-d_114 = Drift(l=0.14179999999978463, eid="D_114")
-d_115 = Drift(l=1.9629240000003152, eid="D_115")
-d_116 = Drift(l=9.801346999999751, eid="D_116")
-d_117 = Drift(l=0.20895000000018626, eid="D_117")
-d_118 = Drift(l=0.1539500000000229, eid="D_118")
-d_119 = Drift(l=2.1217999999998027, eid="D_119")
-d_120 = Drift(l=1.5003359999999917, eid="D_120")
-d_121 = Drift(l=1.0000001111620804e-06, eid="D_121")
-d_122 = Drift(l=9.99999883788405e-07, eid="D_122")
-d_123 = Drift(l=5.525000000000091, eid="D_123")
-d_124 = Drift(l=0.2089499999999589, eid="D_124")
-d_125 = Drift(l=0.1539500000000229, eid="D_125")
-d_126 = Drift(l=11.57414000000008, eid="D_126")
-d_127 = Drift(l=0.2089499999999589, eid="D_127")
-d_128 = Drift(l=0.1539500000000229, eid="D_128")
-d_129 = Drift(l=6.313739999999962, eid="D_129")
-d_130 = Drift(l=1.9999999949504854e-06, eid="D_130")
-d_131 = Drift(l=1.0000001111620804e-06, eid="D_131")
-d_132 = Drift(l=1.224999999999909, eid="D_132")
-d_133 = Drift(l=0.2089499999999589, eid="D_133")
-d_134 = Drift(l=0.1539500000000229, eid="D_134")
-d_135 = Drift(l=6.4938940000000915, eid="D_135")
-d_136 = Drift(l=0.20894999999973152, eid="D_136")
-d_137 = Drift(l=0.15394999999979553, eid="D_137")
-d_138 = Drift(l=9.556182000000172, eid="D_138")
-d_139 = Drift(l=0.20800000000008367, eid="D_139")
-d_140 = Drift(l=8.70000003487803e-05, eid="D_140")
-d_141 = Drift(l=8.600000001024455e-05, eid="D_141")
-d_142 = Drift(l=0.5, eid="D_142")
-d_143 = Drift(l=8.699999989403295e-05, eid="D_143")
-d_144 = Drift(l=8.600000001024455e-05, eid="D_144")
-d_145 = Drift(l=0.5, eid="D_145")
-d_146 = Drift(l=8.699999989403295e-05, eid="D_146")
-d_147 = Drift(l=8.600000001024455e-05, eid="D_147")
-d_148 = Drift(l=0.20800000000008367, eid="D_148")
-d_149 = Drift(l=0.41440000000011423, eid="D_149")
-d_150 = Drift(l=0.2508999999997876, eid="D_150")
-d_151 = Drift(l=0.19350000000016004, eid="D_151")
-d_152 = Drift(l=0.8349999999995816, eid="D_152")
-d_153 = Drift(l=0.15000000000027286, eid="D_153")
-d_154 = Drift(l=3.157699999999932, eid="D_154")
-d_155 = Drift(l=0.19350000000031287, eid="D_155")
-d_156 = Drift(l=0.25089999999984863, eid="D_156")
-d_157 = Drift(l=0.4143999999999004, eid="D_157")
-d_158 = Drift(l=0.20800000000008367, eid="D_158")
-d_159 = Drift(l=8.699999989403295e-05, eid="D_159")
-d_160 = Drift(l=8.500000012645614e-05, eid="D_160")
-d_161 = Drift(l=0.5, eid="D_161")
-d_162 = Drift(l=8.699999989403295e-05, eid="D_162")
-d_163 = Drift(l=8.600000001024455e-05, eid="D_163")
-d_164 = Drift(l=0.5, eid="D_164")
-d_165 = Drift(l=8.699999989403295e-05, eid="D_165")
-d_166 = Drift(l=8.600000001024455e-05, eid="D_166")
-d_167 = Drift(l=0.20800000000008367, eid="D_167")
-d_168 = Drift(l=0.4036999999998443, eid="D_168")
-d_169 = Drift(l=0.1607000000003609, eid="D_169")
-d_170 = Drift(l=0.34480000000009103, eid="D_170")
-d_171 = Drift(l=0.3447999999996363, eid="D_171")
-d_172 = Drift(l=0.34480000000009103, eid="D_172")
-d_173 = Drift(l=0.2144000000000823, eid="D_173")
-d_174 = Drift(l=0.557999999999538, eid="D_174")
-d_175 = Drift(l=0.5000000000003274, eid="D_175")
-d_176 = Drift(l=0.8219999999999891, eid="D_176")
-d_177 = Drift(l=0.1999999999998181, eid="D_177")
-d_178 = Drift(l=0.45000000000027285, eid="D_178")
-d_179 = Drift(l=0.31300000000010186, eid="D_179")
-d_180 = Drift(l=0.6430000000000291, eid="D_180")
-d_181 = Drift(l=3.2269999999998618, eid="D_181")
-d_182 = Drift(l=0.32229999999981374, eid="D_182")
-d_183 = Drift(l=3.9454399999999623, eid="D_183")
+d_112 = Drift(l=6.021799999999894, eid="D_112")
+d_113 = Drift(l=0.2607930000000793, eid="D_113")
+d_114 = Drift(l=0.2089499999999589, eid="D_114")
+d_115 = Drift(l=0.1539500000000229, eid="D_115")
+d_116 = Drift(l=3.880000000000018, eid="D_116")
+d_117 = Drift(l=0.20000000000004547, eid="D_117")
+d_118 = Drift(l=0.14179999999978463, eid="D_118")
+d_119 = Drift(l=1.9629240000003152, eid="D_119")
+d_120 = Drift(l=9.801346999999751, eid="D_120")
+d_121 = Drift(l=0.20895000000018626, eid="D_121")
+d_122 = Drift(l=0.1539500000000229, eid="D_122")
+d_123 = Drift(l=2.1217999999998027, eid="D_123")
+d_124 = Drift(l=1.5003359999999917, eid="D_124")
+d_125 = Drift(l=1.0000001111620804e-06, eid="D_125")
+d_126 = Drift(l=9.99999883788405e-07, eid="D_126")
+d_127 = Drift(l=5.525000000000091, eid="D_127")
+d_128 = Drift(l=0.2089499999999589, eid="D_128")
+d_129 = Drift(l=0.1539500000000229, eid="D_129")
+d_130 = Drift(l=11.57414000000008, eid="D_130")
+d_131 = Drift(l=0.2089499999999589, eid="D_131")
+d_132 = Drift(l=0.1539500000000229, eid="D_132")
+d_133 = Drift(l=6.313739999999962, eid="D_133")
+d_134 = Drift(l=1.9999999949504854e-06, eid="D_134")
+d_135 = Drift(l=1.0000001111620804e-06, eid="D_135")
+d_136 = Drift(l=1.224999999999909, eid="D_136")
+d_137 = Drift(l=0.2089499999999589, eid="D_137")
+d_138 = Drift(l=0.1539500000000229, eid="D_138")
+d_139 = Drift(l=6.4938940000000915, eid="D_139")
+d_140 = Drift(l=0.20894999999973152, eid="D_140")
+d_141 = Drift(l=0.15394999999979553, eid="D_141")
+d_142 = Drift(l=9.556182000000172, eid="D_142")
+d_143 = Drift(l=0.20800000000008367, eid="D_143")
+d_144 = Drift(l=8.70000003487803e-05, eid="D_144")
+d_145 = Drift(l=8.600000001024455e-05, eid="D_145")
+d_146 = Drift(l=0.5, eid="D_146")
+d_147 = Drift(l=8.699999989403295e-05, eid="D_147")
+d_148 = Drift(l=8.600000001024455e-05, eid="D_148")
+d_149 = Drift(l=0.5, eid="D_149")
+d_150 = Drift(l=8.699999989403295e-05, eid="D_150")
+d_151 = Drift(l=8.600000001024455e-05, eid="D_151")
+d_152 = Drift(l=0.20800000000008367, eid="D_152")
+d_153 = Drift(l=0.41440000000011423, eid="D_153")
+d_154 = Drift(l=0.2508999999997876, eid="D_154")
+d_155 = Drift(l=0.19350000000016004, eid="D_155")
+d_156 = Drift(l=0.8349999999995816, eid="D_156")
+d_157 = Drift(l=0.15000000000027286, eid="D_157")
+d_158 = Drift(l=3.157699999999932, eid="D_158")
+d_159 = Drift(l=0.19350000000031287, eid="D_159")
+d_160 = Drift(l=0.25089999999984863, eid="D_160")
+d_161 = Drift(l=0.4143999999999004, eid="D_161")
+d_162 = Drift(l=0.20800000000008367, eid="D_162")
+d_163 = Drift(l=8.699999989403295e-05, eid="D_163")
+d_164 = Drift(l=8.500000012645614e-05, eid="D_164")
+d_165 = Drift(l=0.5, eid="D_165")
+d_166 = Drift(l=8.699999989403295e-05, eid="D_166")
+d_167 = Drift(l=8.600000001024455e-05, eid="D_167")
+d_168 = Drift(l=0.5, eid="D_168")
+d_169 = Drift(l=8.699999989403295e-05, eid="D_169")
+d_170 = Drift(l=8.600000001024455e-05, eid="D_170")
+d_171 = Drift(l=0.20800000000008367, eid="D_171")
+d_172 = Drift(l=0.4036999999998443, eid="D_172")
+d_173 = Drift(l=0.1607000000003609, eid="D_173")
+d_174 = Drift(l=0.34480000000009103, eid="D_174")
+d_175 = Drift(l=0.3447999999996363, eid="D_175")
+d_176 = Drift(l=0.34480000000009103, eid="D_176")
+d_177 = Drift(l=0.2144000000000823, eid="D_177")
+d_178 = Drift(l=0.557999999999538, eid="D_178")
+d_179 = Drift(l=0.5000000000003274, eid="D_179")
+d_180 = Drift(l=0.8219999999999891, eid="D_180")
+d_181 = Drift(l=0.1999999999998181, eid="D_181")
+d_182 = Drift(l=0.45000000000027285, eid="D_182")
+d_183 = Drift(l=0.31300000000010186, eid="D_183")
+d_184 = Drift(l=0.6430000000000291, eid="D_184")
+d_185 = Drift(l=3.2269999999998618, eid="D_185")
+d_186 = Drift(l=0.32229999999981374, eid="D_186")
+d_187 = Drift(l=0.8578000000002248, eid="D_187")
+d_188 = Drift(l=1.0814900000000307, eid="D_188")
+d_189 = Drift(l=2.006149999999707, eid="D_189")
 
 # Quadrupoles:
 qh_1855_tl = Quadrupole(l=1.0291, k1=0.3716633416004276, eid="QH.1855.TL")
@@ -367,6 +373,10 @@ bv_2111_tld = SBend(
 )
 
 # RBends:
+kfby_1883_tl = RBend(l=2.0, e1=0.0, e2=0.0, eid="KFBY.1883.TL")
+kfbx_1893_tl = RBend(l=2.0, e1=0.0, e2=0.0, eid="KFBX.1893.TL")
+kfby_1908_tl = RBend(l=2.0, e1=0.0, e2=0.0, eid="KFBY.1908.TL")
+kfbx_1923_tl = RBend(l=2.0, e1=0.0, e2=0.0, eid="KFBX.1923.TL")
 kmx_1938_tl = RBend(l=0.651, e1=0.0, e2=0.0, eid="KMX.1938.TL")
 kny_1938_tl = RBend(l=0.279, e1=0.0, e2=0.0, tilt=1.570796327, eid="KNY.1938.TL")
 kspos_1941_tl = RBend(l=1.0, angle=-3.0254487e-05, e1=0.0, e2=0.0, eid="KSPOS.1941.TL")
@@ -587,6 +597,11 @@ torc_2122_tld = Marker(eid="TORC.2122.TLD")
 bhm_2122_tld = Marker(eid="BHM.2122.TLD")
 vcst98t200_2123_tld = Marker(eid="VCST98T200.2123.TLD")
 scrw_2126_tld = Marker(eid="SCRW.2126.TLD")
+duwindow_2126_tld = Marker(eid="DUWINDOW.2126.TLD")
+duflange_2127_tld = Marker(eid="DUFLANGE.2127.TLD")
+duconcrete_2128_tld = Marker(eid="DUCONCRETE.2128.TLD")
+dustart_2130_tld = Marker(eid="DUSTART.2130.TLD")
+duabsorb_2130_tld = Marker(eid="DUABSORB.2130.TLD")
 ensec_2130_tld = Marker(eid="ENSEC.2130.TLD")
 
 # SlicedElements:
@@ -664,72 +679,80 @@ cell = (
     d_24,
     qf_1881_tl,
     d_25,
-    cfy_1884_tl,
+    kfby_1883_tl,
     d_26,
-    midbpmi_1889_tl,
+    cfy_1884_tl,
     d_27,
-    bpmi_1889_tl,
+    midbpmi_1889_tl,
     d_28,
-    kfb0_1890_tl,
+    bpmi_1889_tl,
     d_29,
+    kfb0_1890_tl,
+    d_30,
     enblock_1891_cl,
     qf_1892_tl,
-    d_30,
-    cfx_1894_tl,
     d_31,
-    otrbw_1899_tl,
+    kfbx_1893_tl,
     d_32,
-    kfb0_1905_tl,
+    cfx_1894_tl,
     d_33,
-    qf_1907_tl,
+    otrbw_1899_tl,
     d_34,
-    midbpmi_1910_tl,
+    kfb0_1905_tl,
     d_35,
-    bpmi_1910_tl,
+    qf_1907_tl,
     d_36,
-    cfy_1910_tl,
+    kfby_1908_tl,
     d_37,
-    otrbw_1914_tl,
+    midbpmi_1910_tl,
     d_38,
-    kfb0_1920_tl,
+    bpmi_1910_tl,
     d_39,
-    qf_1922_tl,
+    cfy_1910_tl,
     d_40,
-    midbpmi_1925_tl,
+    otrbw_1914_tl,
     d_41,
-    bpmi_1925_tl,
+    kfb0_1920_tl,
     d_42,
-    cfx_1925_tl,
+    qf_1922_tl,
     d_43,
-    otrbw_1929_tl,
+    kfbx_1923_tl,
     d_44,
-    midbpmi_1930_tl,
+    midbpmi_1925_tl,
     d_45,
-    bpmi_1930_tl,
+    bpmi_1925_tl,
     d_46,
-    bam_1931_tl,
+    cfx_1925_tl,
     d_47,
-    bam_1932_tl,
+    otrbw_1929_tl,
     d_48,
-    crd_1934_tl,
+    midbpmi_1930_tl,
     d_49,
-    qf_1937_tl,
+    bpmi_1930_tl,
     d_50,
-    cfy_1937_tl,
+    bam_1931_tl,
     d_51,
+    bam_1932_tl,
+    d_52,
+    crd_1934_tl,
+    d_53,
+    qf_1937_tl,
+    d_54,
+    cfy_1937_tl,
+    d_55,
     kmx_1938_tl,
     kny_1938_tl,
-    d_52,
+    d_56,
     midbpmi_1939_tl,
-    d_53,
+    d_57,
     bpmi_1939_tl,
-    d_54,
+    d_58,
     bl_1939_tl,
-    d_55,
+    d_59,
     ensub_1940_tl,
     stsub_1940_tl,
     vcst40t30_1940_tl,
-    d_56,
+    d_60,
     mkspos_1940a_tl,
     kspos_1941_tl,
     mkspos_1940d_tl,
@@ -737,7 +760,7 @@ cell = (
     mksneg_1941a_tl,
     ksneg_1941_tl,
     mksneg_1941d_tl,
-    d_57,
+    d_61,
     mkspos_1943a_tl,
     kspos_1943_tl,
     mkspos_1943d_tl,
@@ -745,7 +768,7 @@ cell = (
     mksneg_1944a_tl,
     ksneg_1943_tl,
     mksneg_1944d_tl,
-    d_58,
+    d_62,
     mkspos_1945a_tl,
     kspos_1945_tl,
     mkspos_1945d_tl,
@@ -753,7 +776,7 @@ cell = (
     mksneg_1946a_tl,
     ksneg_1945_tl,
     mksneg_1946d_tl,
-    d_59,
+    d_63,
     mkspos_1947a_tl,
     kspos_1948_tl,
     mkspos_1947d_tl,
@@ -761,7 +784,7 @@ cell = (
     mksneg_1948a_tl,
     ksneg_1948_tl,
     mksneg_1948d_tl,
-    d_60,
+    d_64,
     mkspos_1950a_tl,
     kspos_1950_tl,
     mkspos_1950d_tl,
@@ -769,9 +792,9 @@ cell = (
     mksneg_1951a_tl,
     ksneg_1950_tl,
     mksneg_1951d_tl,
-    d_61,
+    d_65,
     qf_1952_tl,
-    d_62,
+    d_66,
     mkspos_1953a_tl,
     kspos_1953_tl,
     mkspos_1953d_tl,
@@ -779,7 +802,7 @@ cell = (
     mksneg_1954a_tl,
     ksneg_1953_tl,
     mksneg_1954d_tl,
-    d_63,
+    d_67,
     mkspos_1955a_tl,
     kspos_1955_tl,
     mkspos_1955d_tl,
@@ -787,7 +810,7 @@ cell = (
     mksneg_1956a_tl,
     ksneg_1955_tl,
     mksneg_1956d_tl,
-    d_64,
+    d_68,
     mkspos_1957a_tl,
     kspos_1958_tl,
     mkspos_1957d_tl,
@@ -795,7 +818,7 @@ cell = (
     mksneg_1958a_tl,
     ksneg_1958_tl,
     mksneg_1958d_tl,
-    d_65,
+    d_69,
     mkspos_1960a_tl,
     kspos_1960_tl,
     mkspos_1960d_tl,
@@ -803,7 +826,7 @@ cell = (
     mksneg_1961a_tl,
     ksneg_1960_tl,
     mksneg_1961d_tl,
-    d_66,
+    d_70,
     mkspos_1962a_tl,
     kspos_1962_tl,
     mkspos_1962d_tl,
@@ -811,245 +834,252 @@ cell = (
     mksneg_1963a_tl,
     ksneg_1962_tl,
     mksneg_1963d_tl,
-    d_67,
+    d_71,
     vcst30t40_1963_tl,
-    d_68,
+    d_72,
     bl_1964_tl,
-    d_69,
+    d_73,
     chx_1965_tl,
-    d_70,
+    d_74,
     kmx_1965_tl,
     kny_1966_tl,
-    d_71,
-    bpma_1966_tl,
-    d_72,
-    qf_1967_tl,
-    d_73,
-    chx_1967_tl,
-    d_74,
-    chy_1967_tl,
     d_75,
-    vcst40t98_1969_tl,
+    bpma_1966_tl,
     d_76,
-    cnx_1977_tl,
+    qf_1967_tl,
     d_77,
-    cny_1977_tl,
+    chx_1967_tl,
     d_78,
-    bpmd_1977_tl,
+    chy_1967_tl,
     d_79,
-    otre_1978_tl,
+    vcst40t98_1969_tl,
     d_80,
+    cnx_1977_tl,
+    d_81,
+    cny_1977_tl,
+    d_82,
+    bpmd_1977_tl,
+    d_83,
+    otre_1978_tl,
+    d_84,
     vcb100_1979_tl,
     vcabsa_1979_tl,
-    d_81,
+    d_85,
     ensub_1980_tl,
     stsec_1980_tld,
     vcst98t40_1980_tld,
     mbz_1980a_tld,
     bz_1980_tld,
-    d_82,
-    mbz_1980d_tld,
-    d_83,
-    qk_1982_tl,
-    d_84,
-    bz_1983_tld,
-    d_85,
-    mbz_1983d_tld,
     d_86,
-    bz_1985_tld,
+    mbz_1980d_tld,
     d_87,
-    mbz_1985d_tld,
+    qk_1982_tl,
     d_88,
-    bz_1986_tld,
+    bz_1983_tld,
     d_89,
-    mbz_1986d_tld,
+    mbz_1983d_tld,
     d_90,
-    otrc_1995_tld,
+    bz_1985_tld,
     d_91,
-    tora_1995_tld,
+    mbz_1985d_tld,
     d_92,
-    bpma_1995_tld,
+    bz_1986_tld,
     d_93,
-    qf_1996_tld,
+    mbz_1986d_tld,
     d_94,
-    cfy_2000_tld,
+    otrc_1995_tld,
     d_95,
-    cfx_2000_tld,
+    tora_1995_tld,
     d_96,
-    mbd_2005a_tld,
+    bpma_1995_tld,
     d_97,
-    bd_2005_tld,
+    qf_1996_tld,
     d_98,
-    mbd_2005d_tld,
+    cfy_2000_tld,
     d_99,
-    mbd_2006a_tld,
+    cfx_2000_tld,
     d_100,
-    bd_2006_tld,
+    mbd_2005a_tld,
     d_101,
-    mbd_2006d_tld,
+    bd_2005_tld,
     d_102,
-    mbd_2008a_tld,
+    mbd_2005d_tld,
     d_103,
-    bd_2008_tld,
+    mbd_2006a_tld,
     d_104,
-    mbd_2008d_tld,
+    bd_2006_tld,
     d_105,
-    bpma_2008_tld,
+    mbd_2006d_tld,
     d_106,
-    qf_2009_tld,
+    mbd_2008a_tld,
     d_107,
-    cfx_2009_tld,
+    bd_2008_tld,
     d_108,
-    sa_2016_tld,
+    mbd_2008d_tld,
     d_109,
-    bpma_2016_tld,
+    bpma_2008_tld,
     d_110,
-    qf_2016_tld,
+    qf_2009_tld,
     d_111,
-    cfy_2017_tld,
+    cfx_2009_tld,
     d_112,
-    bpma_2021_tld,
+    sa_2016_tld,
     d_113,
-    cfx_2021_tld,
+    bpma_2016_tld,
     d_114,
-    sa_2021_tld,
+    qf_2016_tld,
     d_115,
-    qf_2024_tld,
+    cfy_2017_tld,
     d_116,
-    bpma_2034_tld,
+    bpma_2021_tld,
     d_117,
-    qf_2034_tld,
+    cfx_2021_tld,
     d_118,
-    cfy_2035_tld,
+    sa_2021_tld,
     d_119,
-    sa_2037_tld,
+    qf_2024_tld,
     d_120,
-    mbd_2039a_tld,
+    bpma_2034_tld,
     d_121,
-    bd_2039_tld,
+    qf_2034_tld,
     d_122,
-    mbd_2039d_tld,
+    cfy_2035_tld,
     d_123,
-    bpma_2045_tld,
+    sa_2037_tld,
     d_124,
-    qf_2046_tld,
+    mbd_2039a_tld,
     d_125,
-    cfx_2046_tld,
+    bd_2039_tld,
     d_126,
-    bpma_2058_tld,
+    mbd_2039d_tld,
     d_127,
-    qf_2058_tld,
+    bpma_2045_tld,
     d_128,
-    cfy_2059_tld,
+    qf_2046_tld,
     d_129,
-    mbd_2066a_tld,
+    cfx_2046_tld,
     d_130,
-    bd_2066_tld,
+    bpma_2058_tld,
     d_131,
-    mbd_2066d_tld,
+    qf_2058_tld,
     d_132,
-    bpma_2067_tld,
+    cfy_2059_tld,
     d_133,
-    qf_2068_tld,
+    mbd_2066a_tld,
     d_134,
-    cfx_2068_tld,
+    bd_2066_tld,
     d_135,
-    bpma_2075_tld,
+    mbd_2066d_tld,
     d_136,
-    qf_2075_tld,
+    bpma_2067_tld,
     d_137,
-    cfy_2076_tld,
+    qf_2068_tld,
     d_138,
-    vcst40t98y_2085_tld,
+    cfx_2068_tld,
     d_139,
-    mbv_2087a_tld,
+    bpma_2075_tld,
     d_140,
-    bv_2087_tld,
+    qf_2075_tld,
     d_141,
-    mbv_2087d_tld,
+    cfy_2076_tld,
     d_142,
-    mbv_2090a_tld,
+    vcst40t98y_2085_tld,
     d_143,
-    bv_2090_tld,
+    mbv_2087a_tld,
     d_144,
-    mbv_2090d_tld,
+    bv_2087_tld,
     d_145,
-    mbv_2093a_tld,
+    mbv_2087d_tld,
     d_146,
-    bv_2093_tld,
+    mbv_2090a_tld,
     d_147,
-    mbv_2093d_tld,
+    bv_2090_tld,
     d_148,
-    vcst98yt98_2094_tld,
+    mbv_2090d_tld,
     d_149,
-    qk_2095_tld,
+    mbv_2093a_tld,
     d_150,
-    sk_2096_tld,
+    bv_2093_tld,
     d_151,
-    bpmd_2097_tld,
+    mbv_2093d_tld,
     d_152,
-    cnx_2098_tld,
+    vcst98yt98_2094_tld,
     d_153,
-    cny_2098_tld,
+    qk_2095_tld,
     d_154,
-    bpmd_2101_tld,
+    sk_2096_tld,
     d_155,
-    sk_2102_tld,
+    bpmd_2097_tld,
     d_156,
-    qk_2103_tld,
+    cnx_2098_tld,
     d_157,
-    vcst98t98y_2104_tld,
+    cny_2098_tld,
     d_158,
-    mbv_2105a_tld,
+    bpmd_2101_tld,
     d_159,
-    bv_2105_tld,
+    sk_2102_tld,
     d_160,
-    mbv_2105d_tld,
+    qk_2103_tld,
     d_161,
-    mbv_2108a_tld,
+    vcst98t98y_2104_tld,
     d_162,
-    bv_2108_tld,
+    mbv_2105a_tld,
     d_163,
-    mbv_2108d_tld,
+    bv_2105_tld,
     d_164,
-    mbv_2111a_tld,
+    mbv_2105d_tld,
     d_165,
-    bv_2111_tld,
+    mbv_2108a_tld,
     d_166,
-    mbv_2111d_tld,
+    bv_2108_tld,
     d_167,
-    vcst98yt98_2112_tld,
+    mbv_2108d_tld,
     d_168,
-    bpmd_2113_tld,
+    mbv_2111a_tld,
     d_169,
-    qk_2113_tld,
+    bv_2111_tld,
     d_170,
-    qk_2115_tld,
+    mbv_2111d_tld,
     d_171,
-    qk_2116_tld,
+    vcst98yt98_2112_tld,
     d_172,
-    qk_2117_tld,
+    bpmd_2113_tld,
     d_173,
-    bpmd_2118_tld,
+    qk_2113_tld,
     d_174,
-    sweep_2119_tld,
+    qk_2115_tld,
     d_175,
-    sweep_2120_tld,
+    qk_2116_tld,
     d_176,
-    bpmd_2121_tld,
+    qk_2117_tld,
     d_177,
-    otrd_2121_tld,
+    bpmd_2118_tld,
     d_178,
-    torc_2122_tld,
+    sweep_2119_tld,
     d_179,
-    bhm_2122_tld,
+    sweep_2120_tld,
     d_180,
-    vcst98t200_2123_tld,
+    bpmd_2121_tld,
     d_181,
-    bpmw_2126_tld,
+    otrd_2121_tld,
     d_182,
-    scrw_2126_tld,
+    torc_2122_tld,
     d_183,
+    bhm_2122_tld,
+    d_184,
+    vcst98t200_2123_tld,
+    d_185,
+    bpmw_2126_tld,
+    d_186,
+    scrw_2126_tld,
+    duwindow_2126_tld,
+    d_187,
+    duflange_2127_tld,
+    d_188,
+    duconcrete_2128_tld,
+    d_189,
+    dustart_2130_tld,
+    duabsorb_2130_tld,
     ensec_2130_tld,
 )
 
@@ -1103,6 +1133,10 @@ bv_2108_tld.ps_id = "BV.1.TLD"
 bv_2111_tld.ps_id = "BV.1.TLD"
 
 # RBend power supplies:
+kfby_1883_tl.ps_id = "KFBY.1883.TL"
+kfbx_1893_tl.ps_id = "KFBX.1893.TL"
+kfby_1908_tl.ps_id = "KFBY.1908.TL"
+kfbx_1923_tl.ps_id = "KFBX.1923.TL"
 kmx_1938_tl.ps_id = "KMX.1938.TL"
 kny_1938_tl.ps_id = "KNY.1938.TL"
 kspos_1941_tl.ps_id = "KSPOS.1941.TL"

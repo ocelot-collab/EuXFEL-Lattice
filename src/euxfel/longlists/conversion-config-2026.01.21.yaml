@@ -9,12 +9,11 @@ writer:
 
 rows:
   skip:
-    TYPE: ["RF", "CTBI", "CUX", "KJX", "KJY", "KAX", "KAY", "KIX", "KIY", "KDY", "KFBY", "KFBX", "VCCHIRP_S"]
+    TYPE: ["RF", "CTBI", "CUX", "VCCHIRP_S"]
     CLASS: ["CRYO", "UNDPLACEH"]
     GROUP: ["CRYO",
             "MOVER",
-            "PHOTON",
-            "DUMP"]
+            "PHOTON"]
     NAME1: []
 
   keep:

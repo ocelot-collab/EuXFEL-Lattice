@@ -14,11 +14,11 @@ from ocelot.cpbd.elements import (
 
 twiss0 = Twiss()
 twiss0.E = 14.0000000004506
-twiss0.alpha_x = -1.0021570345981827
+twiss0.alpha_x = -1.0021570345981978
 twiss0.alpha_y = 2.1349179352920853
-twiss0.beta_x = 42.95290164927485
+twiss0.beta_x = 42.95290164927498
 twiss0.beta_y = 57.186599623919626
-twiss0.Dy = 1.646956609733804e-06
+twiss0.Dy = 1.6469566097338017e-06
 twiss0.s = 1629.702026
 
 

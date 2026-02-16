@@ -15,9 +15,9 @@ from ocelot.cpbd.elements import (
 
 twiss0 = Twiss()
 twiss0.E = 14.0000000004506
-twiss0.alpha_x = -0.4644504324281974
+twiss0.alpha_x = -0.46445043242818856
 twiss0.alpha_y = 1.7410556802465094
-twiss0.beta_x = 8.134176673109314
+twiss0.beta_x = 8.134176673109456
 twiss0.beta_y = 26.92586262689423
 twiss0.Dx = -3.0622527938599947e-06
 twiss0.s = 2932.914767
@@ -102,7 +102,9 @@ d_74 = Drift(l=0.31300000000010186, eid="D_74")
 d_75 = Drift(l=0.6430000000000291, eid="D_75")
 d_76 = Drift(l=3.2269999999998618, eid="D_76")
 d_77 = Drift(l=0.32229999999981374, eid="D_77")
-d_78 = Drift(l=3.9454399999999623, eid="D_78")
+d_78 = Drift(l=0.8578000000002248, eid="D_78")
+d_79 = Drift(l=1.073240000000169, eid="D_79")
+d_80 = Drift(l=2.0143999999995685, eid="D_80")
 
 # Quadrupoles:
 qf_2962_t4d = Quadrupole(l=0.5321, k1=0.1712989174008645, eid="QF.2962.T4D")
@@ -231,6 +233,10 @@ torc_3098_t4d = Marker(eid="TORC.3098.T4D")
 bhm_3098_t4d = Marker(eid="BHM.3098.T4D")
 vcst98t200_3099_t4d = Marker(eid="VCST98T200.3099.T4D")
 scrw_3102_t4d = Marker(eid="SCRW.3102.T4D")
+duwindow_3102_t4d = Marker(eid="DUWINDOW.3102.T4D")
+duflange_3103_t4d = Marker(eid="DUFLANGE.3103.T4D")
+duconcrete_3104_t4d = Marker(eid="DUCONCRETE.3104.T4D")
+duabsorb_3106_t4d = Marker(eid="DUABSORB.3106.T4D")
 ensub_3106_t4d = Marker(eid="ENSUB.3106.T4D")
 ensec_3106_t4d = Marker(eid="ENSEC.3106.T4D")
 
@@ -398,7 +404,13 @@ cell = (
     bpmw_3102_t4d,
     d_77,
     scrw_3102_t4d,
+    duwindow_3102_t4d,
     d_78,
+    duflange_3103_t4d,
+    d_79,
+    duconcrete_3104_t4d,
+    d_80,
+    duabsorb_3106_t4d,
     ensub_3106_t4d,
     ensec_3106_t4d,
 )

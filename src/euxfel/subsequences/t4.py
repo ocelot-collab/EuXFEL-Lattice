@@ -7,6 +7,7 @@ from ocelot.cpbd.elements import (
     Marker,
     Monitor,
     Quadrupole,
+    RBend,
     SBend,
     Sextupole,
     Undulator,
@@ -15,9 +16,9 @@ from ocelot.cpbd.elements import (
 
 twiss0 = Twiss()
 twiss0.E = 14.0000000004506
-twiss0.alpha_x = -0.8354679102230828
+twiss0.alpha_x = -0.8354679102230986
 twiss0.alpha_y = 1.2187430990999688
-twiss0.beta_x = 26.06704337594621
+twiss0.beta_x = 26.067043375945953
 twiss0.beta_y = 38.142459395357704
 twiss0.s = 2438.517039000001
 
@@ -176,6 +177,10 @@ be_2604_t4 = SBend(
     l=2.5, angle=0.0115035, e1=0.00575175, e2=0.00575175, eid="BE.2604.T4"
 )
 
+# RBends:
+kspos_2787_t4 = RBend(l=1.0, e1=0.0, e2=0.0, eid="KSPOS.2787.T4")
+ksneg_2787_t4 = RBend(l=1.0, e1=0.0, e2=0.0, eid="KSNEG.2787.T4")
+
 # Sextupoles:
 saox_2594_t4 = Sextupole(l=0.3164, k2=23.92225032, eid="SAOX.2594.T4")
 saox_2599_t4 = Sextupole(l=0.3164, k2=8.44816687700063, eid="SAOX.2599.T4")
@@ -195,8 +200,6 @@ cex_2685_t4 = Hcor(l=0.1, eid="CEX.2685.T4")
 cex_2729_t4 = Hcor(l=0.1, eid="CEX.2729.T4")
 cfx_2762_t4 = Hcor(l=0.1, eid="CFX.2762.T4")
 cfx_2786_t4 = Hcor(l=0.1, eid="CFX.2786.T4")
-kspos_2787_t4 = Hcor(l=1.0, eid="KSPOS.2787.T4")
-ksneg_2787_t4 = Hcor(l=1.0, eid="KSNEG.2787.T4")
 cex_2795_t4 = Hcor(l=0.1, eid="CEX.2795.T4")
 cex_2799_t4 = Hcor(l=0.1, eid="CEX.2799.T4")
 
@@ -545,6 +548,10 @@ bt_2520_t4.ps_id = "BT.1.T4"
 bt_2522_t4.ps_id = "BT.1.T4"
 be_2584_t4.ps_id = "BE.1.T4"
 be_2604_t4.ps_id = "BE.1.T4"
+
+# RBend power supplies:
+kspos_2787_t4.ps_id = "KSPOS.2787.T4"
+ksneg_2787_t4.ps_id = "KSNEG.2787.T4"
 
 # Sextupole power supplies:
 saox_2594_t4.ps_id = "SAOX.1.T4"

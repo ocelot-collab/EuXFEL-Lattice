@@ -330,7 +330,7 @@ class LongListConverter:
     """
 
     MINIMUM_DRIFT_LENGTH = 1e-9
-    DRIFTABLE_GROUPS = ["CRYO", "VACUUM"]
+    DRIFTABLE_GROUPS = ["CRYO", "VACUUM", "DUMP"]
 
     def __init__(
         self,
@@ -455,11 +455,11 @@ class LongListConverter:
 
         skipped = df.filter(filter_rows_expr & ~but_keep_rows_expr)
 
-        for n1, s, t, cls, grp in skipped.select(
-            "NAME1", "S", "TYPE", "CLASS", "GROUP"
+        for n1, s, t, cls, grp, l in skipped.select(
+                "NAME1", "S", "TYPE", "CLASS", "GROUP", "LENGTH"
         ).iter_rows():
             print(
-                f"Skipping: NAME1 = {n1}, @ S = {s}, TYPE = {t}, CLASS = {cls}, GROUP = {grp}"
+                f"Skipping: NAME1 = {n1}, @ S = {s}, TYPE = {t}, CLASS = {cls}, GROUP = {grp}, L = {l}"
             )
 
         return df.filter(~filter_rows_expr | but_keep_rows_expr)
@@ -1300,9 +1300,27 @@ class LongListConverter:
         ele.ps_id = row["NAME2"]
         return ele
 
-    convert_rampkick = convert_magnet
-    convert_fastkick = convert_magnet
-    convert_fbkick = convert_magnet
+    def convert_fastkick(self, row: dict[str, float | str]) -> elements.RBend:
+        """
+        Convert a FASTKICK row from the component list into an OCELOT RBend element.
+
+        This method expects a row originating from the component list model
+        with GROUP equal to "FASTKICK".
+        """
+
+        element = elements.RBend(
+            eid=row["NAME1"],
+            l=row["LENGTH"],
+            angle=row["STRENGTH"],
+            e1=row["E1/LAG"],
+            e2=row["E2/FREQ"],
+            tilt=row["TILT"]
+        )
+        element.ps_id = row["NAME2"]
+        return element
+
+    convert_rampkick = convert_fastkick
+    convert_fbkick = convert_fastkick
 
 
 def longlist_to_ocelot(
@@ -1418,7 +1436,6 @@ def _parse_new_elements_dict(dconf: dict[str, dict[str, Any]]) -> dict[str, Plac
             # I could add the rest relatively easily, but not necessary atm.
             raise ValueError("Unsupported element type, %s", etype)
     return new_elements
-
 
 def _parse_matching_dict(mconf: dict[str, str | list[str]]) -> MatchingRequest:
     try:

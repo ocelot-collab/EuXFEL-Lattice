@@ -5,10 +5,10 @@ from ocelot.cpbd.elements import Cavity, Drift, Hcor, Marker, Monitor, Quadrupol
 
 twiss0 = Twiss()
 twiss0.E = 2.4000000004506834
-twiss0.alpha_x = 2.5502449340013302
-twiss0.alpha_y = -1.1693414690367419
-twiss0.beta_x = 28.56117823297485
-twiss0.beta_y = 5.0705968370388
+twiss0.alpha_x = 2.5502449340013458
+twiss0.alpha_y = -1.1693414690367425
+twiss0.beta_x = 28.5611782329749
+twiss0.beta_y = 5.070596837038802
 twiss0.s = 443.619226
 
 
