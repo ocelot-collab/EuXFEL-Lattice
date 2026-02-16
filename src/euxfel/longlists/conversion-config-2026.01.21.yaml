@@ -44,7 +44,6 @@ sections:
     sheet: I1toI1D
     start_marker_name1: STSEC.23.I1
     stop_marker_name1: ENSUB.62.I1
-    sequence_before: null
     extras:
       TDSA.52.I1:
         tilt: 1.570796327
