@@ -66,9 +66,6 @@ the model, please check the documentation.
 * tests - tests for the euxfel package.
 * utils - beam matching script
 
-
-
-
 ## Citation 📚
 
 If you use the s2e scripts from this repository or any of their derivatives in your work, please cite the following:
