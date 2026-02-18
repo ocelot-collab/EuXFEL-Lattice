@@ -35,7 +35,15 @@ $ cd EuXFEL-Lattice
 pip install .
 ```
 
+If you want to update the model from a new longlist and have the changes apply to your local git repo, make sure you install in editable mode:
+
+```
+$ cd EuXFEL-Lattice
+pip install --editable .
+```
+
 ### Command Line Interface
+
 
 Some key functionality can then be accessed from the command line:
 
