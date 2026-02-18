@@ -33,3 +33,5 @@ src/.coverage
 .envrc
 .tox
 .aider*
+
+docs-site/site/

@@ -1,4 +1,5 @@
 import pathlib
+from importlib.metadata import version as md_version
 from importlib.resources import files
 
 import click
@@ -25,11 +26,8 @@ from euxfel.subsequences import USED_COMPONENT_LIST
 
 @click.group()
 def main():
-    """Main entrypoint."""
-    name = "euxfel"
-    echo(name)
-    echo("=" * len(name))
-    echo("Package for the OCELOT simulations of the EuXFEL")
+    """Command line interface for the euxfel package."""
+    pass
 
 
 @main.command(help="Convert Component List files to a set of Python modules")
@@ -72,7 +70,9 @@ def compare(targets, marker):
     plt.show()
 
 
-@main.command(help="Plot the OCELOT model's optics")
+@main.command(
+    help="Plot the OCELOT model's optics from the cathode to one of the dumps."
+)
 @argument("targets", nargs=-1)
 def plot(targets: list[str]):
     selected_targets = targets or reversed(TARGET_NAMES)
@@ -81,7 +81,7 @@ def plot(targets: list[str]):
     plt.show()
 
 
-@main.command(help="Plot the OCELOT model's optics")
+@main.command(help="Plot the OCELOT model's optics for one of the subsequences.")
 @argument("names", nargs=-1)
 @option("--list", "list_", is_flag=True, help="List available subsequences")
 def subsequence(names: list[str], list_):
@@ -98,6 +98,11 @@ def subsequence(names: list[str], list_):
     for name in names:
         plot_subsequence(name)
     plt.show()
+
+
+@main.command(help="Print the version of the euxfel package and exit")
+def version():
+    echo(md_version("euxfel"))
 
 
 if __name__ == "__main__":

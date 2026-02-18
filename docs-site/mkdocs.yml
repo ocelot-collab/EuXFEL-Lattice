@@ -1,0 +1,10 @@
+site_name: EuXFEL Lattice OCELOT Model
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Start to End Simulations: s2e.md
+  - Optics: optics.md
+  - Conversion: conversion.md
+  - API: api.md
+

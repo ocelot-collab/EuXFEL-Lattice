@@ -21,6 +21,9 @@ dependencies = [
     "xlrd>=2.0.2",
     "ocelot-collab",
     "ruff>=0.15.1",
+    "numba>=0.63.1",
+    "pyfftw>=0.15.1",
+    "numexpr>=2.14.1",
 ]
 
 [project.scripts]
@@ -40,6 +43,10 @@ dev = [
     "pyflakes>=3.4.0",
     "pytest>=9.0.2",
     "pytest-cov>=7.0.0",
+]
+docs = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.1",
 ]
 
 [tool.uv.sources]
