@@ -259,3 +259,7 @@ out[:, 7] = E_tr
 np.savetxt("Optics.txt", out)
 
 plt.show()
+
+v11,phi11,v13,phi13 = beam2rf(E1=E1,chirp=-9.7,curvature=240,skewness=23050,n=3, freq=1.3e9, E0=E0)
+v21,phi21 = beam2rf_xfel_linac(sum_voltage=578.72e-3, chirp=-7.69, init_energy=0.13)
+v31,phi31 = beam2rf_xfel_linac(sum_voltage=1734.9e-3, chirp=-9.70, init_energy=0.7)
