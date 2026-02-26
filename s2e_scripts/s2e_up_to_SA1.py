@@ -84,7 +84,7 @@ config = {
             "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
     BC2:   {"rho": r3,
             "match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-    L3:    {"phi": phi41, "v": v41 / 640 * 1e-3,
+    L3:    {"phi": phi41, "v": v41*1e-3 / 640,
             "match": match_exec, #"bounds":[-1,1],
             "SC": SC_exec, "wake": wake_exec},# "smooth": smooth_exec},
     CL1:   {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
