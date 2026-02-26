@@ -1,8 +1,5 @@
-# ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
+import matplotlib.pyplot as plt
 
-# sys.path.append(ocelot_dir)
-# print(sys.path)
-# from s2e_sections.sections_special_lattice import *
 from euxfel.sections import *
 from ocelot.utils.section_track import *
 from ocelot.gui.accelerator import *
@@ -23,18 +20,7 @@ coupler_kick_exec = False  # coupler effect in RF modules, quadrupole and dipole
 
 
 # all sections which can be potentially used in s2e
-all_sections = [
-    A1,
-    AH1,
-    LH,
-    DL,
-    BC0,
-    L1,
-    BC1,
-    L2,
-    BC2,
-    B2D,
-]  # , L3, CL1, CL2, CL3, STN10]#, SASE1, T4, SASE3, T4D]
+all_sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL, SASE1, T4, SASE3, T4D]
 
 ######################### Initial Twiss paramters for design optics ##################
 tws0 = Twiss()
@@ -45,44 +31,40 @@ tws0.alpha_x = -0.8390696483216487
 tws0.alpha_y = -0.8390696483216522
 start = time.time()
 
-#################################### Compression Working Point ################################
+####################################################################################
+E40 = 14000                 # final beam energy
+C10= 3                      # local compression in BC0
+C20= 7                      # local compression in BC1
+C30= 400/(C10*C20)          # local compression in BC2
+R2 = 0                      # first derivative of the inverse compression function
+R3 = 900                    # second derivative of the inverse compression function
 
-# RF settings
-v11 = 0.148  # GV
-phi1 = -12.07
-v13 = 0.031384  # GV
-phi13 = 131.85
-v21 = 0.659  # GV
-phi21 = 30.13
-v31 = 1.7052  # GV
-phi31 = -3.078
+v41 = E40-2400
+phi41 = 0
+
 # BC magnet radius read from BKR
 r1 = 0.5 / 0.1366592804  # 3.6587343247857467
 r2 = 0.5 / 0.0532325422  # 9.392750737348779
 r3 = 0.5 / 0.0411897704  # 12.138936321917445
-#################################### Compression WP ################################
+###################################################################################
 
 # init sections which can be used for tracking
-# all_sections = [TL, SASE1]#, T4, SASE3, T4D]
-section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
+sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, B2D]
+section_lat = SectionLattice(sequence=sections, tws0=tws0, data_dir=data_dir)
 # plot twiss parameters
 lat = MagneticLattice(section_lat.elem_seq)
-# plot_opt_func(lat, section_lat.tws)
-# plt.show()
+plot_opt_func(lat, section_lat.tws)
+plt.show()
 
-# sequence of sections for tracking.
-sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, B2D]  # , L3, CL1, CL2, CL3, TL]
+p_array_init = load_particle_array(data_dir + "gun/rf_gun_new.npz", print_params=True)
 
-
-E1 = 130e-3
-E0 = 0.0065
-
-
-v11, phi11, v13, phi13 = beam2rf(
-    E1=E1, chirp=-9.11, curvature=222, skewness=28000, n=3, freq=1.3e9, E0=E0
-)  # (E1=E1, chirp=-9.314, curvature=230, skewness=23101, n=3, freq=1.3e9, E0=E0)
-v21, phi21 = beam2rf_xfel_linac(sum_voltage=570e-3, chirp=-5.4, init_energy=0.13)
-v31, phi31 = beam2rf_xfel_linac(sum_voltage=1.7, chirp=-9.4, init_energy=0.7)
+E1 = 130.0e-3 
+E0 = p_array_init.E
+######################################### RF Settings ################################
+v11,phi11,v13,phi13 = beam2rf(E1=E1,chirp=-8.92,curvature=180.5,skewness=20332,n=3, freq=1.3e9, E0=E0)
+v21,phi21 = beam2rf_xfel_linac(sum_voltage=578.72e-3, chirp=-9.1, init_energy=0.13)
+v31,phi31 = beam2rf_xfel_linac(sum_voltage=1734.9e-3, chirp=-9.3, init_energy=0.7)
+######################################### RF Settings ################################
 
 config = {
     A1: {"phi": phi11, "v": v11 / 8, "SC": SC_exec, "smooth": True, "wake": wake_exec},
@@ -135,22 +117,11 @@ config = {
     B2D: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
 }
 
-p_array = load_particle_array(data_dir + "gun/gun.npz")
-# show_e_beam(p_array)
-# plt.show()
-
-p_array = section_lat.track_sections(
-    sections=sections,
-    p_array=p_array,
-    config=config,
-    force_ext_p_array=True,
-    coupler_kick=coupler_kick_exec,
-)
-
-
-plot_opt_func(lat, section_lat.tws_track, top_plot=["E"], fig_name="Track Twiss")
-
-
+show_e_beam(p_array_init)
+plt.show()
+p_array = section_lat.track_sections(sections=sections, p_array=p_array_init, config=config, force_ext_p_array=True,
+                                     coupler_kick=coupler_kick_exec)
+end = time.time()
+print(f'\nduration = {end-start}')
 show_e_beam(p_array)
-
 plt.show()
