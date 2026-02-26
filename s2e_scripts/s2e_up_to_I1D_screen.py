@@ -1,7 +1,3 @@
-# ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
-
-# sys.path.append(ocelot_dir)
-# print(sys.path)
 from euxfel.sections import *
 from ocelot.utils.section_track import *
 from ocelot.gui.accelerator import *
@@ -22,12 +18,7 @@ coupler_kick_exec = False  # coupler effect in RF modules, quadrupole and dipole
 
 
 # all sections which can be potentially used in s2e
-all_sections = [
-    A1,
-    AH1,
-    LH,
-    I1D,
-]  # , BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL]  # , L3, CL1, CL2, CL3, STN10]#, SASE1, T4, SASE3, T4D]
+all_sections = [A1, AH1, LH, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL, SASE1, T4, SASE3, T4D]
 
 ######################### Initial Twiss paramters for design optics ##################
 tws0 = Twiss()
@@ -38,25 +29,19 @@ tws0.alpha_x = -0.8390696483216487
 tws0.alpha_y = -0.8390696483216522
 start = time.time()
 
-#################################### Compression Working Point ################################
-
-# RF settings
-v11 = 0.148  # GV
-phi1 = -12.07
-v13 = 0.031384  # GV
-phi13 = 131.85
-v21 = 0.659  # GV
-phi21 = 30.13
-v31 = 1.7052  # GV
-phi31 = -3.078
-# BC magnet radius
+#################################### BC magnet radius ################################
 r1 = 0.5 / 0.1366592804  # 3.6587343247857467
 r2 = 0.5 / 0.0532325422  # 9.392750737348779
 r3 = 0.5 / 0.0411897704  # 12.138936321917445
-#################################### Compression WP ################################
-
-# init sections which can be used for tracking
-section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
+######################################################################################
+sections = [
+    A1,
+    AH1,
+    LH,
+    I1D,
+]
+# sequence of sections for tracking
+section_lat = SectionLattice(sequence=sections, tws0=tws0, data_dir=data_dir)
 section_lat.elem_seq = [i for i in flatten(section_lat.elem_seq)]
 
 SPECIAL_DX12_OPTICS_I1D = {
@@ -78,10 +63,10 @@ for element in section_lat.elem_seq:
         # k1 = k1l / element.l
         element.k1 = k1
 
-
 # plot twiss parameters
 lat = MagneticLattice(section_lat.elem_seq)
-sections = [A1, AH1, LH, I1D]
+plot_opt_func(lat, tws,fig_name="Optics", legend=False)
+plt.show()
 
 E1 = 130e-3
 E0 = 0.0065
@@ -91,12 +76,10 @@ curvature = 222
 skewness = 28000
 
 from ocelot.utils.acc_utils import beam2rf, beam2rf_xfel_linac
-
-v11, phi11, v13, phi13 = beam2rf(
-    E1=E1, chirp=chirp, curvature=curvature, skewness=skewness, n=3, freq=1.3e9, E0=E0
-)
+v11, phi11, v13, phi13 = beam2rf(E1=E1, chirp=chirp, curvature=curvature, skewness=skewness, n=3, freq=1.3e9, E0=E0)
 v21, phi21 = beam2rf_xfel_linac(sum_voltage=570e-3, chirp=-5.4, init_energy=0.13)
 v31, phi31 = beam2rf_xfel_linac(sum_voltage=1.7, chirp=-9.4, init_energy=0.7)
+
 config = {
     A1: {"phi": phi11, "v": v11 / 8, "SC": SC_exec, "smooth": True, "wake": wake_exec},
     AH1: {
@@ -157,15 +140,17 @@ config = {
     SASE2: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
 }
 
-p_array = load_particle_array(data_dir + "gun/gun.npz")
+p_array_init = load_particle_array(data_dir + "gun/rf_gun_new.npz", print_params=True)
 p_array = section_lat.track_sections(
-    sections=all_sections,
-    p_array=p_array,
+    sections=sections,
+    p_array=p_array_init,
     config=config,
     force_ext_p_array=True,
     coupler_kick=coupler_kick_exec,
 )
 
+end = time.time()
+print(f'\nduration = {end-start}')
 
 show_e_beam(p_array)
 plt.show()
