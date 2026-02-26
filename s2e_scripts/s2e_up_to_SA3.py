@@ -152,12 +152,11 @@ config = {
     T3: {"match": match_exec, "SC": False, "wake": wake_exec},  # "CSR": CSR_exec,
     SASE2: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
 }
-
 show_e_beam(p_array_init)
 plt.show()
-s_start = deepcopy(p_array_init.s)
 p_array = section_lat.track_sections(sections=sections, p_array=p_array_init, config=config, force_ext_p_array=True,
                                      coupler_kick=coupler_kick_exec)
-
+end = time.time()
+print(f'\nduration = {end-start}')
 show_e_beam(p_array)
 plt.show()
