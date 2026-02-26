@@ -134,7 +134,7 @@ config = {
     },
     L3: {
         "phi": phi41,
-        "v": v41 / 640,
+        "v": v41*1e-3 / 640,
         "match": match_exec,  # "bounds":[-1,1],
         "SC": SC_exec,
         "wake": wake_exec,
