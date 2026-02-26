@@ -1,4 +1,3 @@
-
 from ocelot import *
 from ocelot.cpbd.physics_proc import IBS
 from ocelot.gui import *
