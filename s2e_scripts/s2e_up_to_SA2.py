@@ -154,14 +154,9 @@ config = {
 
 show_e_beam(p_array_init)
 plt.show()
-s_start = deepcopy(p_array_init.s)
-p_array = section_lat.track_sections(
-    sections=sections,
-    p_array=p_array_init,
-    config=config,
-    force_ext_p_array=True,
-    coupler_kick=coupler_kick_exec,
-)
-
+p_array = section_lat.track_sections(sections=sections, p_array=p_array_init, config=config, force_ext_p_array=True,
+                                     coupler_kick=coupler_kick_exec)
+end = time.time()
+print(f'\nduration = {end-start}')
 show_e_beam(p_array)
 plt.show()
