@@ -1,7 +1,4 @@
-# ocelot_dir = "/Users/tomins/Nextcloud/DESY/repository/ocelot"
 import matplotlib.pyplot as plt
-
-# sys.path.append(ocelot_dir)
 
 from euxfel.sections import *
 from ocelot.utils.section_track import *
@@ -21,7 +18,6 @@ wake_exec = True
 SC_exec = True
 CSR_exec = True
 coupler_kick_exec = False  # coupler effect in RF modules, quadrupole and dipole (usually off) component, which now is not in the lattice files
-
 
 # all sections which can be potentially used in s2e
 all_sections = [
@@ -54,44 +50,41 @@ tws0.alpha_x = -0.8390696483216487
 tws0.alpha_y = -0.8390696483216522
 start = time.time()
 
-#################################### Compression Working Point ################################
-E40 = 14
-r1 = 4.1218  # deflecting radius in BC0
-r2 = 8.3934  # deflecting radius in BC1
-r3 = 14.4111  # deflecting radius in BC2
-# RF settings
-v11 = 0.148  # GV
-phi11 = -12.07
-v13 = 0.031384  # GV
-phi13 = 131.85
-v21 = 0.659  # GV
-phi21 = 30.13
-v31 = 1.7052  # GV
-phi31 = -3.078
-v41 = E40 - 2.4
+####################################################################################
+E40 = 14000                 # final beam energy
+C10= 3                      # local compression in BC0
+C20= 7                      # local compression in BC1
+C30= 400/(C10*C20)          # local compression in BC2
+R2 = 0                      # first derivative of the inverse compression function
+R3 = 900                    # second derivative of the inverse compression function
+
+v41 = E40-2400
 phi41 = 0
-# BC magnet radius
-# r1 = 0.5 / 0.1366592804  # 3.6587343247857467
-# r2 = 0.5 / 0.0532325422  # 9.392750737348779
-# r3 = 0.5 / 0.0411897704  # 12.138936321917445
-#################################### Compression WP ################################
 
-# init sections which can be used for tracking
-# all_sections = [TL, SASE1]#, T4, SASE3, T4D]
-section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
+# BC magnet radius read from BKR
+r1 = 0.5 / 0.1366592804  # 3.6587343247857467
+r2 = 0.5 / 0.0532325422  # 9.392750737348779
+r3 = 0.5 / 0.0411897704  # 12.138936321917445
+###################################################################################
+
+# sequence of sections for tracking
+sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL]
+section_lat = SectionLattice(sequence=sections, tws0=tws0, data_dir=data_dir)
 # plot twiss parameters
 lat = MagneticLattice(section_lat.elem_seq)
 plot_opt_func(lat, section_lat.tws)
 plt.show()
+#load the initial particle array (from the gun) to be tracked down the machine
+p_array_init = load_particle_array(data_dir + "gun/rf_gun_new.npz", print_params=True)
 
-# sequence of sections for tracking.
-all_sections = [A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, TL]
-section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
-# plot twiss parameters
-lat = MagneticLattice(section_lat.elem_seq)
-plot_opt_func(lat, section_lat.tws)
-plt.show()
-
+E1 = 130.0e-3 
+E0 = p_array_init.E
+######################################### RF Settings ################################
+from ocelot.utils.acc_utils import beam2rf,beam2rf_xfel_linac 
+v11,phi11,v13,phi13 = beam2rf(E1=E1,chirp=-8.92,curvature=180.5,skewness=20332,n=3, freq=1.3e9, E0=E0)
+v21,phi21 = beam2rf_xfel_linac(sum_voltage=578.72e-3, chirp=-9.1, init_energy=0.13)
+v31,phi31 = beam2rf_xfel_linac(sum_voltage=1734.9e-3, chirp=-9.3, init_energy=0.7)
+######################################### RF Settings ################################
 
 config = {
     A1: {"phi": phi11, "v": v11 / 8, "SC": SC_exec, "smooth": True, "wake": wake_exec},
@@ -143,7 +136,7 @@ config = {
     },
     L3: {
         "phi": phi41,
-        "v": v41 / 640,
+        "v": v41*1e-3 / 640,
         "match": match_exec,  # "bounds":[-1,1],
         "SC": SC_exec,
         "wake": wake_exec,
@@ -161,141 +154,11 @@ config = {
     SASE2: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
 }
 
-p_array = load_particle_array(data_dir + "gun/gun.npz")
-show_e_beam(p_array)
+show_e_beam(p_array_init)
 plt.show()
-s_start = deepcopy(p_array.s)
-p_array = section_lat.track_sections(
-    sections=all_sections,
-    p_array=p_array,
-    config=config,
-    force_ext_p_array=True,
-    coupler_kick=coupler_kick_exec,
-)
-
-# collect tws for all sections
-seq_global = []
-tws_track_global = []
-L = 0
-for s in all_sections:
-    sec = section_lat.dict_sections[s]
-    seq_global.append(sec.lattice.sequence)
-    for tws in sec.tws_track:
-        tws.s += L
-    tws_track_global = np.append(tws_track_global, sec.tws_track)
-    L += sec.lattice.totalLen
-
-# postprocessing
-S = [tw.s + 3.2 for tw in section_lat.tws]
-s_max = max(S)
-BetaX = [tw.beta_x for tw in section_lat.tws]
-BetaY = [tw.beta_y for tw in section_lat.tws]
-AlphaX = [tw.alpha_x for tw in section_lat.tws]
-AlphaY = [tw.alpha_y for tw in section_lat.tws]
-GammaX = [tw.gamma_x for tw in section_lat.tws]
-GammaY = [tw.gamma_y for tw in section_lat.tws]
-E = [tw.E for tw in section_lat.tws]
-
-
-S_tr = np.array([tw.s for tw in tws_track_global])
-S_tr = S_tr + s_start
-BetaX_tr = [tw.beta_x for tw in tws_track_global]
-BetaY_tr = [tw.beta_y for tw in tws_track_global]
-AlphaX_tr = [tw.alpha_x for tw in tws_track_global]
-AlphaY_tr = [tw.alpha_y for tw in tws_track_global]
-EmitX_tr = [tw.emit_x for tw in tws_track_global]
-EmitY_tr = [tw.emit_y for tw in tws_track_global]
-E_tr = [tw.E for tw in tws_track_global]
-sig_tau = np.sqrt([tw.tautau for tw in tws_track_global])
-Q = np.sum(p_array.q_array)
-I = c * Q / np.sqrt(2 * pi) / sig_tau
-Sx = np.zeros(len(S_tr))
-Sy = np.zeros(len(S_tr))
-for i in range(len(S_tr)):
-    gamma = E_tr[i - 1] / m_e_GeV
-    EmitX_tr[i - 1] = EmitX_tr[i - 1] * gamma * 1e6
-    EmitY_tr[i - 1] = EmitY_tr[i - 1] * gamma * 1e6
-    Sx[i - 1] = (
-        I[i - 1]
-        * BetaX_tr[i - 1]
-        / (1.7045e04 * gamma * gamma * EmitX_tr[i - 1] * 1e-6)
-    )
-    Sy[i - 1] = (
-        I[i - 1]
-        * BetaY_tr[i - 1]
-        / (1.7045e04 * gamma * gamma * EmitY_tr[i - 1] * 1e-6)
-    )
-
-s0 = 0
-s1 = s_max
-plt.figure()
-plt.subplot(221)
-plt.plot(S, BetaX, label="design")
-plt.plot(S_tr, BetaX_tr, label="beam")
-plt.legend()
-plt.ylabel(r"$\beta_x$[m]")
-plt.axis([s0, s1, -1, 100])
-plt.subplot(222)
-plt.plot(S, BetaY, S_tr, BetaY_tr)
-plt.xlim([s0, s1])
-plt.subplot(223)
-plt.plot(S, AlphaX, S_tr, AlphaX_tr)
-plt.xlabel("s[m]")
-plt.ylabel(r"$\alpha_x$")
-plt.xlim([s0, s1])
-plt.subplot(224)
-plt.plot(S, AlphaY, S_tr, AlphaY_tr)
-plt.xlabel("s[m]")
-plt.xlim([s0, s1])
-
-plt.figure()
-plt.subplot(211)
-plt.plot(S_tr, EmitX_tr, S_tr, EmitY_tr)
-plt.grid(True)
-plt.title("Emittances")
-plt.xlabel("s[m]")
-plt.ylabel(r"$\epsilon_x,\epsilon_y [\mu m]$")
-plt.xlim([s0, s1])
-plt.subplot(212)
-plt.plot(S, E, S_tr, E_tr)
-plt.grid(True)
-plt.title("Energy")
-plt.xlabel("s[m]")
-plt.ylabel(r"E [GeV]")
-# plt.axis([s0, s1, 0, 3])
-
-plt.figure()
-plt.subplot(211)
-plt.plot(S_tr, sig_tau * 1e3)
-plt.grid(False)
-# plt.title("Sigma_tau");
-plt.ylabel("$\sigma_z$ [mm]")
-plt.xlim([s0, s1])
-plt.subplot(212)
-plt.plot(S_tr, Sx, S_tr, Sy)
-plt.plot(S_tr, Sx, "b", label=r"$k_x^{sc}$")
-plt.plot(S_tr, Sy, "r", label=r"$k_y^{sc}$")
-plt.legend()
-plt.grid(False)
-plt.xlabel("z[m]")
-plt.xlim([s0, s1])
-
-show_e_beam(p_array, nparts_in_slice=5000, smooth_param=0.01, nfig=13, title="")
-n_out = len(S_tr)
-out = np.zeros((n_out, 8))
-out[:, 0] = S_tr
-out[:, 1] = AlphaX_tr
-out[:, 2] = BetaX_tr
-out[:, 3] = EmitX_tr
-out[:, 4] = AlphaY_tr
-out[:, 5] = BetaY_tr
-out[:, 6] = EmitY_tr
-out[:, 7] = E_tr
-
-np.savetxt("Optics.txt", out)
-
-plt.show()
+s_start = deepcopy(p_array_init.s)
+p_array = section_lat.track_sections(sections=sections, p_array=p_array_init, config=config, force_ext_p_array=True,
+                                     coupler_kick=coupler_kick_exec)
 
 show_e_beam(p_array)
-
 plt.show()
