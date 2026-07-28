@@ -1,7 +1,8 @@
 import matplotlib.patches as patches
 import polars as pl
-from latdraw.latdraw import DEFAULT_COLOUR_MAP, MAGNET_WIDTH
 from matplotlib.axes import Axes
+
+from euxfel.latdraw.draw import DEFAULT_COLOUR_MAP, MAGNET_WIDTH
 
 from .complist import ComponentList
 

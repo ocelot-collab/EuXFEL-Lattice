@@ -1,15 +1,19 @@
-import latdraw
 import matplotlib.pyplot as plt
 import polars as pl
-from latdraw.convert import from_ocelot
-from latdraw.lattice import Beamline
-from latdraw.plot import s_label, subplots_with_lattices
 from ocelot.cpbd.magnetic_lattice import MagneticLattice
 from ocelot.cpbd.track import twiss
 
 from euxfel import subsequences
 from euxfel.complist import ComponentList
 from euxfel.complist_draw import draw_to_target
+from euxfel.latdraw.convert import from_ocelot
+from euxfel.latdraw.lattice import Beamline
+from euxfel.latdraw.plot import (
+    beta_label,
+    s_label,
+    subplots_with_lattices,
+    three_axes_figure,
+)
 
 from . import sequences
 
@@ -26,7 +30,7 @@ def plot_cathode_to_target(
 
     title = f"Cathode to {target.upper()} Optics"
 
-    fig, (_, ax1, ax2, ax3) = latdraw.plot.three_axes_figure(sequence, title=title)
+    fig, (_, ax1, ax2, ax3) = three_axes_figure(sequence, title=title)
 
     ax1.plot(optics_df["s"], optics_df["beta_x"], label=r"$\beta_x$")
     ax1.plot(optics_df["s"], optics_df["beta_y"], label=r"$\beta_y$")
@@ -139,7 +143,7 @@ def plot_subsequence(name: str) -> plt.Figure:
     optics_df = twiss(mlat, tws0=twiss0, return_df=True)
     optics_df = pl.from_pandas(optics_df)  # type: ignore
 
-    fig, (mx, ax1, ax2, ax3) = latdraw.plot.subplots_with_lattices(
+    fig, (mx, ax1, ax2, ax3) = subplots_with_lattices(
         [from_ocelot(sequence), None, None, None], s_offset=twiss0.s
     )
 
@@ -157,7 +161,7 @@ def plot_subsequence(name: str) -> plt.Figure:
     ax1.set_ylabel(r"$\beta$ / m")
     ax2.set_ylabel("$D$ / m")
     ax3.set_ylabel("$E$ / GeV")
-    latdraw.plot.beta_label(ax1)
-    latdraw.plot.s_label(ax3)
+    beta_label(ax1)
+    s_label(ax3)
 
     return fig

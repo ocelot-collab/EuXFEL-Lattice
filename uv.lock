@@ -313,15 +313,15 @@ wheels = [
 
 [[package]]
 name = "euxfel"
-version = "0.2.0+componentlist.20260121"
+version = "0.3.0+componentlist.20260121"
 source = { editable = "." }
 dependencies = [
     { name = "click" },
     { name = "fastexcel" },
-    { name = "latdraw" },
     { name = "matplotlib" },
     { name = "numba" },
     { name = "numexpr" },
+    { name = "numpy" },
     { name = "ocelot-collab" },
     { name = "polars" },
     { name = "pyarrow" },
@@ -351,10 +351,10 @@ docs = [
 requires-dist = [
     { name = "click", specifier = ">=8.3.1" },
     { name = "fastexcel", specifier = ">=0.18.0" },
-    { name = "latdraw", specifier = ">=0.3.1" },
     { name = "matplotlib", specifier = ">=3.10.7" },
     { name = "numba", specifier = ">=0.63.1" },
     { name = "numexpr", specifier = ">=2.14.1" },
+    { name = "numpy", specifier = ">=2" },
     { name = "ocelot-collab", git = "https://github.com/ocelot-collab/ocelot.git?rev=cadf5d69284416c099088b6fec22e8f1d604ad19" },
     { name = "polars", specifier = ">=1.36.1" },
     { name = "pyarrow", specifier = ">=22.0.0" },
@@ -662,19 +662,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/99/dd/841e9a66c4715477ea0abc78da039832fbb09dac5c35c58dc4c41a407b8a/kiwisolver-1.4.9-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:aedff62918805fb62d43a4aa2ecd4482c380dc76cd31bd7c8878588a61bd0369", size = 2391835, upload-time = "2025-08-10T21:27:34.23Z" },
     { url = "https://files.pythonhosted.org/packages/0c/28/4b2e5c47a0da96896fdfdb006340ade064afa1e63675d01ea5ac222b6d52/kiwisolver-1.4.9-cp314-cp314t-win_amd64.whl", hash = "sha256:1fa333e8b2ce4d9660f2cda9c0e1b6bafcfb2457a9d259faa82289e73ec24891", size = 79988, upload-time = "2025-08-10T21:27:35.587Z" },
     { url = "https://files.pythonhosted.org/packages/80/be/3578e8afd18c88cdf9cb4cffde75a96d2be38c5a903f1ed0ceec061bd09e/kiwisolver-1.4.9-cp314-cp314t-win_arm64.whl", hash = "sha256:4a48a2ce79d65d363597ef7b567ce3d14d68783d2b2263d98db3d9477805ba32", size = 70260, upload-time = "2025-08-10T21:27:36.606Z" },
-]
-
-[[package]]
-name = "latdraw"
-version = "0.3.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "matplotlib" },
-    { name = "polars" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/4b/b6/3b77f44c9f08c4009a3fd78730b8634500368dc6c5fe604f5f99dade1dea/latdraw-0.3.1.tar.gz", hash = "sha256:eca20eba609cfdb2834bc8e825a3b416f112de9a3077f4fc793cb83cd74edfc3", size = 128917, upload-time = "2026-02-15T18:55:51.298Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/db/23/beaf4377271e54efd0f64e5eac2934e274fbb531576bc1d247923e3ac9d8/latdraw-0.3.1-py3-none-any.whl", hash = "sha256:5870beb695993ad858050e6accca7b6e80049c4696278ba184bae8ef045d5e13", size = 10813, upload-time = "2026-02-15T18:55:49.078Z" },
 ]
 
 [[package]]
