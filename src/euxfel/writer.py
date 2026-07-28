@@ -140,7 +140,16 @@ class PythonSubsequenceWriter:
             for element in elements_of_this_type:
                 lines.append(self.element_to_string(element, variable_names[element]))
 
-        return "\n".join(lines)
+        # ruff format would otherwise wrap the longest element definitions over
+        # several lines.  Bracket the block so the one-element-per-line layout
+        # emitted here survives every ruff invocation: write_module's own,
+        # `tox -e format`, and editors-on-save.  Anything added to to_module
+        # between here and sequence_to_string would land inside the region.
+        # lstrip: the first section header carries a leading newline as a
+        # separator; drop it so the blank lines before `# fmt: off` stay
+        # outside the region, where ruff still caps them at two.
+        body = "\n".join(lines).lstrip("\n")
+        return f"# fmt: off\n{body}\n# fmt: on"
 
     def slicedelement_to_string(self, element, variable_name):
         lines = []

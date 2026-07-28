@@ -12,6 +12,7 @@ twiss0.beta_y = 7.034952481825338
 twiss0.s = 38.889005
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=0.002879000000000076, eid="D_0")
 d_1 = Drift(l=0.002879000000000076, eid="D_1")
@@ -34,9 +35,7 @@ qi_63_i1d = Quadrupole(l=0.2377, k1=4.401795, eid="QI.63.I1D")
 qi_64_i1d = Quadrupole(l=0.2377, eid="QI.64.I1D")
 
 # SBends:
-bb_62_i1d = SBend(
-    l=0.5, angle=0.5235987756, e1=0.261799388, e2=0.261799388, eid="BB.62.I1D"
-)
+bb_62_i1d = SBend(l=0.5, angle=0.5235987756, e1=0.261799388, e2=0.261799388, eid="BB.62.I1D")
 
 # Monitors:
 bpma_63_i1d = Monitor(eid="BPMA.63.I1D")
@@ -56,6 +55,7 @@ duconcrete_65_i1d = Marker(eid="DUCONCRETE.65.I1D")
 bhm_66_i1d = Marker(eid="BHM.66.I1D")
 duabsorb_66_i1d = Marker(eid="DUABSORB.66.I1D")
 ensec_66_i1d = Marker(eid="ENSEC.66.I1D")
+# fmt: on
 
 # Sequence:
 cell = (

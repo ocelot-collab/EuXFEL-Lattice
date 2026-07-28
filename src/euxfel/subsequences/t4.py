@@ -23,6 +23,7 @@ twiss0.beta_y = 38.14245939535785
 twiss0.s = 2438.517039000001
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=0.2580000000002656, eid="D_0")
 d_1 = Drift(l=0.041999999999916326, eid="D_1")
@@ -173,12 +174,8 @@ bt_2518_t4 = SBend(l=0.6, eid="BT.2518.T4")
 bt_2519_t4 = SBend(l=0.6, eid="BT.2519.T4")
 bt_2520_t4 = SBend(l=0.6, eid="BT.2520.T4")
 bt_2522_t4 = SBend(l=0.6, eid="BT.2522.T4")
-be_2584_t4 = SBend(
-    l=2.5, angle=0.0115035, e1=0.00575175, e2=0.00575175, eid="BE.2584.T4"
-)
-be_2604_t4 = SBend(
-    l=2.5, angle=0.0115035, e1=0.00575175, e2=0.00575175, eid="BE.2604.T4"
-)
+be_2584_t4 = SBend(l=2.5, angle=0.0115035, e1=0.00575175, e2=0.00575175, eid="BE.2584.T4")
+be_2604_t4 = SBend(l=2.5, angle=0.0115035, e1=0.00575175, e2=0.00575175, eid="BE.2604.T4")
 
 # RBends:
 kspos_2787_t4 = RBend(l=1.0, e1=0.0, e2=0.0, eid="KSPOS.2787.T4")
@@ -282,6 +279,7 @@ tora_2793_t4 = Marker(eid="TORA.2793.T4")
 vcst40t10_2793_t4 = Marker(eid="VCST40T10.2793.T4")
 ensub_2800_t4 = Marker(eid="ENSUB.2800.T4")
 ensec_2800_t4 = Marker(eid="ENSEC.2800.T4")
+# fmt: on
 
 # Sequence:
 cell = (

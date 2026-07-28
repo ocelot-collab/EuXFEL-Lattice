@@ -23,6 +23,7 @@ twiss0.Dx = -3.062252793859992e-06
 twiss0.s = 2932.914767
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=0.2579999999998108, eid="D_0")
 d_1 = Drift(l=0.041999999999916326, eid="D_1")
@@ -126,38 +127,10 @@ qk_3092_t4d = Quadrupole(l=1.0552, k1=-0.1699949051999621, eid="QK.3092.T4D")
 qk_3093_t4d = Quadrupole(l=1.0552, k1=-0.1699949051999621, eid="QK.3093.T4D")
 
 # SBends:
-bv_3067_t4d = SBend(
-    l=2.5,
-    angle=0.043633231,
-    e1=0.021816616,
-    e2=0.021816616,
-    tilt=1.570796327,
-    eid="BV.3067.T4D",
-)
-bv_3070_t4d = SBend(
-    l=2.5,
-    angle=0.043633231,
-    e1=0.021816616,
-    e2=0.021816616,
-    tilt=1.570796327,
-    eid="BV.3070.T4D",
-)
-bv_3083_t4d = SBend(
-    l=2.5,
-    angle=0.043633231,
-    e1=0.021816616,
-    e2=0.021816616,
-    tilt=1.570796327,
-    eid="BV.3083.T4D",
-)
-bv_3086_t4d = SBend(
-    l=2.5,
-    angle=0.043633231,
-    e1=0.021816616,
-    e2=0.021816616,
-    tilt=1.570796327,
-    eid="BV.3086.T4D",
-)
+bv_3067_t4d = SBend(l=2.5, angle=0.043633231, e1=0.021816616, e2=0.021816616, tilt=1.570796327, eid="BV.3067.T4D")
+bv_3070_t4d = SBend(l=2.5, angle=0.043633231, e1=0.021816616, e2=0.021816616, tilt=1.570796327, eid="BV.3070.T4D")
+bv_3083_t4d = SBend(l=2.5, angle=0.043633231, e1=0.021816616, e2=0.021816616, tilt=1.570796327, eid="BV.3083.T4D")
+bv_3086_t4d = SBend(l=2.5, angle=0.043633231, e1=0.021816616, e2=0.021816616, tilt=1.570796327, eid="BV.3086.T4D")
 
 # RBends:
 sweep_3095_t4d = RBend(l=0.64, e1=0.0, e2=0.0, tilt=-1.570796327, eid="SWEEP.3095.T4D")
@@ -239,6 +212,7 @@ duconcrete_3104_t4d = Marker(eid="DUCONCRETE.3104.T4D")
 duabsorb_3106_t4d = Marker(eid="DUABSORB.3106.T4D")
 ensub_3106_t4d = Marker(eid="ENSUB.3106.T4D")
 ensec_3106_t4d = Marker(eid="ENSEC.3106.T4D")
+# fmt: on
 
 # Sequence:
 cell = (

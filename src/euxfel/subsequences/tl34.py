@@ -12,6 +12,7 @@ twiss0.beta_y = 10.943857322503927
 twiss0.s = 1957.1856990000013
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=1.4724009999999907, eid="D_0")
 d_1 = Drift(l=13.047400999999823, eid="D_1")
@@ -84,6 +85,7 @@ tora_2011_tl = Marker(eid="TORA.2011.TL")
 vcst40t98_2014_tl = Marker(eid="VCST40T98.2014.TL")
 otre_2023_tl = Marker(eid="OTRE.2023.TL")
 ensub_2025_tl = Marker(eid="ENSUB.2025.TL")
+# fmt: on
 
 # Sequence:
 cell = (

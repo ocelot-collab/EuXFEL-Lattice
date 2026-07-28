@@ -24,6 +24,7 @@ twiss0.beta_x = 55.7981
 twiss0.beta_y = 55.7981
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=0.276, eid="D_0")
 d_1 = Drift(l=0.043999999999999984, eid="D_1")
@@ -183,9 +184,7 @@ ciy_55_i1 = Vcor(l=0.1, eid="CIY.55.I1")
 ciy_58_i1 = Vcor(l=0.1, eid="CIY.58.I1")
 
 # Undulators:
-u74_49_i1 = Undulator(
-    lperiod=0.074, nperiods=12.405405405405407, Kx=1.294, eid="U74.49.I1"
-)
+u74_49_i1 = Undulator(lperiod=0.074, nperiods=12.405405405405407, Kx=1.294, eid="U74.49.I1")
 
 # Cavitys:
 c_a1_1_1_i1 = Cavity(l=1.0377, v=0.018125, freq=1300000000.0, eid="C.A1.1.1.I1")
@@ -196,30 +195,14 @@ c_a1_1_5_i1 = Cavity(l=1.0377, v=0.018125, freq=1300000000.0, eid="C.A1.1.5.I1")
 c_a1_1_6_i1 = Cavity(l=1.0377, v=0.018125, freq=1300000000.0, eid="C.A1.1.6.I1")
 c_a1_1_7_i1 = Cavity(l=1.0377, v=0.018125, freq=1300000000.0, eid="C.A1.1.7.I1")
 c_a1_1_8_i1 = Cavity(l=1.0377, v=0.018125, freq=1300000000.0, eid="C.A1.1.8.I1")
-c3_ah1_1_1_i1 = Cavity(
-    l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.1.I1"
-)
-c3_ah1_1_2_i1 = Cavity(
-    l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.2.I1"
-)
-c3_ah1_1_3_i1 = Cavity(
-    l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.3.I1"
-)
-c3_ah1_1_4_i1 = Cavity(
-    l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.4.I1"
-)
-c3_ah1_1_5_i1 = Cavity(
-    l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.5.I1"
-)
-c3_ah1_1_6_i1 = Cavity(
-    l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.6.I1"
-)
-c3_ah1_1_7_i1 = Cavity(
-    l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.7.I1"
-)
-c3_ah1_1_8_i1 = Cavity(
-    l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.8.I1"
-)
+c3_ah1_1_1_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.1.I1")
+c3_ah1_1_2_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.2.I1")
+c3_ah1_1_3_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.3.I1")
+c3_ah1_1_4_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.4.I1")
+c3_ah1_1_5_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.5.I1")
+c3_ah1_1_6_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.6.I1")
+c3_ah1_1_7_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.7.I1")
+c3_ah1_1_8_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.AH1.1.8.I1")
 
 # TDCavitys:
 tdsa_52_i1 = TDCavity(l=0.7, freq=2800000000.0, tilt=1.570796327, eid="TDSA.52.I1")
@@ -305,6 +288,7 @@ tora_60_i1 = Marker(eid="TORA.60.I1")
 bpmatest_61_i1 = Marker(eid="BPMATEST.61.I1")
 dump_csr_start = Marker(eid="DUMP.CSR.START")
 ensub_62_i1 = Marker(eid="ENSUB.62.I1")
+# fmt: on
 
 # Sequence:
 cell = (
