@@ -347,6 +347,68 @@ class LongListConverter:
         self.rowedits: RowEdits = rowedits or RowEdits()
         self.targets = targets or {}
         self.drift_counter = 0
+        # NAME1 -> (entry S, exit S), rebuilt per section by convert_section.
+        self.bend_extents: dict[str, tuple[float, float]] = {}
+
+    def _bend_extents_from_markers(
+        self, df: pl.DataFrame
+    ) -> dict[str, tuple[float, float]]:
+        """Map each bending magnet's NAME1 to its (entry S, exit S).
+
+        The Component List brackets every bending magnet with BENDIN and
+        BENDOUT marker rows.  These give the magnet's arc length *and* its
+        position, and taking both from the same pair of numbers is what makes
+        the geometry come out exactly right.
+
+        The magnet's own LENGTH column is not the arc, and cannot be converted
+        into it by any single formula: for some magnets LENGTH is the chord and
+        for others the projection onto the straight axis.  Nor is the magnet's
+        own S usable for placement, because it is rounded independently of the
+        markers -- BL.50I.I1's S sits half a micron off the midpoint of its own
+        BENDIN/BENDOUT pair -- so deriving the start as S - arc/2 makes the
+        magnet overrun its neighbour.
+
+        Two independent checks confirm the span is the arc.  The chord between
+        the BENDIN and BENDOUT positions satisfies chord = 2 * rho * sin(t/2)
+        for exactly this arc, to better than a micron on every bend; and the
+        BENDARC marker, which records where the curved trajectory passes at
+        mid-magnet, sits the corresponding sagitta off the chord midpoint.
+
+        Nothing but other BEND* markers ever appears between BENDIN and
+        BENDOUT, so the whole span belongs to the magnet.  Those markers lie
+        inside the magnet's extent and are therefore dropped by
+        `_filter_bad_rows`, so this must be called on the unfiltered section.
+        """
+        extents: dict[str, tuple[float, float]] = {}
+        start_s: float | None = None
+        bend_name: str | None = None
+        for row in df.select(["NAME1", "CLASS", "S"]).iter_rows(named=True):
+            cls = row["CLASS"]
+            if cls == "BENDIN":
+                start_s, bend_name = row["S"], None
+            elif cls == "BENDOUT":
+                if start_s is not None and bend_name is not None:
+                    extents[bend_name] = (start_s, row["S"])
+                start_s, bend_name = None, None
+            elif start_s is not None and cls in ("SBEN", "RBEN"):
+                bend_name = row["NAME1"]
+        return extents
+
+    def _bend_arc_or(self, name1: str, length: float) -> float:
+        """Arc length from the BENDIN/BENDOUT markers, else the LENGTH column."""
+        extent = self.bend_extents.get(name1)
+        return length if extent is None else extent[1] - extent[0]
+
+    def _element_start_s(self, row: dict[str, Any], oelement: OpticElement) -> float:
+        """Global s at which an element begins.
+
+        Bends are positioned by their BENDIN marker rather than by centring
+        them on their own S, which is rounded independently of the markers.
+        """
+        extent = self.bend_extents.get(row["NAME1"])
+        if extent is not None:
+            return extent[0]
+        return row["S"] - oelement.l * 0.5
 
     def convert_sections(
         self, sections: list[SubsequenceModule]
@@ -503,8 +565,25 @@ class LongListConverter:
             ["NAME1", "S", "LENGTH", "GROUP", "CLASS", "TYPE"]
         )
 
-        starts = (df["S"] - df["LENGTH"] * 0.5).to_numpy()
-        stops = (df["S"] + df["LENGTH"] * 0.5).to_numpy()
+        # Bends occupy their arc, which is longer than LENGTH, so their extents
+        # must be measured with the arc or markers lying just inside a magnet
+        # survive here and later force a negative drift.
+        starts = (
+            df["NAME1"]
+            .replace_strict(
+                {n: a for n, (a, _) in self.bend_extents.items()}, default=None
+            )
+            .fill_null(df["S"] - df["LENGTH"] * 0.5)
+            .to_numpy()
+        )
+        stops = (
+            df["NAME1"]
+            .replace_strict(
+                {n: b for n, (_, b) in self.bend_extents.items()}, default=None
+            )
+            .fill_null(df["S"] + df["LENGTH"] * 0.5)
+            .to_numpy()
+        )
 
         bad_name1s: list[str] = []
         for row in thin.iter_rows(named=True):
@@ -608,6 +687,9 @@ class LongListConverter:
         _raise_if_row_is_not_marker(df[idx_start])
         _raise_if_row_is_not_marker(df[idx_stop])
 
+        # Must be read before _filter_bad_rows drops the BEND* markers.
+        self.bend_extents = self._bend_extents_from_markers(section_df)
+
         start = section_df[0]
         twiss0 = Twiss(
             beta_x=start["BETX"].item(),
@@ -659,8 +741,8 @@ class LongListConverter:
             # be because the longlist includes no drifts, so figuring
             # out the structure of the lattice only using lengths is
             # not possible.
-            oelement_here_start_s = row_here["S"] - oelement_here.l * 0.5
-            oelement_there_start_s = row_there["S"] - oelement_there.l * 0.5
+            oelement_here_start_s = self._element_start_s(row_here, oelement_here)
+            oelement_there_start_s = self._element_start_s(row_there, oelement_there)
 
             oelement_here_until_next_element = self._expand_from_this_element_to_next(
                 oelement_here,
@@ -1061,8 +1143,15 @@ class LongListConverter:
         elif row["CLASS"] == "VKIC":
             ele = elements.Vcor(angle=row["STRENGTH"], **common_kw)
         elif row["CLASS"] == "SBEN":
+            # LENGTH is not the arc -- see _bend_extents_from_markers.
             ele = elements.SBend(
-                angle=row["STRENGTH"], e1=row["E1/LAG"], e2=row["E2/FREQ"], **common_kw
+                angle=row["STRENGTH"],
+                e1=row["E1/LAG"],
+                e2=row["E2/FREQ"],
+                **{
+                    **common_kw,
+                    "l": self._bend_arc_or(row["NAME1"], row["LENGTH"]),
+                },
             )
         elif row["CLASS"] == "SOLE":
             ele = elements.Solenoid(**common_kw)
@@ -1072,7 +1161,13 @@ class LongListConverter:
             ele = elements.Sextupole(k2=row["STRENGTH"] / row["LENGTH"], **common_kw)
         elif row["CLASS"] == "RBEN":
             ele = elements.RBend(
-                angle=row["STRENGTH"], e1=row["E1/LAG"], e2=row["E2/FREQ"], **common_kw
+                angle=row["STRENGTH"],
+                e1=row["E1/LAG"],
+                e2=row["E2/FREQ"],
+                **{
+                    **common_kw,
+                    "l": self._bend_arc_or(row["NAME1"], row["LENGTH"]),
+                },
             )
         elif row["CLASS"] == "OCTU":
             if row["LENGTH"] == 0 and row["STRENGTH"] == 0:

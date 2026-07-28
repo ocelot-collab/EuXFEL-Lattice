@@ -5,41 +5,37 @@ from ocelot.cpbd.elements import Drift, Hcor, Marker, Monitor, Quadrupole, SBend
 
 twiss0 = Twiss()
 twiss0.E = 2.4000000004506834
-twiss0.alpha_x = 2.550244934001351
-twiss0.alpha_y = -1.1693414690367554
-twiss0.beta_x = 28.56117823297494
-twiss0.beta_y = 5.070596837038869
+twiss0.alpha_x = 2.55519355394083
+twiss0.alpha_y = -1.16932766668269
+twiss0.beta_x = 28.61364619706966
+twiss0.beta_y = 5.0705567123194974
 twiss0.s = 443.619226
 
 
 # fmt: off
 # Drifts:
-d_0 = Drift(l=0.0014499999999770807, eid="D_0")
-d_1 = Drift(l=0.001449999999988849, eid="D_1")
-d_2 = Drift(l=0.5799999999999841, eid="D_2")
-d_3 = Drift(l=0.17395000000001345, eid="D_3")
-d_4 = Drift(l=0.18394999999999562, eid="D_4")
-d_5 = Drift(l=1.0437200000000075, eid="D_5")
-d_6 = Drift(l=0.13628000000002202, eid="D_6")
-d_7 = Drift(l=0.17999999999995908, eid="D_7")
-d_8 = Drift(l=0.19999999999998863, eid="D_8")
-d_9 = Drift(l=0.9839500000000158, eid="D_9")
-d_10 = Drift(l=0.43628000000002465, eid="D_10")
-d_11 = Drift(l=0.4176699999999869, eid="D_11")
-d_12 = Drift(l=0.0014500000000339242, eid="D_12")
-d_13 = Drift(l=0.001449999999988849, eid="D_13")
-d_14 = Drift(l=0.5149270000000001, eid="D_14")
-d_15 = Drift(l=0.16901999999995496, eid="D_15")
-d_16 = Drift(l=0.2589800000000222, eid="D_16")
-d_17 = Drift(l=0.224899999999991, eid="D_17")
-d_18 = Drift(l=0.23402000000000953, eid="D_18")
-d_19 = Drift(l=0.5136800000000361, eid="D_19")
-d_20 = Drift(l=0.14999999999997726, eid="D_20")
-d_21 = Drift(l=0.22500000000002274, eid="D_21")
-d_22 = Drift(l=0.125, eid="D_22")
-d_23 = Drift(l=0.049999999999954525, eid="D_23")
-d_24 = Drift(l=0.23527000000001408, eid="D_24")
-d_25 = Drift(l=0.7280000000000086, eid="D_25")
+d_0 = Drift(l=0.5799999999999841, eid="D_0")
+d_1 = Drift(l=0.17395000000001345, eid="D_1")
+d_2 = Drift(l=0.18394999999999562, eid="D_2")
+d_3 = Drift(l=1.0437200000000075, eid="D_3")
+d_4 = Drift(l=0.13628000000002202, eid="D_4")
+d_5 = Drift(l=0.17999999999995908, eid="D_5")
+d_6 = Drift(l=0.19999999999998863, eid="D_6")
+d_7 = Drift(l=0.9839500000000158, eid="D_7")
+d_8 = Drift(l=0.43628000000002465, eid="D_8")
+d_9 = Drift(l=0.4176699999999869, eid="D_9")
+d_10 = Drift(l=0.5149270000000001, eid="D_10")
+d_11 = Drift(l=0.16901999999995496, eid="D_11")
+d_12 = Drift(l=0.2589800000000222, eid="D_12")
+d_13 = Drift(l=0.224899999999991, eid="D_13")
+d_14 = Drift(l=0.23402000000000953, eid="D_14")
+d_15 = Drift(l=0.5136800000000361, eid="D_15")
+d_16 = Drift(l=0.14999999999997726, eid="D_16")
+d_17 = Drift(l=0.22500000000002274, eid="D_17")
+d_18 = Drift(l=0.125, eid="D_18")
+d_19 = Drift(l=0.049999999999954525, eid="D_19")
+d_20 = Drift(l=0.23527000000001408, eid="D_20")
+d_21 = Drift(l=0.7280000000000086, eid="D_21")
 
 # Quadrupoles:
 qf_469_b2d = Quadrupole(l=0.5321, k1=-2.19942871499906, eid="QF.469.B2D")
@@ -49,8 +45,8 @@ qf_476_b2d = Quadrupole(l=0.5321, k1=3.13097893, eid="QF.476.B2D")
 qf_477_b2d = Quadrupole(l=0.5321, k1=0.7703645572993798, eid="QF.477.B2D")
 
 # SBends:
-bg_467_b2d = SBend(l=1.5971, angle=0.2094395102, tilt=1.570796327, eid="BG.467.B2D")
-bg_474_b2d = SBend(l=1.5971, angle=-0.2094395102, tilt=1.570796327, eid="BG.474.B2D")
+bg_467_b2d = SBend(l=1.599999999999966, angle=0.2094395102, tilt=1.570796327, eid="BG.467.B2D")
+bg_474_b2d = SBend(l=1.6000000000000227, angle=-0.2094395102, tilt=1.570796327, eid="BG.474.B2D")
 
 # Hcors:
 cfx_470_b2d = Hcor(l=0.1, eid="CFX.470.B2D")
@@ -87,57 +83,53 @@ ensec_480_b2d = Marker(eid="ENSEC.480.B2D")
 cell = (
     stsec_466_b2d,
     mbg_467a_b2d,
-    d_0,
     bg_467_b2d,
-    d_1,
     mbg_467d_b2d,
-    d_2,
+    d_0,
     cfy_468_b2d,
-    d_3,
+    d_1,
     qf_469_b2d,
-    d_4,
+    d_2,
     bpma_469_b2d,
-    d_5,
+    d_3,
     cfx_470_b2d,
-    d_6,
+    d_4,
     qe_471_b2d,
-    d_7,
+    d_5,
     bpma_471_b2d,
-    d_8,
+    d_6,
     cfy_471_b2d,
-    d_9,
+    d_7,
     qf_472_b2d,
-    d_10,
+    d_8,
     otra_473_b2d,
-    d_11,
+    d_9,
     mbg_474a_b2d,
-    d_12,
     bg_474_b2d,
-    d_13,
     mbg_474d_b2d,
-    d_14,
+    d_10,
     cfy_476_b2d,
-    d_15,
+    d_11,
     qf_476_b2d,
-    d_16,
+    d_12,
     bpma_477_b2d,
-    d_17,
+    d_13,
     cfx_477_b2d,
-    d_18,
+    d_14,
     qf_477_b2d,
-    d_19,
+    d_15,
     vcst40t98_478_b2d,
-    d_20,
+    d_16,
     otrd_478_b2d,
-    d_21,
+    d_17,
     torc_479_b2d,
-    d_22,
+    d_18,
     bpmd_479_b2d,
-    d_23,
+    d_19,
     vcst98t60_479_b2d,
-    d_24,
+    d_20,
     duflange_479_b2d,
-    d_25,
+    d_21,
     duabsorb_480_b2d,
     ensec_480_b2d,
 )

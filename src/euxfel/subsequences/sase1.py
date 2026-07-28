@@ -15,12 +15,11 @@ from ocelot.cpbd.elements import (
 
 twiss0 = Twiss()
 twiss0.E = 14.0000000004506
-twiss0.alpha_x = 0.6814574153540669
-twiss0.alpha_y = -2.1569592316665136
-twiss0.beta_x = 10.537014089873141
-twiss0.beta_y = 42.1386271199817
-twiss0.Dy = -1.4862242485372767e-06
-twiss0.s = 2002.1858230000016
+twiss0.alpha_x = 0.6814836256970225
+twiss0.alpha_y = -2.1569606968621766
+twiss0.beta_x = 10.553299032090695
+twiss0.beta_y = 42.1388120896146
+twiss0.s = 2002.1858230000012
 
 
 # fmt: off
@@ -556,13 +555,13 @@ qa_2455_sa1 = Quadrupole(l=0.1137, k1=0.5620550638962181, eid="QA.2455.SA1")
 qa_2461_sa1 = Quadrupole(l=0.1137, k1=-0.5620550638962181, eid="QA.2461.SA1")
 
 # SBends:
-bp_2197i_t2 = SBend(l=0.44, angle=-5e-06, e2=-5e-06, eid="BP.2197I.T2")
-bp_2197ii_t2 = SBend(l=0.44, angle=1e-05, e1=-5e-06, e2=5e-06, eid="BP.2197II.T2")
-bp_2198_t2 = SBend(l=0.44, angle=-1e-05, e1=5e-06, e2=-5e-06, eid="BP.2198.T2")
-bp_2199i_t2 = SBend(l=0.44, angle=1e-05, e1=-5e-06, e2=5e-06, eid="BP.2199I.T2")
-bp_2199ii_t2 = SBend(l=0.44, angle=-1e-05, e1=5e-06, e2=-5e-06, eid="BP.2199II.T2")
-bp_2200_t2 = SBend(l=0.44, angle=1e-05, e1=-5e-06, e2=5e-06, eid="BP.2200.T2")
-bp_2201_t2 = SBend(l=0.44, angle=-5e-06, e1=5e-06, eid="BP.2201.T2")
+bp_2197i_t2 = SBend(l=0.44000000000005457, angle=-5e-06, e2=-5e-06, eid="BP.2197I.T2")
+bp_2197ii_t2 = SBend(l=0.44000000000005457, angle=1e-05, e1=-5e-06, e2=5e-06, eid="BP.2197II.T2")
+bp_2198_t2 = SBend(l=0.44000000000005457, angle=-1e-05, e1=5e-06, e2=-5e-06, eid="BP.2198.T2")
+bp_2199i_t2 = SBend(l=0.44000000000005457, angle=1e-05, e1=-5e-06, e2=5e-06, eid="BP.2199I.T2")
+bp_2199ii_t2 = SBend(l=0.4399999999995998, angle=-1e-05, e1=5e-06, e2=-5e-06, eid="BP.2199II.T2")
+bp_2200_t2 = SBend(l=0.44000000000005457, angle=1e-05, e1=-5e-06, e2=5e-06, eid="BP.2200.T2")
+bp_2201_t2 = SBend(l=0.44000000000005457, angle=-5e-06, e1=5e-06, eid="BP.2201.T2")
 bt_2211_t2 = SBend(l=0.6, eid="BT.2211.T2")
 bt_2214_t2 = SBend(l=0.6, eid="BT.2214.T2")
 bt_2215_t2 = SBend(l=0.6, eid="BT.2215.T2")
