@@ -1,9 +1,8 @@
-[![CLICK HERE to go to the lattice files](https://img.shields.io/badge/%F0%9F%91%89%20CLICK%20HERE-Go%20to%20the%20lattice%20files-red?style=for-the-badge)](src/euxfel/subsequences)
 
 > [!TIP]
 > ### 👉 [Click here to go to the lattice files](src/euxfel/subsequences)
 >
-> These live within the [`src/euxfel/subsequences`](src/euxfel/subsequences) directory.
+> These live within the [`src/euxfel/subsequences`](src/euxfel/subsequences) subdirectory.
 
 ---
 
