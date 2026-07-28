@@ -1,4 +1,4 @@
-# Converted from component_list_2026.01.21.xls
+# Converted from component_list_2026.02.13.xls
 
 from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.elements import (
@@ -387,7 +387,7 @@ qf_3023_t4d.ps_id = "QF.11.T4D"
 qf_3058_t4d.ps_id = "QF.4.T4D"
 qf_3065_t4d.ps_id = "QF.5.T4D"
 qk_3074_t4d.ps_id = "QK.1.T4D"
-qk_3079_t4d.ps_id = "QK.1.T4D"
+qk_3079_t4d.ps_id = "QK.2.T4D"
 qk_3089_t4d.ps_id = "QK.6.T4D"
 qk_3090_t4d.ps_id = "QK.6.T4D"
 qk_3092_t4d.ps_id = "QK.6.T4D"

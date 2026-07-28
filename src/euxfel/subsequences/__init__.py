@@ -1,4 +1,4 @@
-# Automatically generated __init__.py from component_list_2026.01.21.xls
+# Automatically generated __init__.py from component_list_2026.02.13.xls
 from importlib.resources import files
 
 try:
@@ -58,4 +58,4 @@ except Exception:
     del warnings
 
 # The longlist file we used to generate the subsequences in this directory:
-USED_COMPONENT_LIST = files("euxfel.longlists") / "component_list_2026.01.21.xls"
+USED_COMPONENT_LIST = files("euxfel.longlists") / "component_list_2026.02.13.xls"

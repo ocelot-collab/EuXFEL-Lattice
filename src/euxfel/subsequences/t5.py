@@ -1,4 +1,4 @@
-# Converted from component_list_2026.01.21.xls
+# Converted from component_list_2026.02.13.xls
 
 from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.elements import (
@@ -93,34 +93,38 @@ d_64 = Drift(l=0.15395000000007714, eid="D_64")
 d_65 = Drift(l=0.20895000000008657, eid="D_65")
 d_66 = Drift(l=0.8364999999998872, eid="D_66")
 d_67 = Drift(l=0.44050000000015643, eid="D_67")
-d_68 = Drift(l=1.030999999999949, eid="D_68")
-d_69 = Drift(l=1.2550000000001091, eid="D_69")
-d_70 = Drift(l=1.0529999999998836, eid="D_70")
-d_71 = Drift(l=0.20894999999973152, eid="D_71")
-d_72 = Drift(l=0.15395000000025028, eid="D_72")
-d_73 = Drift(l=1.4400000000002364, eid="D_73")
-d_74 = Drift(l=0.20894999999973152, eid="D_74")
-d_75 = Drift(l=0.21895000000030485, eid="D_75")
-d_76 = Drift(l=0.14999999999987268, eid="D_76")
-d_77 = Drift(l=1.325, eid="D_77")
+d_68 = Drift(l=0.28099999999994907, eid="D_68")
+d_69 = Drift(l=0.25, eid="D_69")
+d_70 = Drift(l=0.5, eid="D_70")
+d_71 = Drift(l=0.5, eid="D_71")
+d_72 = Drift(l=0.25, eid="D_72")
+d_73 = Drift(l=0.5050000000001091, eid="D_73")
+d_74 = Drift(l=1.0529999999998836, eid="D_74")
+d_75 = Drift(l=0.20894999999973152, eid="D_75")
+d_76 = Drift(l=0.15395000000025028, eid="D_76")
+d_77 = Drift(l=1.4400000000002364, eid="D_77")
 d_78 = Drift(l=0.20894999999973152, eid="D_78")
-d_79 = Drift(l=0.15395000000025028, eid="D_79")
-d_80 = Drift(l=12.953999999999905, eid="D_80")
-d_81 = Drift(l=0.20894999999973152, eid="D_81")
-d_82 = Drift(l=0.15395000000025028, eid="D_82")
-d_83 = Drift(l=0.8399999999998726, eid="D_83")
-d_84 = Drift(l=0.7332599999999729, eid="D_84")
-d_85 = Drift(l=7.139000000000124, eid="D_85")
-d_86 = Drift(l=0.205000000000382, eid="D_86")
-d_87 = Drift(l=0.1399999999996544, eid="D_87")
-d_88 = Drift(l=1.103149999999823, eid="D_88")
-d_89 = Drift(l=19.96185000000014, eid="D_89")
+d_79 = Drift(l=0.21895000000030485, eid="D_79")
+d_80 = Drift(l=0.14999999999987268, eid="D_80")
+d_81 = Drift(l=1.325, eid="D_81")
+d_82 = Drift(l=0.20894999999973152, eid="D_82")
+d_83 = Drift(l=0.15395000000025028, eid="D_83")
+d_84 = Drift(l=12.953999999999905, eid="D_84")
+d_85 = Drift(l=0.20894999999973152, eid="D_85")
+d_86 = Drift(l=0.15395000000025028, eid="D_86")
+d_87 = Drift(l=0.8399999999998726, eid="D_87")
+d_88 = Drift(l=0.7332599999999729, eid="D_88")
+d_89 = Drift(l=7.139000000000124, eid="D_89")
 d_90 = Drift(l=0.205000000000382, eid="D_90")
 d_91 = Drift(l=0.1399999999996544, eid="D_91")
-d_92 = Drift(l=21.064999999999962, eid="D_92")
-d_93 = Drift(l=0.205000000000382, eid="D_93")
-d_94 = Drift(l=0.1399999999996544, eid="D_94")
-d_95 = Drift(l=9.67599999999984, eid="D_95")
+d_92 = Drift(l=1.103149999999823, eid="D_92")
+d_93 = Drift(l=19.96185000000014, eid="D_93")
+d_94 = Drift(l=0.205000000000382, eid="D_94")
+d_95 = Drift(l=0.1399999999996544, eid="D_95")
+d_96 = Drift(l=21.064999999999962, eid="D_96")
+d_97 = Drift(l=0.205000000000382, eid="D_97")
+d_98 = Drift(l=0.1399999999996544, eid="D_98")
+d_99 = Drift(l=9.67599999999984, eid="D_99")
 
 # Quadrupoles:
 qe_2756_t5 = Quadrupole(l=0.24, k1=-0.2155167819, eid="QE.2756.T5")
@@ -234,7 +238,12 @@ mbe_2841a_t5 = Marker(eid="MBE.2841a.T5")
 mbe_2841d_t5 = Marker(eid="MBE.2841d.T5")
 miral_2952_t5 = Marker(eid="MIRAL.2952.T5")
 otrc_2952_t5 = Marker(eid="OTRC.2952.T5")
+cam1_2952_t5 = Marker(eid="CAM1.2952.T5")
+cdr_2952_t5 = Marker(eid="CDR.2952.T5")
+elphi_2953_t5 = Marker(eid="ELPHI.2953.T5")
 vcstern_2953_t5 = Marker(eid="VCSTERN.2953.T5")
+mirout_2953_t5 = Marker(eid="MIROUT.2953.T5")
+cam2_2954_t5 = Marker(eid="CAM2.2954.T5")
 otrc_2954_t5 = Marker(eid="OTRC.2954.T5")
 tora_2977_t5 = Marker(eid="TORA.2977.T5")
 ensub_2978_t5 = Marker(eid="ENSUB.2978.T5")
@@ -392,62 +401,71 @@ cell = (
     d_67,
     otrc_2952_t5,
     d_68,
-    vcstern_2953_t5,
+    cam1_2952_t5,
     d_69,
-    otrc_2954_t5,
+    cdr_2952_t5,
     d_70,
-    bpma_2955_t5,
+    elphi_2953_t5,
+    vcstern_2953_t5,
     d_71,
-    qf_2956_t5,
+    mirout_2953_t5,
     d_72,
-    cmy_2956_t5,
+    cam2_2954_t5,
     d_73,
-    bpma_2958_t5,
+    otrc_2954_t5,
     d_74,
-    qf_2958_t5,
+    bpma_2955_t5,
     d_75,
-    qe_2959_t5,
+    qf_2956_t5,
     d_76,
-    cmx_2959_t5,
+    cmy_2956_t5,
     d_77,
-    bpma_2961_t5,
+    bpma_2958_t5,
     d_78,
-    qf_2961_t5,
+    qf_2958_t5,
     d_79,
-    cmy_2962_t5,
+    qe_2959_t5,
     d_80,
-    bpma_2975_t5,
+    cmx_2959_t5,
     d_81,
-    qf_2976_t5,
+    bpma_2961_t5,
     d_82,
-    cmx_2976_t5,
+    qf_2961_t5,
     d_83,
-    tora_2977_t5,
+    cmy_2962_t5,
     d_84,
+    bpma_2975_t5,
+    d_85,
+    qf_2976_t5,
+    d_86,
+    cmx_2976_t5,
+    d_87,
+    tora_2977_t5,
+    d_88,
     ensub_2978_t5,
     ensec_2978_t5,
     stsec_2978_un2,
-    d_85,
-    bpma_2985_un2,
-    d_86,
-    qe_2985_un2,
-    d_87,
-    cey_2986_un2,
-    d_88,
-    otrdp4_2987_un2,
     d_89,
-    bpma_3007_un2,
+    bpma_2985_un2,
     d_90,
-    qe_3007_un2,
+    qe_2985_un2,
     d_91,
-    cex_3007_un2,
+    cey_2986_un2,
     d_92,
-    bpma_3028_un2,
+    otrdp4_2987_un2,
     d_93,
-    qe_3029_un2,
+    bpma_3007_un2,
     d_94,
-    cey_3029_un2,
+    qe_3007_un2,
     d_95,
+    cex_3007_un2,
+    d_96,
+    bpma_3028_un2,
+    d_97,
+    qe_3029_un2,
+    d_98,
+    cey_3029_un2,
+    d_99,
     ensec_3039_un2,
 )
 
