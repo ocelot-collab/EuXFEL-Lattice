@@ -12,6 +12,7 @@ twiss0.beta_y = 5.070596837038869
 twiss0.s = 443.619226
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=3.506649999999979, eid="D_0")
 d_1 = Drift(l=0.131649999999964, eid="D_1")
@@ -2115,6 +2116,7 @@ otrbw_1635_l3 = Marker(eid="OTRBW.1635.L3")
 stop_l3 = Marker(eid="stop_l3")
 ensub_1652_l3 = Marker(eid="ENSUB.1652.L3")
 ensec_1652_l3 = Marker(eid="ENSEC.1652.L3")
+# fmt: on
 
 # Sequence:
 cell = (

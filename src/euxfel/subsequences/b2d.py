@@ -12,6 +12,7 @@ twiss0.beta_y = 5.070596837038869
 twiss0.s = 443.619226
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=0.0014499999999770807, eid="D_0")
 d_1 = Drift(l=0.001449999999988849, eid="D_1")
@@ -80,6 +81,7 @@ vcst98t60_479_b2d = Marker(eid="VCST98T60.479.B2D")
 duflange_479_b2d = Marker(eid="DUFLANGE.479.B2D")
 duabsorb_480_b2d = Marker(eid="DUABSORB.480.B2D")
 ensec_480_b2d = Marker(eid="ENSEC.480.B2D")
+# fmt: on
 
 # Sequence:
 cell = (

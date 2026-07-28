@@ -23,6 +23,7 @@ twiss0.Dy = -7.000380436194425e-06
 twiss0.s = 2450.988421000021
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=0.2579999999998108, eid="D_0")
 d_1 = Drift(l=0.042000000000371074, eid="D_1")
@@ -139,12 +140,8 @@ qe_2712_un1 = Quadrupole(l=0.24, k1=-0.19227955160000001, eid="QE.2712.UN1")
 qe_2733_un1 = Quadrupole(l=0.24, k1=0.19227955160000001, eid="QE.2733.UN1")
 
 # SBends:
-be_2546_t3 = SBend(
-    l=2.5, angle=0.0218803, e1=0.01094015, e2=0.01094015, eid="BE.2546.T3"
-)
-be_2566_t3 = SBend(
-    l=2.5, angle=0.0218803, e1=0.01094015, e2=0.01094015, eid="BE.2566.T3"
-)
+be_2546_t3 = SBend(l=2.5, angle=0.0218803, e1=0.01094015, e2=0.01094015, eid="BE.2546.T3")
+be_2566_t3 = SBend(l=2.5, angle=0.0218803, e1=0.01094015, e2=0.01094015, eid="BE.2566.T3")
 
 # Sextupoles:
 saox_2555_t3 = Sextupole(l=0.3164, k2=12.57269279, eid="SAOX.2555.T3")
@@ -232,6 +229,7 @@ ensub_2682_t3 = Marker(eid="ENSUB.2682.T3")
 ensec_2682_t3 = Marker(eid="ENSEC.2682.T3")
 stsec_2682_un1 = Marker(eid="STSEC.2682.UN1")
 ensec_2743_un1 = Marker(eid="ENSEC.2743.UN1")
+# fmt: on
 
 # Sequence:
 cell = (

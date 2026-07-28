@@ -21,6 +21,7 @@ twiss0.beta_y = 10.943857322503927
 twiss0.s = 1957.1856990000013
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=1.4724009999999907, eid="D_0")
 d_1 = Drift(l=13.047400999999823, eid="D_1")
@@ -58,32 +59,14 @@ qk_1982_tl = Quadrupole(l=1.0552, k1=0.09035960007960576, eid="QK.1982.TL")
 qf_1997_tl = Quadrupole(l=0.5321, k1=-0.17919084760007517, eid="QF.1997.TL")
 
 # SBends:
-qf_2012_tl = SBend(
-    l=0.5321,
-    angle=-0.000571520488,
-    k1=-0.1791908476,
-    e1=0.000144449,
-    e2=0.00071597,
-    tilt=1.570796327,
-    eid="QF.2012.TL",
-)
+qf_2012_tl = SBend(l=0.5321, angle=-0.000571520488, k1=-0.1791908476, e1=0.000144449, e2=0.00071597, tilt=1.570796327, eid="QF.2012.TL")
 
 # RBends:
-kl_1998_tl = RBend(
-    l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.1998.TL"
-)
-kl_1999_tl = RBend(
-    l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.1999.TL"
-)
-kl_2000_tl = RBend(
-    l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2000.TL"
-)
-kl_2001_tl = RBend(
-    l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2001.TL"
-)
-kl_2002_tl = RBend(
-    l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2002.TL"
-)
+kl_1998_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.1998.TL")
+kl_1999_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.1999.TL")
+kl_2000_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2000.TL")
+kl_2001_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2001.TL")
+kl_2002_tl = RBend(l=0.93, angle=-0.000101914522, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2002.TL")
 kl_2003_tl = RBend(l=0.93, e1=0.0, e2=0.0, tilt=1.570796327, eid="KL.2003.TL")
 kl_2005_tl = RBend(l=0.93, e1=0.0, e2=0.0, eid="KL.2005.TL")
 kl_2006_tl = RBend(l=0.93, e1=0.0, e2=0.0, eid="KL.2006.TL")
@@ -123,6 +106,7 @@ tora_2011_tl = Marker(eid="TORA.2011.TL")
 vcst40t98_2014_tl = Marker(eid="VCST40T98.2014.TL")
 otre_2023_tl = Marker(eid="OTRE.2023.TL")
 ensub_2025_tl = Marker(eid="ENSUB.2025.TL")
+# fmt: on
 
 # Sequence:
 cell = (

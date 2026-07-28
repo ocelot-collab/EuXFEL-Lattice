@@ -23,6 +23,7 @@ twiss0.beta_y = 8.698683623541857
 twiss0.s = 206.100754
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=0.7527499999999918, eid="D_0")
 d_1 = Drift(l=1.9499960000000272, eid="D_1")
@@ -351,18 +352,10 @@ qd_464_b2 = Quadrupole(l=0.2367, k1=1.2982678500000002, eid="QD.464.B2")
 qd_465_b2 = Quadrupole(l=0.2367, k1=-0.24686100550063372, eid="QD.465.B2")
 
 # SBends:
-bb_393_b2 = SBend(
-    l=0.5, angle=0.04163879892, e2=0.041638799, tilt=1.570796327, eid="BB.393.B2"
-)
-bb_402_b2 = SBend(
-    l=0.5, angle=-0.04163879892, e1=-0.041638799, tilt=1.570796327, eid="BB.402.B2"
-)
-bb_404_b2 = SBend(
-    l=0.5, angle=-0.04163879892, e2=-0.041638799, tilt=1.570796327, eid="BB.404.B2"
-)
-bb_413_b2 = SBend(
-    l=0.5, angle=0.04163879892, e1=0.041638799, tilt=1.570796327, eid="BB.413.B2"
-)
+bb_393_b2 = SBend(l=0.5, angle=0.04163879892, e2=0.041638799, tilt=1.570796327, eid="BB.393.B2")
+bb_402_b2 = SBend(l=0.5, angle=-0.04163879892, e1=-0.041638799, tilt=1.570796327, eid="BB.402.B2")
+bb_404_b2 = SBend(l=0.5, angle=-0.04163879892, e2=-0.041638799, tilt=1.570796327, eid="BB.404.B2")
+bb_413_b2 = SBend(l=0.5, angle=0.04163879892, e1=0.041638799, tilt=1.570796327, eid="BB.413.B2")
 
 # RBends:
 kdy_445_b2 = RBend(l=0.35, e1=0.0, e2=0.0, eid="KDY.445.B2")
@@ -652,6 +645,7 @@ crd_463_b2 = Marker(eid="CRD.463.B2")
 engrd_466_b2 = Marker(eid="ENGRD.466.B2")
 enlat_466_b2 = Marker(eid="ENLAT.466.B2")
 ensub_466_b2 = Marker(eid="ENSUB.466.B2")
+# fmt: on
 
 # Sequence:
 cell = (

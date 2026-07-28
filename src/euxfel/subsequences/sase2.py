@@ -23,6 +23,7 @@ twiss0.Dy = 4.067259042224402e-06
 twiss0.s = 2174.808421000021
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=0.2927199999999175, eid="D_0")
 d_1 = Drift(l=2.597780000000057, eid="D_1")
@@ -855,6 +856,7 @@ u00_2470_sa2 = Marker(eid="U00.2470.SA2")
 enucell_2473_sa2 = Marker(eid="ENUCELL.2473.SA2")
 ensub_2473_sa2 = Marker(eid="ENSUB.2473.SA2")
 ensec_2473_sa2 = Marker(eid="ENSEC.2473.SA2")
+# fmt: on
 
 # Sequence:
 cell = (

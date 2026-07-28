@@ -12,6 +12,7 @@ twiss0.beta_y = 8.698683623541857
 twiss0.s = 206.100754
 
 
+# fmt: off
 # Drifts:
 d_0 = Drift(l=0.2527499999999918, eid="D_0")
 d_1 = Drift(l=0.0018370000000231812, eid="D_1")
@@ -34,9 +35,7 @@ qd_231_b1d = Quadrupole(l=0.2367, k1=-3.0, eid="QD.231.B1D")
 qd_232_b1d = Quadrupole(l=0.2367, eid="QD.232.B1D")
 
 # SBends:
-bb_229_b1d = SBend(
-    l=0.5, angle=0.2094395102, e2=0.20943951, tilt=1.570796327, eid="BB.229.B1D"
-)
+bb_229_b1d = SBend(l=0.5, angle=0.2094395102, e2=0.20943951, tilt=1.570796327, eid="BB.229.B1D")
 
 # Hcors:
 ccx_233_b1d = Hcor(l=0.1, eid="CCX.233.B1D")
@@ -59,6 +58,7 @@ vcst40t60_237_b1d = Marker(eid="VCST40T60.237.B1D")
 duflange_237_b1d = Marker(eid="DUFLANGE.237.B1D")
 duabsorb_237_b1d = Marker(eid="DUABSORB.237.B1D")
 ensec_237_b1d = Marker(eid="ENSEC.237.B1D")
+# fmt: on
 
 # Sequence:
 cell = (

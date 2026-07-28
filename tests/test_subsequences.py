@@ -1,3 +1,6 @@
+import ast
+from importlib.resources import files
+
 import pytest
 from euxfel.sequences import (
     I1D_SUBSEQUENCES,
@@ -21,6 +24,15 @@ ALL_TARGETS_SUBSEQUENCES = [
     T4D_SUBSEQUENCES,
     T5D_SUBSEQUENCES,
 ]
+
+SUBSEQUENCE_MODULE_PATHS = sorted(
+    (
+        p
+        for p in files("euxfel.subsequences").iterdir()
+        if p.name.endswith(".py") and p.name != "__init__.py"
+    ),
+    key=lambda p: p.name,
+)
 
 
 @pytest.mark.parametrize(
@@ -65,3 +77,33 @@ def test_subsequences_linear_optics(target_subsequences: list[str]) -> None:
         assert twiss_end.Dxp == pytest.approx(twiss_next.Dxp, abs=atol_dispersion)
         assert twiss_end.Dyp == pytest.approx(twiss_next.Dyp, abs=atol_dispersion)
         assert twiss_end.s == twiss_next.s
+
+
+@pytest.mark.parametrize("module_path", SUBSEQUENCE_MODULE_PATHS, ids=lambda p: p.name)
+def test_one_element_definition_per_line(module_path) -> None:
+    """Every generated element definition must occupy exactly one line.
+
+    `PythonSubsequenceWriter.elements_to_string` brackets the element block in
+    `# fmt: off` / `# fmt: on` precisely so `ruff format` cannot wrap the longest
+    definitions.  This fails if those markers are lost or moved.
+    """
+    tree = ast.parse(module_path.read_text(), filename=module_path.name)
+
+    offenders = []
+    for node in tree.body:
+        # Element definitions are `name = ElementClass(...)`; this also covers
+        # `twiss0 = Twiss()` (one line, passes).  Excluded by construction:
+        # `cell = (...)` is Assign+Tuple, and the SlicedElement expression
+        # `qk_1982_tl = (...) * 10` is Assign+BinOp -- neither is a single
+        # element definition.
+        if not (isinstance(node, ast.Assign) and isinstance(node.value, ast.Call)):
+            continue
+        if node.end_lineno != node.lineno:
+            offenders.append((node.lineno, ast.unparse(node).splitlines()[0]))
+
+    assert not offenders, (
+        f"{module_path.name}: {len(offenders)} element definition(s) span multiple "
+        f"lines -- the `# fmt: off` guard in "
+        f"PythonSubsequenceWriter.elements_to_string has been lost. "
+        f"First few: {offenders[:5]}"
+    )
