@@ -1,3 +1,12 @@
+[![CLICK HERE to go to the lattice files](https://img.shields.io/badge/%F0%9F%91%89%20CLICK%20HERE-Go%20to%20the%20lattice%20files-red?style=for-the-badge)](src/euxfel/subsequences)
+
+> [!CAUTION]
+> ### 👉 [Click here to go to the lattice files](src/euxfel/subsequences)
+>
+> These are **generated** from the component list by `euxfel convert`. Never edit them by hand.
+
+---
+
 [![Python Version from PEP 621 TOML](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Focelot-collab%2FEuXFEL-Lattice%2Frefs%2Fheads%2Fmain%2Fpyproject.toml&style=flat&logo=python)](https://www.python.org)
 [![Static Badge](https://img.shields.io/badge/10.1103%2FPhysRevAccelBeams.22.024401-purple?label=PRAB&link=https%3A%2F%2Fdoi.org%2F10.1103%2FPhysRevAccelBeams.22.024401)](https://doi.org/10.1103/PhysRevAccelBeams.22.024401)
 [![Static Badge](https://img.shields.io/badge/10.18429%2FJACoW--IPAC2017--WEPAB031-purple?label=IPAC&link=https%3A%2F%2Fdoi.org%2F10.18429%2FJACoW-IPAC2017-WEPAB031)](https://doi.org/10.18429/JACoW-IPAC2017-WEPAB031)
