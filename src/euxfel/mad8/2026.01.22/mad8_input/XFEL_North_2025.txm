@@ -1,0 +1,1975 @@
+!================================================================================================
+!
+!--- November 2022, XFEL lattice --- North beamline starting from T2 section
+!
+!================================================================================================
+!
+!  Beam Line NORTH: SASE1, XS3, SASE3
+!
+!  NORTH: LINE = (T2, SA1, T4, SA3_UE90, T4D)
+!
+!================================================================================================
+!
+!  January 2022:   In the front of SA1: Corrugated structure, two new quadrupoles, kickers, collimator
+!  July    2019:   Afterburner section behind SASE3 is added
+!  July    2019:   T20 is added
+!
+!================================================================================================
+
+comment
+!----- Section and Subsection Markers
+
+STSEC.TLD.TLD: MARKER;  ! used in this file
+ENSEC.TLD.TLD: MARKER;  ! used in TLD file
+
+STSEC.T1.T1:  MARKER;   ! used in this file
+ENSEC.T1.T1:  MARKER;   ! used in TD1 file
+
+STSEC.T20.T20: MARKER;  ! used in this file 
+ENSEC.T20.T20: MARKER;  ! used in T20 file 
+endcomment
+
+
+!----- Vacuum Markers and Vacuum Components 
+
+VCST40T10.T2:   MARKER;
+VCST40T18.T2:   MARKER;
+VCST18T40.T2:   MARKER;
+VCST10T40.T4:   MARKER;
+VCST40T10.T4:   MARKER;
+VCST10T40.T4D:  MARKER;
+VCST93YT40.T4D: MARKER;
+VCST98T98Y.T4D: MARKER;
+VCST98YT98.T4D: MARKER;
+VCST40T93Y.T4D: MARKER;
+VCST40T98.T4D:  MARKER;
+VCST98T200.T4D: MARKER;
+VCST10T22.T4D:  MARKER;
+VCST22T40.T4D:  MARKER;
+
+VCMIR.T2: MARKER
+
+!************************************************************************************************
+!
+!---------- T2 Line: (T2A, T2B)
+!
+!************************************************************************************************
+
+!----- Section and Subsection Markers
+
+STSEC.T2.T2: MARKER;
+ENSEC.T2.T2: MARKER;
+STSUB.T2U.T2: MARKER;
+ENSUB.T2U.T2: MARKER;
+STSUB.T2M.T2: MARKER;
+ENSUB.T2M.T2: MARKER;
+
+!----- Diagnostic Markers
+
+BPMA.T2:  MONITOR;
+BPME.T2:  MONITOR;
+OTRBW.T2: MARKER;
+OTRB.T2:  MARKER;
+OTRC.T2:  MARKER;
+SPEC.T2: MARKER;
+OTRCMARK.T2:  MARKER;
+SPECMARK.T2: MARKER;
+TORA.T2:  MARKER;
+BCM.T2:   MARKER;
+
+!----- Vacuum Markers and Vacuum Components
+
+VCBSHUT.T2: DRIFT, L=0.3;
+VCBSTOP.T2: DRIFT, L=0.3;
+
+
+!----- Correctors (L_yoke is used)
+
+CEX.T2: HKICKER, L = 0.100;
+CEY.T2: VKICKER, L = 0.100;
+CFX.T2: HKICKER, L = 0.100;
+CFY.T2: VKICKER, L = 0.100;
+CMX.T2: HKICKER, L = 0.300;
+CMY.T2: VKICKER, L = 0.300;
+CNY.T2: VKICKER, L = 0.300;
+
+
+BD.10.T2: RBEND, L=1.0, ANGLE=0;
+BSECT.T2: RBEND, L=1.5, ANGLE=0;
+ABSP.T2:  DRIFT, L=0.05;
+
+!------------------------------------------------------------------------------------------------
+
+
+!-------- 30 m FODO lattice: T2A 
+
+!----- Quadrupoles
+
+!--- KFscale is defined in TL file
+
+QF.1.1.T2:  Quadrupole, L = L_QF_eff, K1 = +KFscale;
+QF.1.2.T2:  Quadrupole, L = L_QF_eff, K1 = -KFscale;
+
+QF.2.1.T2:  Quadrupole, L = L_QF_eff, K1 = +KFscale;
+QF.2.2.T2:  Quadrupole, L = L_QF_eff, K1 = -KFscale;
+
+
+!--- July 2019, with 3 T20 septa (BZ3T20)
+
+T2A: Line = (BZ3T20, D0500, BZ3T20, D0500, BZ3T20, D9425,        &
+             D0100,BPMA.T2,D0100, fD0125, QF.1.1.T2, fD0125,     &
+             D0045, CFX.T2, D6405, BD.10.T2, D6500,       &
+!             D0045, CFX.T2, D6405, D0150, BD.10.T2, D6350,       &   !2025 if T20 will be installed
+             D0100,BPMA.T2,D0100, fD0125, QF.1.2.T2, fD0125,     &
+             D0045, CFY.T2, D13905,                              &
+             D0100,BPMA.T2,D0100, fD0125, QF.1.1.T2, fD0125,     &
+             D0045, CFX.T2, D0300, BSECT.T2, D0400, D11705,      &
+             D00001, D0100,BPMA.T2,D0100, fD0125);
+
+!------------------------------------------------------------------------------------------------
+
+
+!-------- Matching section from FODO lattice to SASE1: T2B
+
+!----- First QF.1.T2 is shifted upstream for 0.5m (08.02.2012) 
+!----- (from standard position in FODO lattice)
+
+
+!----- Diagnostic undulator with natural focusing
+
+!--- 3 pairs of poles
+!    Period  = 40 mm
+!    Gap = 12 mm  =>  B_0 = 0.96 T, K = 3.2784
+   
+LundS     = 0.040;
+NundS     = 3;            ! 0.34 = 3*0.04+0.11+0.11
+LundS_3 = LundS * NundS;  ! L = 0.120
+   
+KundS    = 3.2784;
+kQundS   = (2*pi*KundS)/(LundS*gammaUnd*betaUnd);
+OmegaS   = kQundS / sqrt(2);
+   
+!--- Initial beta_y:
+r11_udia = cos(OmegaS*LundS);
+r12_udia = sin(OmegaS*LundS) / OmegaS;
+Beta0_udia = r12_udia / sqrt(1.0 - r11_udia * r11_udia);
+!value, beta0_udia;
+
+U40S.T2: MATRIX, L = LundS_3,            &
+   RM(1,1) = 1.0,                        &
+   RM(1,2) = LundS_3,                    &
+   RM(1,3) = 0.0,                        &
+   RM(2,2) = 1.0,                        &
+   RM(3,3) = cos(OmegaS*LundS_3),        &
+   RM(3,4) = sin(OmegaS*LundS_3)/OmegaS, &
+   RM(4,3) =-sin(OmegaS*LundS_3)*OmegaS, &
+   RM(4,4) = cos(OmegaS*LundS_3);
+
+!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+
+comment
+!-------- Section T2B without dechirper and other related elements
+
+!----- Quadrupoles
+
+!--- Setting: Undulator SASE1 open (default)
+QF.3.T2:  Quadrupole, L = L_QF_eff, K1 = -0.155080318226;
+QF.4.T2:  Quadrupole, L = L_QF_eff, K1 = +0.152454154852;
+QF.5.T2:  Quadrupole, L = L_QF_eff, K1 = -0.128671683097;
+QF.6.T2:  Quadrupole, L = L_QF_eff, K1 = +0.120612721647;
+
+QA.1.T2:  Quadrupole, L = L_QA_eff, K1 = -0.562055063894;   ! = QA.1.SA1
+QA.2.T2:  Quadrupole, L = L_QA_eff, K1 = +0.562055063894;   ! = QA.2.SA1
+
+!----- Quadrupole movers
+CMVQA.T2: KICKER, L=0;
+
+T2B: Line = (QF.1.2.T2, fD0125, D0045, CFY.T2, D122482,        &
+             VCBSHUT.T2, D01568, D1900,                        &
+             QFSEC(BPMA.T2, QF.1.1.T2, CFX.T2), D11165, D0800, &
+             QFSEC(BPMA.T2, QF.2.2.T2, CFY.T2), D15065,        &
+             QFSEC(BPMA.T2, QF.2.1.T2, CFX.T2), D6740,         &
+             D0200, OTRB.T2, D0400, D6525,                     &   ! 1st screen
+             QFSEC(BPMA.T2, QF.3.T2,   CFY.T2), D6740,         &
+             D0200,          D0400, D6525,                     &
+             QFSEC(BPMA.T2, QF.4.T2,   CFX.T2), D6740,         &
+             D0200, OTRB.T2, D0400, D6525,                     &   ! 2d  screen
+             QFSEC(BPMA.T2, QF.5.T2,   CFY.T2), D5140,         &
+             D0200, OTRBW.T2, D0400, D4925,                    &   ! 3d  screen
+             QFSEC(BPMA.T2, QF.6.T2,   CFX.T2),                &
+             D0200, D3626817, BPMA.T2,                         &   !!! insert for BPM and beam stop in front of SASE1
+             D0615, VCBSHUT.T2, D3950733,                      &   !!!
+             D0300, TORA.T2, D000675, D0500,                   &  
+             D0100, VCST40T10.T2, D009975,                     &  
+             D0100, BPME.T2, D0100, aD0125,                    &  
+             QA.1.T2, CMVQA.T2, aD0125, D0035, D0025, CNY.T2, D0125,     &  
+             CEX.T2, D20575, D0110, U40S.T2, D0110,            &
+             D17167, CNY.T2, D0150, CEX.T2, D0160, D0050,      &
+             ABSP.T2, D01723, BPME.T2, aD01935, QA.2.T2, CMVQA.T2, aD0047);
+endcomment
+
+!++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+
+!-------- November 2022. T2B with dechirper, two additional quadrupoles, kickers, collimator  
+
+
+!----- Corrugated structure (L = 6 m)
+
+VCCHIRP.T2:   MARKER;
+VCCHIRP_S.T2: MARKER;
+CHIRP.T2: LINE = (VCCHIRP_S.T2, D1000, VCCHIRP_S.T2, D1000,   &
+                  VCCHIRP_S.T2, D1000, VCCHIRP.T2 ,  D1000,   &
+                  VCCHIRP_S.T2, D1000, VCCHIRP_S.T2, D1000,   &
+                  VCCHIRP_S.T2);
+
+                          
+!----- KL kickers
+KL.1.T2: RBEND, L = LEN_KL, ANGLE = 0;   ! KL.2144.T2
+KL.2.T2: RBEND, L = LEN_KL, ANGLE = 0;   ! KL.2192.T2
+KL.3.T2: RBEND, L = LEN_KL, ANGLE = 0;   ! KL.2207.T2   
+
+
+!----- New collimator              
+COLM4.T2: ECOLLIMATOR, L = 0.5, XSIZE = 0.002, YSIZE = 0.002;
+
+
+!----- Quadrupoles (two new QH & QF quads)
+
+!--- Setting: Design optics for beam transport 
+
+QF.7.T2:  Quadrupole, L = L_QF_eff, K1 = -0.17919084758504;    ! QF.1.2.T2
+QF.8.T2:  Quadrupole, L = L_QF_eff, K1 = +0.17919084758504;    ! QF.1.1.T2, bipolar
+QH.9.T2:  Quadrupole, L = L_QH_eff, K1 = +0.0;                 ! new, unipolar
+QF.9.T2:  Quadrupole, L = L_QF_eff, K1 = +0.0;                 ! replaces QH.9.T2
+QF.10.T2: Quadrupole, L = L_QF_eff, K1 = -0.17919084758504;    ! QF.2.2.T2, unipolar
+QF.11.T2: Quadrupole, L = L_QF_eff, K1 = +0.17919084758504;    ! QF.2.1.T2, unipolar
+!--- dechirper is here
+QF.3.T2:  Quadrupole, L = L_QF_eff, K1 = -0.155080318226;
+QF.12.T2: Quadrupole, L = L_QF_eff, K1 = +0.0;                 ! new, unipolar
+QF.4.T2:  Quadrupole, L = L_QF_eff, K1 = +0.152454154852;
+QF.5.T2:  Quadrupole, L = L_QF_eff, K1 = -0.128671683097;
+QF.6.T2:  Quadrupole, L = L_QF_eff, K1 = +0.120612721647;
+
+QA.1.T2:  Quadrupole, L = L_QA_eff, K1 = -0.562055063894;   ! = QA.1.SA1
+QA.2.T2:  Quadrupole, L = L_QA_eff, K1 = +0.562055063894;   ! = QA.2.SA1
+
+!----- Quadrupole movers
+CMVQA.T2: KICKER, L=0;
+
+!------ January 2023: Wiggler (L=4.74 m)
+
+CBP.1.T2: HKICKER, L=0.0;
+CBP.2.T2: HKICKER, L=0.0;
+CBP.3.T2: HKICKER, L=0.0;
+CBP.4.T2: HKICKER, L=0.0;
+CBP.5.T2: HKICKER, L=0.0;
+CBP.6.T2: HKICKER, L=0.0;
+CBP.7.T2: HKICKER, L=0.0;
+
+!--- Dipoles
+LEN_BP = 0.44;    
+
+!--- 2023 configuration
+comment
+ang_wig = -0.000001;
+arc_wig = LEN_BP;    ! /sin(ang_wig)*ang_wig
+arce_wig = LEN_BP;    ! /sin(ang_wig/2)*ang_wig/2
+
+BP.1.1.T2  : SBEND, L = arce_wig, ANGLE =  ang_wig/2, &
+             E1 = 0, E2 = ang_wig/2, TILT = 0;
+BP.1.2.T2  : SBEND, L = arce_wig, ANGLE =  ang_wig/2, &
+             E1 = -ang_wig/2, E2 = 0, TILT = 0;
+BP.2.1.T2: SBEND, L = arc_wig, ANGLE =  -ang_wig,   &
+             E1 = -ang_wig/2, E2 = ang_wig/2, TILT = 0;
+BP.2.2.T2: SBEND, L = arc_wig, ANGLE = +ang_wig,    &
+             E1 = ang_wig/2, E2 = -ang_wig/2, TILT = 0;
+
+deltawig  = 0.210;    ! 0.394
+drifwig:  DRIFT, L = deltawig / cos(ang_wig/2);
+
+WIGGLER: LINE=(VCST40T18.T2, D0200, BP.1.1.T2, CBP.1.T2,  &
+               drifwig, BP.2.1.T2, drifwig, BP.2.2.T2, drifwig, BP.2.1.T2, &
+               drifwig, BP.2.2.T2, drifwig, BP.2.1.T2, drifwig, &
+               BP.1.2.T2, CBP.7.T2, D0200, VCST18T40.T2) 
+endcomment
+!comment
+!2025 New Wiggler Configuration with 7 PS
+
+ang_wig = -0.00001;
+arc_wig = LEN_BP;    ! /sin(ang_wig)*ang_wig
+arce_wig = LEN_BP;    ! /sin(ang_wig/2)*ang_wig/2
+
+BP.1.T2  : SBEND, L = arce_wig, ANGLE =  ang_wig/2, &
+             E1 = 0, E2 = ang_wig/2, TILT = 0;
+BP.2.T2  : SBEND, L = arc_wig, ANGLE =  -ang_wig, &
+             E1 = ang_wig/2, E2 = -ang_wig/2, TILT = 0;
+BP.3.T2  : SBEND, L = arc_wig, ANGLE =  ang_wig, &
+             E1 = -ang_wig/2, E2 = ang_wig/2, TILT = 0;
+BP.4.T2  : SBEND, L = arc_wig, ANGLE =  -ang_wig, &
+             E1 = ang_wig/2, E2 = -ang_wig/2, TILT = 0;
+BP.5.T2  : SBEND, L = arc_wig, ANGLE =  ang_wig, &
+             E1 = -ang_wig/2, E2 =ang_wig/2, TILT = 0;
+BP.6.T2  : SBEND, L = arc_wig, ANGLE =  -ang_wig, &
+             E1 = ang_wig/2, E2 = -ang_wig/2, TILT = 0;
+BP.7.T2: SBEND, L = arce_wig, ANGLE = ang_wig/2,    &
+             E1 = -ang_wig/2, E2 = 0, TILT = 0;
+
+deltawig  = 0.210;    ! 0.394
+drifwig:  DRIFT, L = deltawig / cos(ang_wig/2);
+
+WIGGLER: LINE=(VCST40T18.T2, D0200, BP.1.T2, CBP.1.T2,  &
+               drifwig, BP.2.T2, drifwig, BP.3.T2, drifwig, BP.4.T2, &
+               drifwig, BP.5.T2, drifwig, BP.6.T2, drifwig, &
+               BP.7.T2, CBP.7.T2, D0200, VCST18T40.T2) 
+comment   
+!Variant B: 2.4 m period (just for info)
+ang_wig = -0.000001;
+arc_wig = LEN_BP;    ! /sin(ang_wig)*ang_wig
+
+BP.1.1.T2  : SBEND, L = arc_wig, ANGLE =  ang_wig, &
+             E1 = 0, E2 = ang_wig, TILT = 0;
+BP.5.1.T2  : SBEND, L = LEN_BP, ANGLE =  0, &
+             E1 = -ang_wig/2, E2 = 0, TILT = 0;
+BP.2.1.T2: SBEND, L = arc_wig, ANGLE =  -ang_wig,   &
+             E1 = -ang_wig, E2 = 0, TILT = 0;
+BP.2.2.T2: SBEND, L = arce_wig, ANGLE = +ang_wig,    &
+             E1 = 0, E2 = ang_wig, TILT = 0;
+BP.3.1.T2: SBEND, L = arc_wig, ANGLE =  ang_wig,   &
+             E1 = -ang_wig, E2 = 0 , TILT = 0;
+BP.3.2.T2: SBEND, L = arc_wig, ANGLE = -ang_wig,    &
+             E1 = 0, E2 = -ang_wig, TILT = 0;
+BP.4.1.T2: SBEND, L = arce_wig, ANGLE = -ang_wig,    &
+             E1 = +ang_wig, E2 = 0, TILT = 0;
+
+deltawig  = 0.210;    ! 0.394
+drifwig:  DRIFT, L = deltawig / cos(ang_wig/2);
+
+WIGGLER: LINE=(VCST40T18.T2, D0200, BP.1.1.T2, CBP.1.T2,  &
+               drifwig, BP.2.1.T2, drifwig, BP.3.2.T2, drifwig, BP.3.1.T2, &
+               drifwig, BP.2.2.T2, drifwig, BP.4.1.T2, drifwig, &
+               BP.5.1.T2, CBP.7.T2, D0200, VCST18T40.T2) 
+endcomment
+
+!------ February 2023: Incoupling and Compensation Chicanes
+
+
+TWOCPPCHIC(BT.1,CBT.1,BT.2,CBT.2, &
+           BT.3,CBT.3,BT.4,CBT.4, D1TO2, D2TO3): &
+   LINE = (D0115, BT.1,CBT.1, D1TO2, BT.2,CBT.2, &  
+           D2TO3, BT.3,CBT.3, D1TO2, BT.4,CBT.4, &
+           D0115);
+
+!---- incoupling chicane - will not be installed in 2025 --------------------
+comment
+CBT.1.T2: HKICKER, L=0.0;
+CBT.2.T2: HKICKER, L=0.0;
+CBTX.3.T2: HKICKER, L=0.0;
+CBT.4.T2: HKICKER, L=0.0;
+
+CBT.21.T2: HKICKER, L=0.0;
+CBT.22.T2: HKICKER, L=0.0;
+
+!--- Dipoles
+!LEN_BT = 0.6;    ! defined in DEFS file
+
+ang_chic_T2A = 0.000;
+arc_chic_T2A = LEN_BT;    ! /sin(ang_chic_T2A)*ang_chic_T2A
+
+BT.1.1.T2: SBEND, L = arc_chic_T2A, ANGLE = ang_chic_T2A, &
+                    E1 = 0, E2 = ang_chic_T2A, TILT = 0;
+BT.1.2.T2: SBEND, L = arc_chic_T2A, ANGLE =-ang_chic_T2A, &
+                    E1 = -ang_chic_T2A, E2 = 0, TILT = 0;
+BTX.1.T2: SBEND, L = arc_chic_T2A, ANGLE =-ang_chic_T2A, &
+                    E1 = 0, E2 =-ang_chic_T2A, TILT = 0;
+BT.1.4.T2: SBEND, L = arc_chic_T2A, ANGLE = ang_chic_T2A, &
+                    E1 = ang_chic_T2A, E2 = 0, TILT = 0;
+
+
+deltachic_T2A  = 1.0145;    ! 0.394
+D1TO2_T2A:  DRIFT, L = deltachic_T2A / cos(ang_chic_T2A);
+
+D2TO3_T2A: DRIFT, L = 0.341   
+
+CHIC.T2A: LINE = &                                             &
+  ( TWOCPPCHIC(BT.1.1.T2,D0000, BT.1.2.T2,D0000,            &
+             BTX.1.T2, CBTX.3.T2, BT.1.4.T2,CBT.4.T2,           &
+             D1TO2_T2A, D2TO3_T2A));
+endcomment
+!----------------------------------------------------------------------------
+
+STCHIC.T2: MARKER
+ENCHIC.T2: MARKER
+CHIC.T2A: LINE = (STCHIC.T2, D5000, ENCHIC.T2)
+
+!--- Dipoles
+!LEN_BT = 0.6;    ! defined in DEFS file
+
+ang_chic_T2B = 0.000;
+arc_chic_T2B = LEN_BT;    ! /sin(ang_chic_T2B)*ang_chic_T2B
+
+BT.2.1.T2: SBEND, L = arc_chic_T2B, ANGLE = ang_chic_T2B, &
+                    E1 = 0, E2 = ang_chic_T2B, TILT = 0;
+BT.2.2.T2: SBEND, L = arc_chic_T2B, ANGLE =-ang_chic_T2B, &
+                    E1 = -ang_chic_T2B, E2 = 0, TILT = 0;
+BT.2.3.T2: SBEND, L = arc_chic_T2B, ANGLE =-ang_chic_T2B, &
+                    E1 = 0, E2 =-ang_chic_T2B, TILT = 0;
+BT.2.4.T2: SBEND, L = arc_chic_T2B, ANGLE = ang_chic_T2B, &
+                    E1 = ang_chic_T2B, E2 = 0, TILT = 0;
+
+CBT.23.T2: HKICKER, L=0.0;
+CBT.24.T2: HKICKER, L=0.0;
+
+deltachic_T2B  = 1.0145 + 0.75;    ! 0.394
+D1TO2_T2B:  DRIFT, L = deltachic_T2B / cos(ang_chic_T2B);
+
+D2TO3_T2B: DRIFT, L = 0.341   
+
+CHIC.T2B: LINE = &
+  (TWOCPPCHIC(BT.2.1.T2,D0000, BT.2.2.T2,D0000,            &
+             BT.2.3.T2,CBT.23.T2, BT.2.4.T2,CBT.24.T2, &
+             D1TO2_T2B, D2TO3_T2B));
+
+
+
+comment
+!--- Setting: Special optics with dechirper, Weilun 25.01.2022
+QF.7.T2:  Quadrupole, L = L_QF_eff, K1 = -0.0;                 ! QF.1.2.T2
+QF.8.T2:  Quadrupole, L = L_QF_eff, K1 = -0.19447049237398;    ! QF.1.1.T2, bipolar
+QH.9.T2:  Quadrupole, L = L_QH_eff, K1 = +0.138684331412366;   ! new, unipolar
+QF.9.T2:  Quadrupole, L = L_QF_eff, K1 = +0.138684331412366*2; ! replaces QH.9.T2
+QF.10.T2: Quadrupole, L = L_QF_eff, K1 = -0.095807951581177;   ! QF.2.2.T2, unipolar
+QF.11.T2: Quadrupole, L = L_QF_eff, K1 = +0.0;                 ! QF.2.1.T2, unipolar
+!--- dechirper is here
+QF.3.T2:  Quadrupole, L = L_QF_eff, K1 = -0.188693448956594;   ! unipolar
+QF.12.T2: Quadrupole, L = L_QF_eff, K1 = +0.148133963487159;   ! new, unipolar
+QF.4.T2:  Quadrupole, L = L_QF_eff, K1 = +0.0658894923973741; 
+QF.5.T2:  Quadrupole, L = L_QF_eff, K1 = -0.117891585923375; 
+QF.6.T2:  Quadrupole, L = L_QF_eff, K1 = +0.0115048240848942;
+QA.1.T2:  Quadrupole, L = L_QA_eff, K1 = -0.0143125484568571;
+QA.2.T2:  Quadrupole, L = L_QA_eff, K1 = +0.562055063894;
+endcomment
+
+D5142102a: DRIFT, L=5.142102-4+0.523-0.6+0.4698
+D04302: DRIFT, L=0.4302
+D6525a: DRIFT, L=6.525+4-4.74-0.523-1.5-0.6-0.9  
+D02485: DRIFT, L = 0.2485
+
+T2B: Line = (QF.7.T2, fD0125, D0045, CFY.T2, D122482,          &
+             VCBSHUT.T2,                                       &
+             ENSUB.T2U.T2, STSUB.T2M.T2,                       &
+             D01568, D1900,                                    &
+             QFSEC(BPMA.T2, QF.8.T2, CFX.T2),                  &
+!             D549795, QH.9.T2, D0153944, CMX.T2, D2297556,     &
+             D549795, D02485, QF.9.T2, D02485, D0153944, CMX.T2, D2297556, &  !2025 replace QH with QF
+             KL.1.T2, D045645, D0500, D0800,                   &   ! 1st kicker KL
+             QFSEC(BPMA.T2, QF.10.T2, CFY.T2),                 &
+             D15065,                                          &
+             QFSEC(BPMA.T2, QF.11.T2, CFX.T2),                 &
+             D0113946, CMY.T2, D0170496,                       &
+             CHIRP.T2, D0155558,                               &   ! corrugated structure 6 m
+             D0350, OTRB.T2, D0250, D6525,                     &   ! 1st screen
+             QFSEC(BPMA.T2, QF.3.T2, CFY.T2),                  &
+!==========================================================================================================
+!             D03675, CMX.T2, D102895, D5000,                   & 
+!             QF.12.T2, D0138947, D0300, D0204603, D59929,      &
+!             QFSEC(BPMA.T2, QF.4.T2, CFX.T2),                  &
+!             D03675, CMX.T2, D102895, D2000, VCMIR.T2, D3000,  &  !2025 Variant1: Holey Mirror
+!             QF.12.T2, D0138947, D0300, D0204603, D59929,      &  !2025 Variant1: Holey Mirror
+!             QFSEC(BPMA.T2, QF.4.T2, CFX.T2),                  &  !2025 Variant1: Holey Mirror
+             D03675, CMX.T2, D102895, D3000,                   &  !2025 Variant2: Incoupling Chicane
+             QF.12.T2, D08182, D1000, CHIC.T2A, D1000, D08182, &  !2025 Variant2: Incoupling Chicane
+             QFSEC(BPMA.T2, QF.4.T2, CFX.T2),                  &  !2025 Variant2: Incoupling Chicane
+!===========================================================================================================
+             D0113948, CMY.T2,                                 &
+             D015395, D0100, KL.2.T2,                          &   ! 2d  kicker KL
+             D5142102a, D0200, OTRC.T2, D0400, D04302,         &   !2025 2d  screen
+             WIGGLER, D1500, D0200, OTRB.T2, D0400,            &   ! wiggler and YAG
+             D0200, D0400, D6525a,                             &   ! Spectrometer
+             QFSEC(BPMA.T2, QF.5.T2, CFY.T2),                  &   ! 2d  kicker KL
+             D0113949, D0100, KL.3.T2,                         &   
+!             D2012251, COLM4.T2,                               & 
+!             D14838, D0200, OTRBW.T2, D0400, D4925,            &   ! 3d  screen
+             D1012251, COLM4.T2,                               &   !2025 eSASE Chicane
+             D05403, OTRBW.T2, D01685, D0400, CHIC.T2B, D0400, &   !2025 eSASE Chicane
+             QFSEC(BPMA.T2, QF.6.T2,   CFX.T2),                &
+             D0200, D0150, SPEC.T2, D3476817, BPMA.T2,         &   !2025 Spectrometer
+             D0615, VCBSHUT.T2, D3950733,                      &   
+             D0300, TORA.T2, D000675, D0500,                   &  
+             D0100, VCST40T10.T2, D009975,                     &  
+             D0100, BPME.T2, D0100, aD0125,                    &  
+             QA.1.T2, CMVQA.T2, aD0125, D0035, D0025, CNY.T2, D0125,     &  
+             CEX.T2, D20575, D0110, U40S.T2, D0110,            &
+             D17167, CNY.T2, D0150, CEX.T2, D0160, D0050,      &
+             ABSP.T2, D01723, BPME.T2, aD01935, QA.2.T2, CMVQA.T2, aD0047);
+
+!             QFSEC(BPMA.T2, QF.3.T2, CFY.T2), D669645,         &
+!             QF.12.T2, D0138947, CMX.T2, D0204603, D59929,     &
+
+
+!************************************************************************************************
+
+T2: Line = (STSEC.T2.T2, STSUB.T2U.T2, T2A, T2B, ENSUB.T2M.T2, ENSEC.T2.T2);
+
+!************************************************************************************************
+!
+!---------- SASE1 - XTD2 35
+!---------- SASE1 Undulator (37 cells)
+!---------- October  2016: 2 first cells CELL 1 and CELL 2 are without undulator segments)
+!---------- November 2021: Undulator segment from CELL33 moved to CELL2
+!
+!************************************************************************************************
+
+
+!----- Section and Subsection Markers
+STSEC.SA1.SA1: MARKER;
+ENSEC.SA1.SA1: MARKER;
+STUCELL.SA1:   MARKER;
+ENUCELL.SA1:   MARKER;
+ 
+!----- Matching Markers
+MATCH.UND.SA1: Marker;
+
+!----- Steerers
+CAX.SA1: HKICKER, L=0.025;
+CAY.SA1: VKICKER, L=0.025;
+CBX.SA1: HKICKER, L=0.025;
+CBY.SA1: VKICKER, L=0.025;
+CUX.SA1: HKICKER, L=0.000;
+
+
+!----- Quadrupole movers
+CMVQA.SA1: KICKER, L=0;
+
+!----- MONITOR
+BPME.SA1: MONITOR;
+
+!----- PHASESHIFTER
+BPS.SA1: DRIFT, L=0.23;
+
+!----- ABSORBER
+ABSP.SA1: DRIFT, L=0.05;
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Model for magnetic field of undulator (natural focusing)
+
+!--- Undulator closed (with natural focusing)
+!    - model for U40.SA1 has to be set in SET_MODEL_SA1.txm
+!    - matching has to be done to periodic solution in SA1
+!    - one example: call, "SET_SA1_closed_14GeV_136_b32.txm"
+
+
+!--- Undulator open (no natural focusing)
+
+U40.SA1: Drift, L = 5.0;
+
+
+!--- Definition of undulator segment: Open (default)
+
+UNDU.SA1: Line = (U40.SA1);
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Quadrupoles
+
+!--- Setting of quadrupoles depends on energy, undulator gap, betatron functions
+
+!--- Undulator SASE1 open (default), mean beta-function 32 m
+
+QA.1.SA1: Quadrupole, L = L_QA_eff, K1 = -0.562055063894;
+QA.2.SA1: Quadrupole, L = L_QA_eff, K1 = +0.562055063894;
+
+!------------------------------------------------------------------------------------------------
+
+
+!-------- SA1 Lattice
+
+!----- Description of CELL (undulator segments and intersecton): in DEFS file
+
+comment   ! here for info 
+!--- New Section Definition Necessary to correctly handle start/end markers
+UNDSEC(START,CAX,CAY,UNDU,CBX,CBY,CL,ABSP,BPM,Q,QMV,PHS,END): LINE = &
+    (START, CAX,CAY, D004778, CL, UNDU, D00467, CBX,CBY,             &
+     D0050, ABSP, D01723, BPM, aD01935, Q, QMV, aD0047,              &
+     D0058, PHS, D000472, END);
+
+!--- Last Undulator Cell ends before the phase shifter
+UNDSECE(START,CAX,CAY,UNDU,CBX,CBY,CL,ABSP,BPM,Q,QMV,END): LINE =    &
+    (START, CAX,CAY, D004778, CL, UNDU, D00467, CBX,CBY,             &
+     D0050, ABSP, D01723, BPM, aD01935, Q, QMV, aD0047, END);
+endcomment
+
+commnent
+!--- Old definition
+UNDSEC(START,CAX,CAY,UNDU,CBX,CBY,CL,ABSP,BPM,Q,QMV,PHS,END): LINE =   &
+   (D0058, PHS, D000472, END,                                          &
+    START, CAX,CAY, D004778, CL, UNDU, D00467, CBX,CBY,                &
+    D0050, ABSP, D01723, BPM, aD01935, Q, QMV, aD0047);
+endcomment
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Undulator chicane
+
+!LEN_BS  = 0.3;      ! defined in DEFS file
+
+BS: SBEND, L = LEN_BS, ANGLE = 0, &   
+           E1 = 0, E2 = 0, TILT = 0;
+
+D01485: DRIFT, L = 0.1485;
+D12375: DRIFT, L = 1.2375;
+D0435:  DRIFT, L = 0.4350;
+D0290:  DRIFT, L = 0.2900;
+D01515: DRIFT, L = 0.1515;
+
+SEEDCHIC(BS.1,CBS.1,BS.2,CBS.2,BS.3,CBS.3,BS.4,CBS.4,D12375,BPM,MONO): &
+           LINE = (D01485,                         &
+           BS.1,CBS.1, D12375, BS.2,CBS.2,         &
+           D0290, BPM, D0300, MONO, D0435,         &
+           BS.3,CBS.3, D12375, BS.4,CBS.4, D01515);
+
+D1025: DRIFT, L = 1.025;
+D050157:  DRIFT, L = 0.50157;
+D094843:  DRIFT, L = 0.94843 - 0.415;
+D0155: DRIFT, L = 0.155;
+
+RRMCHIC(BS.1,CBS.1,BS.2,CBS.2,BS.3,CBS.3,BS.4,CBS.4,D1025, MONO): &
+           LINE = (D0145,                         &
+           BS.1,CBS.1, D1025, BS.2,CBS.2,         &
+           D050157, MONO, D094843,  &
+           BS.3,CBS.3, D1025, BS.4,CBS.4, D0155);
+
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Description of CELL (undulator segments and intersecton) without undulators segments
+
+!--- Undulator segment: 5 m long drift
+!UNDULATOR: DRIFT, L = 5.0;
+!U00.SA1: UNDULATOR;
+
+!--- Undulator segment is devided in two parts
+!    for checking of SASE1_Ursprung (deltaZ=2.8905m)
+U00.SA1: Marker;
+U00Line.SA1: Line = (D2500, U00.SA1, D2500);
+
+
+!--- Cells without undulator segment
+
+SA1DRIF1: LINE = &
+  (UNDSEC(STUCELL.SA1, D0025,D0025, U00Line.SA1, D0025,D0025, CUX.SA1, &
+          ABSP.SA1, BPME.SA1, &
+          QA.1.SA1, CMVQA.SA1, D0230, ENUCELL.SA1));
+
+SA1DRIF2: LINE = &
+  (UNDSEC(STUCELL.SA1, D0025,D0025, U00Line.SA1, D0025,D0025, CUX.SA1, &
+          ABSP.SA1, BPME.SA1, &
+          QA.2.SA1, CMVQA.SA1, D0230, ENUCELL.SA1));
+
+!--- New description: Periodic solutions at the entrance of CAX.SA1
+dofo_SA1_open:  Line = (SA1DRIF1, SA1DRIF2);   ! first quad defocusing
+fodo_SA1_open:  Line = (SA1DRIF2, SA1DRIF1);   ! first quad   focusing
+
+!------------------------------------------------------------------------------------------------
+
+!----- Cells with Self-Seeding chicanes
+
+MONO1.SA1: Marker
+
+MCBS.1.SA1: MARKER;
+CBS.2.SA1: HKICKER, L=0.0;
+CBS.3.SA1: HKICKER, L=0.0;
+CBS.4.SA1: HKICKER, L=0.0;
+
+ang_chic1 =  0.000;
+arc_chic1 = LEN_BS;       ! /sin(ang_chic1)*ang_chic1
+
+BS.1.1.SA1: SBEND, L = arc_chic1, ANGLE = ang_chic1, &
+                   E1 = 0, E2 = ang_chic1, TILT = 0;
+BS.1.2.SA1: SBEND, L = arc_chic1, ANGLE =-ang_chic1, &
+                   E1 = -ang_chic1, E2 = 0, TILT = 0;
+BS.1.3.SA1: SBEND, L = arc_chic1, ANGLE =-ang_chic1, &
+                   E1 = 0, E2 =-ang_chic1, TILT = 0;
+BS.1.4.SA1: SBEND, L = arc_chic1, ANGLE = ang_chic1, &
+                   E1 = ang_chic1, E2 = 0, TILT = 0;
+
+deltachic  = 1.2375;
+CD12375I1 = 1.2375 / cos(ang_chic1);
+D12375I1:  DRIFT, L = CD12375I1;
+
+CHIC.1.SA1: LINE = &
+  (SEEDCHIC(BS.1.1.SA1,MCBS.1.SA1, BS.1.2.SA1,CBS.2.SA1, &
+            BS.1.3.SA1,CBS.3.SA1,  BS.1.4.SA1,CBS.4.SA1, &
+            D12375I1, D0000, MONO1.SA1));
+
+!----   XFELO chicane
+
+RRM1.SA1: MARKER;
+MIRR1.SA1: MARKER;
+OTRO.SA1: MARKER;
+
+RRM: LINE = (RRM1.SA1, D0305, MIRR1.SA1, D0110, OTRO.SA1);
+
+RRM2.T4: MARKER;  
+MIRR2.T4: MARKER  
+
+MCBS.5.SA1: MARKER;
+CBS.6.SA1: HKICKER, L=0.0;
+CBS.7.SA1: HKICKER, L=0.0;
+CBS.8.SA1: HKICKER, L=0.0;
+
+ang_chic2 =  0.000;
+arc_chic2 = LEN_BS;       ! /sin(ang_chic2)*ang_chic2
+
+BS.2.1.SA1: SBEND, L = arc_chic2, ANGLE = ang_chic2, &
+                   E1 = 0, E2 = ang_chic2, TILT = 0;
+BS.2.2.SA1: SBEND, L = arc_chic2, ANGLE =-ang_chic2, &
+                   E1 = -ang_chic2, E2 = 0, TILT = 0;
+BS.2.3.SA1: SBEND, L = arc_chic2, ANGLE =-ang_chic2, &
+                   E1 = 0, E2 =-ang_chic2, TILT = 0;
+BS.2.4.SA1: SBEND, L = arc_chic2, ANGLE = ang_chic2, &
+                   E1 = ang_chic2, E2 = 0, TILT = 0;
+
+comment
+chickick = 0.003;
+BS.1.1.SA1: HKICKER, L = arc_chic2, KICK =  chickick;
+BS.1.2.SA1: HKICKER, L = arc_chic2, KICK = -chickick;
+BS.1.3.SA1: HKICKER, L = arc_chic2, KICK = -chickick;
+BS.1.4.SA1: HKICKER, L = arc_chic2, KICK =  chickick;
+endcomment
+
+deltachic  = 1.025;
+CD1025I2 = 1.025 / cos(ang_chic2);
+D1025I2:  DRIFT, L = CD1025I2;
+
+CHIC.2.SA1: LINE = &
+  (RRMCHIC(BS.2.1.SA1,MCBS.5.SA1, BS.2.2.SA1,CBS.6.SA1, &
+            BS.2.3.SA1,CBS.7.SA1,  BS.2.4.SA1,CBS.8.SA1, &
+            D1025I2, RRM));           
+
+!2023 --- Cell with chicane
+SA1SECSEED1: LINE = &
+  (UNDSEC(STUCELL.SA1, D0025,D0025,CHIC.1.SA1,D0025,D0025,D0000, &
+          ABSP.SA1, BPME.SA1, QA.1.SA1, CMVQA.SA1, BPS.SA1, ENUCELL.SA1));
+
+SA1SECSEED2: LINE = &
+  (UNDSEC(STUCELL.SA1, D0025,D0025,CHIC.2.SA1,D0025,D0025,D0000, &
+          ABSP.SA1, BPME.SA1, QA.1.SA1, CMVQA.SA1, BPS.SA1, ENUCELL.SA1));
+
+!--- Cell with chicane = drift
+!SA1SECSEED1: LINE = &
+!  (UNDSEC(STUCELL.SA1, D0025,D0025,D5000,D0025,D0025,D0000, &
+!          ABSP.SA1, BPME.SA1, QA.1.SA1, CMVQA.SA1, BPS.SA1, ENUCELL.SA1));           
+
+!------------------------------------------------------------------------------------------------
+
+
+!--- Sections with undulator segments
+
+!--- Cell with defocusing (horizontal) quadrupole 
+SA1SEC1: LINE = &
+  (UNDSEC(STUCELL.SA1, CAX.SA1, CAY.SA1, UNDU.SA1,   &
+          CBX.SA1, CBY.SA1, CUX.SA1,                 &
+          ABSP.SA1, BPME.SA1,                        &
+          QA.1.SA1, CMVQA.SA1, BPS.SA1, ENUCELL.SA1));
+
+!--- Last Undulator cell ends before the phase shifter (L = 5.80728 m)
+SA1SEC1E: LINE = &
+  (UNDSECE(STUCELL.SA1, CAX.SA1, CAY.SA1, UNDU.SA1,  &
+           CBX.SA1, CBY.SA1, CUX.SA1,                &
+           ABSP.SA1, BPME.SA1,                       &
+           QA.1.SA1, CMVQA.SA1, ENUCELL.SA1));
+
+!--- Cell with focusing (horizontal) quadrupole 
+SA1SEC2: LINE = &
+  (UNDSEC(STUCELL.SA1, CAX.SA1, CAY.SA1, UNDU.SA1,   &
+          CBX.SA1, CBY.SA1, CUX.SA1,                 &
+          ABSP.SA1, BPME.SA1,                        &
+          QA.2.SA1, CMVQA.SA1, BPS.SA1, ENUCELL.SA1));
+
+!--- Cell in the front of chicane without phase shifter BPS.SA1 => D0230
+SA1SEC2A: LINE = &
+  (UNDSEC(STUCELL.SA1, CAX.SA1, CAY.SA1, UNDU.SA1,   &
+          CBX.SA1, CBY.SA1, CUX.SA1,                 &
+          ABSP.SA1, BPME.SA1,                        &
+          QA.2.SA1, CMVQA.SA1, D0230, ENUCELL.SA1));
+
+
+!--- New desciption: Periodic solution at the entrance of CAX.SA1
+dofo_SA1_close: Line = (SA1SEC1, SA1SEC2);   ! first quadrupole defocusing
+fodo_SA1_close: Line = (SA1SEC2, SA1SEC1);   ! first quadrupole   focusing
+
+!------------------------------------------------------------------------------------------------
+
+!----- SA1
+
+!--- CELL1  without undulator segment
+!--- CELL2  with undulator segment
+!--- CELL33 with chicane
+!--- Matching point at the entrance of CELL3
+
+!--- Undulator segment from CELL33 moved to CELL2
+!--- Undulator segment from CELL17 moved to CELL1
+
+comment    
+SA1: LINE = (STSEC.SA1.SA1, D029272, SA1DRIF1, SA1SEC2, MATCH.UND.SA1, &
+             6*(SA1SEC1, SA1SEC2),                                    &
+             SA1SEC1, SA1SEC2, SA1SEC1, SA1SEC2,                      &
+             6*(SA1SEC1, SA1SEC2),                                    &
+             SA1SEC1, SA1SEC2A, SA1SECSEED2, SA1SEC2,                 &
+             SA1SEC1, SA1SEC2,  SA1SEC1E,                             &
+             ENSEC.SA1.SA1);
+endcomment
+!2025 with self-seeding chicane
+!comment
+SA1: LINE = (STSEC.SA1.SA1, D029272, SA1SEC1, SA1SEC2, MATCH.UND.SA1, &
+             6*(SA1SEC1, SA1SEC2),                                    &
+             SA1SEC1, SA1SEC2A, SA1SECSEED1, SA1SEC2,                 &
+             6*(SA1SEC1, SA1SEC2),                                    &
+             SA1SEC1, SA1SEC2A, SA1SECSEED2, SA1SEC2,                 &
+             SA1SEC1, SA1SEC2,  SA1SEC1E,                             &
+             ENSEC.SA1.SA1);
+!endcomment
+
+
+SA1_CAX: LINE = (STSEC.SA1.SA1, SA1DRIF1, SA1SEC2, MATCH.UND.SA1,      &
+                 14*(SA1SEC1, SA1SEC2), SA1SEC1, SA1SEC2A,             &
+                 SA1SECSEED1, SA1SEC2, SA1SEC1, SA1SEC2, SA1SEC1E,     &
+                 ENSEC.SA1.SA1);
+
+comment
+!--- Old definition and without chicane
+SA1: LINE = (STSEC.SA1.SA1, (SA1DRIF1, SA1DRIF2), MATCH.UND.SA1, &
+             SA1SEC1E, 17*(SA1SEC2, SA1SEC1), ENSEC.SA1.SA1);
+endcomment
+
+!SA1: LINE = (STSEC.SA1.SA1, SA1DRIF1, SA1SEC2E, MATCH.UND.SA1,   &
+!             15*(SA1SEC1, SA1SEC2),                              &
+!             SA1SECSEED1, SA1SEC2, SA1SEC1, SA1SEC2, SA1SEC1,    &
+!             ENSEC.SA1.SA1);
+          
+ 
+!************************************************************************************************
+!
+!---------- T4 Beam Transport and Deflection to SASE3 in XS3
+!
+!************************************************************************************************
+
+
+!----- Section and Subsection Markers
+
+STSEC.T4.T4:   MARKER;
+ENSEC.T4.T4:   MARKER;
+
+STSUB.T4U.T4:  MARKER;   ! Start of subsection from start of T4 up to first photon beamline start
+ENSUB.T4U.T4:  MARKER;
+
+STSUB.T4T.T4:  MARKER;   ! Start of subsection from photon beamline start to end of T4 section
+ENSUB.T4T.T4:  MARKER;  
+
+
+!----- Diagnostics Marker
+
+BPMA.T4:  MONITOR;
+BPME.T4:  MONITOR;
+OTRB.T4:  MARKER;
+OTRA.T4:  MARKER;
+OTRBW.T4: MARKER;
+BAM.T4:   MARKER;
+BAMC.T4:  MARKER;
+TORA.T4:  MARKER;
+
+PDIO.T4: MARKER;
+
+!----- Vacuum Markers and Vacuum Components
+
+VCSTEP.T4:     MARKER;
+VCST40T93X.T4: MARKER;
+VCST93XT40.T4: MARKER;
+VCST10T22.T4:  MARKER;  
+VCST22T40.T4:  MARKER; 
+VCBSHUT.T4: DRIFT, L=0.3;
+
+
+!----- Correctors (L_yoke is used)
+
+CEX.T4:   HKICKER, L = 0.1;
+CEX.1.T4: HKICKER, L = 0.1;
+CEX.2.T4: HKICKER, L = 0.1;
+CEX.3.T4: HKICKER, L = 0.1;
+CEY.T4:   VKICKER, L = 0.1;
+CFX.T4:   HKICKER, L = 0.1;
+CFY.T4:   VKICKER, L = 0.1;
+CHX.T4:   HKICKER, L = 0.2;
+CHX.1.T4: HKICKER, L = 0.2;
+CHY.T4:   VKICKER, L = 0.2;
+CNY.T4:   VKICKER, L = 0.3;
+
+ABSP.T4: DRIFT, L = 0.05;
+
+
+!----- Kicker in the front of SA3
+
+KSPOS.1.T4:  Hkicker, L = LEN_KS/2, KICK  = 0.0;
+KSNEG.1.T4:  Hkicker, L = LEN_KS/2, KICK  = 0.0;
+KS.1.T4: MARKER;
+             
+KICK_KST4: LINE=(KSPOS.1.T4, KS.1.T4, KSNEG.1.T4);
+
+!----- Chicane in front of SA3
+
+CBT.1.T4: HKICKER, L=0.0;
+CBT.2.T4: HKICKER, L=0.0;
+CBT.3.T4: HKICKER, L=0.0;
+CBT.4.T4: HKICKER, L=0.0;
+
+!--- Dipoles
+!LEN_BT = 0.6;    ! defined in DEFS file
+
+ang_chic_T4 = 0.000;
+arc_chic_T4 = LEN_BT;    ! /sin(ang_chic_T2A)*ang_chic_T2A
+
+BT.1.1.T4: SBEND, L = arc_chic_T4, ANGLE = ang_chic_T4, &
+                    E1 = 0, E2 = ang_chic_T4, TILT = 0;
+BT.1.2.T4: SBEND, L = arc_chic_T4, ANGLE =-ang_chic_T4, &
+                    E1 = -ang_chic_T4, E2 = 0, TILT = 0;
+BT.1.3.T4: SBEND, L = arc_chic_T4, ANGLE =-ang_chic_T4, &
+                    E1 = 0, E2 =-ang_chic_T4, TILT = 0;
+BT.1.4.T4: SBEND, L = arc_chic_T4, ANGLE = ang_chic_T4, &
+                    E1 = ang_chic_T4, E2 = 0, TILT = 0;
+
+
+deltachic_T4  = 1.0145;    ! 0.394
+D1TO2_T4:  DRIFT, L = deltachic_T4 / cos(ang_chic_T4);
+
+D2TO3_T4: DRIFT, L = 0.341   
+
+CHIC.T4: LINE = &
+  (TWOCPPCHIC(BT.1.1.T4,D0000, BT.1.2.T4, D0000,            &
+             BT.1.3.T4,CBT.3.T4, BT.1.4.T4,CBT.4.T4, &
+             D1TO2_T4, D2TO3_T4));
+
+!------------------------------------------------------------------------------------------------
+
+
+!-------- FODO cell in T4 (mux = muy = 60 deg): T4LFODO
+
+!----- Quadrupoles 
+
+QE.1.T4: Quadrupole, L = L_QE_eff, K1 = -0.192279551578;
+QE.2.T4: Quadrupole, L = L_QE_eff, K1 = +0.192279551578;
+
+T4LFODO: LINE=(D10000, D0450, QESEC(BPMA.T4, QE.2.T4, CEX.T4),  & 
+               D10000, &
+               D10000, D0935, QESEC(BPMA.T4, QE.1.T4, CEY.T4),  &
+               D10000, D0485);
+
+T4LFODOCHIC: LINE=(D2500, CHIC.T4,                              &        
+               D2500,  D0450, QESEC(BPMA.T4, QE.2.T4, CEX.T4),  & 
+               D10000, &
+               D10000, D0935, QESEC(BPMA.T4, QE.1.T4, CEY.T4),  &
+               D10000, D0485);
+
+!------------------------------------------------------------------------------------------------
+
+
+!------- Matching section from SASE1 to T4LFODO: T4MATCH1
+
+!--- Quadrupoles 
+
+!--- Setting: Undulator SASE1 open (default)
+QE.3.T4: QUADRUPOLE, L = L_QE_eff, K1 = +0.223792251712;
+QE.4.T4: QUADRUPOLE, L = L_QE_eff, K1 = -0.204091452363;
+QE.5.T4: QUADRUPOLE, L = L_QE_eff, K1 = +0.240596358538;
+QE.6.T4: QUADRUPOLE, L = L_QE_eff, K1 = -0.230659760613;
+
+!D11295: Drift, L = 11.795 - 0.586;
+
+D5000x: DRIFT, L=5-0.074+0.0721-0.305, 
+D6209x: DRIFT, L=6.209+0.074-0.0721;
+D0305: DRIFT, L=0.305;
+
+T4MATCH1: LINE = (STSUB.T4U.T4,                            &
+!                  VCST10T40.T4, D0058, D03325,             &   ! without BAMC
+                  VCST10T22.T4, D0258,BAMC.T4,D0042,       &  !2023 insert BAMC
+                  VCST22T40.T4,D00905,                     &  !2023 insert BAMC
+!                  D0990, TORA.T4, D0300, D0000, D0140,   &
+                  D0990, TORA.T4, D0300, PDIO.T4, D0140,   &  !2023 insert PDIO
+                  D5138,  QESEC(BPMA.T4, QE.3.T4, CEX.T4), &
+                  D11795, QESEC(BPMA.T4, QE.4.T4, CEY.T4), &
+                  D11795, QESEC(BPMA.T4, QE.5.T4, CEX.T4), &
+!                  D0586, OTRA.T4, D5000, D0000, D6209,     & 
+                  D0586, OTRA.T4, D5000x, MIRR2.T4,        &   !2023 insert reflector
+                  D0305, RRM2.T4,   D6209x,                &  !2023 insert reflector
+                  QESEC(BPMA.T4, QE.6.T4, CEY.T4),         &
+                  D8430);
+
+comment
+T4MATCH1: LINE = (STSUB.T4U.T4,                            &
+                  VCST10T22.T4, D0150,BAMC.T4,D0150,       &  ! insert BAMC, chamber 22 mm
+                  VCST22T40.T4, D00905,                    &  ! chamber 22mm
+                  D0990, TORA.T4, D0210, D0230,            &
+                  D5138,  QESEC(BPMA.T4, QE.3.T4, CEX.T4), &
+                  D11795, QESEC(BPMA.T4, QE.4.T4, CEY.T4), &
+                  D11795, QESEC(BPMA.T4, QE.5.T4, CEX.T4), &
+                  D11795, QESEC(BPMA.T4, QE.6.T4, CEY.T4), &
+                  D8430);
+endcomment
+
+!------------------------------------------------------------------------------------------------
+
+
+!-------- Deflection arc T4M
+!         angle = (1.318203999257485)*(PI/180.0) = 0.023007 rad
+
+
+!----- Dipoles (two dipoles)
+ 
+!LEN_BE =  2.5;             ! defined in DEFS file
+
+ANG_T4 = 0.0115035;         ! 0.5*0.023007
+ARC_T4 = (0.5*LEN_BE*ANG_T4)/sin(0.5*ANG_T4);
+E12_T4 = 0.5 * ANG_T4;
+
+BE.1.T4: Sbend, L = ARC_T4, ANGLE = ANG_T4, &
+                E1 = E12_T4, E2 = E12_T4;
+
+
+!----- Quadrupoles and sextupoles
+
+!--- Setting: QH.1.T4 and QH.2.T4 are used for matching
+QH.1.T4: Quadrupole, L = L_QH_eff, K1 = +0.294889644110;
+QM.2.T4: Quadrupole, L = L_QM_eff, K1 = -0.288466077501;
+QM.1.T4: Quadrupole, L = L_QM_eff, K1 = +0.288229145377;
+QH.2.T4: Quadrupole, L = L_QH_eff, K1 = -0.294826790306;
+
+SAOX.1.T4: Sextupole, L = L_SA_eff, K2 = +25.23*0.3/0.3164;
+SAOX.2.T4: Sextupole, L = L_SA_eff, K2 =  +8.91*0.3/0.3164;
+
+
+T4M1: LINE = (D1000, CHX.T4, D0145,                                &
+              D0040, CHY.T4, D0040, D0050, D0100, BPMA.T4, D0100,  &
+              hD0125, QH.1.T4, hD0125, &
+              D0025, VCST40T93X.T4, D0250, ENSUB.T4U.T4);
+
+ 
+T4M2: LINE = (STSUB.T4T.T4,                                         &
+              BE.1.T4, VCST93XT40.T4, D0100,                        &
+              D0500, D0025, QMSEC(D0000, QM.2.T4, D0200), D1440,    &
+              D1500, D0025, QMSEC(BPMA.T4, QM.1.T4, CHX.T4),        &
+              D0515, sD0125, SAOX.1.T4, sD0125, D1900,              &
+              QMSEC(BPMA.T4, QM.2.T4, CHY.T4),                      &
+              D1165, sD0125, SAOX.2.T4, sD0125, D0920,              &
+              D0040, CHX.T4, D0040, D0050, D0100, BPMA.T4, D0100,   &
+              D0150, mD0125, QM.1.T4, mD0125, D0275, BE.1.T4,       &
+              D0100, D0500, D0175, QHSEC(BPMA.T4, QH.2.T4, CHY.T4), D1590);
+
+T4M: LINE = (T4M1, T4M2);
+
+!------------------------------------------------------------------------------------------------
+
+
+!-------- Matching from/to FODO lattice (T4LFODO): T4MATCH2
+
+QH.3.T4: QUADRUPOLE, L = L_QH_eff, K1 = -0.196526138301;
+QH.4.T4: QUADRUPOLE, L = L_QH_eff, K1 = +0.196531553235;
+
+T4MATCH2: LINE = (D7930, D0175, QHSEC(BPMA.T4, QH.4.T4, CHX.T4), D1230,&
+                          D0175, QHSEC(BPMA.T4, QH.3.T4, CHY.T4), D8020);
+
+!------------------------------------------------------------------------------------------------
+
+
+!-------- Matching to SASE3: T4MATCH4
+
+
+!----- Diagnsotic undulators with natural focusing
+!----- Parameters like for U40S.T2
+
+U40S.T4: MATRIX, L = LundS_3,            &
+   RM(1,1) = 1.0,                        &
+   RM(1,2) = LundS_3,                    &
+   RM(1,3) = 0.0,                        &
+   RM(2,2) = 1.0,                        &
+   RM(3,3) = cos(OmegaS*LundS_3),        &
+   RM(3,4) = sin(OmegaS*LundS_3)/OmegaS, &
+   RM(4,3) =-sin(OmegaS*LundS_3)*OmegaS, &
+   RM(4,4) = cos(OmegaS*LundS_3);
+
+
+!----- Quadrupoles 
+
+!--- Setting: Undulator SASE3 open (default)
+QF.7.T4:  QUADRUPOLE, L = L_QF_eff, K1 = -0.115601665486;
+QF.8.T4:  QUADRUPOLE, L = L_QF_eff, K1 = +0.147541323539;
+QF.9.T4:  QUADRUPOLE, L = L_QF_eff, K1 = -0.150513058332;
+QF.10.T4: QUADRUPOLE, L = L_QF_eff, K1 = +0.183637635430;
+
+QA.3.T4:  QUADRUPOLE, L = L_QA_eff, K1 = -1.116515943559;     ! not QA.1.SA3
+QA.4.T4:  QUADRUPOLE, L = L_QA_eff, K1 = +1.243900966656;     ! not QA.2.SA3
+
+
+!D1535703: DRIFT, L = 1.535703;     ! Winni's value
+D1535703: DRIFT, L = 1.535713;    ! to Winni: Nina's value: for 1e-5 larger
+
+T4MATCH3: LINE = (D0275, OTRBW.T4, D10000, D0175,         &
+                  QESEC(BPMA.T4, QE.2.T4, CEX.T4),        &
+                  D9860, D10000, D0175,                   &
+                  QFSEC(BPMA.T4, QF.7.T4, CFY.T4),        &
+                  D5240, D0200, OTRBW.T4, D0400, D5025,   &
+                  QFSEC(BPMA.T4, QF.8.T4, CFX.T4),        &
+                  D5240, D0200,           D0400, D5025,   &
+                  QFSEC(BPMA.T4, QF.9.T4, CFY.T4),        &
+                  D5240, D0200, OTRBW.T4, D0400, D5025,   &
+                  QFSEC(BPMA.T4, QF.10.T4, CFX.T4),       &
+                  D0445, KICK_KST4, D1754987,             &   !!! Insert for Kicker, BPM and Beam Stop in front of SASE3
+                  BPMA.T4, D0615, VCBSHUT.T4, D1535703,   &   !!!
+                  D0400, TORA.T4, D000675,                &
+                  D0500, D0100, VCST40T10.T4, D009975,    &
+                  D0100, BPME.T4, D0100,                  &
+                  aD0125, QA.3.T4, aD0125, D0035,         &
+                  D0025,  CNY.T4, D0125, CEX.T4, D20575,  &
+                  D0110, U40S.T4, D0110,                  &
+                  D17167, CNY.T4, D0150, CEX.T4, D0160,   &
+                  D0050, ABSP.T4, D01723, BPME.T4,        &
+                  aD01935, QA.4.T4, aD0047,               &
+                  ENSUB.T4T.T4);
+
+!------------------------------------------------------------------------------------------------
+
+
+!-------- Total T4 line
+
+!SA1TT4: LINE = (T4MATCH1, 1 * T4LFODO, T4MATCH2);
+SA1TT4: LINE = (T4MATCH1, 1 * T4LFODOCHIC, T4MATCH2);    !2025: compensation chicane
+T4TSA3: LINE = (T4MATCH2, 2 * T4LFODO, T4MATCH3);
+
+T4:     LINE = (STSEC.T4.T4, SA1TT4, T4M, T4TSA3, ENSEC.T4.T4);
+
+
+!************************************************************************************************
+!
+!---------- SASE 3 - XTD4 22
+!---------- SASE 3 Undulator (23 Sections)
+!
+!---------- August   2016: 23 Cells, CELL1 and CELL2 are without undulator segments
+!---------- December 2019: Undulator segment from CELL13 is moved in CELL2
+!
+!************************************************************************************************
+
+!----- Section and Subsection Markers
+
+STSEC.SA3.SA3: MARKER;
+ENSEC.SA3.SA3: MARKER; 
+
+STSUB.UE90.SA3: MARKER;
+ENSUB.UE90.SA3: MARKER;
+
+STUCELL.SA3: MARKER;
+ENUCELL.SA3: MARKER;
+
+
+!----- Matching Markers
+
+MATCH.UND.SA3:  Marker;
+MATCH.UE90.SA3: Marker;    ! if needed
+ 
+
+!----- Steerer
+CAX.SA3:  HKICKER, L=0.025;
+CAY.SA3:  VKICKER, L=0.025;
+CBX.SA3:  HKICKER, L=0.025;
+CBY.SA3:  VKICKER, L=0.025;
+CUX.SA3:  HKICKER, L=0.000;
+CUY.SA3:  HKICKER, L=0.000;
+CUSX.SA3: HKICKER, L=0.000;
+CUSY.SA3: HKICKER, L=0.000;
+
+!----- Quadrupole movers
+CMVQA.SA3: KICKER, L=0;
+
+!----- Monitor
+BPME.SA3: MONITOR;
+BPMA.SA3: MONITOR;
+
+!----- Phase Shifter
+BPS.SA3: DRIFT, L=0.23;
+
+!----- ABSORBER
+ABSP.SA3: DRIFT, L=0.05;
+ABSP6.SA3: DRIFT, L = 0.05;
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Model for undulator natural focusing
+
+!--- Undulator closed (with natural focusing)
+!    - model for U68.SA3 has to be set in SET_MODEL_SA3.txm
+!    - matching has to be done to periodic solution in SA3
+!    - one case: call, "SET_SA3_closed_14GeV_110_b15.txm"
+
+
+!--- Undulator open (no natural focusing)
+
+U68.SA3: Drift, L = 5.0;
+
+
+!--- Definition of undulator segment: Open Default
+
+UNDU.SA3: Line = (U68.SA3);
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Quadrupoles
+
+!--- Setting of quadrupoles depends on energy, undulator gap, betatron functions
+
+!--- Undulator SASE3 open (default), mean beta-function 15 m
+QA.1.SA3:  Quadrupole, L = L_QA_eff, K1 = -1.197430122553;
+QA.2.SA3:  Quadrupole, L = L_QA_eff, K1 = +1.197430122553;
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Chicane in CELL13
+
+CBSL.1.SA3: HKICKER, L=0.0;
+CBSL.2.SA3: HKICKER, L=0.0;
+CBSL.3.SA3: HKICKER, L=0.0;
+CBSL.4.SA3: HKICKER, L=0.0;
+
+
+!--- Dipoles
+
+!LEN_BSL = 0.6;    ! defined in DEFS file
+
+ang_chic_SA3 = 0.000;
+arc_chic_SA3 = LEN_BSL;    ! /sin(ang_chic_SA3)*ang_chic_SA3
+
+BSL.1.1.SA3: SBEND, L = arc_chic_SA3, ANGLE = ang_chic_SA3, &
+                    E1 = 0, E2 = ang_chic_SA3, TILT = 0;
+BSL.1.2.SA3: SBEND, L = arc_chic_SA3, ANGLE =-ang_chic_SA3, &
+                    E1 = -ang_chic_SA3, E2 = 0, TILT = 0;
+BSL.1.3.SA3: SBEND, L = arc_chic_SA3, ANGLE =-ang_chic_SA3, &
+                    E1 = 0, E2 =-ang_chic_SA3, TILT = 0;
+BSL.1.4.SA3: SBEND, L = arc_chic_SA3, ANGLE = ang_chic_SA3, &
+                    E1 = ang_chic_SA3, E2 = 0, TILT = 0;
+
+
+deltachic_SA3  = 1.068 - 0.6;   
+CD0394I = deltachic_SA3 / cos(ang_chic_SA3);
+D1TO2:  DRIFT, L = CD0394I;
+
+D2TO3L = 2.034-0.6;
+D2TO3I: DRIFT, L = 0.392;
+D2TO3II: DRIFT, L = D2TO3L-0.392;
+
+
+ODL.SA3: MARKER
+
+D2TO3: Line=(D2TO3I, ODL.SA3, D2TO3II)
+
+
+CHIC.CELL13.SA3: LINE = &
+  (TWOCPPCHIC(BSL.1.1.SA3,CBSL.1.SA3, BSL.1.2.SA3,CBSL.2.SA3,            &
+             BSL.1.3.SA3,CBSL.3.SA3, BSL.1.4.SA3, CBSL.4.SA3, D1TO2, D2TO3));
+
+
+comment
+CHIC.CELL13.SA3: DRIFT, L=5.000;
+endcomment
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- SA3 Lattice
+
+!----- 
+!----- December 2019: Undulator segment from CELL13 is moved in CELL2
+
+
+!----- Description of one CELL (undulator segments and intersecton): in DEFS file
+
+comment   ! here for info
+!--- New Section Definition necessary to correctly handle start/end markers
+UNDSEC(START,CAX,CAY,UNDU,CBX,CBY,CL,ABSP,BPM,Q,QMV,PHS,END): LINE = &
+    (START, CAX,CAY, D004778, CL, UNDU, D00467, CBX,CBY,             &
+     D0050, ABSP, D01723, BPM, aD01935, Q, QMV, aD0047,              &
+     D0058, PHS, D000472, END);
+
+!--- Last Undulator Cell ends before the phase shifter 
+UNDSECE(START,CAX,CAY,UNDU,CBX,CBY,CL,ABSP,BPM,Q,QMV,END): LINE =    &
+    (START, CAX,CAY, D004778, CL, UNDU, D00467, CBX,CBY,             &
+     D0050, ABSP, D01723, BPM, aD01935, Q, QMV, aD0047, END);
+
+!--- L_UNDSEC = 6.1 m;  L_UNDSECE = 5.80728 m (D0058+PHS+D000472=0.29272m)
+endcomment
+
+comment
+!--- Old description kept for a while (phase shifter in the beginning)
+UNDSEC(START,CAX,CAY,UNDU,CBX,CBY,CL,ABSP,BPM,Q,QMV,PHS,END): LINE =   &
+   (D0058, PHS, D000472, END,                                          &
+    START, CAX,CAY, D004778, CL, UNDU, D00467, CBX,CBY,                &
+    D0050, ABSP, D01723, BPM, aD01935, Q, QMV, aD0047);
+endcomment
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Cells without undulators segments
+!      Aug 2016: CELL1 and CELL2 are without undulator segments
+!      Dec 2019: CELL1 without undulator segment
+!                CELL2 with chicane, description without segment 
+!                is not needed, but kept for studies
+
+!--- Undulator segment as a drift
+!UNDULATOR: DRIFT, L = 5.0;
+!U00.SA3: UNDULATOR;
+
+!--- Undulator segment is devided in two parts
+!--- for cheking of SASE3_Ursprung (deltaZ=2.8905m)
+
+U00.SA3: Marker;
+U00Line.SA3: Line = (D2500, U00.SA3, D2500);
+
+
+!--- CELL1 and CELL2 without undulator segments
+
+SA3DRIF1: LINE = &
+  (UNDSEC(STUCELL.SA3, D0025,D0025, U00LINE.SA3, D0025,D0025, CUX.SA3, &
+          ABSP.SA3, BPME.SA3, &
+          QA.1.SA3, CMVQA.SA3, D0230, ENUCELL.SA3));
+
+SA3DRIF2: LINE = &
+  (UNDSEC(STUCELL.SA3, D0025,D0025, U00LINE.SA3, D0025,D0025, CUX.SA3, &
+          ABSP.SA3, BPME.SA3, &
+          QA.2.SA3, CMVQA.SA3, D0230, ENUCELL.SA3));
+
+!--- Periodic solution at the entrance of CAX.SA3 
+dofo_SA3_open: Line = (SA3DRIF1, SA3DRIF2);
+fodo_SA3_open: Line = (SA3DRIF2, SA3DRIF1);
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Cells with undulator segments
+
+!--- CELL with defocusing (horizontal) quadrupole 
+SA3SEC1: LINE = &
+  (UNDSEC(STUCELL.SA3, CAX.SA3, CAY.SA3, UNDU.SA3, &
+          CBX.SA3, CBY.SA3, CUX.SA3,               &
+          ABSP.SA3, BPME.SA3,                      &
+          QA.1.SA3, CMVQA.SA3, BPS.SA3, ENUCELL.SA3));
+
+!--- CELL with defocusing (horizontal) quadrupole without Phaseshifter
+!--- including 6 mm photon absorner
+SA3SEC1A: LINE = &
+  (UNDSEC(STUCELL.SA3, CAX.SA3, CAY.SA3, UNDU.SA3, &
+          CBX.SA3, CBY.SA3, CUX.SA3,               &
+          ABSP6.SA3, BPME.SA3,                      &
+          QA.1.SA3, CMVQA.SA3, BPS.SA3, ENUCELL.SA3));
+
+comment   ! not needed
+!--- Last Undulator CELL ends before the phase shifter (L = 5.80728 m)
+SA3SEC1E: LINE = &
+  (UNDSECE(STUCELL.SA3, CAX.SA3, CAY.SA3, UNDU.SA3, &
+          CBX.SA3, CBY.SA3, CUX.SA3,                &
+          ABSP.SA3, BPME.SA3,                       &
+          QA.1.SA3, CMVQA.SA3, ENUCELL.SA3));
+endcomment
+
+!--- CELL with focusing (horizontal) quadrupole
+SA3SEC2: LINE = &
+  (UNDSEC(STUCELL.SA3, CAX.SA3, CAY.SA3, UNDU.SA3, &
+          CBX.SA3, CBY.SA3, CUX.SA3,               &
+          ABSP.SA3, BPME.SA3,                      &
+          QA.2.SA3, CMVQA.SA3, BPS.SA3, ENUCELL.SA3));
+
+!--- CELL in the front of chicane without Phaseshifter BPS.SA1 => D0230
+SA3SEC2A: LINE = &
+  (UNDSEC(STUCELL.SA3, CAX.SA3, CAY.SA3, UNDU.SA3, &
+          CBX.SA3, CBY.SA3, CUX.SA3,               &
+          ABSP.SA3, BPME.SA3,                      &
+          QA.2.SA3, CMVQA.SA3, D0230, ENUCELL.SA3));
+
+!--- CELL with 6mm photon absorber
+SA3SEC2B: LINE = &
+  (UNDSEC(STUCELL.SA3, CAX.SA3, CAY.SA3, UNDU.SA3, &
+          CBX.SA3, CBY.SA3, CUX.SA3,               &
+          ABSP6.SA3, BPME.SA3,                      &
+          QA.2.SA3, CMVQA.SA3, BPS.SA3, ENUCELL.SA3));
+
+
+!--- CELL 13 with chicane (with Phaseshifter)
+
+SA3TWOCPP: LINE = &
+  (UNDSEC(STUCELL.SA3, D0025,D0025, CHIC.CELL13.SA3 , D0025,D0025, D0000, &
+          ABSP.SA3, BPME.SA3, &
+          QA.1.SA3, CMVQA.SA3, BPS.SA3, ENUCELL.SA3));
+
+
+!--- Periodic solutions at the entrance of CAX.SA3
+dofo_SA3_close: Line =(SA3SEC1, SA3SEC2);
+fodo_SA3_close: Line =(SA3SEC2, SA3SEC1);
+
+
+!************************************************************************************************
+!
+!----- Description of afterburner section UE90
+!          
+!----- 24.06.2019, Suren: Afterburner section UE90 
+!        Length (one FODO period) = 14.8 m
+!        Intersections like in SA3
+!        4 x UE90 undulators (2.6 m reserved space for each)
+!        4 x phase shifters
+!        4 x BPME
+!        2 x QA quadrupoles
+!
+!************************************************************************************************
+
+            
+!----- Model for undulator UE90 natural focusing
+
+!--- Undulator closed (with natural focusing) 
+!--- 08.01.2020: not introduced 
+
+!--- Undulator open (no natural focusing)
+ 
+L_UE90 = 1.98;
+
+D03285: DRIFT, L = 0.3285-0.1-0.0325;
+D02915: DRIFT, L = 0.2915-0.1-0.0325;
+D00325: DRIFT, L = 0.0325;
+
+UE90.SA3:  Drift,  L = L_UE90;
+MVUE90.SA3: MARKER
+
+QP.SA3: Quadrupole, L = 0.1, k1 = 0.0
+
+!--- Definition of undulator UE90: Default Open
+
+UNDU.UE90: Line = (D03285, QP.SA3, D00325, UE90.SA3, MVUE90.SA3, &
+D00325, QP.SA3, D02915);  ! L = 0.3285+1.98+0.2915 = 2.6 m
+
+
+!D0990: Drift, L = L_UE90/2;   ! D0990 is defined in DEFS file
+!MIDUE90.SA3: MARKER;
+!UNDU.UE90: Line = (D03285, D0990, MIDUE90.SA3, D0990, D02915);
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Drift for missing quadrupoles in two intersections
+
+D01137:   Drift, L = 0.1137;     ! QA effective length
+CMVQA.NO: Drift, L = 0.0;
+
+
+!--- 06.01.2020. Two ambient magnetic field correctors: CUX, CUY
+
+CU.SA3: Line = (CUSX.SA3, CUSY.SA3);
+!CU.SA3: Line = (D0000, D0000);
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- UE90 Lattice
+
+comment
+!--- UE90 Lattice without Apple-X undulators
+
+!--- 1st and 3d cells: without quadrupoles, with Phaseshifters and BPM's
+UE90SECQ: LINE = &
+  (UNDSEC(STUCELL.SA3, D0025,D0025, UNDU.UE90,    &
+          D0025,D0025, CU.SA3,                    &
+          ABSP.SA3, BPME.SA3, D01137, CMVQA.NO, D0230, ENUCELL.SA3));
+
+!--- 2d cell: with focusing quadrupole, Phaseshifter and BPM
+UE90SEC2: LINE = &
+  (UNDSEC(STUCELL.SA3, D0025,D0025, UNDU.UE90,     &
+          D0025,D0025, CU.SA3,                     &
+          ABSP.SA3, BPME.SA3, QA.2.SA3, CMVQA.SA3, D0230, ENUCELL.SA3));
+
+!--- 4th cell: with defocusing quadrupole and BPM, without Phaseshifter
+UE90SEC1: LINE = &
+  (UNDSECE(STUCELL.SA3, D0025,D0025, UNDU.UE90,   &
+          D0025,D0025, CU.SA3,                    &
+          ABSP.SA3, BPME.SA3, QA.1.SA3, CMVQA.SA3, ENUCELL.SA3));
+endcomment
+
+!comment
+!--- Version from 01.01.2022 with Phaseshiters
+
+!--- 1st and 3d cells: without quadrupoles, with Phaseshifters and BPM's
+UE90SECQ: LINE = &
+  (UNDSEC(STUCELL.SA3, CAX.SA3,CAY.SA3, UNDU.UE90,    &
+          CBX.SA3,CBY.SA3, CU.SA3,                    &
+          ABSP.SA3, BPME.SA3, D01137, CMVQA.NO, BPS.SA3, ENUCELL.SA3));
+
+!--- 2d cell: with focusing quadrupole, Phaseshifter, BPM and 6 mm absorber
+UE90SEC2: LINE = &
+  (UNDSEC(STUCELL.SA3,CAX.SA3,CAY.SA3, UNDU.UE90,     &
+          CBX.SA3,CBY.SA3, CU.SA3,                    &
+          ABSP6.SA3, BPME.SA3, QA.2.SA3, CMVQA.SA3, BPS.SA3, ENUCELL.SA3));
+
+!--- 4th cell: with defocusing quadrupole and BPM, without Phaseshifter
+UE90SEC1: LINE = &
+  (UNDSECE(STUCELL.SA3, CAX.SA3,CAY.SA3, UNDU.UE90,   &
+          CBX.SA3,CBY.SA3, CU.SA3,                    &
+          ABSP.SA3, BPME.SA3, QA.1.SA3, CMVQA.SA3, ENUCELL.SA3));
+!endcomment
+
+
+comment
+!--- Version from 01.01.2021
+!--- 1st and 3d cells: without quadrupoles, with phase shifters and BPM's
+!--- 22.01.21 WD: Phase shifters are not yet installed
+UE90SECQ: LINE = &
+  (UNDSEC(STUCELL.SA3, D0025,D0025, UNDU.UE90, D0025,D0025, D0000, &
+          ABSP.SA3, BPME.SA3, D01137, CMVQA.NO, D0230, ENUCELL.SA3));  
+
+!--- 2d cell: with focusing quadrupole, phase shifter and BPM
+!--- 22.01.21 WD: Phase shifters are not yet installed
+UE90SEC2: LINE = &
+  (UNDSEC(STUCELL.SA3, D0025,D0025, UNDU.UE90, D0025,D0025, D0000, &
+          ABSP.SA3, BPME.SA3, QA.2.SA3, CMVQA.SA3, D0230, ENUCELL.SA3));
+
+!--- 4th cell: with defocusing quadrupole, phase shifter and BPM
+!--- 22.01.21 WD: Phase shifters are not yet installed
+UE90SEC1: LINE = &
+  (UNDSEC(STUCELL.SA3, D0025,D0025, UNDU.UE90, D0025,D0025, D0000, &
+          ABSP.SA3, BPME.SA3, QA.1.SA3, CMVQA.SA3, D0230, ENUCELL.SA3));
+endcomment
+
+
+!----- Afterburner section with 4 UE90 undulators
+
+UE90: Line = (STSUB.UE90.SA3,                         &
+              UE90SECQ, UE90SEC2, UE90SECQ, UE90SEC1, &
+              ENSUB.UE90.SA3);
+
+
+!----- Afterburner FODO period (contains 4 x UE90 undulators),
+!----- to find the periodic solution for studies.
+!----- Last CELL in SA3 with Phaseshifter
+
+fodo_UE90: Line = (UE90SECQ, UE90SEC2, UE90SECQ, UE90SEC1, D029272);
+!fodo_UE90: Line = (D029272, UE90SECQ, UE90SEC2, UE90SECQ, UE90SEC1);
+
+!------------------------------------------------------------------------------------------------
+
+          
+!----- SA3 (23 CELLs)
+
+!--- First cell without undulator segment
+!--- Second cell with undulator segment
+!--- 13th cell with chicane
+!--- Matching point at the start of 3d cell
+
+!--- Undulator segment from CELL13 moved to CELL2
+!--- Chicane in CELL13
+
+SA3: LINE =(STSEC.SA3.SA3, D029272, (SA3DRIF1, SA3SEC2), MATCH.UND.SA3,  &
+            4*(SA3SEC1, SA3SEC2), SA3SEC1, SA3SEC2A, SA3TWOCPP,          &
+            4*(SA3SEC2, SA3SEC1), SA3SEC2B, SA3SEC1A,                     &
+            UE90, ENSEC.SA3.SA3);
+
+SA3_CAX: LINE =(STSEC.SA3.SA3, (SA3DRIF1, SA3SEC2), MATCH.UND.SA3,       &
+            4*(SA3SEC1, SA3SEC2), SA3SEC1, SA3SEC2A, SA3TWOCPP,          &
+            5*(SA3SEC2, SA3SEC1),                                       &
+            UE90, ENSEC.SA3.SA3);
+
+
+! SA3: LINE =(STSEC.SA3.SA3, (SA3DRIF1, SA3SEC2E), MATCH.UND.SA3,    &
+!            5*(SA3SEC1, SA3SEC2), SA3TWOCPP, 5*(SA3SEC2, SA3SEC1),  &
+!            UE90, ENSEC.SA3.SA3);
+
+comment
+!----- Old description kept for a while
+SA3: LINE =(STSEC.SA3.SA3, (SA3DRIF1, SA3SEC2E), MATCH.UND.SA3,    &
+            5*(SA3SEC1, SA3SEC2), SA3TWOCPP, 5*(SA3SEC2, SA3SEC1), &
+            ENSEC.SA3.SA3)   
+SA3: LINE =(STSEC.SA3.SA3, (SA3DRIF1, SA3DRIF2), MATCH.UND.SA3,    &
+            SA3SEC1E, 10*(SA3SEC2, SA3SEC1), ENSEC.SA3.SA3)
+endcomment
+
+
+!************************************************************************************************
+!
+!---------- T9 Line: T9
+!
+!************************************************************************************************
+
+STSEC.T9.T9:  MARKER;
+ENSEC.T9.T9:  MARKER;
+
+OTRC.T9:   MARKER;
+VV0.T9:    MARKER;
+BSECP.T9:  RBEND, L=0.7;
+
+D716773922: DRIFT, L = 716.774022;
+
+T9: LINE = (STSEC.T9.T9, D10000, D10000, D5400, D0200, BSECP.T9, D3600,&
+            D0200, BSECP.T9, D0944, OTRC.T9, D0036,                    &
+            D1000, VV0.T9, D0400, D0036, D716773922, ENSEC.T9.T9);
+
+
+!************************************************************************************************
+!
+!---------- Beam Dump Line T4D after SASE3: SA3TT4D
+!
+!---------- July 2019: With Afterburner section after SASE3 
+!
+!************************************************************************************************
+
+
+!----- Section and Subsection Markers
+
+STSEC.T4D.T4D:   MARKER;
+ENSEC.T4D.T4D:   MARKER;
+
+STSUB.T4DU.T4D:  MARKER;   ! Start of subsection from start of T4D up to photon beamline start
+ENSUB.T4DU.T4D:  MARKER;   ! 
+
+STSUB.T4DT.T4D:  MARKER;   ! Start of subsection from photon beamline start to end of T4D section
+ENSUB.T4DT.T4D:  MARKER;   ! 
+
+
+!----- Diagnostic Markers
+
+BPMA.T4D:    MONITOR;
+MIDBPMF.T4D: MARKER;
+BPMF.T4D:    MONITOR;
+BPMD.T4D:    MONITOR;
+BPMW.T4D:    MONITOR;
+BPME.T4D:    MONITOR;
+TORC.T4D:    MARKER;
+OTRD.T4D:    MARKER;
+OTRCR.T4D:    MARKER;
+OTRA.T4D:    MARKER;
+BAM.T4D:     MARKER;
+BAMC.T4D:    MARKER;
+TORA.T4D:    MARKER;
+BHM.T4D:     MARKER;
+SCRW.T4D:    MARKER;
+
+
+!----- Correctors (L_yoke is used)
+
+CEX.T4D: HKICKER, L=0.1;
+CEY.T4D: VKICKER, L=0.1;
+CFX.T4D: HKICKER, L=0.1;
+CFY.T4D: VKICKER, L=0.1;
+CNX.T4D: HKICKER, L=0.3;
+CNY.T4D: VKICKER, L=0.3;
+CMX.T4D: HKICKER, L=0.3;
+CMY.T4D: VKICKER, L=0.3;
+!------------------------------------------------------------------------------------------------
+
+
+!-------- Matching section from UE90 to the dump arc: SA3TT4D_UE90 
+
+!         1) Quadrupole QF.1.T4D (QF.2946.T4D) is moved in the position behind 
+!            QF.3.T4D (QF.2974.T4D) => 1.135 m free space.  
+!         2) Position of quadrupole QF.2.T4D (QF.2962.T4D) is not changed
+!            (the polarity is changed).
+!         3) Thus in the front of QF.2.T4D there is a drift: 
+!            D3000 + D5600 + D0200 + D5275 = 14.075 + 1.135 = 15.210 m
+!         4) L_afterburner = 14.8 m: 15.210 - 14.8 = 0.410 m =>
+!            D0410 is kept in the front of QF.2.T4D
+                 
+!----- 02.12.2019: Shift of QF.1.T4D more downstream
+D1465: Drift, L = 1.465;
+
+
+!-------- August 2023. TDS/Corrugated-structure after Sa3. 
+
+!--- Corrugated structure (dechirper): Defined with L = 5 m for a while 
+
+MVCCHIRP.T4D:   MARKER;  
+MVCCHIRP_S.T4D: MARKER;
+
+!--- Dechirper is not build
+CHIRP.T4D: LINE = (D5000);
+
+!--- Dechirper is drift with markers 
+!CHIRP.T4D: LINE = (VCCHIRP_S.T4D,D1000,VCCHIRP_S.T4D,D1000,VCCHIRP_S.T4D, &
+!                  D0500, VCCHIRP.T4D, D0500,                              &
+!                  VCCHIRP_S.T4D,D1000,VCCHIRP_S.T4D,D1000,VCCHIRP_S.T4D);
+
+!--- Dechirper is RBEND to see in the plot
+!CHIR.1.T4D:  RBEND, L = 1.0;
+!CHIR.2.T4D:  RBEND, L = 0.5;
+!CHIRP.T4D: LINE = (VCCHIRP_S.T4D, CHIR.1.T4D, VCCHIRP_S.T4D,  &
+!                   CHIR.1.T4D, VCCHIRP_S.T4D,                 &
+!                   CHIR.2.T4D, VCCHIRP.T4D, CHIR.2.T4D,       &
+!                   VCCHIRP_S.T4D, CHIR.1.T4D, VCCHIRP_S.T4D,  &
+!                   CHIR.1.T4D, VCCHIRP_S.T4D);
+
+!----- Correctors for orbit bump (CM type)
+! CMX.11.T4D: HKICKER, L = 0.300, Kick = +0.0;
+! CMX.12.T4D: HKICKER, L = 0.300, Kick = -0.0;
+! CMX.13.T4D: HKICKER, L = 0.300, Kick = -0.0;
+! CMX.14.T4D: HKICKER, L = 0.300, Kick = +0.0;
+
+
+!--- New drifts will be moved in DEFS file later
+D424975: Drift, L = 4.24975;
+D3265:   Drift, L = 3.265+0.6245;
+D2600:   Drift, L = 3.000-0.6245;
+D6265:   Drift, L = 6.265;
+D4490:   Drift, L = 4.490;
+D4690:   Drift, L = 4.690;
+D2690:   Drift, L = 2.690;
+D2490:   Drift, L = 2.490;
+D6465:   Drift, L = 6.465;
+D6065:   Drift, L = 6.065;
+D6305:   Drift, L = 6.305;
+D33106:  Drift, L = 3.3106;
+D2310:   Drift, L = 2.310;
+D6445:   Drift, L = 6.445;
+
+
+!----- Quadrupoles
+
+!--- 24.06.2019: Undulators SASE3 and U90 open (default), <beta>=15m, 200km
+!--- 06.02.2020: QF.1.T4D is additionally shifted for 3m
+
+!--- 07.08.2023: Magnet lattice for diagnostic with corrugated structure 
+
+!---- Design optics, beta_{x,y} = 200 km at the dump
+QF.2.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.171298917406;
+QF.3.T4D:  Quadrupole, L = L_QF_eff, K1 = -0.110215646918;
+QF.1.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.095348292055;
+QF.6.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.0;
+QF.7.T4D:  Quadrupole, L = L_QF_eff, K1 = -0.0;
+QF.8.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.0;
+QF.9.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.0;
+QF.10.T4D: Quadrupole, L = L_QF_eff, K1 = +0.0;
+QF.11.T4D: Quadrupole, L = L_QF_eff, K1 = +0.0;
+QF.4.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.135664656962;
+QF.5.T4D:  Quadrupole, L = L_QF_eff, K1 = -0.080864647865;
+!QK.6.T4D:  QUADRUPOLE, L = L_QK_eff, K1 = -0.169741271532;  ! defined below
+
+
+comment
+!--- 08.08.2023. Special optics Var 1 
+!                beta_x = 50m at TDS
+!                beta_x = beta_y= 5 0m at OTRD
+!                at dump: D_y=0, beta_x=10km, beta_y=5.7km
+QF.2.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.210520423634;
+QF.3.T4D:  Quadrupole, L = L_QF_eff, K1 = -0.399278329524;
+QF.1.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.295561284927;
+QF.6.T4D:  Quadrupole, L = L_QF_eff, K1 = -0.413194459972;
+QF.7.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.148986992317;
+QF.8.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.196338520969;
+QF.9.T4D:  Quadrupole, L = L_QF_eff, K1 = -0.239355869544;
+QF.10.T4D: Quadrupole, L = L_QF_eff, K1 = +0.0;
+QF.11.T4D: Quadrupole, L = L_QF_eff, K1 = +0.0;
+QF.4.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.231319527598;
+QF.5.T4D:  Quadrupole, L = L_QF_eff, K1 = -0.180234293658;
+QK.1.T4D:  QUADRUPOLE, L = L_QK_eff, K1 = -0.172994430289;   ! design
+QK.6.T4D:  QUADRUPOLE, L = L_QK_eff, K1 = -0.0;
+endcomment
+
+comment
+!--- 08.08.2023. Special optics Var 2
+!                beta_x =50m at TDS
+!                beta_x =beta_y = 50m at OTRD 
+!                at dump: D_y ~= 0, small beta_x and beta_y
+QF.2.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.210520423634;
+QF.3.T4D:  Quadrupole, L = L_QF_eff, K1 = -0.399278329524; 
+QF.1.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.295561284927;
+QF.6.T4D:  Quadrupole, L = L_QF_eff, K1 = -0.413194459972;
+QF.7.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.148986992317;
+! tds
+QF.8.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.105170335001;
+QF.9.T4D:  Quadrupole, L = L_QF_eff, K1 = -0.020832046459;
+QF.10.T4D: Quadrupole, L = L_QF_eff, K1 = -0.059321268212;
+QF.11.T4D: Quadrupole, L = L_QF_eff, K1 = -0.081811191926;
+QF.4.T4D:  Quadrupole, L = L_QF_eff, K1 = +0.153883234845;
+QF.5.T4D:  Quadrupole, L = L_QF_eff, K1 = -0.146684143051;
+QK.1.T4D:  QUADRUPOLE, L = L_QK_eff, K1 = -0.0;
+QK.6.T4D:  QUADRUPOLE, L = L_QK_eff, K1 = -0.037;
+endcomment
+
+SA3TT4D: LINE = (STSUB.T4DU.T4D,                            &
+                 VCST10T22.T4D, D0258,BAMC.T4D,D0042,       &   ! 2023 insert BAMC and chamber with 22 mm
+                 VCST22T40.T4D,D00905,                      &   ! 2023 insert BAMC
+                 D0990, D0240, D085775,                     &
+                 D424975,                                   &
+                 QFSEC(BPMA.T4D, QF.2.T4D, CFX.T4D),        &
+                 D3265, TORA.T4D, D2600,                    &
+                 QFSEC(BPMA.T4D, QF.3.T4D, CFY.T4D),        &
+                 D6265,                                     &
+                 QFSEC(BPMA.T4D, QF.1.T4D, CMX.T4D),        &   
+                 D4490,                                     &
+                 QFSEC(BPMA.T4D, QF.6.T4D, CMY.T4D),        &
+                 D2310,                                     &
+                 D0040, CMX.T4D, D0040, D0050,              &
+                 qfD0075, QF.7.T4D, qfD0080,                &
+                 D0050, D0100, BPMA.T4D, D0100,             &
+                 D6445, CHIRP.T4D, D6305,                   &
+                 QFSEC(BPMA.T4D, QF.8.T4D, CMX.T4D),        &
+                 D2490,                                     &
+                 QFSEC(BPMA.T4D, QF.9.T4D, CMY.T4D),        &
+                 D4490,                                     & 
+                 QFSEC(BPMA.T4D, QF.10.T4D, CMX.T4D),       &
+                 D6065,                                     &
+                 QFSEC(BPMA.T4D, QF.11.T4D, CMY.T4D),       &
+                 D5600,        D2500, D0800,                &
+                 D5600, D0200, D2500, D0800,                &
+                 D5600, D0200, D6200, D0800,                &
+                 D33106,                                    &
+                 QFSEC(BPMA.T4D, QF.4.T4D, CFX.T4D),        &
+                 D0190, D5075, D0055, CFY.T4D, D0045,       &
+                 fD0125, QF.5.T4D, fD0125, D00275,          &
+                 D01275,MIDBPMF.T4D,D0096,BPMF.T4D,D00315,  &
+                 D00793, TORA.T4D, D028294, VCST40T93Y.T4D, &
+                 D0256, ENSUB.T4DU.T4D);
+
+comment
+SA3TT4D: LINE = (STSUB.T4DU.T4D,                            & 
+!                 VCST10T40.T4D, D0058, D03325,              &    ! without BAMC
+                 VCST10T22.T4D, D0150,BAMC.T4D,D0150,       &   !2023 insert BAMC and chamber with 22 mm
+                 VCST22T40.T4D,D00905,                      &   !2023 insert BAMC
+                 D0990, D0240, D085775,                     &
+                 D0410, D080725, D23831,                    &
+                 QFSEC(BPMA.T4D, QF.2.T4D, CFX.T4D), D0190, &   ! position of QF.2.T4D not changed
+                 D43487, TORA.T4D, D14513, D5075,           &
+                 QFSEC(BPMA.T4D, QF.3.T4D, CFY.T4D), D0190, &   ! position of QF.3.T4D not changed
+                 D5400, D0200, D0900, D3000,                &
+                 QFSEC(BPMA.T4D, QF.1.T4D, CFX.T4D),        &   ! QF.1.T4D is moved in this position
+                 D1465, D0200, D6200, D0800,                &
+                 D5600, D0200, D6200, D0800,                &
+                 D5600, D0200, D6200, D0800,                &
+                 D5600, D0200, D6200, D0800,                &
+                 D5600, D0200, D6200, D0800,                &
+                 D5600, D0200, D6200, D0475,                &
+                 QFSEC(BPMA.T4D, QF.4.T4D, CFX.T4D),        &
+                 D0190, D5075, D0055, CFY.T4D, D0045,       &
+                 fD0125, QF.5.T4D, fD0125, D00275,          &
+                 D01275,MIDBPMF.T4D,D0096,BPMF.T4D,D00315,  &
+                 D00793, TORA.T4D, D028294, VCST40T93Y.T4D, &
+                 D0256, ENSUB.T4DU.T4D);
+
+endcomment
+
+
+!---------------------------------------------------------------------------
+
+
+!-------- Beamline to the dump: Deflection downwards (to negative y)
+!         10 deg arc, 4 bends: 10.0*pi/180/4 = 0.043633231299858 rad
+
+!----- Dipoles 
+
+!LEN_BV = 2.5;    ! defined in DEFS file
+
+ANG_T4D = 0.043633231;
+ARC_T4D = (0.5*LEN_BV*ANG_T4D)/sin(0.5*ANG_T4D);
+E12_T4D = 0.5 * ANG_T4D;
+
+BV.1.T4D: SBEND, L = ARC_T4D, ANGLE = ANG_T4D,   &
+                 E1 = E12_T4D, E2 = E12_T4D,     &
+                 TILT = 1.570796326795;
+
+
+BX.1.T4D: DRIFT, L=0.5;   ! RBEND,ANGLE= 0.226892802759E-2,L=0.5
+BX.2.T4D: DRIFT, L=0.5;   ! RBEND,ANGLE=-0.226892802759E-2,L=0.5
+
+SWEEP.1.T4D: RBEND, ANGLE=0, L=0.64, TILT=-1.570796326795;
+SWEEP.2.T4D: RBEND, ANGLE=0, L=0.64;
+
+
+!----- Sextupoles and quadrupoles with 100 mm aperture
+
+!--- Deflection arc (fixed setting)
+QK.1.T4D: QUADRUPOLE, L = L_QK_eff, K1 = -0.172994430289;
+SK.1.T4D: SEXTUPOLE,  L = L_SK_eff, K2 = +2.30979461997958*0.3/0.3430, &
+                      TILT = 1.570796326795;
+
+!--- 4 quadrupoles after arc
+QK.6.T4D: QUADRUPOLE, L = L_QK_eff, K1 = -0.169994905188;
+
+T4DM: LINE =(STSUB.T4DT.T4D,                            & 
+             BV.1.T4D, VCST93YT40.T4D, D0500, BV.1.T4D, &
+             D05919, VCST40T98.T4D, D05081,             &
+             D0200, D0300, D0100, D0190,                &
+             -QKSEC(BPMD.T4D, QK.1.T4D, CNX.T4D),       & 
+             D0350, skD0125, SK.1.T4D, skD0125, D0700,  &
+             D0100, OTRCR.T4D, D0100,                   &
+             D0650, skD0125, SK.1.T4D, skD0125, D0350,  &
+             QKSEC(BPMD.T4D, QK.1.T4D, CNY.T4D),        & 
+             D0582, D1100, VCST98T98Y.T4D, D0208,       &
+             BV.1.T4D, D0500, BV.1.T4D, D0208,          &
+             VCST98YT98.T4D,                            &
+             D04037, BPMD.T4D, D00633,                  &
+             kD0125, QK.6.T4D, kD0125, D0150,           &
+             kD0125, QK.6.T4D, kD0125, D0150,           &
+             kD0125, QK.6.T4D, kD0125, D0150,           &
+             kD0125, QK.6.T4D);
+
+
+DUWINDOW.T4D:   MARKER;
+DUFLANGE.T4D:   MARKER;
+DUCONCRETE.T4D: MARKER;
+DUABSORB.T4D:   MARKER;
+
+T4DD: Line = (kD0125, D0092, D0025, BPMD.T4D, D0150, D0408, &
+              SWEEP.1.T4D, D0500, SWEEP.2.T4D,              &
+              D0822, BPMD.T4D, D0200, OTRD.T4D,             &
+              D0450, TORC.T4D, D0113, D0200, BHM.T4D,       &
+              D0643, VCST98T200.T4D,                        &
+              D3227, BPMW.T4D, D03223, SCRW.T4D,            &
+              DUWINDOW.T4D, D08578, DUFLANGE.T4D, D107324,  &
+              DUCONCRETE.T4D, D20144, DUABSORB.T4D,         &
+              ENSUB.T4DT.T4D);
+
+
+T4D: LINE=(STSEC.T4D.T4D, SA3TT4D, T4DM, T4DD, ENSEC.T4D.T4D);
+
+
+!****************************************************************************
+!
+!---------- T10 Line: T10
+!
+!****************************************************************************
+
+
+STSEC.T10.T10: MARKER;
+ENSEC.T10.T10: MARKER;
+
+OTRC.T10:  MARKER;
+VV0.T10:   MARKER;
+BSECP.T10: RBEND, L=0.6;
+
+D233674566: DRIFT, L = 233.674666;
+
+T10: LINE = (STSEC.T10.T10, D10000, D10000, D6800, D0200, BSECP.T10, D0200, &
+             D2200, D0200, BSECP.T10, D0944, OTRC.T10, D0036, &
+             D1000, VV0.T10, D0400, D0036, D233674566, ENSEC.T10.T10);
+
+
+!****************************************************************************
+!
+!---------- Total NORTH Line: NORTH
+!
+!****************************************************************************
+
+NORTH: LINE = (T2, SA1, T4, SA3, T4D);
+
+
+!--- At T4D dump absorber: Design optics
+!         beta_x ~= 200 km
+!         beta_y ~= 200 km
+
+!============================================================================
+!============================================================================
+

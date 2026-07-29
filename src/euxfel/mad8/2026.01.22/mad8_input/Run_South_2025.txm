@@ -1,0 +1,429 @@
+!---------------------------------------------------------------------------------------
+!
+!  July 2023: XFEL Lattice and Optics --- SOUTH beamline (SA2)
+!
+!---------------------------------------------------------------------------------------
+!
+!  17.07.2023: South Brunch Upgrade - SCU, new T3MATCH1
+!  07.01.2019: SASE2 upgrade - two chicanes in CELL9 and CELL18
+!
+!---------------------------------------------------------------------------------------
+
+!assign,print="print"
+option, -echo, -info,warn
+!---------------------------------------------------------------------------------------
+
+SETPLOT, FONT=1, LWIDTH=8, POST=1, LSCALE=2.0, SSCALE=2.0, &
+         RSCALE=1.6, ASCALE=1.9
+
+!beam, energy=0.150
+!beam, particle=electron, energy=0.7, ex=0.01e-6, ey=0.01e-6, sige=1.0e-03
+
+!---------------------------------------------------------------------------------------
+
+!----- GUN.23.I1: Z coordinate 
+
+set, z0_start, 23.2
+
+
+!----- L0C8, MATCH.FQ.I1: Z coordinate
+
+set, z0_L0C8, 37.6484
+
+!---------------------------------------------------------------------------------------
+
+
+!----- Call files needed for SOUTH line
+
+call,"XFEL_DEFS.txm"       ! Definitions
+
+call, "XFEL_I1.txm"
+call, "XFEL_L1.txm"
+call, "XFEL_B1.txm"
+call, "XFEL_L2.txm"
+call, "XFEL_B2.txm"
+call, "XFEL_L3.txm"
+call, "XFEL_CL.txm"
+call, "XFEL_TL.txm"
+
+!--- Call file with SCU
+!call, "XFEL_South.txm"
+call, "XFEL_South_2025.txm"
+
+! call other model setup and optics in sections
+!call, "SET_closed_LHund_130MeV_42mm.txm"   ! LH undulator closed
+
+!---------------------------------------------------------------------------------------
+
+!----- Initial Twiss functions at Z = 37.6484 m, MATCH.FQ.I1
+!      Historical values used as initial Twiss functions
+!      for the design of linear beam optics downstream
+B0_I1.ACC1:  BETA0, energy= 0.150, &
+                    betx = 25.543,  alfx = -0.3771,  &
+                    bety = 25.543,  alfy = -0.3771;
+
+!----- Twiss functions at Cathode, GUN.23.I1
+!      Calculated by back tracking from MATCH.FQ.I1 to GUN.23.I1
+!      Back tracking: TWISS command with COUPLE logical flag
+B0_I1.G1:    BETA0, energy= 0.005, &
+                    betx = 55.798075,  alfx = 18.18859573,  &
+                    bety = 55.798075,  alfy = 18.18859573;
+
+!----- Remark:
+!      Back and forward trackings are consistent using COUPLE flag
+
+!---------------------------------------------------------------------------------------
+
+
+!----- Setting of TLD beamline elements
+!         1) Only setting for KS kickers are needed
+!         2) Quadrupoles between KS and 2d septum have
+!            individual names and defined in Run_TLD.txm  
+
+!----- Setting of kickers 
+
+!--- KS kickers are RBEND with zero angle
+set, KSPOS.1.TL[ANGLE],     0
+set, KSNEG.1.TL[ANGLE],     0
+
+comment
+!--- QF.1.TLD.TL quadrupole is SBEND with zero angle
+set, QF.1.TLD.TL[ANGLE],    0
+set, QF.1.TLD.TL[E1],       0
+set, QF.1.TLD.TL[E2],       0
+
+!--- QF.2.TLD.TL quadrupole is SBEND with zero angle
+set, QF.2.TLD.TL[ANGLE],    0
+set, QF.2.TLD.TL[E1],       0
+set, QF.2.TLD.TL[E2],       0
+
+!--- QK.1.TLD.TL quadrupole is sliced in N slices: Exception
+endcomment
+
+!----- Model with HELP elements is still possible
+
+!--- HELP elements are RBEND with zero angle
+set, HELP.1a.TLD[ANGLE], 0
+set, HELP.1b.TLD[ANGLE], 0
+set, HELP.2a.TLD[ANGLE], 0
+set, HELP.2b.TLD[ANGLE], 0
+set, HELP.3a.TLD[ANGLE], 0
+set, HELP.3b.TLD[ANGLE], 0
+
+!---------------------------------------------------------------------------------------
+
+!----- T20: Setting for KL kickers and quadrupoles between KL and 2d septum
+!           not needed
+
+comment
+!--- KL kickers are RBEND with zero angle
+set, KL.20.TL[ANGLE],   0 
+
+!--- QF.1.T20.TL quadrupole is SBEND with zero angle
+set, QF.1.T20.TL[ANGLE],    0
+set, QF.1.T20.TL[E1],       0
+set, QF.1.T20.TL[E2],       0
+
+!--- QK.2.T20.TL quadrupole is sliced in N slices: Exception
+endcomment
+
+!----- Model with HELP elements is still possible
+
+!--- HELP elements are RBEND with zero angle
+set, HELP.1a.T20[ANGLE], 0
+set, HELP.1b.T20[ANGLE], 0
+set, HELP.2a.T20[ANGLE], 0
+set, HELP.2b.T20[ANGLE], 0
+
+!---------------------------------------------------------------------------------------
+
+
+!----- SOUTH (SA2): Setting for KL kickers and quadrupoles between KL and 2d septum
+
+!--- KL kickers are RBEND magnets
+set, KL.1.TL[ANGLE],  ANG_KL_TD1
+set, KL.2.TL[ANGLE],  0
+
+
+!--- February 2021: Model using combine function magnets
+
+!--- Desciption of QF.1.T1.TL for SOUTH line
+!      1) horizontally focusing quadrupole, k1 > 0
+!      2) at the entrance the trajectory is shifted in Y-plane  => vertical dipole
+!      3) vert dipole => TILT = pi/2 => k1 < 0 to be focusing in X-plane 
+
+!--- From Matlab without slope after CL: delta_QF = 5.718047458e-04
+!E1_QF1_T1 = +0.0005095726087;
+!E2_QF2_T1 = +0.0010813773545;
+
+!--- From MAD with slope after CL: 5.715204879e-04
+E1_QF1_T1 = +1.444493782E-04;
+E2_QF1_T1 = +7.159698661E-04;
+
+ANG_QF1_T1 = -(E2_QF1_T1 - E1_QF1_T1);      ! sign (-) for deflection to positive Y
+
+QF.1.T1.TL: SBEND, L = L_QF_eff, ANGLE = ANG_QF1_T1,  &
+                   E1 = E1_QF1_T1, E2 = E2_QF1_T1,    &
+                   K1 = -KFscale,                     &
+                   TILT = pi/2;  
+
+!--- Desciption of QK.2.T1.TL (between 1st and 2d septa) for SOUTH line
+!      1) QK.2.T1.TL quadrupole is splitted in N slices: Exception
+!      2) at the entrance the trajectory is shifted in both planes
+!         => horizontal and vertical dipole components
+!      3) horizontally defocusing quadrupole, k1 < 0
+
+!--- Horizontal trajectory at entrance and exit of QK.2.T1.TL
+
+!--- From Matlab
+!xE1_QK2_T1 = +0.0053755878344;
+!xE2_QK2_T1 = +0.0061551011509;
+!ANG_X_QK2_T1 = -(xE2_QK - xE1_QK)*0.99958;
+
+!--- From MAD
+E1_X_QK2_T1 = +5.375491030E-03;
+E2_X_QK2_T1 = +6.154668757E-03;
+
+ANG_X_QK2_T1 = -(E2_X_QK2_T1 - E1_X_QK2_T1)*1.00002;    ! sign (-) to deflect to positive X
+                 
+
+!--- Vertical trajectory at entrance and exit of QK.2.T1.TL
+
+!--- From Matlab without slope after CL: delta = -0.0022445866325
+!E1_Y_QK2_T1 = +0.0022445866325; 
+!E2_Y_QK2_T1 = +0.0;               ! +0.0000017883641   ! must be zero
+
+!--- From MAD with slope after CL: delta =  -0.0022448963472
+E1_Y_QK2_T1 = +1.879779622E-03;
+E2_Y_QK2_T1 = -3.651167252E-04;
+
+ANG_Y_QK2_T1 = -(E2_Y_QK2_T1 - E1_Y_QK2_T1)*0.9999975;    ! sign (+) to deflect down (to negative Y)
+
+
+!--- QK.2.T1.TL is splitted in N slices: 10 hor and 190 ver
+                 
+z2_slice = 200;                   ! total number of slices
+x2_slice = 10;                    ! number of X-slices, for angle
+y2_slice = z2_slice - x2_slice;   ! number of Y-slices, for angle
+
+xQK.2.T1.TL: SBEND, L = L_QK_eff/z2_slice, ANGLE = ANG_X_QK2_T1/x2_slice,  &
+                    E1 = 0, E2 = 0,                                        &
+                    K1 = -KFscale*(0.5321/1.0552);
+
+yQK.2.T1.TL:  SBEND, L = L_QK_eff/z2_slice, ANGLE = ANG_Y_QK2_T1/y2_slice, &
+                     E1 = 0, E2 = 0,                                       &
+                     K1 = +KFscale*(0.5321/1.0552),                        &
+                     TILT = pi/2;
+      
+QK2.T1_slice10: Line = (19 * yQK.2.T1.TL, 1 * xQK.2.T1.TL);
+QK.2.T1.TL:  Line = (10 * QK2.T1_slice10);
+
+
+!----- Model with HELP elements is still possible
+
+!--- HELP elements are RBEND with zero angle
+set, HELP.1a.T1[ANGLE], 0
+set, HELP.1b.T1[ANGLE], 0
+set, HELP.2a.T1[ANGLE], 0
+set, HELP.2b.T1[ANGLE], 0
+
+!----- Test of 4-bump in STERN  --------------------------------------------------------
+comment
+use, (T5MATCH3A, T5MATCH3B)
+match, beta0=B0_I1.G1
+constraint, VCSTERN.T5,  Y=-0.00 , py = 0.001
+constraint, #e,  y=0 , py = 0
+vary, CEY1.T5[KICK], step = 0.01, lower = -0.005, upper = 0.005
+vary, CEY2.T5[KICK], step = 0.01, lower = -0.005, upper = 0.005
+vary, CEY3.T5[KICK], step = 0.01, lower = -0.005, upper = 0.005
+vary, CEY4.T5[KICK], step = 0.01, lower = -0.005, upper = 0.005
+lmdif
+simplex, call = 2000
+lmdif
+endmatch
+
+twiss, beta0=B0_I1.G1, save, couple
+plot,table=twiss,haxis=s, vaxis1=x,y, spline,colour=100
+stop
+endcomment
+!---------------------------------------------------------------------------------------
+
+
+!----- Twiss functions
+
+!--- Start at Cathode
+
+title, "XFEL G1 to T5D: November 2022"
+beam, energy=0.005
+use, I1TT5D
+print, #s/#e
+twiss, beta0=B0_I1.G1, save, couple, tape=twiss_T5D
+plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, vaxis2=dx,dy
+plot,table=twiss, haxis=s, vaxis=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, hmin=0,hmax=3000
+plot,table=twiss, haxis=s, vaxis=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, hmin=2700,hmax=3000
+
+
+!static, map
+
+
+comment
+!--- Start at Z = 37.6484 m
+
+title, "XFEL G1 to T5D: November 2022"
+beam, energy=0.150
+use, I1TT5D_L0C8
+print, #s/#e
+!twiss, beta0=B0_I1.ACC1, save, couple, tape=twiss_T5D_L0C8
+twiss, beta0=B0_I1.ACC1, save, tape=twiss_T5D_L0C8_x
+plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, vaxis2=dx,dy
+plot,table=twiss, haxis=s, vaxis=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, hmin=0,hmax=3000
+plot,table=twiss, haxis=s, vaxis=dx,dy, spline,colour=100, &
+     vmin=-0.02,vmax=+0.03, hmin=0,hmax=3000
+!
+!--- CL
+plot,table=twiss, haxis=s, vaxis=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, hmin=1600,hmax=1850
+
+!static, map
+
+!stop
+endcomment
+
+!---------------------------------------------------------------------------------------
+
+!----- Survey
+
+!----- Rotations of coordinate system: Have to be used only for SURVEY
+
+!--- In the front of 2d (1st untilted) T1 septum
+
+!--- Nov 2016: New RotSystemTD1
+az1  = -0.00440392786446921;
+ay   = +9.27121409529346e-08;
+az2  = +0.00441369699554469;
+
+Rot.Z1.T1: Srot, angle = az1;
+Rot.Y.T1:  Yrot, angle =  ay;
+Rot.Z2.T1: Srot, angle = az2;
+
+RotSystemTD1: Line = (Rot.Z1.T1, Rot.Y.T1, Rot.Z2.T1);
+
+!---- At Sa2 entrance (at Sa2_Ursprung)
+
+Rot.Y.Sa2:  Yrot, angle = -2.365095999996847e-06;   ! if RotSytemTD1 is used
+
+
+!--- T1 with RotSystemTD1 at T1M start: for SURVEY
+T1_survey: Line = (RotSystemTD1, T1M, T1D, ENSEC.T1.T1);
+
+SA2_survey: LINE = (STSEC.SA2.SA2, ROT.Y.SA2, D029272, &
+                    MATCH.UND.SA2, SA2SEC1O, SA2SEC2O,   &
+                    3*(SA2SEC1, SA2SEC2),              &
+                    SA2SEC1, SA2SEC2A, SA2SECSEED1,    &
+                    3*(SA2SEC2, SA2SEC1),              &
+                    SA2SEC2, SA2SEC1A, SA2SECSEED2,    &
+                    9*(SA2SEC1, SA2SEC2), SA2SEC1B,     &
+                    SCU, ENSEC.SA2.SA2);
+
+
+
+comment
+!--- Old description
+!----- SA2 with ROT.Y.SA2 in the front of CELL 1: for Survey
+SA2_survey: LINE = (STSEC.SA2.SA2, ROT.Y.SA2, MATCH.UND.SA2,  &
+                    SA2SEC1E, SA2SEC2,                        &
+                    3*(SA2SEC1, SA2SEC2), SA2SECSEED1,        &
+                    4*(SA2SEC2, SA2SEC1), SA2SECSEED2,        &
+                    9*(SA2SEC1, SA2SEC2), SA2SEC1, ENSEC.SA2.SA2);
+endcomment
+
+
+I1TT5D_sur:      LINE = (I1, L1, B1, L2, B2, L3, CL,        &
+                        CLtoSouth, T1_survey, SA2_survey,   &
+                        T3, UN1, T5, UN2, T5D);
+
+I1TT5D_L0C8_sur: LINE = (I1_L0C8, L1, B1, L2, B2, L3, CL,   &
+                         CLtoSouth, T1_survey, SA2_survey,  &
+                         T3, UN1, T5, UN2, T5D);
+
+
+title, "XFEL G1 to T5D: Survey, July 2023"
+! beam, energy=0.150
+! use, I1TT5D_L0C8_sur
+beam, energy=0.005
+use, I1TT5D_sur
+print, #s/#e
+survey, y0 = -2.75, z0 = z0_start, tape=survey_T5D
+
+!--- Matching subroutines
+
+!call,"Matching_TD1.txm"
+
+!---------------------------------------------------------------------------------------
+
+!comment
+
+I1TT6_sur:   LINE = (I1, L1, B1, L2, B2, L3, CL,      &
+                 CLtoSouth, T1_survey, SA2_survey,     &
+                 SA2TT3, T3M1, T6);
+
+I1TT8_sur:   LINE = (I1, L1, B1, L2, B2, L3, CL,      &
+                 CLtoSouth, T1_survey, SA2_survey,    &
+                 T3, UN1, T5MATCH1, T5MATCH2,     &
+                 T5M1, T8);
+
+I1TT7_sur:   LINE = (I1, L1, B1, L2, B2, L3, CL,      &
+                 CLtoSouth, T1_survey, SA2_survey,    &
+                 T3, UN1, T5, UN2, UN2TT5D, T7);
+
+
+title, "XFEL G1 to T6"
+beam, energy=0.005
+use, I1TT6
+!call, "MAGNET_SET_G1toT5D.txm"
+twiss, beta0=B0_I1.G1, save, tape=twiss_T6 
+!setTD1lay
+use, I1TT6_sur
+survey, y0=-2.75, z0 = z0_start, &
+        tape=survey_t6
+
+title, "XFEL G1 to T7"
+beam, energy=0.005
+use, I1TT7
+!call, "MAGNET_SET_G1toT5D.txm"
+twiss, beta0=B0_I1.G1, save, tape=twiss_T7 
+!setTD1lay
+use, I1TT7_sur
+survey, y0=-2.75, z0 = z0_start, &
+        tape=survey_t7
+
+title, "XFEL G1 to T8"
+beam, energy=0.005
+use, I1TT8
+!call, "MAGNET_SET_G1toT5D.txm"
+twiss, beta0=B0_I1.G1, save, tape=twiss_T8 
+!setTD1lay
+use, I1TT8_sur
+survey, y0=-2.75, z0 = z0_start, &
+        tape=survey_t8
+
+commment
+title, "XFEL G1 to T8E"
+beam, energy=0.005
+use, I1TT8E
+!call, "MAGNET_SET_G1toT5D.txm"
+twiss, beta0=B0_I1.G1, save, tape=twiss_T8 
+!setTD1lay
+use, I1TT8E_sur
+survey, y0=-2.75, z0 = z0_start, &
+        tape=survey_t8
+endcomment
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+

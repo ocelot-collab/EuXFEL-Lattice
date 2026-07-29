@@ -1,0 +1,302 @@
+!================================================================================================
+!
+!--- November 2022, XFEL lattice --- Collimation section CL
+!
+!================================================================================================
+
+!================================================================================================
+!
+!  Section CL:   CL: Line = (STSEC.CL.CL, LTCL, MATCH.ARC.CL, CL_ARCS, ENSEC.CL.CL)
+!
+!  Can be different optics in CL: FODO transport, Mode B, Mode A
+!
+!  Optics used: Mode A
+!
+!================================================================================================
+!================================================================================================
+
+
+!----- Section and Subsection Markers
+
+STSEC.CL.CL:  MARKER;
+ENSEC.CL.CL:  MARKER;
+
+
+!----- Matching Markers
+
+MATCH.ARC.CL: MARKER;
+
+
+!----- Markers for Substitutable Block
+
+STBLOCK.FODO.CL:   MARKER;
+ENBLOCK.FODO.CL:   MARKER;
+
+
+!----- Diagnostics Marker
+
+BPMA.CL:     Monitor;
+BPMI.E.CL:   Monitor;
+MIDBPMI.E.CL: MARKER;
+OTRB.CL:     MARKER; 
+OTRBW.CL:    MARKER;
+DCM.CL:      MARKER;
+TORA.CL:     MARKER;
+CRD.CL:      MARKER;
+
+
+!----- Correctors (L_yoke is used)
+
+CFX.CL: HKICKER, L = 0.1;
+CFY.CL: VKICKER, L = 0.1;
+CHX.CL: HKICKER, L = 0.2;
+CHY.CL: VKICKER, L = 0.2;
+
+
+!----- Collimators
+
+COLM.CL : ECOLLIMATOR, L = 0.5, XSIZE = 0.002, YSIZE = 0.002;
+COLS.CL : ECOLLIMATOR, L = 1.0, XSIZE = 0.002, YSIZE = 0.002;
+
+!************************************************************************************************
+
+!----- Matching from L3 Linac to CL: LTCL
+
+!--- Quadrupoles
+
+QF.3.CL:  Quadrupole, L = L_QF_eff, K1 = +0.178404564852;
+QH.1.CL:  Quadrupole, L = L_QH_eff, K1 = -0.173349825451;
+QH.2.CL:  Quadrupole, L = L_QH_eff, K1 = +0.339394983264;
+
+LTCL: Line = (D63887, TORA.CL, D0100, DCM.CL, D0600,  &  
+              QFSEC(BPMA.CL, QF.3.CL, CFX.CL),        &
+              D6170, CHY.CL, D0045,                   &
+              hD0125, QH.1.CL, hD0125, hD0125, QH.1.CL, hD0125, &
+              D0100, BPMA.CL, D0250,                  &
+              hD0125, QH.2.CL, hD0125, hD0125, QH.2.CL, hD0125, &
+              D0045, CHX.CL, D0590, D0045, fD0125);
+
+!************************************************************************************************
+
+!----- Phase shifter CLM 
+
+!--- Quadrupoles
+
+!--- Setting: mu_x = 0.75, mu_y = 0.75
+QH.3.CL:  Quadrupole, L = L_QH_eff,  K1 = +0.323910501863;
+QH.4.CL:  Quadrupole, L = L_QH_eff,  K1 = -0.225717454844;
+QF.5.CL:  Quadrupole, L = L_QF_eff,  K1 = +0.142039928756;
+QF.6.CL:  Quadrupole, L = L_QF_eff,  K1 = +0.162588064445;   ! July 2017, uni-pos
+QF.7.CL:  Quadrupole, L = L_QF_eff,  K1 = -0.221232869575;
+
+
+! 22.10.2015: Refit of the angle 'theta' at the CL exit.
+!             Correction of the length of CL after refit.
+
+D15407c: Drift, L = 1.5407 - 3e-6;
+
+CLM: Line = (QF.4.1.CL, fD0125, D0045, CFY.CL,                  &
+             D0380, BPMA.CL, D0675, CHX.CL, D0045,              & 
+             hD0125, QH.3.CL, hD0125, hD0125, QH.3.CL, hD0125,  & 
+             D0100, BPMA.CL, D0100, D0150,                      &
+             hD0125, QH.4.CL, hD0125, hD0125, QH.4.CL, hD0125,  &
+             D0045, CHY.CL, D0510, D0700,                       & 
+             fD0125, QF.5.CL, fD0125, D0045, CFX.CL,            &
+             D0930, BPMA.CL, D2475, D0700,                      & 
+             fD0125, QF.6.CL, fD0125, D0045, CFY.CL,            &
+             D0930, BPMA.CL, D1975, D0200,                      & 
+             fD0125, QF.7.CL, fD0125, D0045, CFX.CL,            &
+             D0930, BPMA.CL, D04343, TORA.CL, D15407c, D0200,   &
+             fD0125, QF.6.CL, fD0125, D0045, CFY.CL,            &
+             D0930, BPMA.CL, D2475, D0700,                      & 
+             fD0125, QF.5.CL, fD0125, D0045, CFX.CL,            &
+             D0380, BPMA.CL, D0685, CHY.CL, D0045,              &
+             hD0125, QH.4.CL, hD0125, hD0125, QH.4.CL, hD0125,  & 
+             D0100, BPMA.CL, D0100, D0150,                      & 
+             hD0125, QH.3.CL, hD0125, hD0125, QH.3.CL, hD0125,  &
+             D0045, CHX.CL, D0500, D0700,                       &
+             fD0125);
+
+!************************************************************************************************
+
+!----- Collimation arcs 
+
+!--- Dipoles
+
+!LEN_BE = 2.5;     ! defined in DEFS file
+!LEN_BL = 0.2;     ! defined in DEFS file
+
+ANG_BE1_CL = +(0.3571260125 * PI) / 180;
+ARC_BE1_CL = (0.5 * LEN_BE * ANG_BE1_CL) / sin(0.5 * ANG_BE1_CL);
+E12_BE1_CL = ANG_BE1_CL / 2;
+
+ANG_BE2_CL = +(0.3511941487 * PI) / 180;
+ARC_BE2_CL = (0.5 * LEN_BE * ANG_BE2_CL) / sin(0.5 * ANG_BE2_CL);
+E12_BE2_CL = ANG_BE2_CL / 2;
+
+BE.1.CL: Sbend, L  = ARC_BE1_CL, ANGLE = ANG_BE1_CL,    &
+                E1 = E12_BE1_CL, E2 = E12_BE1_CL,       &
+                TILT = PI/2;
+
+BE.2.CL: Sbend, L  = ARC_BE2_CL, ANGLE =-ANG_BE2_CL,    &
+                E1 =-E12_BE2_CL, E2 =-E12_BE2_CL,       &
+                TILT = PI/2;
+
+ANG_BL1_CL = +(0.0422357293 * PI) / 180;
+ARC_BL1_CL = (0.5 * LEN_BL * ANG_BL1_CL) / sin(0.5 * ANG_BL1_CL);
+E12_BL1_CL = ANG_BL1_CL / 2;
+
+ANG_BL2_CL = +(0.04153387054 * PI) / 180;
+ARC_BL2_CL = (0.5 * LEN_BL * ANG_BL2_CL) / sin(0.5 * ANG_BL2_CL);
+E12_BL2_CL = ANG_BL2_CL / 2;
+
+BL.1.CL: Sbend, L  = ARC_BL1_CL, ANGLE = -ANG_BL1_CL,   &
+                E1 =-E12_BL1_CL, E2 = -E12_BL1_CL,      &
+                TILT = PI/2;
+
+BL.2.CL: Sbend, L  = ARC_BL2_CL, ANGLE = ANG_BL2_CL,    &
+                E1 = E12_BL2_CL, E2 = E12_BL2_CL,       &
+                TILT = PI/2;
+
+
+!--- Quadrupoles and sextupoles
+
+!--- CL Arcs: Quadrupoles and sextupoles are fixed for all collimation modes 
+
+QF.4.1.CL: Quadrupole,  L = L_QF_eff,  K1 = -0.301317338392;
+QF.4.2.CL: Quadrupole,  L = L_QF_eff,  K1 = +0.301303610312;
+
+QFH.4.1.CL: Quadrupole, L = L_QF_eff/2, K1 = -0.301317338392;
+QFH.4.2.CL: Quadrupole, L = L_QF_eff/2, K1 = +0.301303610312;
+
+
+SA.1.CL: Sextupole, L = L_SA_eff, K2 = +18.59020266302*0.3/0.3164, tilt = PI/2;
+SA.2.CL: Sextupole, L = L_SA_eff, K2 = -15.63045600493*0.3/0.3164, tilt = PI/2;
+SA.3.CL: Sextupole, L = L_SA_eff, K2 =  +3.01313108964*0.3/0.3164, tilt = PI/2;
+SA.4.CL: Sextupole, L = L_SA_eff, K2 = -18.59020266302*0.3/0.3164, tilt = PI/2;
+SA.5.CL: Sextupole, L = L_SA_eff, K2 = +15.63045600493*0.3/0.3164, tilt = PI/2;
+SA.6.CL: Sextupole, L = L_SA_eff, K2 =  -3.01313108964*0.3/0.3164, tilt = PI/2;
+
+
+!----- FODO arc cell (in 1st arc)
+
+fodo_ARC_CL: Line = (QFH.4.1.CL,QFH.4.1.CL, fD0125, D0045, CFY.CL, D0055,    &
+                     sD0125, SA.1.CL, sD0125, D01015,          &
+                     D0096,D01275,MIDBPMI.E.CL,D0096,BPMI.E.CL,D00315,D0100, &
+                     D18225, BE.1.CL, D2625,                   &
+                     fD0125, QF.4.2.CL, fD0125, D0045, CFX.CL, D0055, &
+                     sD0125, SA.2.CL, sD0125,                  &
+                     D0325, BPMA.CL, D1050, COLS.CL, D2150,    &
+                     BL.1.CL, D0450, OTRB.CL, D0750, COLM.CL, D0325,  &
+                     sD0125, SA.3.CL, sD0125, D0200,           &
+                     fD0125);
+
+
+!----- FODO cell from quadrupole center for studies
+
+fodoH_ARC_CL: Line = (QFH.4.1.CL, fD0125, D0045, CFY.CL, D0055, &
+                      sD0125, SA.1.CL, sD0125, D01015,            &
+                      D0096,D01275,MIDBPMI.E.CL,D0096,BPMI.E.CL,D00315,D0100,&
+                      D18225, BE.1.CL, D2625,                     &
+                      fD0125, QF.4.2.CL, fD0125, D0045, CFX.CL, D0055,      &
+                      sD0125, SA.2.CL, sD0125,                    &
+                      D0325, BPMA.CL, D1050, COLS.CL, D2150,      &
+                      BL.1.CL, D0450, OTRB.CL, D0750, COLM.CL, D0325,       &
+                      sD0125, SA.3.CL, sD0125, D0200,             &
+                      fD0125, QFH.4.1.CL);
+
+
+!----- First arc
+
+CLFODO_P1: Line = (QF.4.1.CL, fD0125, D0045, CFY.CL, D0055,               &
+                   sD0125, SA.1.CL, sD0125, D01015,                       &
+                   D0096,D01275,MIDBPMI.E.CL,D0096,BPMI.E.CL,D00315,D0100,&
+                   D18225, BE.1.CL, D2625,                                &
+                   fD0125, QF.4.2.CL, fD0125, D0045, CFX.CL, D0055,       &
+                   sD0125, SA.2.CL, sD0125,                               &
+                   D0325, BPMA.CL, D1050, COLS.CL, D2150,                 &
+                   BL.1.CL, D0450, OTRB.CL, D0750, COLM.CL, D0325,        &
+                   sD0125, SA.3.CL, sD0125, D0200,                        &
+                   fD0125, QF.4.1.CL, fD0125, D0045, CFY.CL, D0055,       &
+                   sD0125, SA.3.CL, sD0125, D01015,                       &
+                   D0096,D01275,MIDBPMI.E.CL,D0096,BPMI.E.CL,D00315,D0100,&
+                   D14725, BL.1.CL, D4525,                                &
+                   sD0125, SA.2.CL, sD0125, D0200,                        &
+                   fD0125, QF.4.2.CL, fD0125, D0045, CFX.CL,              & 
+                   D0930, BPMA.CL, D1550, BE.1.CL, D2375,                 &
+                   sD0125, SA.1.CL, sD0125, D0200,                        &
+                   fD0125);
+
+CLFODO_P2: Line = (QF.4.1.CL, fD0125, D0045, CFY.CL, D0055,               &
+                   sD0125, SA.1.CL, sD0125,                               &
+                   D0325, BPMA.CL, D2050, BE.1.CL, D2625,                 &
+                   fD0125, QF.4.2.CL, fD0125, D0045, CFX.CL, D0055,       &
+                   sD0125, SA.2.CL, sD0125,                               &
+                   D0325, BPMA.CL, D1050, COLS.CL, D2150,                 &
+                   BL.1.CL, D0450, OTRB.CL, D0750, COLM.CL, D0325,        &
+                   sD0125, SA.3.CL, sD0125, D0200,                        &
+                   fD0125, QF.4.1.CL, fD0125, D0045, CFY.CL, D0055,       &
+                   sD0125, SA.3.CL, sD0125, D01015,                       &
+                   D0096,D01275,MIDBPMI.E.CL,D0096,BPMI.E.CL,D00315,D0100, &
+                   D14725, BL.1.CL, D4525,                                &
+                   sD0125, SA.2.CL, sD0125, D0200,                        &
+                   fD0125, QF.4.2.CL, fD0125, D0045, CFX.CL,              & 
+                   D0930, BPMA.CL, D1550, BE.1.CL, D2375,                 &
+                   sD0125, SA.1.CL, sD0125, D0200,                        &
+                   fD0125);
+
+
+!----- Second arc
+
+CLFODO_M1: Line = (QF.4.1.CL, fD0125, D0045, CFY.CL, D0055,               &
+                   sD0125, SA.4.CL, sD0125,                               & 
+                   D0325, BPMA.CL, D2050, BE.2.CL, D2625,                 &
+                   fD0125, QF.4.2.CL, fD0125, D0045, CFX.CL, D0055,       &
+                   sD0125, SA.5.CL, sD0125,                               &
+                   D0325, BPMA.CL, D1050, COLS.CL, D2150,                 &
+                   BL.2.CL, D0450, OTRB.CL, D0750, COLM.CL, D0325,        &
+                   sD0125, SA.6.CL, sD0125, D0200,                        &
+                   fD0125, QF.4.1.CL, fD0125, D0045, CFY.CL, D0055,       &
+                   sD0125, SA.6.CL, sD0125,                               &
+                   D0325, BPMA.CL, D1700, BL.2.CL, D4525,                 &
+                   sD0125, SA.5.CL, sD0125, D0200,                        &
+                   fD0125, QF.4.2.CL, fD0125, D0045, CFX.CL,              &
+                   D0930, BPMA.CL, D1550, BE.2.CL, D2375,                 &
+                   sD0125, SA.4.CL, sD0125, D0200,                        &
+                   fD0125);
+              
+CLFODO_M2: Line = (QF.4.1.CL, fD0125, D0045, CFY.CL, D0055,               &
+                   sD0125, SA.4.CL, sD0125,                               &
+                   D0325, BPMA.CL, D2050, BE.2.CL, D2625,                 &
+                   fD0125, QF.4.2.CL, fD0125, D0045, CFX.CL, D0055,       &
+                   sD0125, SA.5.CL, sD0125,                               &
+                   D0325, BPMA.CL, D4200,                                 &
+                   BL.2.CL, D0450, OTRB.CL, D0750, COLM.CL, D0325,        &
+                   sD0125, SA.6.CL, sD0125, D0200,                        &
+                   fD0125, QF.4.1.CL, fD0125, D0045, CFY.CL, D0055,       &
+                   sD0125, SA.6.CL, sD0125, D01015,                       &
+                   D0096,D01275,MIDBPMI.E.CL,D0096,BPMI.E.CL,D00315,D0100,&
+                   D14725, BL.2.CL, D4525,                                & 
+                   sD0125, SA.5.CL, sD0125, D0200,                        &
+                   fD0125, QF.4.2.CL, fD0125, D0045, CFX.CL,              &
+                   D0930, BPMA.CL, D1550, BE.2.CL, D2375,                 &
+                   sD0125, SA.4.CL, sD0125, D0100,BPMA.CL,D0100,          &
+                   fD0125, QF.4.1.CL);
+
+
+CLARCP:  Line = (CLFODO_P1, CLFODO_P2);
+CLARCM:  Line = (CLFODO_M1, CLFODO_M2);
+
+CL_ARCS: Line = (CLARCP, CLM, CLARCM);
+
+!************************************************************************************************
+
+
+!----- Total collimation section: CL
+
+CL: Line = (STSEC.CL.CL, STBLOCK.FODO.CL, LTCL,   &
+            MATCH.ARC.CL, CL_ARCS, ENSEC.CL.CL);
+
+!================================================================================================
+!================================================================================================
+

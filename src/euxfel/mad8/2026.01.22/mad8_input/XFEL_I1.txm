@@ -1,0 +1,1053 @@
+!===================================================================================
+!
+!--- November 2022, XFEL lattice --- Injector beamline 
+!
+!===================================================================================
+!
+!--- Start at GUN, Z = 23.2 m
+!
+!--- Section I1:     I1:     LINE = (STSEC.I1.I1, I1G1, I1M1, L0, I1LH, I1DIA, &
+!                                    I1DLG, I1BC0, I1PS, L1U, ENSEC.I1.I1)
+!
+!--- Section I1TI1D: I1TI1D: LINE = (STSEC.I1.I1, I1G1, I1M1, L0, I1LH,        &
+!                                    I1DIAU, I1DIACORE, I1DIAD1, I1D)
+!
+!--- Start at Z = 37.6484 m, in the front of 1st cold quadrupole Q.A1.1.I1:
+!
+!--- I1_L0C8:     LINE = (L0C8, I1LH, I1DIA, I1DLG, I1BC0, I1PS, L1U, ENSEC.I1.I1)
+!
+!--- I1TI1D_L0C8: LINE = (L0C8, I1LH, I1DIAU, I1DIACORE, I1DIAD1, I1D)
+!
+!===================================================================================
+
+
+!----- Section and Subsection Markers
+
+STSEC.I1.I1:    MARKER;
+ENSEC.I1.I1:    MARKER;
+STSEC.I1D.I1:   MARKER;
+ENSEC.I1D.I1:   MARKER;
+STSEC.I1D.I1D:  MARKER;
+ENSEC.I1D.I1D:  MARKER;
+
+STSUB.G1.I1:    MARKER;
+ENSUB.G1.I1:    MARKER;
+STSUB.G1D.I1:   MARKER;
+ENSUB.G1D.I1:   MARKER;
+STSUB.I1M.I1:   MARKER;
+ENSUB.I1M.I1:   MARKER;
+STSUB.I1T.I1:   MARKER;
+ENSUB.I1T.I1:   MARKER;
+STSUB.B0.I1:    MARKER;
+ENSUB.B0.I1:    MARKER;
+
+
+!----- Lattice Markers
+
+STLAT.LHT.I1:   MARKER;
+ENLAT.LHT.I1:   MARKER;
+STLAT.DIA.I1:   MARKER;
+ENLAT.DIA.I1:   MARKER;
+STLAT.DOG.I1:   MARKER;
+ENLAT.DOG.I1:   MARKER;
+STLAT.B0M.I1:   MARKER;
+ENLAT.B0M.I1:   MARKER;
+STLAT.PS.I1:    MARKER;
+ENLAT.PS.I1:    MARKER;
+
+
+!----- Matching Markers
+
+MATCH.FQ.I1:    MARKER;     ! at Z = 37.6484 m, in the front of quadrupole Q.A1.1.I1
+MATCH.QI52.I1:  MARKER;     ! QI.4.I1 (QI.52.I1), at entrance
+MATCH.DIA.I1:   MARKER;     ! Diagnostic FODO lattice, at OTRC.55.I1
+MATCH.DLG.I1:   MARKER;     ! Injector dogleg, at the entrance of 1st dogleg quad
+MATCH.PS.I1:    MARKER;     ! Phase shifter FODO lattice, at I1PS entrance
+
+
+!----- Girder Markers
+
+STGRD.G1.I1:    MARKER;
+ENGRD.G1.I1:    MARKER;
+STGRD.G2.I1:    MARKER;
+ENGRD.G2.I1:    MARKER;
+STGRD.G3.I1:    MARKER;
+ENGRD.G3.I1:    MARKER;
+STGRD.G4.I1:    MARKER;
+ENGRD.G4.I1:    MARKER;
+STGRD.G5.I1:    MARKER;
+ENGRD.G5.I1:    MARKER;
+STGRD.G6.I1:    MARKER;
+ENGRD.G6.I1:    MARKER;
+
+
+!----- Diagnostics Marker
+
+BPMA.I1:     MONITOR; 
+BPMATEST.I1: MARKER; 
+BPMG.I1:     MONITOR; 
+BPMS.I1:     MONITOR;  
+MIDBPMF.I1:  MARKER;
+BPMF.I1:     MONITOR;
+BPMA.I1D:    MONITOR; 
+BPMD.I1D:    MONITOR;
+SCRN.I1:     MARKER;
+OTRA.I1:     MARKER;
+OTRL.I1:     MARKER;
+OTRC.I1:     MARKER;
+OTRS.I1:     MARKER;
+OTRC.I1D:    MARKER;
+OTRD.I1D:    MARKER;
+DCM.I1:      MARKER;
+BAM.I1:      MARKER;
+TORA.I1:     MARKER;
+TORB.I1:     MARKER;
+TORC.I1D:    MARKER;
+EOD.I1:      MARKER;
+FCUP.I1:     MARKER;
+BHM.I1D:     MARKER;
+
+
+!----- Vacuum Markers and Vacuum Components
+
+VCST40T35.I1:   MARKER;
+VCST35T40.I1:   MARKER;
+VCST40T400Y.I1: MARKER;
+VCST400Y.I1:    MARKER;
+VCST400YT40.I1: MARKER;
+VCST40Y.I1:     MARKER;
+VCST40T98.I1D:  MARKER;
+VCST98T60.I1D:  MARKER;
+
+VCDST.I1:   VCDST;            ! DRIFT, L=1.215, defined in DEFS
+VCBSHUT.I1: DRIFT, L=0.3;     ! Beam Stop
+
+
+!***********************************************************************************
+
+!-----------------------------------------------------------------------------------
+!---------- Injector from GUN to ACC1 entrance (I1G1, I1M1) ------------------------
+!---------- Injector dispersive arm            (I1G1, I1G1D) -----------------------
+!-----------------------------------------------------------------------------------
+
+!----- 22.12.2016: Description of I1G1 and I1M1 according to Lars, email 22.12.2016
+
+
+GUN.I1:  MARKER;
+
+SOLA.1.I1: SOLENOID, L=0;
+SOLB.1.I1: SOLENOID, L=0;
+
+QLN.23.I1: QUADRUPOLE, L=0.00, K1=0.0;
+QLS.23.I1: QUADRUPOLE, L=0.00, K1=0.0, TILT;
+CLX.I1:   HKICKER, L=0.00;
+CLY.I1:   VKICKER, L=0.00;
+QCLNSXY.I1: LINE = (D0025, QLN.23.I1, QLS.23.I1, CLX.I1, CLY.I1, D0025)
+
+RF.1.I1:  KICKER, L=0.0;
+
+CKX.I1:   HKICKER, L=0.025;
+CKY.I1:   VKICKER, L=0.025;
+CKXY.I1:  LINE=(CKX.I1,CKY.I1);
+
+KDC.I1:   VKICKER, L=0.200;
+KIX.I1:   HKICKER, L=0.100;
+KIY.I1:   VKICKER, L=0.100;
+
+KAX.1.I1: HKICKER, L=0.350;
+KAX.2.I1: HKICKER, L=0.350;
+KAX.3.I1: HKICKER, L=0.350;
+KAX.4.I1: HKICKER, L=0.350;
+KJX.1.I1:   HKICKER, L=0.175;
+KJY.1.I1:   VKICKER, L=0.175;
+KJX.2.I1:   HKICKER, L=0.175;
+KJY.2.I1:   VKICKER, L=0.175;
+
+DCCOL.I1: ECOL, XSIZE=0.02, YSIZE=0.02;
+
+D0025:  DRIFT, L = 0.025;
+D0088:  DRIFT, L = 0.088;
+D0111:  DRIFT, L = 0.111;
+D01264: Drift, L = 0.1264;
+D0169:  Drift, L = 0.1690;
+D01988: DRIFT, L = 0.198782;    ! not all digitals in the name 
+D02292: DRIFT, L = 0.229218;    ! not all digitals in the name
+D02335: DRIFT, L = 0.23352;     ! not all digitals in the name 
+D0276:  DRIFT, L = 0.276;
+D0019:  DRIFT, L = 0.019;
+D0297:  DRIFT, L = 0.297;
+
+
+!----- 03.01.2019: with QLN.23.I1/QLS.23.I1
+!I1G1: LINE = (STSUB.G1.I1,                                     &
+!              GUN.I1,  RF.1.I1, SOLA.1.I1, D0276, SOLB.1.I1,   &
+!              QLN.23.I1, QLS.23.I1, D0169,                     &
+!              D0047, CKXY.I1, D0108, KIX.I1, KIY.I1,           &  ! insert KIX/KIY, removed dark current kicker
+!              D0003, CKXY.I1, D0047,                           &
+!             BPMG.I1, D0150, SCRN.I1, FCUP.I1, D01988,        &
+!              ENSUB.G1.I1); 
+
+!----- 17.12.2025: GUN5 with space for pulsed solenoid
+
+I1G1: LINE = (STSUB.G1.I1,                                     &
+              GUN.I1,  SOLA.1.I1, D0276, SOLB.1.I1,            &
+              D0019, QCLNSXY.I1, D0297,            &
+              D0108, KIX.I1, KIY.I1,           &  ! insert KIX/KIY, removed dark current kicker
+              D0003, CKXY.I1, D0047,                           &
+              BPMG.I1, D0150, SCRN.I1, FCUP.I1, D01988,        &
+              ENSUB.G1.I1); 
+
+
+I1M1: LINE = (STSUB.I1M.I1                                              &
+              D02292, D0100, D0050,                                     &
+              D0060, TORA.I1, D0225, SCRN.I1, FCUP.I1, DCCOL.I1, D0088, &
+              BPMG.I1, D0111, DCM.I1, D0310, CKXY.I1, D01264);
+
+
+!--------- Injector Dispersive Arm -------------------------------------------------
+
+BK.1.I1: SBEND, L=0.3, ANGLE = 60/180*PI;        ! To diagnostik arm
+
+I1G1D: LINE = (STSUB.G1D.I1,                                             &
+               BK.1.I1, D02335, FCUP.I1, SCRN.I1, D0088, BPMG.I1, D0100, &
+               FCUP.I1, ENSUB.G1D.I1);
+
+!----- Total Dispersive Arm beamline: I1TG1D
+
+!I1TG1D:  LINE = (STSEC.I1.I1, I1G1, I1G1D);     ! Defined in DEFS file
+
+
+!***********************************************************************************
+
+!-----------------------------------------------------------------------------------
+!----------------- Injector beamline -----------------------------------------------
+!-----------------------------------------------------------------------------------
+
+!---------- LINAC 0 and 3d harmonic (Injector Linac)
+
+STSUB.L0.I1: MARKER;
+ENSUB.L0.I1: MARKER;
+       
+
+!--- Markers for A1 and 3.9 GHZ 
+
+STAC.A1.1.I1:   MARKER;
+MIAC.A1.1.I1:   MARKER;
+ENAC.A1.1.I1:   MARKER;
+
+STAC.AH1.1.I1:  MARKER;
+ENAC.AH1.1.I1:  MARKER;
+MIAC.AH1.1.I1:  MARKER; 
+
+
+!--- BPM at ACC end (TYP BPM)
+BPMC.I1: MONITOR;        ! Cold Button BPM
+BPMR.I1: MONITOR         ! Re-Entrant BPM
+
+
+!--- Steerer at ACC end
+!--- (zero length kicker, in reality cos(phi) winding in quadrupole)
+CX.I1: HKICKER;
+CY.I1: VKICKER;
+I1COR: LINE=(CX.I1, CY.I1);
+
+
+!--- Vacuum Markers and Vacuum Components
+VCST35T78.I1: MARKER;
+VCST78T30.I1: MARKER;
+VCST30T78.I1: MARKER;
+VCST78T40.I1: MARKER;
+
+
+!--- Drift for feed and turn box
+!--- Endpoint means bypass to beam distance of 0.7 m and warm vaccuum valve
+CTBI.I1: DRIFT, L = 0.5512;     ! 0.1+0.4512
+CFBI.I1: DRIFT, L = 1.04;       ! 2.5-0.208-0.0663-1.1857
+
+
+!----- Definition of RF modules: April 2021, in DEFS file
+
+comment
+!----- Here for info
+!----- Definition of RF modules
+MIAC: MARKER;
+!--- Cavity Wake field dummies
+LTWAKECAV:  DRIFT, L=0.0;
+LTWAKECAV3: DRIFT, L=0.0;    
+!--- 1.3 GHz Module
+ACC(START,MIAC,C,BPM,Q,COR,END): LINE =                        &
+    (START, D0080, 4*(D01416, C, D02043, LTWAKECAV), MIAC,     &
+     4*(D01416, C, D02043, LTWAKECAV),                         &
+     D00432,Q,D00432,COR, D0085, BPM, D0085, D00729, D0300, END);
+!--- 3.9 GHz module with 8 3900 MHz cavities  
+!--- based on E. Vogels 12/02/2009 design
+ACH(START,MIAC,C,BPM,Q,CORX,CORY,END): LINE =       &
+    (START, D00611, D0075, D0085, BPM, D0085,       &
+     D00432,Q,D00432,CORX,CORY, D0020, D0102,       &
+     2*(D0080, C, D0080, LTWAKECAV3, D0102), MIAC,  &
+     5*(D0080, C, D0080, LTWAKECAV3, D0102),        &
+       (D0080, C, D0080, LTWAKECAV3),               &
+     D0075, END);
+endcmment
+
+
+!----- Single Cavity for A1 (MAD definition)
+
+!--- Feb 2017, A1 module: E_ent  = 5 MeV
+!                         E_exit = 150 MeV
+!--- Energy gain in A1: GainA1.I1.Cav = (150-5)/8=18.125 MeV
+
+E_Gun =   5.0;
+E_A1  = 150.0;
+
+GainA1.I1 = E_A1 - E_Gun;
+GainA1.I1.Cav = GainA1.I1/8;
+
+phi_A1 = 0;     ! off-crest phase in degree
+
+relerr:=0e-3;
+
+C.A1.I1: LCAVITY, L=0.1153*9, PHI0=phi_A1/360,        &
+                  DELTAE=GainA1.I1.Cav,               &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+
+ 
+!----- Single 9 cell Cavity for ACC3RD (MAD definition)
+!----- Based on E. Vogel 12/02/2009 design
+
+!--- 17.03.2017: E_ent  = 150 MeV
+!                E_exit = 130 MeV
+!--- Energy gain in AH1: GainAH1.I1.Cav (130-150)/8 = -20/8 = -2.5 MeV
+
+!----- AH1
+
+E_AH1 = 130.0;
+
+GainAH1.I1 = (E_A1 - E_AH1);
+GainAH1.I1.Cav = GainAH1.I1/8;    ! positive
+
+C3.AH1.I1: LCAVITY, L=0.346, PHI0=180/360,      &   ! phase = 180 deg
+                    DELTAE=GainAH1.I1.Cav,      &
+                    FREQ=3900000000.0*1e-6;
+
+
+!--- Linac 0 and 3d harmonic module Quadrupoles
+
+Q.A1.1.I1:  QUADRUPOLE, L = L_Q_eff, K1 = -1.302316200356;
+Q.AH1.1.I1: QUADRUPOLE, L = L_Q_eff, K1 = +1.332457630655;
+
+
+!----- Description of A1 module separated in two parts
+
+!--- Part 1: A1 module up to Quadrupole Q.A1.1.I1
+
+!--- A1 module: no Coupler Kicks
+ACC10Q: LINE = (STAC.A1.1.I1, D0080,                                   &
+                4*(D01416, C.A1.I1, D02043, LTWAKECAV), MIAC.A1.1.I1,  &
+                4*(D01416, C.A1.I1, D02043, LTWAKECAV));
+
+
+!--- Part 2: A1 module from Quadrupole Q.A1.1.I1 (at Z = 37.6484 m)
+     
+ACC1C8: LINE = (MATCH.FQ.I1,                              &
+                D00432, Q.A1.1.I1, D00432, CX.I1, CY.I1,  &
+                D0085, BPMC.I1, D0085,                    &
+                D00729, D0300, ENAC.A1.1.I1);
+
+
+!--- ACC1 module
+
+ACC1: Line = (ACC10Q, ACC1C8);
+
+!-----------------------------------------------------------------------------------
+
+
+!----- AH1: 3d harmonic module
+
+!--- AH1 without coupler kicks
+
+ACH1:   LINE = (ACH(STAC.AH1.1.I1, MIAC.AH1.1.I1,   &
+                C3.AH1.I1, BPMR.I1,                 &
+                Q.AH1.1.I1, CX.I1, CY.I1, ENAC.AH1.1.I1));
+
+!-----------------------------------------------------------------------------------------
+
+!----- Linac 0 (A1 module and 3d harmonic module): L0
+
+!L0: LINE = (STSUB.L0.I1, VCST35T78.I1, CTBI.I1, ACC1, VCST78T30.I1, &
+!            ACH1, VCST30T78.I1, CFBI.I1, VCST78T40.I1, ENSUB.L0.I1);
+
+L0: LINE = (VCST35T78.I1, CTBI.I1, ACC1, VCST78T30.I1, &
+            ACH1, VCST30T78.I1, CFBI.I1, VCST78T40.I1);
+
+!----- Linac 0 starting at Z = 37.6484 m: L0C8
+
+L0C8: LINE = (ACC1C8, VCST78T30.I1,                                 &
+              ACH1, VCST30T78.I1, CFBI.I1, VCST78T40.I1, ENSUB.L0.I1);
+
+!-----------------------------------------------------------------------------------------
+
+!----- ACC1 Reverse: from the entrance of quadrupole Q.A1.1.I1 to GUN
+
+ACCREV(END,C): LINE = (END, 4*(LTWAKECAV, D02043, C, D01416), &
+                       MIAC,4*(LTWAKECAV, D02043, C, D01416), &
+                       D0080);
+
+C.A1.R.I1: LCAVITY, L=0.1153*9, PHI0=phi_A1/360,          &
+                    DELTAE=-GainA1.I1.Cav,                &
+                    FREQ=1300000000.0*1e-6,volterr=20*relerr;
+
+ACC1REV: LINE = (ACCREV(MATCH.FQ.I1, C.A1.R.I1));
+
+L0C8REV: LINE = (ACC1REV, CTBI.I1);
+
+!-----------------------------------------------------------------------------------------
+
+
+!--- LOLA cavity for diagnostics (MAD definition)
+
+TDSA.I1: LCAVITY, L=0.7, PHI0=0, VOLT=0, FREQ=2800000000.0*1e-6;
+
+!--- For studies
+!TDSA.I1.i: LCAVITY, L=0.7/2, PHI0=0, VOLT=0, FREQ=2800000000.0*1e-6;
+!TDSA.I1: Line = (TDSA.I1, TDSA.I1);
+
+
+!--- Correctors (L_yoke is used)
+
+CIX.I1:    HKICKER, L = 0.1;
+CIY.I1:    VKICKER, L = 0.1;
+
+!--- Window frame corrector, on top of BPMF magnet
+
+CWX.1.I1:   HKICKER, L=0;
+CWY.1.I1:   VKICKER, L=0;
+
+!--- Correction coils
+
+CBL.I1:    VKICKER, L=0;      ! Trim coil BL magnet in DLG
+CBB.2.I1:  VKICKER, L=0;      ! Trim coil BB magnet in B0
+CBB.3.I1:  VKICKER, L=0;      ! Trim coil BB magnet in B0
+CBB.4.I1:  VKICKER, L=0;      ! Trim coil BB magnet in B0
+CBB.5.I1D: HKICKER, L=0;      ! Trim coil BB magnet in Dump
+
+
+!--- Quadrupole mover
+
+CMVQI.I1: KICKER, L=0;
+
+!-----------------------------------------------------------------------------------
+!----- Laser Heater: I1LH = (I1LH1, I1LH2) ----------------------------------------- 
+!-----------------------------------------------------------------------------------
+
+
+!----- Section in front of LH chicane: I1LH1
+ 
+QI.1.I1: Quadrupole, L = L_QI_eff, K1 = +0.306515355656;
+QI.2.I1: Quadrupole, L = L_QI_eff, K1 = +0.164541479526;
+
+I1LH1: LINE = (D12964, TORA.I1, D02519, D008115,                      &
+               QI.1.I1, CMVQI.I1, D008615,                            &
+               BAM.I1, D0090,                                         &
+               D00315,BPMF.I1,D0096,MIDBPMF.I1,CWX.1.I1,CWY.1.I1,D01275,  &
+               D00862, DCM.I1, D012345,                               &
+               QI.2.I1, CMVQI.I1, D008115);
+
+!-----------------------------------------------------------------------------------
+
+
+!----- Models for laser heater undulator
+
+!--- Default: LH undulator open, no natural focusing, used to create longlist 
+! old description using iron length
+! U74.I1: DRIFT, L = 0.740;                  ! 
+! D0089:   Drift, L = 0.089;                 ! 0.03 + 0.5*(0.918-0.8)
+! UNDU.I1: Line = (D0089, U74.I1, D0089);    ! L = 0.918
+
+!--- LH undulator closed (with natural focusing)
+!    - model for U74.I1 has to be set in SET_MODEL_LH.txm
+!    - matching to injector diagnostic section has to be done 
+!      taking into account the undulator natural focusing
+!    - Model from V.Balandin requires the length of 0.918 m, so
+!      the reserved space is increased to 0.918 m. 
+
+U74.I1: Drift, L = 0.918;    
+! call, "SET_LHund_closed_130MeV_42mm.txm"   ! setup for gap = 42 mm
+UNDU.I1: Line = (U74.I1);
+
+!-----------------------------------------------------------------------------------
+
+
+!----- Laser Heater chicane: I1LH2
+
+!--- Dipoles 
+
+!LEN_BL = 0.2;    ! defined in DEFS file
+
+
+ang_lh = -0.099484;                   ! 5.7 deg, design
+arc_lh = LEN_BL*ang_lh/sin(ang_lh);
+
+BL.1.1.I1: Sbend, L = arc_lh, ANGLE = ang_lh,   &
+                  E1 = 0, E2 = ang_lh;
+BL.1.2.I1: Sbend, L = arc_lh, ANGLE = -ang_lh,  &
+                  E1 = -ang_lh, E2 = 0;
+BL.3.I1:   Sbend, L = arc_lh, ANGLE = -ang_lh,  &
+                  E1 = 0, E2 = -ang_lh;
+BL.4.I1:   Sbend, L = arc_lh, ANGLE = ang_lh,   &
+                  E1 = ang_lh, E2 = 0;
+
+DELTALH  = 0.100;
+CD0100I: Drift, L = DELTALH / cos(ang_lh);
+
+
+!--- 27.03.2017: Length of 0.918 m (was 0.8 m) is reserved for LH undulator
+!                to fit the model of the measured magnetic fields.
+  
+D0041: Drift, L = 0.041;    ! 0.100 - 0.5*(0.918-0.8) = 0.041
+
+I1LH2:  LINE = (STLAT.LHT.I1, VCST40T35.I1,             &
+                D0051, BL.1.1.I1, CD0100I,              &
+                BL.1.2.I1, D006075,                     &
+                D01275,MIDBPMF.I1,D0096,BPMF.I1,D00315, &
+                D014425, OTRL.I1, D0064, D0041,         &
+                UNDU.I1, D0041, D0064,                  &
+                OTRL.I1, D0120, BL.3.I1,                &
+                CD0100I, BL.4.I1, D0051,                &
+                VCST35T40.I1, ENLAT.LHT.I1);
+
+I1LH:  LINE = (I1LH1, I1LH2);
+
+!-----------------------------------------------------------------------------------
+!----- Diagnostic section: I1DIA = (I1DIAU, I1DIACORE, I1DIAD1, I1DIAD2)
+!-----------------------------------------------------------------------------------
+
+
+!----- Section between LH chicane and TDS section: I1DIAU
+
+!--- Quadrupoles
+
+QI.3.I1: Quadrupole, L = L_QI_eff, K1 = -0.864662329448;
+QI.4.I1: Quadrupole, L = L_QI_eff, K1 = -0.352207614007;
+
+I1DIAU:  LINE = (D008115, QI.3.I1, D008964, D0100, EOD.I1,  &
+                 D0200, CIY.I1, D0100,                      &
+                 D0200, D0003, CIX.I1, D0070,               &
+                 D00315,BPMF.I1,D0096,MIDBPMF.I1,D01275,    & 
+                 D005615, MATCH.QI52.I1, QI.4.I1, D005115);
+
+
+!----- Section with TDS cavity and diagnostic FODO lattice: I1DIACORE
+
+!--- TDS quadrupoles 
+
+QI.5.I1: Quadrupole, L = L_QI_eff, K1 = +2.104794185668490;
+QI.6.I1: Quadrupole, L = L_QI_eff, K1 = +0.794366106339083;
+
+!--- Quadrupoles in FODO lattice
+
+!--- Setting for asymmetric optics: mu_x = 76 deg, mu_y = 45 deg
+QI.7.I1: Quadrupole, L = L_QI_eff, K1 = -2.638336077594;
+QI.8.I1: Quadrupole, L = L_QI_eff, K1 = +3.278062023815;
+QI.9.I1: Quadrupole, L = L_QI_eff, K1 = -2.638336077594;
+
+
+!----- FODO cell starting from 1st OTRC to find the periodic solution
+
+fodo_I1_DIA: LINE = (MATCH.DIA.I1, OTRC.I1, D0125,            &
+                 D0050, CIY.I1, D0150, BPMA.I1, D013115,      &
+                 QI.7.I1, D008615, KAX.3.I1, D0285,           &
+                 D0035,OTRC.I1,D0125,                         &
+                 D0050, CIX.I1, D0150, BPMA.I1, D013115,      &
+                 QI.8.I1, D008615, KJX.2.I1, KJY.2.I1,        &
+                 D0285, D0035,OTRC.I1);
+
+
+I1DIACORE: LINE = (TDSA.I1, D005115,                              &
+                   QI.5.I1, D010315, D0175, KJX.1.I1, KJY.1.I1, D008615, &
+                   QI.6.I1, D008615, KAX.2.I1,  D0285,  &
+                   STLAT.DIA.I1, D0035, MATCH.DIA.I1, OTRC.I1, D0125,& 
+                   D0050, CIY.I1, D0150, BPMA.I1, D013115,        &
+                   QI.7.I1, D008615, KAX.3.I1, D0285,   &
+                   D0035,OTRC.I1,D0125,                    &
+                   D0050, CIX.I1, D0150, BPMA.I1, D013115,        &
+                   QI.8.I1, D008615, KJX.2.I1, KJY.2.I1, D0285,   &
+                   D0035,OTRC.I1,D0125,                           &
+                   D0150, CIY.I1, D0050, D013115,                 & 
+                   QI.9.I1, D020115, BPMA.I1,                     &
+                   D0380,OTRC.I1,D0200);
+
+!-----------------------------------------------------------------------------------
+
+
+!----- Matching to dogleg 
+
+
+!----- Section in front of I1D dump dipole: I1DIA1  
+
+!--- Quadrupoles
+
+QI.11.I1: Quadrupole, L = L_QI_eff, K1 = +1.977819462285;
+QI.12.I1: Quadrupole, L = L_QI_eff, K1 = +0.870861987047;
+
+I1DIAD1:  LINE = (D008115, QI.11.I1, D008115, D01817, TORA.I1,         &
+                  D00143, D0350, BPMA.I1, D0150, BPMATEST.I1, D0054,   &
+                  D018115, QI.12.I1, D013115, D0400, ENSUB.I1M.I1);
+
+
+!----- Section behind of I1D dump dipole: I1DIA2
+
+BB.0.I1: DRIFT, L = 0.5;              ! Placeholder in straight beamline for BB.5.I1D
+!BB.0.I1: RBEND, L = 0.5, ANGLE=0;    ! Placeholder in straight beamline for BB.5.I1D
+
+BSECI.I1: RBEND, L=0.4, ANGLE=0;
+
+
+!--- Quadrupoles
+
+QI.13.I1: Quadrupole, L = L_QI_eff, K1 = -1.824087238688;
+QI.14.I1: Quadrupole, L = L_QI_eff, K1 = +2.142575757027;
+
+I1DIAD2: LINE = (STSUB.I1T.I1, BB.0.I1, CBB.5.I1D, D0540, D0200, CIY.I1, & 
+                 D008115, QI.13.I1, D013115, BPMA.I1, D0150,  &
+                 D0400, BSECI.I1, D0500, CIX.I1, D0150,       &
+                 VCBSHUT.I1, D018115, QI.14.I1);     
+
+
+!----- Total diagnostic section: I1DIA
+
+I1DIA: LINE = (I1DIAU, I1DIACORE, I1DIAD1, I1DIAD2);
+
+
+!-----------------------------------------------------------------------------------
+!----- Dogleg with R56 = 0.03 m (compression): I1DLG = (I1DLGU, DLGCORE) -----------
+!-----------------------------------------------------------------------------------
+
+!----- Matching section in the front of injector dogleg: I1DLGU
+
+!--- Quadrupoles
+
+QI.15.I1: Quadrupole, L = L_QI_eff, K1 = -2.126511638625;   
+QI.16.I1: Quadrupole, L = L_QI_eff, K1 = +3.403378798043; 
+QI.17.I1: Quadrupole, L = L_QI_eff, K1 = -4.434528950054;
+
+I1DLGU: LINE = (D28623, QI.15.I1, D17623, QI.16.I1,       &
+                D068115, BPMA.I1, D018115, QI.17.I1,      &
+                D018115, CIY.I1, D0200, CIX.I1, D008115);
+
+!-----------------------------------------------------------------------------------
+
+
+!----- Dogleg: DLGCORE
+
+!--- Injector Dogleg dipoles
+
+!LEN_BL = 0.2;       ! defined in DEFS file 
+
+cur_injdog1 = -0.5545855173;
+ang_injdog1 = 2.0*asin(0.5*LEN_BL*cur_injdog1);
+arc_injdog1 = ang_injdog1/cur_injdog1;
+end_injdog1 = 0.5*ang_injdog1;
+
+cur_injdog2 = +0.2132461253;
+ang_injdog2 = 2.0*asin(0.5*LEN_BL*cur_injdog2);
+arc_injdog2 = ang_injdog2/cur_injdog2;
+end_injdog2 = 0.5*ang_injdog2;
+
+BL.6.I1:   Sbend, L = arc_injdog1, ANGLE = ang_injdog1,   &
+           E1 = end_injdog1, E2 = end_injdog1, tilt=pi/2;
+
+BL.8.I1:   Sbend, L = arc_injdog1, ANGLE =-ang_injdog1,   &
+           E1 = -end_injdog1, E2 = -end_injdog1, tilt=pi/2;
+
+BL.7.1.I1: Sbend, L = arc_injdog2, ANGLE = ang_injdog2,   &
+           E1 = end_injdog2, E2 = end_injdog2, tilt=pi/2;
+
+BL.7.2.I1: Sbend, L = arc_injdog2, ANGLE =-ang_injdog2,   &
+           E1 = -end_injdog2, E2 = -end_injdog2,tilt=pi/2;
+
+
+!--- Injector Dogleg quadrupoles
+
+QI.18.I1:  Quadrupole, L = L_QI_eff, K1 = +4.632555992438;
+QI.19.I1:  Quadrupole, L = L_QI_eff, K1 = -4.991375219753;
+QI.20.I1:  Quadrupole, L = L_QI_eff, K1 = +5.027338701185;
+
+QI.21.I1:  Quadrupole, L = L_QI_eff, K1 = -4.991375219753;    ! =QI.19.I1[K1]
+QI.22.I1:  Quadrupole, L = L_QI_eff, K1 = +4.632555992438;    ! =QI.18.I1[K1]
+QI.23.I1:  Quadrupole, L = L_QI_eff, K1 = -4.991375219753;    ! =QI.19.I1[K1]
+QI.24.I1:  Quadrupole, L = L_QI_eff, K1 = +5.027338701185;    ! =QI.20.I1[K1]
+
+QI.25.I1:  Quadrupole, L = L_QI_eff, K1 = -0.712521010063;    ! used for matching
+
+
+!--- Half of quadrupoles for studies
+QIH.18.I1: Quadrupole, L = L_QI_eff/2, K1 = +4.632555992438;
+QIH.20.I1: Quadrupole, L = L_QI_eff/2, K1 = +5.027338701185;
+
+
+!--- Injector Dogleg sextupoles: Feb2016, scaled for L_SC_eff
+
+SC.1.1.I1:  SEXTUPOLE, L = L_SC_eff, K2 = -87.578258358157271, tilt=pi/2;
+SC.1.2.I1:  SEXTUPOLE, L = L_SC_eff, K2 = +87.578258358157271, tilt=pi/2;
+SC.2.1.I1:  SEXTUPOLE, L = L_SC_eff, K2 = -53.061653294498576, tilt=pi/2;
+SC.2.2.I1:  SEXTUPOLE, L = L_SC_eff, K2 = +53.061653294498576, tilt=pi/2;
+
+
+!--- Injector dogleg FODO cell
+
+fodo_I1_DLG: LINE = (MATCH.DLG.I1,                               &
+                     QI.18.I1, D01823768, BL.6.I1, CBL.I1,       &
+                     D0135, CIX.I1, D0165, D00744318046,         &
+                     SC.1.1.I1, D00751, QI.19.I1, D00751,        &
+                     SC.2.1.I1, D01349319, BL.7.1.I1, D01086082, &
+                     D0050, BPMA.I1, D01325, CIY.I1, D009865);
+
+comment
+!--- Injector dogleg FODO cell: Quudrupole center 
+fodo_I1_DLG: Line = (QIH.18.I1, D01823768, BL.6.I1, CBL.I1,      &
+                     D0135, CIX.I1, D0165, D00744318046,         &
+                     SC.1.1.I1, D00751, QI.19.I1, D00751,        &
+                     SC.2.1.I1, D01349319, BL.7.1.I1, D01086082, &
+                     D0050, BPMA.I1, D01325, CIY.I1, D009865,    & 
+                     QIH.20.I1);
+endcomment
+
+
+!--- Dogleg description 
+
+!--- These magical drifts are used to keep the fit
+!--- of the dogleg geometry with high precition
+
+D00744318046: Drift, L = 0.0744318046;
+D01086082:    Drift, L = 0.1086082922;
+D01349319:    Drift, L = 0.1349319890;
+D01823768:    Drift, L = 0.1823768540;
+
+DLG1A: LINE = (QI.18.I1, D01823768, BL.6.I1, CBL.I1,         &
+               D0135, CIX.I1, D0165, D00744318046,           &
+               SC.1.1.I1, D00751, QI.19.I1, D00751,          &
+               SC.2.1.I1, D01349319, BL.7.1.I1, D01086082,   &
+               D0050, BPMA.I1, D01325, CIY.I1, D009865,      & 
+               QI.20.I1, D011615, CIX.I1, D0165, D01086082,  &
+               BL.7.1.I1, D01349319, SC.2.1.I1,              &
+               D00751, QI.19.I1, D00751, SC.1.1.I1,          &
+               D00744318046, D0150, D0100, BPMA.I1, D0150,   &
+               BL.6.I1, D01823768);
+
+DLG1B: LINE = (QI.18.I1, D01823768, BL.6.I1, CBL.I1,         &
+               D0135, CIX.I1, D0165, D00744318046,           &
+               SC.1.1.I1, D00751, QI.19.I1, D00751,          &
+               SC.2.1.I1, D01349319, BL.7.1.I1, D01086082,   &
+               D0050, BPMA.I1, D01325, CIY.I1, D009865,      &
+               QI.20.I1, D011615, CIX.I1, D0165, D01086082,  &       
+               BL.7.1.I1, D01349319, SC.2.1.I1,              &
+               D00751, QI.21.I1, D00751, SC.1.1.I1,          &
+               D00744318046, D0150, D0100, BPMA.I1, D0150,   &
+               BL.6.I1, D01823768);
+
+DLG3A: LINE = (QI.22.I1, D01823768, BL.8.I1, CBL.I1,         &
+               D0135, CIX.I1, D0165, D00744318046,           &
+               SC.1.2.I1, D00751, QI.21.I1, D00751,          &
+               SC.2.2.I1, D01349319, BL.7.2.I1, D01086082,   &
+               D0050, BPMA.I1, D01325, CIY.I1, D009865,      &
+               QI.24.I1, D011615, CIX.I1, D0165, D01086082,  &  
+               BL.7.2.I1, D01349319, SC.2.2.I1,              &
+               D00751, QI.23.I1, D00751, SC.1.2.I1,          &
+               D00744318046, D0150, D0100, BPMA.I1, D0150,   &
+               BL.8.I1, D01823768);
+
+!--- Last qudrupole in DLG3B is not equal to QI.22.I1 (or QI.18.I1)
+!--- because it is used for the matching to downsteam line
+
+DLG3BM: LINE = (QI.22.I1, D01823768, BL.8.I1, CBL.I1,        &
+               D0135, CIX.I1, D0165, D00744318046,           &
+               SC.1.2.I1, D00751, QI.23.I1, D00751,          &
+               SC.2.2.I1,D01349319,BL.7.2.I1,CBL.I1,D01086082, &
+               D0050, BPMA.I1, D01325, CIX.I1, D009865,      &
+               QI.24.I1, D011615, D0100, D0165, D01086082,   & 
+               BL.7.2.I1, D01349319, SC.2.2.I1,              &
+               D00751, QI.23.I1, D00751, SC.1.2.I1,          &
+               D00744318046, D00175, CIY.I1, D01325,         &
+               BPMA.I1, D0150,                               &
+               BL.8.I1, D01823768, QI.25.I1);
+
+
+!----- Dogleg: Start at the entrance of first quadrupole
+
+DLGCORE: Line = (STLAT.DOG.I1, MATCH.DLG.I1,      & 
+                 DLG1A, DLG1B, DLG3A, DLG3BM,     &
+                 ENLAT.DOG.I1, ENSUB.I1T.I1);
+
+
+!----- Total Dogleg section: I1DLG 
+
+I1DLG: Line = (I1DLGU, DLGCORE);
+
+
+!-----------------------------------------------------------------------------------
+!----- Bunch Compressor I1BC0 = (BC0U, BC0CORE, BC0D) ------------------------------
+!-----------------------------------------------------------------------------------
+
+COLO.I1:   ECOL, XSIZE=0.02, YSIZE=0.02;   ! collimator in B0
+COLU.I1:   ECOL, XSIZE=0.02, YSIZE=0.02;   ! collimator in B0
+
+
+!----- Section in front of BC0CORE: BC0U  
+
+!--- Quadrupoles
+
+! Setting for design angle_b0 = 6.850878128775468 deg
+QI.26.I1: Quadrupole, L = L_QI_eff, K1 = +3.376422450845; 
+QI.27.I1: Quadrupole, L = L_QI_eff, K1 = -3.050392292533;
+
+comment
+! Setting for angle_BC0 = 7.83 deg -- Bolko email, 03.08.2018
+QI.26.I1: Quadrupole, L = L_QI_eff, K1 = +3.345427062071; 
+QI.27.I1: Quadrupole, L = L_QI_eff, K1 = -3.013328964062;
+endcomment
+
+BC0U: LINE = (D000013, D088115, TORA.I1, D0200, CIY.I1,   &
+              D009115, QI.26.I1, D015365,                 &
+              D01275, MIDBPMF.I1, D0096, BPMF.I1, D00315, &
+              D01725, CIX.I1, D009115, QI.27.I1, D018115, &
+              D0200);
+
+!-----------------------------------------------------------------------------------
+
+
+!----- BC0 chicane: BC0CORE  
+
+!--- BC0 dipoles
+
+!L_BB_yoke = 0.5000;   ! defined in DEFS file
+!L_BB_eff  = 0.5582;   ! defined in DEFS file
+
+!--- Model with L_yoke is used
+
+l_b0  = L_BB_yoke;
+               
+ang_b0 =  0.11957038;            ! 6.850878128775468 deg - design value 
+!ang_b0 =  7.83*pi/180;          ! 0.136659280431156 rad - Bolko, 03.08.2018, used
+
+arc_b0 = l_b0/sin(ang_b0)*ang_b0;
+               
+BB.1.1.I1: SBEND, L = arc_b0, ANGLE = ang_b0, &
+           E1 = 0, E2 = ang_b0, TILT = pi/2;
+BB.1.2.I1: SBEND, L = arc_b0, ANGLE =-ang_b0, &
+           E1 = -ang_b0, E2 = 0, TILT = pi/2;
+BB.1.3.I1: SBEND, L = arc_b0, ANGLE =-ang_b0, &
+           E1 = 0, E2 =-ang_b0, TILT = pi/2;
+BB.1.4.I1: SBEND, L = arc_b0, ANGLE = ang_b0, &
+           E1 = ang_b0, E2 = 0, TILT = pi/2;
+                 
+DELTAL  = 1.0;
+CD1000I = DELTAL / cos(ang_b0);
+
+D1000I:  DRIFT, L = CD1000I;
+D1000IM: DRIFT, L = CD1000I - 0.6;
+
+BC0CORE: LINE = (STLAT.B0M.I1, D0100,                            &
+                 BB.1.1.I1, VCST40T400Y.I1, D1000I, VCST400Y.I1, &
+                 BB.1.2.I1,CBB.2.I1,                             &
+                 D03975, COLO.I1, D0085, COLU.I1, D03825,        &
+                 BPMS.I1, D0310, OTRS.I1, D0325,                 &
+                 BB.1.3.I1,CBB.3.I1,                             &
+                 VCST400YT40.I1, D0600, D1000IM, VCST40Y.I1,     &
+                 BB.1.4.I1,CBB.4.I1,                             &
+                 D0100, ENLAT.B0M.I1);   
+
+!-----------------------------------------------------------------------------------
+
+
+!----- Section behind of BC0 chicane: BC0D  
+
+!--- Quadrupoles
+
+! Setting for design angle_b0 = 6.850878128775468 deg
+QI.28.I1: Quadrupole, L = L_QI_eff, K1 = +0.687960942049;
+QI.29.I1: Quadrupole, L = L_QI_eff, K1 = -1.359150063327;
+QI.30.I1: Quadrupole, L = L_QI_eff, K1 = +1.497501211839;
+
+comment
+! Setting for angle_BC0 = 7.83 deg -- Bolko email, 03.08.2018
+QI.28.I1: Quadrupole, L = L_QI_eff, K1 = +0.384438675053;
+QI.29.I1: Quadrupole, L = L_QI_eff, K1 = -1.068432517039;
+QI.30.I1: Quadrupole, L = L_QI_eff, K1 = +1.475998497224;
+endcmment
+
+BC0D: LINE = (D0200,                                               &
+              D0100, D009115, QI.28.I1, D009115, CIX.I1, D01225,   &
+              D01275, MIDBPMF.I1, D0096, BPMF.I1, D00315,          &
+              D01125, CIY.I1, D009115, QI.29.I1, D018115, BPMA.I1, &
+              D0500, D0060, CIX.I1, D009115, QI.30.I1);
+
+
+!----- BC0 section: I1BC0
+
+I1BC0: LINE = (STSUB.B0.I1, BC0U, BC0CORE, BC0D);
+
+
+comment
+! Setting for the design angle_BC0 = 6.8509 deg
+!--- BC0U: In front of BC0
+set, QI.26.I1[k1], +3.376422450845
+set, QI.27.I1[k1], -3.050392292533
+!--- BC0D: Behind of BC0  
+set, QI.28.I1[k1], +0.687960942049
+set, QI.29.I1[k1], -1.359150063327
+set, QI.30.I1[k1], +1.497501211839
+endcomment
+
+!-----------------------------------------------------------------------------------
+!----- Phase Shifter: I1PS ---------------------------------------------------------
+!-----------------------------------------------------------------------------------
+
+
+!--- Quadrupoles
+
+QI.31.I1: Quadrupole, L = L_QI_eff, K1 = -1.522641254394;
+QI.32.I1: Quadrupole, L = L_QI_eff, K1 = +1.522641067699;
+
+
+!--- I1PS FODO cell to define the periodic solution
+
+fodo_I1_PS: LINE = (MATCH.PS.I1, D018115, BPMA.I1, D1800, D0090,     &
+                    CIY.I1, D009115, QI.31.I1,                       &
+                    D018115, BPMA.I1, D1800, D0090, CIX.I1, D009115, &
+                    QI.32.I1);
+
+
+I1PS:  LINE = (STLAT.PS.I1, MATCH.PS.I1,                             &
+               D018115, BPMA.I1, D1800, D0090, CIY.I1, D009115,      &
+               QI.31.I1,                                             &
+               D018115, BPMA.I1, D1800, D0090, CIX.I1, D009115,      &
+               QI.32.I1,                                             &
+               D018115, BPMA.I1, D1800, D0090, CIY.I1, D009115,      &
+               QI.31.I1,                                             & 
+               D018115, BPMA.I1, D0500, VCDST.I1, D0325, ENLAT.PS.I1);
+
+
+!-----------------------------------------------------------------------------------
+!----- Matching to Linac L1: L1U
+!-----------------------------------------------------------------------------------
+
+
+!--- Quadrupoles
+
+!--- Setting for the energy gain in L1: 130 MeV => 700 MeV
+QI.33.I1: Quadrupole, L = L_QI_eff, K1 = +0.996799661408;
+QI.34.I1: Quadrupole, L = L_QI_eff, K1 = +0.537541402855;
+QI.35.I1: Quadrupole, L = L_QI_eff, K1 = -0.941219919992;
+
+L1U:  LINE = (CIX.I1, D009115, QI.33.I1, D018115, BPMA.I1, &
+              D11242, TORA.I1, D01408,                     &
+              CIY.I1, D009115, QI.34.I1, D013965, BPMA.I1, &
+              D109132, OTRA.I1, D034903, DCM.I1, D009115,  &
+              CIX.I1, D009115, QI.35.I1, D014395, BPMA.I1, &
+              D03522, ENSUB.B0.I1);
+
+
+!-----------------------------------------------------------------------------------
+!----- Total injector section: I1
+!-----------------------------------------------------------------------------------
+
+!--- Start at GUN, Z = 23.2 m
+
+I1:      LINE = (STSEC.I1.I1, I1G1, I1M1, L0, I1LH, I1DIA, &
+                 I1DLG, I1BC0, I1PS, L1U, ENSEC.I1.I1);
+
+
+!--- Start at Z = 37.6484 m, in the front of 1st cold quadrupole Q.A1.1.I1 
+
+I1_L0C8:  LINE = (L0C8, I1LH, I1DIA, I1DLG, I1BC0, I1PS, L1U, ENSEC.I1.I1);
+
+!===================================================================================
+
+
+!-----------------------------------------------------------------------------------
+!
+!----- Injector dump beamline: I1D -------------------------------------------------
+!
+!----- I1DIAD1 section in the front of I1D dipole (two quadrupoles)
+!         1) with quadrupole setting like for the straight line:
+!            QI.11.I1: Quadrupole, L = L_QI_eff, K1 = +1.977819462285;
+!            QI.12.I1: Quadrupole, L = L_QI_eff, K1 = +0.870861987047;
+!            only 1-2 bunches are allowed
+!         2) for 2 < N_b < 1000 other setting of these quadrupoles has to be used
+!
+!----- I1D section behind I1D dipole (two quadrupoles)
+!        1) with quadrupole setting below
+!           QI.41.I1D: Quadrupole, L = L_QI_eff, K1 = +4.401795;
+!           QI.42.I1D: Quadrupole, L = L_QI_eff, K1 =  0.0;
+!           the dispersion at I1D dump is around zero
+!        2) optics solution with D_x = 0 at I1D dump is possible 
+!           only for N_b < 1000
+!        3) if N_b > 1000 other setting of these two quadrupoles has to be used
+!
+!-----------------------------------------------------------------------------------
+
+DUFLANGE.I1D:   MARKER;
+DUCONCRETE.I1D: MARKER;
+DUABSORB.I1D:   MARKER;
+
+
+!--- Dipole to injector dump I1D
+
+!L_BB_yoke = 0.5000;   ! defined in DEFS file
+
+l_i1d      = L_BB_yoke;
+ang_i1d    = 30*PI/180;
+ang_i1d_ee = ang_i1d/2;
+arc_i1d    = 0.5*l_i1d*ang_i1d/sin(0.5*ang_i1d);
+
+BB.5.I1D: SBEND, L = arc_i1d, ANGLE = ang_i1d,    &
+                 E1 = ang_i1d_ee, E2 = ang_i1d_ee;
+
+
+!--- Quadrupoles in the dump line
+
+!--- Relaxed optics: 
+!      Setting of QI.11.I1/QI.12.I1 like for the straight line
+!      at I1D dump: beta_x = 26.60m, beta_y = 81.27m, Dx = -0.003 m
+!      Number of bunches: N_b = 1-2
+
+QI.41.I1D: Quadrupole, L = L_QI_eff, K1 = +4.401795;
+QI.42.I1D: Quadrupole, L = L_QI_eff, K1 =  0.0;
+
+
+!I1D:   LINE = (STSEC.I1D.I1D, BB.5.I1D, CBB.5.I1D, D0250, D0135,    &
+I1D:   LINE = (STSEC.I1D.I1D, BB.5.I1D, D0250, D0135,               &
+               D0500, D008115, QI.41.I1D, D015615,                  &
+               BPMA.I1D, D0250, D0156, OTRC.I1D, D0150, D000015,    &
+               QI.42.I1D, D009915, VCST40T98.I1D, D015006,          &
+               OTRD.I1D, D0225, TORC.I1D, D0125, BPMD.I1D, D0050,   &
+               VCST98T60.I1D, D023523,                              &
+               DUFLANGE.I1D, D0252, DUCONCRETE.I1D, D1696, BHM.I1D, &
+               D0098, DUABSORB.I1D, ENSEC.I1D.I1D);                                    
+
+!-----------------------------------------------------------------------------------
+!----- Total injector beamline to the dump: I1TI1D
+!-----------------------------------------------------------------------------------
+
+!--- Defined in DEFS file, here definitions are for information. 
+
+!--- Start at GUN, Z = 23.2 m
+!I1TI1D:      LINE = (STSEC.I1.I1, I1G1, I1M1, L0, I1LH,     &
+!                     I1DIAU, I1DIACORE, I1DIAD1, I1D);
+
+
+!--- Start at Z = 37.6484 m, in the front of 1st cold quadrupole Q.A1.1.I1 
+!I1TI1D_L0C8: LINE = (L0C8, I1LH, I1DIAU, I1DIACORE, I1DIAD1, I1D);
+
+
+!-----------------------------------------------------------------------------------
+!--- For back tracking: From entrance of 1st cold quadrupole Q.A1.1.I1 (Z = 37.6484 m)
+!                       to GUN.I1 (Z = 23.2 m)
+!-----------------------------------------------------------------------------------
+
+BACKTR_ACC1_GUN: LINE = (L0C8REV, -I1M1, -I1G1, STSEC.I1.I1);
+
+!===================================================================================
+!===================================================================================
+

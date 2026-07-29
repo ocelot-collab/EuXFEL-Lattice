@@ -1,0 +1,361 @@
+!================================================================================================
+!
+!--- November 2022, XFEL lattice --- Linac 2
+!
+!================================================================================================
+
+!================================================================================================
+! XFEL Linac Definitions
+!
+! February  2016, Nina: Upgrade of all linacs.
+! September 2015, Nina: Upgrade of L0 linac for injector commissioning.
+!
+! Version 7.1 8.03.2011
+!
+! New Nomenclature
+! Extended length of cryo components: Feed and turnbox 3.5 m, connection box 
+! New length of feedbox: 3.35 m
+! New length of endbox : 3.25 m
+! lambda: 0.23061
+! cavity length: 1.0377  (l/2*9
+! module length: 11.9917 (l*52)
+! string connection box: 2.9979 (l*13)
+! module center: 6.20582 from module start (cold) (or at 3.90394*l/2 in the 5th 9-cell cavity)
+! insert marker close to this position, s,x,y,z to be corrected by post-processing
+! updated 3rd harmonic according to design from 12.2.2009
+! changed L3 to maximum of 96 modules with 6 long warm FODO cells at end
+! changed L0 to include 3rd harmonic and end box
+! inserted L0 start/end markers (10/11/09 WD)
+! differentiate BPM types (10/11/09 WD)
+! add TORA at beginning of temporary beamline (4/1/11 WD)
+! changed Injector module and Injector Linac layout to adjust for 3* module (8/3/11 WD)
+! include place holder for left out modules with quadrupole unit below position of ceiling support ... 
+! (position of quad -1.293 m or - 9.093 from module position)
+!================================================================================================
+!================================================================================================
+
+
+!---------- LINAC 2: 12 modules, 3 RF stations
+
+!----- RF stations: A2, A3, A4
+!----- RF modules:  4 x 3 = 12  
+
+!----- Energy profile
+!
+!        E_initial =  700 MeV
+!        E_final   = 2400 MeV
+!        Energy Gain = (2400-700) = 1700 MeV
+
+!----- Model
+!      - Equal distribution of Energy gain between RF stations, modules and cavities
+!      - On-crest phase
+!      - RF transverse focusing: Analytical model for standing wave cavity 
+!      - No coupler kicks
+!
+!================================================================================================
+
+
+!----- Markers for L2
+
+STSEC.L2.L2:  MARKER;
+ENSEC.L2.L2:  MARKER;
+MID.L2.L2:    MARKER;
+
+STAC.A3.1.L2: MARKER;
+MIAC.A3.1.L2: MARKER;
+ENAC.A3.1.L2: MARKER;
+STAC.A3.2.L2: MARKER;
+MIAC.A3.2.L2: MARKER;
+ENAC.A3.2.L2: MARKER;
+STAC.A3.3.L2: MARKER;
+MIAC.A3.3.L2: MARKER;
+ENAC.A3.3.L2: MARKER; 
+STAC.A3.4.L2: MARKER;
+MIAC.A3.4.L2: MARKER;
+ENAC.A3.4.L2: MARKER;
+STAC.A4.1.L2: MARKER;
+MIAC.A4.1.L2: MARKER;
+ENAC.A4.1.L2: MARKER;
+STAC.A4.2.L2: MARKER;
+MIAC.A4.2.L2: MARKER;
+ENAC.A4.2.L2: MARKER; 
+STAC.A4.3.L2: MARKER;
+MIAC.A4.3.L2: MARKER;
+ENAC.A4.3.L2: MARKER;
+STAC.A4.4.L2: MARKER;
+MIAC.A4.4.L2: MARKER;
+ENAC.A4.4.L2: MARKER;
+STAC.A5.1.L2: MARKER;
+MIAC.A5.1.L2: MARKER;
+ENAC.A5.1.L2: MARKER;
+STAC.A5.2.L2: MARKER;
+MIAC.A5.2.L2: MARKER;
+ENAC.A5.2.L2: MARKER;
+STAC.A5.3.L2: MARKER;
+MIAC.A5.3.L2: MARKER;
+ENAC.A5.3.L2: MARKER;
+STAC.A5.4.L2: MARKER;
+MIAC.A5.4.L2: MARKER;
+ENAC.A5.4.L2: MARKER; 
+
+
+!----- BPM at ACC end (TYP BPM)
+BPMC.L2: MONITOR;  ! Cold Button BPM
+BPMR.L2: MONITOR;  ! Re-Entrant BPM
+
+!----- BPM at ACC end (TYP BPM)
+BPMC0.L2: MARKER;  ! Cold Button BPM
+BPMR0.L2: MARKER;  ! Re-Entrant BPM
+
+
+!----- Steerer at ACC end
+!      (zero length kicker, in reality cos(phi) winding in quadrupole)
+CX.L2: HKICKER;
+CY.L2: VKICKER;
+
+
+!----- Vacuum Markers and Vacuum Components
+VCST40T78.L2: MARKER;
+VCST78T40.L2: MARKER;
+
+
+!----- Drift for feed and turn box 
+!      Endpoint means bypass to beam distance of 0.7 m and warm vaccuum valve
+CFB.L2:  DRIFT, L = 3.35; 
+CTB.L2:  DRIFT, L = 3.25;
+
+
+!----- Cavity Wake field dummies
+!LTWAKECAV:  DRIFT, L=0.0
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Definition of RF modules: April 2021, in DEFS file
+
+comment
+!----- Here for info
+MIAC: MARKER   
+!--- 1.3 GHz Module
+D01416: DRIFT, L = 0.1416
+D02043: DRIFT, L = 0.2043
+D00432: Drift, L = 0.0432
+D0085:  DRIFT, L = 0.0850
+D00729: DRIFT, L = 0.0729
+!D0300:  DRIFT, L = 0.300     ! defined in DEFS file
+ACC(START,MIAC,C,BPM,Q,COR,END): LINE =                        &
+    (START, D0080, 4*(D01416, C, D02043, LTWAKECAV), MIAC,     &
+     4*(D01416, C, D02043, LTWAKECAV),                         &
+     D00432,Q,D00432,COR, D0085, BPM, D0085, D00729, D0300, END)
+endcomment
+
+!-----------------------------------------------------------------------------------------
+
+!----- Energy profile in L2
+
+!----- 18.04.2018: Design energy gain is used
+!                  On-crest phase
+!                  Equal distribution of energy gain between RF stations, modules and cavities.
+!                  Transferse RF focusing using the BRK energy gain and phases is very small.
+
+
+!--- Off-crest phase in deg
+
+phi_L2 = 0.0; 
+
+!--- Energy gain in MeV
+
+E_L1 =  700.0;
+E_L2 = 2400.0;
+Gain.L2 = (2400.0 - 700.0);    ! MeV
+
+!--- Energy gain per RF station (3 RF stations)
+GainA3.L2 = Gain.L2/3;   ! 566.66 MeV
+GainA4.L2 = Gain.L2/3;   ! 566.66
+GainA5.L2 = Gain.L2/3;   ! 566.66
+
+!--- Energy gain per module (4 modules for each RF station)
+GainA3.M1.L2 = GainA3.L2/4;
+GainA3.M2.L2 = GainA3.L2/4;
+GainA3.M3.L2 = GainA3.L2/4;
+GainA3.M4.L2 = GainA3.L2/4;
+
+GainA4.M1.L2 = GainA4.L2/4;
+GainA4.M2.L2 = GainA4.L2/4;
+GainA4.M3.L2 = GainA4.L2/4;
+GainA4.M4.L2 = GainA4.L2/4;
+
+GainA5.M1.L2 = GainA5.L2/4;
+GainA5.M2.L2 = GainA5.L2/4;
+GainA5.M3.L2 = GainA5.L2/4;
+GainA5.M4.L2 = GainA5.L2/4;
+
+
+!--- Energy gain per cavity
+GainA3.M1.Cav.L2 = GainA3.M1.L2/8;
+GainA3.M2.Cav.L2 = GainA3.M2.L2/8;
+GainA3.M3.Cav.L2 = GainA3.M3.L2/8;
+GainA3.M4.Cav.L2 = GainA3.M4.L2/8;
+
+GainA4.M1.Cav.L2 = GainA4.M1.L2/8;
+GainA4.M2.Cav.L2 = GainA4.M2.L2/8;
+GainA4.M3.Cav.L2 = GainA4.M3.L2/8;
+GainA4.M4.Cav.L2 = GainA4.M4.L2/8;
+
+GainA5.M1.Cav.L2 = GainA5.M1.L2/8;
+GainA5.M2.Cav.L2 = GainA5.M2.L2/8;
+GainA5.M3.Cav.L2 = GainA5.M3.L2/8;
+GainA5.M4.Cav.L2 = GainA5.M4.L2/8;
+
+
+!--- Voltage per cavity
+VoltA3.M1.Cav.L2 = GainA3.M1.Cav.L2/cos(phi_L2*pi/180);
+VoltA3.M2.Cav.L2 = GainA3.M2.Cav.L2/cos(phi_L2*pi/180);
+VoltA3.M3.Cav.L2 = GainA3.M3.Cav.L2/cos(phi_L2*pi/180);
+VoltA3.M4.Cav.L2 = GainA3.M4.Cav.L2/cos(phi_L2*pi/180);
+
+VoltA4.M1.Cav.L2 = GainA4.M1.Cav.L2/cos(phi_L2*pi/180);
+VoltA4.M2.Cav.L2 = GainA4.M2.Cav.L2/cos(phi_L2*pi/180);
+VoltA4.M3.Cav.L2 = GainA4.M3.Cav.L2/cos(phi_L2*pi/180);
+VoltA4.M4.Cav.L2 = GainA4.M4.Cav.L2/cos(phi_L2*pi/180);
+
+VoltA5.M1.Cav.L2 = GainA5.M1.Cav.L2/cos(phi_L2*pi/180);
+VoltA5.M2.Cav.L2 = GainA5.M2.Cav.L2/cos(phi_L2*pi/180);
+VoltA5.M3.Cav.L2 = GainA5.M3.Cav.L2/cos(phi_L2*pi/180);
+VoltA5.M4.Cav.L2 = GainA5.M4.Cav.L2/cos(phi_L2*pi/180);
+
+
+!--- Linac 2 cavities (MAD definition)
+
+!relerr:=0e-3;
+
+C.A3.1.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA3.M1.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A3.2.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA3.M2.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A3.3.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA3.M3.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A3.4.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA3.M4.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+
+C.A4.1.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA4.M1.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A4.2.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA4.M2.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A4.3.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA4.M3.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A4.4.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA4.M4.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+
+C.A5.1.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA5.M1.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A5.2.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA5.M2.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A5.3.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA5.M3.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A5.4.L2: LCAVITY, L=0.1153*9, PHI0=phi_L2/360,       &
+                  DELTAE=VoltA5.M4.Cav.L2,             &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+
+
+!--- Quadrupoles in L2 
+
+!--- 23.10.2017: 5pi optics between BC1 and BC2 chicanes
+
+Q.A3.1.L2: Quadrupole, L = L_Q_eff, K1 = +0.424912906937;
+Q.A3.2.L2: Quadrupole, L = L_Q_eff, K1 = -0.393848527050;
+Q.A3.3.L2: Quadrupole, L = L_Q_eff, K1 = +0.387775731861;
+Q.A3.4.L2: Quadrupole, L = L_Q_eff, K1 = -0.424753736956;
+
+Q.A4.1.L2: Quadrupole, L = L_Q_eff, K1 = +0.488189811449;
+Q.A4.2.L2: Quadrupole, L = L_Q_eff, K1 = -0.605809757025;
+Q.A4.3.L2: Quadrupole, L = L_Q_eff, K1 = +0.488189811449;
+Q.A4.4.L2: Quadrupole, L = L_Q_eff, K1 = -0.605809757025;
+
+Q.A5.1.L2: Quadrupole, L = L_Q_eff, K1 = +0.652582980725;
+Q.A5.2.L2: Quadrupole, L = L_Q_eff, K1 = -0.389085416758;
+Q.A5.3.L2: Quadrupole, L = L_Q_eff, K1 = +0.431283981988;
+Q.A5.4.L2: Quadrupole, L = L_Q_eff, K1 = -0.383914887450;
+
+
+!--- Linac L2C: 12 modules, no Coupler Kicks
+
+ACC3.1: LINE=(ACC(STAC.A3.1.L2, MIAC.A3.1.L2, C.A3.1.L2, BPMC.L2,  &
+                  Q.A3.1.L2, CX.L2, ENAC.A3.1.L2));
+ACC3.2: LINE=(ACC(STAC.A3.2.L2, MIAC.A3.2.L2, C.A3.2.L2, BPMC.L2,  &
+                  Q.A3.2.L2, CY.L2, ENAC.A3.2.L2));
+ACC3.3: LINE=(ACC(STAC.A3.3.L2, MIAC.A3.3.L2, C.A3.3.L2, BPMR.L2,  &
+                  Q.A3.3.L2, CX.L2, ENAC.A3.3.L2));
+ACC3.4: LINE=(ACC(STAC.A3.4.L2, MIAC.A3.4.L2, C.A3.4.L2, BPMR.L2,  &
+                  Q.A3.4.L2, CY.L2, ENAC.A3.4.L2));
+
+ACC4.1: LINE=(ACC(STAC.A4.1.L2, MIAC.A4.1.L2, C.A4.1.L2, BPMC.L2,  &
+                  Q.A4.1.L2, CX.L2, ENAC.A4.1.L2));
+ACC4.2: LINE=(ACC(STAC.A4.2.L2, MIAC.A4.2.L2, C.A4.2.L2, BPMR.L2,  &
+                  Q.A4.2.L2, CY.L2, ENAC.A4.2.L2));
+ACC4.3: LINE=(ACC(STAC.A4.3.L2, MIAC.A4.3.L2, C.A4.3.L2, BPMC.L2,  &
+                  Q.A4.3.L2, CX.L2, ENAC.A4.3.L2));
+ACC4.4: LINE=(ACC(STAC.A4.4.L2, MIAC.A4.4.L2, C.A4.4.L2, BPMR.L2,  &
+                  Q.A4.4.L2, CY.L2, ENAC.A4.4.L2));
+
+ACC5.1: LINE=(ACC(STAC.A5.1.L2, MIAC.A5.1.L2, C.A5.1.L2, BPMC.L2,  &
+                  Q.A5.1.L2, CX.L2, ENAC.A5.1.L2));
+ACC5.2: LINE=(ACC(STAC.A5.2.L2, MIAC.A5.2.L2, C.A5.2.L2, BPMC.L2,  &
+                  Q.A5.2.L2, CY.L2, ENAC.A5.2.L2));
+ACC5.3: LINE=(ACC(STAC.A5.3.L2, MIAC.A5.3.L2, C.A5.3.L2, BPMR.L2,  &
+                  Q.A5.3.L2, CX.L2, ENAC.A5.3.L2));
+ACC5.4: LINE=(ACC(STAC.A5.4.L2, MIAC.A5.4.L2, C.A5.4.L2, BPMR.L2,  &
+                  Q.A5.4.L2, CY.L2, ENAC.A5.4.L2));
+
+L2C: LINE=(ACC3.1, ACC3.2,            ACC3.3, ACC3.4, &
+           ACC4.1, ACC4.2, MID.L2.L2, ACC4.3, ACC4.4, &
+           ACC5.1, ACC5.2,            ACC5.3, ACC5.4);
+
+
+!----- Linac L2
+
+L2: LINE=(STSEC.L2.L2, VCST40T78.L2, CFB.L2, L2C, CTB.L2,  &
+          VCST78T40.L2, ENSEC.L2.L2);
+
+!-----------------------------------------------------------------------------------------
+
+!--- One L2 FODO cell with RF focusing: as an example
+
+fodo_L2_RFon: Line = (ACC3.1, ACC3.2);
+
+!-----------------------------------------------------------------------------------------
+
+
+!----- L2 linac without cavity focussing: for studies
+
+!--- Length of cavity (9-cells)
+
+C.00.L2: DRIFT, L = 1.0377;   ! 0.1153*9=1.0377
+
+!--- Single cavity (9-cells) with surrounding drifts
+!ACC_CAV0: DRIFT, L = 1.3836;   ! 0.1416+1.0377+0.2043 = 1.3836
+
+
+ACC3.F.L2: LINE=(ACC(STAC.A3.1.L2, MIAC.A3.1.L2, C.00.L2, BPMC.L2,  &
+                     Q.A3.1.L2, CX.L2, ENAC.A3.1.L2));
+ACC3.D.L2: LINE=(ACC(STAC.A3.2.L2, MIAC.A3.2.L2, C.00.L2, BPMR.L2,  &
+                     Q.A3.2.L2, CY.L2, ENAC.A3.2.L2));
+
+fodo_L2_RFoff: Line = (ACC3.F.L2, ACC3.D.L2);
+dofo_L2_RFoff: Line = (ACC3.D.L2, ACC3.F.L2);
+
+
+!=========================================================================================
+!=========================================================================================
+

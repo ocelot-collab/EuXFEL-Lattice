@@ -1,0 +1,143 @@
+!---------------------------------------------------------------------------------------
+!
+!  November 2022: XFEL Lattice and Optics --- B2D and B2 beamlines
+!
+!---------------------------------------------------------------------------------------
+
+!assign,print="print"
+option, -echo, info,warn
+
+!---------------------------------------------------------------------------------------
+
+SETPLOT, FONT=1, LWIDTH=8, POST=1, LSCALE=2.0, SSCALE=2.0, &
+         RSCALE=1.6, ASCALE=1.9
+
+!beam, energy=0.150
+!beam, particle=electron, energy=0.7, ex=0.01e-6, ey=0.01e-6, sige=1.0e-03
+
+!---------------------------------------------------------------------------------------
+
+!----- Call files needed for B2 and B2D line
+
+call,"XFEL_DEFS.txm"       ! Definitions
+
+call, "XFEL_I1.txm"
+call, "XFEL_L1.txm"
+call, "XFEL_B1.txm"
+call, "XFEL_L2.txm"
+call, "XFEL_B2.txm"
+
+! call other model setup and optics in some sections
+!call, "SET_closed_LHund_130MeV_42mm.txm"    ! LH undulator closed
+
+!---------------------------------------------------------------------------------------
+
+!----- GUN.23.I1: Z coordinate 
+
+set, z0_start, 23.2
+
+
+!----- L0C8, MATCH.FQ.I1: Z coordinate
+
+set, z0_L0C8, 37.6484
+
+!---------------------------------------------------------------------------------------
+
+
+!----- Initial Twiss functions at Z = 37.6484 m, MATCH.FQ.I1
+!      Historical values used as initial Twiss functions
+!      for the design of linear beam optics downstream
+B0_I1.ACC1:   BETA0, energy = 0.150, &
+                     betx = 25.543,  alfx = -0.3771,  &
+                     bety = 25.543,  alfy = -0.3771;
+
+!----- Twiss functions at Cathode, GUN.23.I1
+!      Calculated by back tracking from MATCH.FQ.I1 to GUN.23.I1
+!      Back tracking: TWISS command with COUPLE logical flag
+B0_I1.G1:    BETA0, energy= 0.005, &
+                    betx = 55.798075,  alfx = 18.18859573,  &
+                    bety = 55.798075,  alfy = 18.18859573;
+
+!---------------------------------------------------------------------------------------
+
+!----- B2 section, 01.04.2021
+
+!--- Twiss functions at entrance of B2 section: at MATCH.B2.B2
+B0_B2.START: BETA0, energy = 2.4, &
+                    betx = 79.34349126, alfx = -3.902699957, &
+                    bety = 87.49953072, alfy = +4.141196643
+
+!--- Twiss functions at OTRC.B2: MATCH.DIA.B2
+!--- Periodic solution for fodo_B2_DIA_1
+B0_B2.DIA: BETA0, energy = 2.4, &
+                  betx = 16.962093980,  alfx = -2.156761166, &
+                  bety =  6.051015284,  alfy = +1.006412039
+
+!--- Twiss functions at the end of B2 section: at ENSEC.B2.B2 (STSEC.L3.L3)
+B0_L3.START: BETA0, energy = 2.4, &
+                    betx = 20.87580045, alfx = +0.6832650984, &
+                    bety = 12.34773207, alfy = -0.2933161182
+
+!----- Twiss functions at B2D dump
+B0_B2.B2D:    BETA0, energy = 2.4,  &
+                     betx = 61637.92181,  alfx = -20545.63736,  &
+                     bety = 41519.06391,  alfy = -12613.74698
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
+!----- Start at Cathode, Gun.23.I1
+
+title, "XFEL G1 to B2D"
+beam, energy=0.005
+use, I1TB2D
+print, #s/#e
+!twiss, beta0=B0_I1.G1, save, couple, tape=twiss_B2D
+twiss, beta0=B0_I1.G1, save, tape=twiss_B2D
+plot, table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+      style = 100, vmin=0,vmax=150, vaxis2=dy, hmin=350, hmax = 450
+
+survey, y0 = -2.75, z0 = z0_start, tape=survey_B2D
+
+!static, map
+
+!---------------------------------------------------------------------------------------
+
+comment
+!----- Start at Z = 37.6484 m, MATCH.FQ.I1
+
+title, "XFEL G1 to B2D"
+beam, energy=0.150
+use, I1TB2D_L0C8
+print, #s/#e
+!twiss, beta0=B0_I1.ACC1, save, couple, tape=twiss_B2D_L0C8
+twiss, beta0=B0_I1.ACC1, save, tape=twiss_B2D_L0C8
+plot, table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+      vmin=0,vmax=150, vaxis2=dx,dy
+
+survey, y0 = -2.75, z0 = z0_L0C8, tape=survey_B2D_L0C8
+endcomment
+
+!---------------------------------------------------------------------------------------
+
+!call,"Matching_B1.txm"
+! call,"Matching_B2.txm"
+
+!---------------------------------------------------------------------------------------
+
+
+!----- B2 section
+
+title, "XFEL B2 section"
+beam, energy=2.400
+use, B2
+print, #s/#e
+!twiss, beta0=B0_B2.START, save, couple, tape=twiss_B2
+twiss, beta0=B0_B2.START, save, tape=twiss_B2
+plot, table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+      vmin=0,vmax=150, vaxis2=dx,dy
+!static, map
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+

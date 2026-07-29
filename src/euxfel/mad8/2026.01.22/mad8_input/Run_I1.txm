@@ -1,0 +1,229 @@
+!---------------------------------------------------------------------------------------
+!
+!  November 2022: XFEL Lattice and Optics --- I1D and I1 beamlines
+!
+!---------------------------------------------------------------------------------------
+
+!assign,print="print"
+option, -echo, info,warn
+
+!---------------------------------------------------------------------------------------
+
+SETPLOT, FONT=1, LWIDTH=8, POST=2, LSCALE=2.0, SSCALE=2.0, &
+         RSCALE=1.6, ASCALE=1.9
+
+!beam, energy=0.150
+!beam, particle=electron, energy=0.7, ex=0.01e-6, ey=0.01e-6, sige=1.0e-03
+
+!---------------------------------------------------------------------------------------
+
+!----- Call files needed for I1D and I1 line
+
+call,"XFEL_DEFS.txm"       ! Definitions
+
+call, "XFEL_I1.txm"
+
+! call other model setup and optics in some sections
+!call, "SET_closed_LHund_130MeV_42mm.txm"    ! LH undulator closed
+
+!---------------------------------------------------------------------------------------
+
+!----- GUN.23.I1: Z coordinate 
+
+set, z0_start, 23.2
+
+
+!----- L0C8, MATCH.FQ.I1: Z coordinate
+
+set, z0_L0C8, 37.6484
+
+!---------------------------------------------------------------------------------------
+
+!----- Initial Twiss functions at Z = 37.6484 m, MATCH.FQ.I1
+!      Historical values used as initial Twiss functions 
+!      for the design of linear beam optics downstream
+B0_I1.ACC1:  BETA0, energy= 0.150, &
+                    betx = 25.543,  alfx = -0.3771,  &
+                    bety = 25.543,  alfy = -0.3771;
+
+!----- Twiss functions at Cathode, GUN.23.I1
+!      Calculated by back tracking from MATCH.FQ.I1 to GUN.23.I1
+!      Back tracking: TWISS command with COUPLE logical flag
+B0_I1.G1:    BETA0, energy= 0.005, &
+                    betx = 55.798075,  alfx = 18.18859573,  &
+                    bety = 55.798075,  alfy = 18.18859573;
+
+!----- Remark:
+!      Back and forward trackings are consistent using COUPLE flag
+
+      
+comment
+!----- Calculation of Twiss function at Cathode, GUN.23.I1
+
+B0_I1.ACC1REV:  BETA0, energy= 0.150, &
+                        betx = 25.543,  alfx = +0.3771,  &
+                        bety = 25.543,  alfy = +0.3771;
+
+title, "XFEL Back tracking to GUN"
+beam, energy=0.150
+use, (L0C8REV,-I1M1,-I1G1, STSEC.I1.I1)
+print, #s/#e
+twiss, beta0=B0_I1.ACC1REV, save, couple, tape=twiss_I1DREV
+
+title, "XFEL Forward tracking from GUN"
+beam, energy=0.005
+use, (STSEC.I1.I1, I1G1, I1M1, STSUB.L0.I1, VCST35T78.I1, CTBI.I1, ACC10Q)
+print, #s/#e
+twiss, beta0=B0_I1.G1, save, couple, tape=twiss_tmp
+stop
+endcomment
+
+!---------------------------------------------------------------------------------------
+
+!----- Option without COUPLE logic flag in TWISS command
+
+!--- Twiss functions at GUN.23.I1 
+!    Calculated by back tracking from MATCH.FQ.I1 with COUPLE flag
+!B0_I1.G1:    BETA0, energy= 0.005, &
+!                    betx = 55.798075,  alfx = 18.18859573,  &
+!                    bety = 55.798075,  alfy = 18.18859573;
+
+!--- Twiss functions at MATCH.FQ.I1, no COUPLE flag in TWISS command
+!    Calculated by forward tracking from GUN.23.I1 to MATCH.FQ.I1
+!B0_I1.ACC1:  BETA0, energy= 0.150, &
+!                    betx = 25.54299993,  alfx = -0.3771000041,  &
+!                    bety = 25.54299993,  alfy = -0.3771000041;
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
+!----- Start at Cathode, Gun.23.I1
+
+
+!----- Injector dispersive arm I1TG1D
+
+title, "XFEL G1 to G1D"
+beam, energy=0.005
+use, I1TG1D
+print, #s/#e
+!twiss, beta0=B0_I1.G1, save, couple, tape=twiss_G1D
+twiss, beta0=B0_I1.G1, save, tape=twiss_G1D
+plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=100, vaxis2=dx
+
+survey, y0 = -2.75, z0 = z0_start, tape=survey_G1D
+
+
+!----- Injector beamline I1TI1D
+
+title, "XFEL G1 to I1D, relaxed optics, asymmetric FODO"
+beam, energy=0.005
+use, I1TI1D
+print, #s/#e
+!twiss, beta0=B0_I1.G1, save, couple, tape=twiss_tmp
+twiss, beta0=B0_I1.G1, save, tape=twiss_I1D
+plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=200, vaxis2=dx
+
+survey, y0 = -2.75, z0 = z0_start, tape=survey_I1D
+
+
+!----- Injector beamline I1
+
+title, "XFEL Injector, asymmetric FODO lattice"
+beam, energy=0.005
+use, I1
+print, #s/#e
+!twiss, beta0=B0_I1.G1, save, couple, tape=twiss_tmp
+twiss, beta0=B0_I1.G1, save, tape=twiss_I1
+plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=50, hmin=0,hmax=80
+plot,table=twiss,haxis=s, vaxis1=dx,dy, spline,colour=100, &
+     vmin=-0.3,vmax=0.3, hmin=0,hmax=80
+
+survey, y0 = -2.75, z0 = z0_start, tape=survey_I1
+
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
+comment
+
+!----- Start at Z = 37.6484 m, MATCH.FQ.I1
+
+!----- Injector beamline I1TI1D
+
+title, "XFEL G1 to I1D, relaxed optics, asymmetric FODO"
+beam, energy=0.150
+use, I1TI1D_L0C8
+print, #s/#e
+twiss, beta0=B0_I1.ACC1, save, tape=twiss_I1D_L0C8
+plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=200, vaxis2=dx
+
+!static, map
+
+survey, y0 = -2.75, z0 = z0_L0C8, tape=survey_I1D_L0C8
+
+
+!----- Injector beamline I1
+
+title, "XFEL Injector, asymmetric FODO lattice"
+beam, energy=0.150
+use, I1_L0C8
+print, #s/#e
+twiss, beta0=B0_I1.ACC1, save, tape=twiss_I1_L0C8
+plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=50, hmin=0,hmax=80
+plot,table=twiss,haxis=s, vaxis1=dx,dy, spline,colour=100, &
+     vmin=-0.3,vmax=0.3, hmin=0,hmax=80
+
+!survey, y0 = -2.75, z0 = z0_L0C8, tape=survey_I1_L0C8
+
+endcomment
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
+!----- Matching subroutines
+
+!call, "Matching_I1.txm"
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
+!----- Twiss function at the matching points and some other positions
+!      (option without COUPLE flag in TWISS command)
+
+!----- Twiss functions at I1D dump
+B0_B1.I1D:    BETA0, energy= 0.130, &
+                     betx = 26.59917561,  alfx = -8.696450346,  &
+                     bety = 81.26573399,  alfy = -15.80768523;
+
+
+!----- Twiss functions at 1st OTRC.I1: MATCH.DIA.I1
+!----- Periodic solution for fodo_I1_DIA
+B0_I1.DIA:     BETA0, energy= 0.130, &
+                      betx = 2.302491349,  alfx = +1.026403572,  &
+                      bety = 4.537930945,  alfy = -1.629964980;
+
+!----- Twiss functions at the entrance of dogleg: MATCH.DLG.I1
+B0_I1.DLG:     BETA0, energy= 0.130, &
+                      betx = 3.8652305900,  alfx = -2.1462751280,  &
+                      bety = 0.8395438295,  alfy = +0.6039215629;
+
+!----- Twiss functions at 1st OTRC.I1: MATCH.PS.I1
+!----- Periodic solution for fodo_I1_PS
+B0_I1.PS:     BETA0, energy= 0.130, &
+                      betx = 8.875962815,  alfx = +1.604660839,  &
+                      bety = 3.676870321,  alfy = -0.6934829411;   
+
+!----- Twiss functions at the entrance of L1 Linac: STSEC.L1.L1 (ENSEC.I1.I1)
+B0_L1.START:   BETA0, energy=0.130, &
+                      betx =  4.387469501, alfx = -0.4422552511, &
+                      bety = 13.63879990,  alfy = +0.3298237580;   
+
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+

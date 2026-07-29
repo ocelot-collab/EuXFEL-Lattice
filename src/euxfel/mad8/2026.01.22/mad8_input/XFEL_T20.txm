@@ -1,0 +1,406 @@
+!================================================================================================
+!
+!--- November 2022
+!
+!================================================================================================
+!
+!  Beam Line T20: Extraction to LUXE Experiment
+!
+!  TD20: LINE = (T20M)
+!
+!================================================================================================
+!
+!     26 October 2021
+!       - final focus lattice for LUXE from Stuart
+!     September 2021 
+!       - model using combine function magnets for quadrupoles between KL and septum
+!     February  2021 
+!       - variant for Stuart
+!     June 2020
+!       - fitting of TD20 geometry with Daniel
+!     24 July 2019  
+!       - add BPM and CMX in T20 arc
+!     09 July 2019   
+!       - two KL kickers behind all TD1 septa: kick up (Winni, 08.07.2019)
+!     01 July 2019 
+!      - two KL kickers behind all TD1 septa: kick down
+!      - BD dipoles instead BV  
+!
+!================================================================================================
+!
+!--- T20 line:
+!    Vertical kickers KL:  up           (to positive y)
+!    Horizontal septa:     to the right (to negative x)
+!    Horizontal dipoles:   to the right (to negative x)
+!    Vertical dipoles:     dogleg in the end of T20M (down, opposite to kickers KL)
+!
+!    Definition of KL_20 kickers and 1st tilted TD20 septa (which is in TL file) is in this file.
+!
+!================================================================================================
+
+
+!----- Section and Subsection Markers
+
+!STSEC.T20.T20: MARKER;  ! defined in TD2 file
+!ENSEC.T20.T20: MARKER;  ! defined in TD2 file
+
+
+!----- Diagnostics Marker
+
+BPMA.T20:   MONITOR;
+!OTRBW.T20: MARKER;      ! to winni: needed ?
+!OTRE.T20:  MARKER;      ! to winni: needed ?
+OTRC.T20:  MARKER;
+TORA.T20:  MARKER;
+
+
+!----- Correctors (L_yoke is used)
+
+CMX.T20: HKICKER, L = 0.300;
+CMY.T20: VKICKER, L = 0.300;
+
+!------------------------------------------------------------------------------------------------
+
+!----- Definition of kickers KL
+
+
+!--- Two KL kickers KL (vertical): up (to positive y)
+
+!LEN_KL = 0.93;     ! defined in DEFS file
+
+cur_KL_T20_matlab =  -4.0582484e-04;   ! 09.07.2019, kick up, from Matlab code
+
+
+!--- MAD definition
+
+cur_KL_T20_mad = cur_KL_T20_matlab;  
+!ang_KL_T20_mad = asin(cur_KL_T20_mad*LEN_KL);        ! description used all time
+ang_KL_T20_mad = 2*asin(0.5*cur_KL_T20_mad*LEN_KL);   ! description for RBEND
+arc_KL_T20_mad = ang_KL_T20_mad / cur_KL_T20_mad;
+
+
+!--- MAD definition as VKICKER: positive VKICK to kick to positive Y (up)
+!ANG_KL_T20 = -ang_KL_T20_mad;                         ! sign (+) for KL as Vkicker up
+
+!--- MAD definition as RBEND:   negative ANGLE to kick to positive Y (up)
+ANG_KL_T20 = ang_KL_T20_mad;                           ! sign (-) for KL as RBEND
+
+!--- for info
+NUM_KL_T20 = 2;
+ANG_KL_T20_tot = NUM_KL_T20 * ANG_KL_T20;
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Definition of T20 septa
+
+!--- 4 septa are used: 1 tilted and 3 untilted
+!--- 4 septa: cur = 0.0055, B_max = 0.4036
+!             (maximal possible strength)
+!--- angle = 0.0055000069 rad = 0.3151267 deg
+
+
+!--- July 2019: Definition from Matlab code
+
+cur_BZ1_T20_matlab  = 0.0055;
+tilt_BZ1_T20_matlab = -(11.0954465102 / 180.0) * pi;
+
+
+!--- MAD definition
+
+CUR_BZ1_T20  = cur_BZ1_T20_matlab;
+ANG_BZ1_T20  = 2*asin(0.5*LEN_BZ*CUR_BZ1_T20);     ! for E1=E2=angle/2
+!ANG_BZ1_T20  = asin(LEN_BZ*CUR_BZ1_T20);          ! for E1=0,E2=angle, -0.005500027729544
+ARC_BZ1_T20  = ANG_BZ1_T20 / CUR_BZ1_T20;
+E12_BZ1_T20  = ANG_BZ1_T20 / 2;
+TILT_BZ1_T20 = tilt_BZ1_T20_matlab;
+
+!--- First T20 septum (tilted)
+             
+BZ.1.T20: Sbend, L = ARC_BZ1_T20,  ANGLE = ANG_BZ1_T20,  &
+                 E1 = E12_BZ1_T20, E2 = E12_BZ1_T20,     &
+                 TILT = TILT_BZ1_T20;
+
+!--- Three T20 septa (not tilted): have the same angle as first septum
+
+BZ.2.T20: Sbend, L = ARC_BZ1_T20, ANGLE = ANG_BZ1_T20,   &
+                 E1 = E12_BZ1_T20, E2 = E12_BZ1_T20;
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- T20M arc
+
+!--- 09.06.2020: Fitting of TD20 geometry with Daniel
+!--- BD dipole angles are fitted to get 
+!      X = -5.925059914 at Z = 2136.173120 (with DXX = 13.086 m)    
+!    angle_hor = -0.1176628563 = -6.74158507 deg
+
+!--- 29.07.2019
+!--- Each BV dipole => 3*BD dipoles
+!--- 3*BD.2.T20 is moved downstream for 0.021m 
+!--- BD dipole angles are fitted to get the total angle = 6.585 deg 
+!--- (including the angle from 1st tilted septum and QK quadrupole) 
+!        Angle of 1st dipole was reduced (18.07.2019)
+!        Angles of 2d and 3d dipoles are increased (29.07.2019)
+!--- QL.6.T20 is moved upstream for 1 m
+!--- QL.7.T20 is moved downstream for 1 m
+
+
+!LEN_BV = 2.5;     ! defined in DEFS file
+!LEN_BD = 1.0;     ! defined in DEFS file
+
+
+!--- Horizontal dipoles
+
+comment
+!--- Old values for 3 BV dipoles in old design from Matlab
+cur_HH1_TD20_matlab = +0.0130267889083361
+cur_HH2_TD20_matlab = +0.0120167232674249
+cur_HH3_TD20_matlab = +0.0117214317191970
+ANG_BV1_TD20 = 2 * asin(0.5 * LEN_BV * cur_HH1_TD20_matlab)
+ANG_BV2_TD20 = 2 * asin(0.5 * LEN_BV * cur_HH2_TD20_matlab)
+ANG_BV3_TD20 = 2 * asin(0.5 * LEN_BV * cur_HH3_TD20_matlab)
+endcomments
+
+             
+!--- Three BD1 dipoles
+
+ANG_BD1_TD20 = 0.010473*1.0293;
+ARC_BD1_TD20 = 0.5*ANG_BD1_TD20*LEN_BD/sin(0.5*ang_BD1_TD20); 
+E12_BD1_TD20 = ANG_BD1_TD20 / 2;
+
+BD.1.T20: Sbend, L = ARC_BD1_TD20,  ANGLE = ANG_BD1_TD20,   &
+                 E1 = E12_BD1_TD20, E2 = E12_BD1_TD20;
+
+
+!--- Three BD2 dipoles
+
+ANG_BD2_TD20 = 0.010262*1.0293;
+ARC_BD2_TD20 = 0.5*ANG_BD2_TD20*LEN_BD/sin(0.5*ang_BD2_TD20); 
+E12_BD2_TD20 = ANG_BD2_TD20 / 2;
+
+BD.2.T20: Sbend, L = ARC_BD2_TD20,  ANGLE = ANG_BD2_TD20,   &
+                 E1 = E12_BD2_TD20, E2 = E12_BD2_TD20;
+
+
+!--- Three BD3 dipoles
+
+ANG_BD3_TD20 = 0.010015*1.0303;
+ARC_BD3_TD20 = 0.5*ANG_BD3_TD20*LEN_BD/sin(0.5*ang_BD3_TD20); 
+E12_BD3_TD20 = ANG_BD3_TD20 / 2;
+
+BD.3.T20: Sbend, L = ARC_BD3_TD20,  ANGLE = ANG_BD3_TD20,   &
+                 E1 = E12_BD3_TD20, E2 = E12_BD3_TD20;
+
+
+!--- 2 vertical dipoles (dogleg in arc end) 
+
+!CUR_BD_TD20 = +0.00470151614564009;   ! Nina, 17.07.2019
+!CUR_BD_TD20 = +0.004698901772;        ! Nina, 20.09.2021, model with combine functions
+
+CUR_BD_TD20 = +0.0046909589;           ! Nina, 20.09.2021, dogleg with delatY=0 at T20M end
+
+ANG_BD_TD20 = 2 * asin(0.5 * LEN_BD * CUR_BD_TD20);
+ARC_BD_TD20 = ANG_BD_TD20 / CUR_BD_TD20;
+E12_BD_TD20 = ANG_BD_TD20 / 2;
+
+BD.4.T20: Sbend, L  = ARC_BD_TD20, ANGLE = ANG_BD_TD20,     &
+                 E1 = E12_BD_TD20, E2 = E12_BD_TD20,        &
+                 TILT = PI/2;
+BD.5.T20: Sbend, L  =  ARC_BD_TD20, ANGLE = -ANG_BD_TD20,   &
+                 E1 = -E12_BD_Td20, E2 = -E12_BD_TD20,      &
+                 TILT = PI/2;
+
+
+!--- Quadrupoles
+
+comment
+! 09.06.2020: different angles, Var1a
+! Setting using HELP elements
+QL.1.T20:  Quadrupole, L = L_QL_eff, K1 = +0.305655571992;   
+QL.2.T20:  Quadrupole, L = L_QL_eff, K1 = -0.307137064204;
+QL.3.T20:  Quadrupole, L = L_QL_eff, K1 = +0.370532836182;
+QL.4.T20:  Quadrupole, L = L_QL_eff, K1 = -0.231244727260;
+QL.5.T20:  Quadrupole, L = L_QL_eff, K1 = +0.360395464320;
+QL.6.T20:  Quadrupole, L = L_QL_eff, K1 = -0.311108117127;
+QL.7.T20:  Quadrupole, L = L_QL_eff, K1 = +0.242173312086;
+QL.8.T20:  Quadrupole, L = L_QL_eff, K1 = -0.184546274841;
+QL.9.T20:  Quadrupole, L = L_QL_eff, K1 = +0.201516139198;   
+QL.10.T20: Quadrupole, L = L_QL_eff, K1 = -0.061556555030;
+endcomment
+
+
+! 20.09.2021: different angles, Var1a for T20 arc
+! Setting for model with combine function magnets
+QL.1.T20:  Quadrupole, L = L_QL_eff, K1 = +0.305655571992;   
+QL.2.T20:  Quadrupole, L = L_QL_eff, K1 = -0.307137064204;
+QL.3.T20:  Quadrupole, L = L_QL_eff, K1 = +0.370532836182;
+QL.4.T20:  Quadrupole, L = L_QL_eff, K1 = -0.231244727260;
+QL.5.T20:  Quadrupole, L = L_QL_eff, K1 = +0.360395464320;
+QL.6.T20:  Quadrupole, L = L_QL_eff, K1 = -0.311094771766;
+QL.7.T20:  Quadrupole, L = L_QL_eff, K1 = +0.242170505609;;
+QL.8.T20:  Quadrupole, L = L_QL_eff, K1 = -0.184711540463;
+QL.9.T20:  Quadrupole, L = L_QL_eff, K1 = +0.201488128155;   
+QL.10.T20: Quadrupole, L = L_QL_eff, K1 = -0.061285903506;
+
+
+!--- Drifts (kept here for a while)
+
+D7675:  Drift, L = 7.675;
+D1858:  Drift, L = 1.858;
+D2386:  Drift, L = 2.386;
+!D1000: Drift, L = 1.000;
+!D0300: Drift, L = 0.300;
+xD0194: Drift, L = 0.194 + 0.021 -0.1;
+xD0773: Drift, L = 0.773 - 0.021;
+D2185:  Drift, L = 2.185;
+D44684: Drift, L = 4.4684;
+D1485:  Drift, L = 1.485;
+D0177:  Drift, L = 0.177;
+D2328:  Drift, L = 2.328;
+D0249:  Drift, L = 0.249;
+D0860:  Drift, L = 0.860;
+!D0090: Drift, L = 0.090;
+D4100:  Drift, L = 4.100;
+
+DXX: Drift, L = 13.086;
+
+!--- Deflection arc with dogleg in the end
+
+!nD7675: Drift, L = 7.675 - 4.750 - 0.500
+D2425: Drift, L = 2.425;
+D0960: Drift, L = 0.960;
+
+T20M: Line = (BZ.2.T20, D0500, BZ.2.T20, D0500, BZ.2.T20,  &
+              D4750, TORA.T20, D0500, D0000, D2425,     &
+              QLSEC(BPMA.T20, QL.1.T20, CMX.T20),          &
+              D1858,  &
+              QLSEC(BPMA.T20, QL.2.T20, CMY.T20),          &
+              D2386,  & 
+              QLSEC(BPMA.T20, QL.3.T20, CMX.T20),          &
+              D0900,  &
+              BD.1.T20,D0500,BD.1.T20,D0500,BD.1.T20,      & 
+              D0300,  &
+              QLSEC(BPMA.T20, QL.4.T20, CMY.T20),          & 
+              xD0194,  & 
+              BD.2.T20,D0500,BD.2.T20,D0500,BD.2.T20,      &
+              xD0773,  &
+              QLSEC(BPMA.T20, QL.5.T20, CMX.T20),          & 
+              D2185,  &
+              QLSEC(BPMA.T20, QL.6.T20, CMY.T20),          &        ! to avoid collissions it would be goog to move this magnet upstream
+              D44684, &                                             ! as far as possible - every mm helps
+              QLSEC(BPMA.T20, QL.7.T20, CMX.T20),          & 
+              D1485,  &
+              BD.3.T20,D0500,BD.3.T20,D0500,BD.3.T20,      &
+              D0177,  &
+              QLSEC(BPMA.T20, QL.8.T20, CMY.T20),          & 
+              D2328,  &    
+              QLSEC(BPMA.T20, QL.9.T20, CMX.T20),          & 
+              D0249,  &
+              D0250, QLD0075, QL.10.T20, QLD0080, D0330,   & 
+              D0090,  &
+              BD.4.T20, &
+              D1000, D0100,BPMA.T20,D0100, D0170, CMY.T20, &
+              D0860, D0100,BPMA.T20,D0100, D0170, CMX.T20, &
+              D0900, BD.5.T20);                       
+
+!              BD.4.T20, D4100, BD.5.T20);
+
+T20: Line = (T20M, ENSEC.T20.T20)
+
+!------------------------------------------------------------------------------------------------
+
+!----- Vertical dogleg in the end of T20M (for test)
+
+dogleg_T20: Line = (BD.4.T20, D4100, BD.5.T20)
+
+!------------------------------------------------------------------------------------------------
+
+!----- 26.10.2021: Final focus lattice for LUXE experiment, Stuart Walker
+
+
+STSEC.FF.T20: MARKER;
+ENSEC.FF.T20: MARKER;
+
+TARGET.LUXE.T20: Marker;
+DUMP.1.LUXE.T20: Marker;
+DUMP.2.LUXE.T20: Marker;
+IP.LUXE.T20:     Marker;
+
+D048545: Drift, L = 0.48545;
+D033545: Drift, L = 0.33545;
+D013545: Drift, L = 0.13545;
+D01918:  Drift, L = 0.1918;
+D01500:  Drift, L = 0.1500;
+D08500:  Drift, L = 0.8500;
+D46200:  Drift, L = 4.6200;
+
+!D2890L:  Drift, L = 2.890000820392643;
+!D03982L: Drift, L = 0.3982468677637172;
+!D70899L: Drift, L = 7.089999179607361;
+
+D2890L:  Drift, L = 2.890001;
+D02982L: Drift, L = 0.298247;
+D70899L: Drift, L = 7.089999;
+
+comment
+!--- 26.10.2021: Stuart Walker for IP 
+!--- Setting in T20M is not changed
+QL.1.T20:  Quadrupole, L = L_QL_eff, K1 = +0.305655571992;   
+QL.2.T20:  Quadrupole, L = L_QL_eff, K1 = -0.307137064204;
+QL.3.T20:  Quadrupole, L = L_QL_eff, K1 = +0.370532836182;
+QL.4.T20:  Quadrupole, L = L_QL_eff, K1 = -0.231244727260;
+QL.5.T20:  Quadrupole, L = L_QL_eff, K1 = +0.360395464320;
+QL.6.T20:  Quadrupole, L = L_QL_eff, K1 = -0.311108117127;
+QL.7.T20:  Quadrupole, L = L_QL_eff, K1 = +0.242173312086;
+QL.8.T20:  Quadrupole, L = L_QL_eff, K1 = -0.184546274841;
+QL.9.T20:  Quadrupole, L = L_QL_eff, K1 = +0.201516139198;   
+QL.10.T20: Quadrupole, L = L_QL_eff, K1 = -0.061556555030;
+!--- Setting in final focus section
+QL.11.T20: Quadrupole, L=1.0291, K1=-0.028289705803972;
+QL.12.T20: Quadrupole, L=1.0291, K1=-0.108553355697549;
+QL.13.T20: Quadrupole, L=1.0291, K1=-0.028368536473910;
+QL.14.T20: Quadrupole, L=1.0291, K1=+0.209211365395777;
+QL.15.T20: Quadrupole, L=1.0291, K1=-0.3116544555602732;
+endcomment
+
+!--- 26.10.2021: Fit in the model using combine function magnets (Nina)
+QL.11.T20: Quadrupole, L=1.0291, K1=-0.018969088856;
+QL.12.T20: Quadrupole, L=1.0291, K1=-0.115015378397;
+QL.13.T20: Quadrupole, L=1.0291, K1=-0.042441056063;
+QL.14.T20: Quadrupole, L=1.0291, K1=+0.214252495106;
+QL.15.T20: Quadrupole, L=1.0291, K1=-0.300317522215;
+
+TDC.1.T20: Rbend, L=1.2000, ANGLE=0.0;
+TDC.2.T20: Rbend, L=1.2000, ANGLE=0.0;
+TDC.3.T20: Rbend, L=1.2000, ANGLE=0.0;
+
+
+FF_T20: Line = (STSEC.FF.T20,                         &   
+                D1000, BPMA.T20, D048545,             &
+                QL.11.T20, D033545, CMX.T20, D033545, & 
+                QL.12.T20, D013545, CMY.T20,          &
+                D0150, BPMA.T20, D02982L,             &
+                CMX.T20, D0200, CMY.T20, D0100,       &
+                QL.13.T20, D01918,                    &
+                QL.14.T20, D01918,                    &
+                QL.14.T20, D01918, QL.15.T20, D01500, & 
+                BPMA.T20, D0150, TORA.T20, D0350, OTRC.T20, D0350, &
+                TARGET.LUXE.T20, D46200, &
+                TDC.1.T20, &
+                DUMP.1.LUXE.T20, D2890L, &
+                TDC.2.T20, &
+                IP.LUXE.T20, D70899L,    &     
+                TDC.3.T20, &
+                DUMP.2.LUXE.T20,         &
+                ENSEC.FF.T20);
+
+!------------------------------------------------------------------------------------------------
+
+T20_FF: Line = (T20, FF_T20);
+
+!================================================================================================
+!================================================================================================
+
+

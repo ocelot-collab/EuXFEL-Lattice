@@ -1,0 +1,280 @@
+!---------------------------------------------------------------------------------------
+!
+!  November 2022: XFEL Lattice and Optics --- TLD beamline
+!
+!---------------------------------------------------------------------------------------
+
+!assign,print="print"
+option, -echo, info,warn
+
+!---------------------------------------------------------------------------------------
+
+SETPLOT, FONT=1, LWIDTH=8, POST=2, LSCALE=2.0, SSCALE=2.0, &
+         RSCALE=1.6, ASCALE=1.9
+
+!beam, energy=0.150
+!beam, particle=electron, energy=0.7, ex=0.01e-6, ey=0.01e-6, sige=1.0e-03
+
+!---------------------------------------------------------------------------------------
+
+!----- GUN.23.I1: Z coordinate 
+
+set, z0_start, 23.2
+
+
+!----- L0C8, MATCH.FQ.I1: Z coordinate
+
+set, z0_L0C8, 37.6484
+
+!---------------------------------------------------------------------------------------
+
+
+!----- Call files needed for NORTH line
+
+call,"XFEL_DEFS.txm"       ! Definitions
+
+call, "XFEL_I1.txm"
+call, "XFEL_L1.txm"
+call, "XFEL_B1.txm"
+call, "XFEL_L2.txm"
+call, "XFEL_B2.txm"
+call, "XFEL_L3.txm"
+call, "XFEL_CL.txm"
+call, "XFEL_TL.txm"
+call, "XFEL_TLD.txm"
+
+! call other model setup and optics in sections
+!call, "SET_closed_LHund_130MeV_42mm.txm"   ! LH undulator closed
+
+!---------------------------------------------------------------------------------------
+
+!----- Initial Twiss functions at at Z = 37.6484 m, in the front of 1st cold quadrupole Q.A1.1.I1
+
+!----- Twiss functions at MATCH.FQ.I1
+B0_I1.ACC1:    BETA0, energy= 0.150, &
+                      betx = 25.543,  alfx = -0.3771,  &
+                      bety = 25.543,  alfy = -0.3771
+
+!----- Twiss functions at Cathode
+B0_I1.G1:    BETA0, energy= 0.005, &
+                      betx = 55.798075,  alfx = 18.18859573,  &
+                      bety = 55.798075,  alfy = 18.18859573
+
+!---------------------------------------------------------------------------------------
+
+!----- TLD: Setting for KS kickers and quadrupoles between KS and 2d septum 
+
+!----- February 2021: Model using combine function magnets for quadrupoles between KS and 2d septum
+
+
+!----- Setting of KS kickers 
+
+!--- KS kickers are RBEND magnets
+set, KSPOS.1.TL[ANGLE],     ANG_KS_TLD/2
+set, KSNEG.1.TL[ANGLE],     ANG_KS_TLD/2
+
+                 
+!--- Desciption of QF.1.TLD.TL for TLD line
+!      1) QF.1.TLD.TL is SBEND with dipole and quadrupole components
+!      2) horizontally focusing quadrupole, k1 > 0
+!      3) at the entrance the trajectory is shifted in X-plane  => horizontal dipole
+
+!--- Horizontal trajectory at entrance and exit of QF.1.TLD.TL
+
+!--- From Matlab
+!E1_QF1_TLD = +0.000302544875;
+!E2_QF1_TLD = +0.000125456351;
+
+!--- from MAD
+E1_QF1_TLD = +3.025448949E-04;
+E2_QF1_TLD = +1.253694976E-04;
+
+ang_QF1_TLD = -(E2_QF1_TLD - E1_QF1_TLD);      ! sign (+) for deflection to negative X
+
+QF.1.TLD.TL: SBEND, L = L_QF_eff, ANGLE = ang_QF1_TLD,  &
+                    E1 = E1_QF1_TLD, E2 = E2_QF1_TLD,   &
+                    K1 = +KFscale;
+
+
+!--- Desciption of QF.2.TLD.TL for TLD line
+!      1) QF.1.TLD.TL is SBEND with dipole and quadrupole components
+!      2) horizontally defocusing quadrupole, k1 < 0
+!      3) at the entrance the trajectory is shifted in X-plane  => horizontal dipole
+
+!--- Horizontal trajectory at entrance and exit of QF.2.TLD.TL
+
+!--- From Matlab
+!E1_QF2_TLD = +0.000428001225;
+!E2_QF2_TLD = +0.001045323364;
+
+!--- From MAD
+E1_QF2_TLD = +4.279143925E-04;
+E2_QF2_TLD = +1.044797476E-03;
+
+ang_QF2_TLD = -(E2_QF2_TLD - E1_QF2_TLD);      ! sign (-) for deflection to positive X
+
+QF.2.TLD.TL: SBEND, L = L_QF_eff, ANGLE = ang_QF2_TLD,  &
+                    E1 = E1_QF2_TLD, E2 = E2_QF2_TLD,   &
+                    K1 = -KFscale;
+
+                 
+!--- Desciption of QK.1.TLD.TL (between 1st and 2d septa) for TLD line
+!      1) QK.1.TLD.TL is splitted in N slices: Exception
+!      2) horizontally focusing quadrupole, k1 > 0
+!      3) at the entrance the trajectory is shifted in both planes  
+!         => horizontal and vertical dipole components
+
+
+!--- Horizontal trajectory at entrance and exit of QK.1.TLD.TL
+
+!--- From Matlab
+!xE1_QK1_TLD = +0.002242847919;
+!xE2_QK1_TLD = +0.0;                !+0.000001561760   ! must be zero
+
+!--- From MAD
+xE1_QK1_TLD = +2.242943152E-03;
+xE2_QK1_TLD = -5.119037480E-10;   ! must be zero
+
+angX_QK1_TLD = -(xE2_QK1_TLD - xE1_QK1_TLD)*0.999984;   ! sign (+) to deflect to negative X
+                                                        ! xxx, SURVEY_TLD_3
+
+!--- Vertical trajectory at entrance and exit of QK.1.TLD.TL  
+
+!--- From Matlab without vertical slope after CL: delta = +7.78419281e-04
+!yE1_QK1_TLD = +0.005368047627;
+!yE2_QK1_TLD = +0.006146466908;
+
+!--- From MAD with slope after CL: delta = +7.78080491e-04
+yE1_QK1_TLD = +5.002815411E-03;
+yE2_QK1_TLD = +5.780895902E-03;
+
+angY_QK1_TLD = -(yE2_QK1_TLD - yE1_QK1_TLD);    ! sign (-) to deflect upper (to positive Y)
+
+
+!--- QK.1.TLD.TL is splitted in 200 parts: 190 hor and 10 ver slices
+
+z1_slice = 200                  ! total number of slices
+x1_slice =  10                  ! number of X-slices, for angle
+y1_slice = z1_slice - x1_slice  ! number of Y-slices, for angle
+
+xQK.1.TL: SBEND, L = L_QK_eff/z1_slice, ANGLE = angX_QK1_TLD/y1_slice,  &
+                 E1 = 0, E2 = 0,                                        &
+                 K1 = +KFscale*(0.5321/1.0552);
+
+yQK.1.TL:  SBEND, L = L_QK_eff/z1_slice, ANGLE = angY_QK1_TLD/x1_slice, &
+                  E1 = 0, E2 = 0,                                       &
+                  K1 = -KFscale*(0.5321/1.0552),                        &
+                  TILT = pi/2;
+
+QK1.TLD_slice10: Line = (19 * xQK.1.TL, 1 * yQK.1.TL);
+QK.1.TLD.TL:  Line = (10 * QK1.TLD_slice10);
+
+!----------------------------------------------------------------------------
+
+!----- Model with HELP elements is still possible
+
+!--- HELP elements are RBEND with zero angle
+set, HELP.1a.TLD[ANGLE], 0
+set, HELP.1b.TLD[ANGLE], 0
+set, HELP.2a.TLD[ANGLE], 0
+set, HELP.2b.TLD[ANGLE], 0
+set, HELP.3a.TLD[ANGLE], 0
+set, HELP.3b.TLD[ANGLE], 0
+
+!----------------------------------------------------------------------------
+
+!----- T5D: Setup is not needed (can be found in the file end)
+!----- T20: Setup is not needed (can be found in the file end)
+
+!----------------------------------------------------------------------------
+!----------------------------------------------------------------------------
+
+!----- Start at cathode
+
+title, "XFEL G1 to TLD: November 2022"
+beam, energy=0.005
+use, I1TTLD
+print, #s/#e
+!twiss, beta0=B0_I1.G1, save, couple, tape=twiss_tmp
+twiss, beta0=B0_I1.G1, save, tape=twiss_TLD
+plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, vaxis2=dx,dy
+
+!static, map
+
+survey, y0 = -2.75, z0 = z0_start, tape=survey_TLD
+
+
+comment
+!----- Start at MATCH.FQ.I1
+
+title, "XFEL G1 to TLD: November 2022"
+beam, energy=0.150
+use, I1TTLD_L0C8
+print, #s/#e
+!twiss, beta0=B0_I1.ACC1, save, couple, tape=twiss_TLD_L0C8
+twiss, beta0=B0_I1.ACC1, save, tape=twiss_TLD_L0C8
+plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, vaxis2=dx,dy
+
+!static, map
+
+survey, y0 = -2.75, z0 = z0_L0C8, tape=survey_TLD_L0C8
+endcomment
+
+!---------------------------------------------------------------------------------------
+
+!call,"Matching_TLD.txm"   
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
+
+comment
+!----- T5D: Setting for KL kickers and quadrupoles between KL and 2d septum
+!           not needed
+
+!--- KL kickers are RBEND with zero angle
+set, KL.1.TL[ANGLE],  0
+set, KL.2.TL[ANGLE],  0
+
+!--- QF.1.T1.TL quadrupole is SBEND with zero angle
+set, QF.1.T1.TL[ANGLE],    0
+set, QF.1.T1.TL[E1],       0
+set, QF.1.T1.TL[E2],       0
+
+!--- QK.2.T1.TL quadrupole is sliced in N slices: Exception
+
+!--- HELP elements are RBEND with zero angle
+set, HELP.1a.T1[ANGLE], 0
+set, HELP.1b.T1[ANGLE], 0
+set, HELP.2a.T1[ANGLE], 0
+set, HELP.2b.T1[ANGLE], 0
+endcomment
+
+!----------------------------------------------------------------------------
+
+comment
+!----- TD20: Setting for KL kickers and quadrupoles between KL and 2d septum
+!            not needed
+
+!--- KL kickers are RBEND with zero angle
+set, KL.20.TL[ANGLE],   0 
+
+!--- QF.1.T20.TL quadrupole is SBEND with zero angle
+set, QF.1.T20.TL[ANGLE],    0
+set, QF.1.T20.TL[E1],       0
+set, QF.1.T20.TL[E2],       0
+
+!--- QK.2.T20.TL quadrupole is sliced in N slices: Exception
+
+!--- HELP elements are RBEND with zero angle
+set, HELP.1a.T20[ANGLE], 0
+set, HELP.1b.T20[ANGLE], 0
+set, HELP.2a.T20[ANGLE], 0
+set, HELP.2b.T20[ANGLE], 0
+endcomment
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+

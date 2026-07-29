@@ -1,0 +1,284 @@
+!================================================================================================
+!
+!--- November 2022, XFEL lattice --- Linac L1
+!
+!================================================================================================
+
+!================================================================================================
+!
+! February  2016, Nina: Upgrade of all linacs.
+! September 2015, Nina: Upgrade of L0 linac for injector commissioning.
+!
+! Version 7.1 8.03.2011
+!
+! New Nomenclature
+! Extended length of cryo components: Feed and turnbox 3.5 m, connection box 
+! New length of feedbox: 3.35 m
+! New length of endbox : 3.25 m
+! lambda: 0.23061
+! cavity length: 1.0377  (l/2*9
+! module length: 11.9917 (l*52)
+! string connection box: 2.9979 (l*13)
+! module center: 6.20582 from module start (cold) (or at 3.90394*l/2 in the 5th 9-cell cavity)
+! insert marker close to this position, s,x,y,z to be corrected by post-processing
+! updated 3rd harmonic according to design from 12.2.2009
+! changed L3 to maximum of 96 modules with 6 long warm FODO cells at end
+! changed L0 to include 3rd harmonic and end box
+! inserted L0 start/end markers (10/11/09 WD)
+! differentiate BPM types (10/11/09 WD)
+! add TORA at beginning of temporary beamline (4/1/11 WD)
+! changed Injector module and Injector Linac layout to adjust for 3* module (8/3/11 WD)
+! include place holder for left out modules with quadrupole unit below position of ceiling support ... 
+! (position of quad -1.293 m or - 9.093 from module position)
+!================================================================================================
+!================================================================================================
+
+!================================================================================================
+!
+!---------- LINAC 1: 4 modules, 1 RF station
+
+!----- Energy profile
+!
+!        E_initial = 130 MeV
+!        E_final   = 700 MeV
+!        Energy Gain = (700-130) = 570 MeV
+
+!----- Model
+!       - Energy gain per module and phase --- from BKR
+!       - Off-crest phase = 25 deg
+!       - CavGainA2.M1.L1 = (285.41-130.00)/8
+!       - CavGainA2.M2.L1 = (433.78-285.41)/8
+!       - CavGainA2.M3.L1 = (572.60-433.78)/8
+!       - CavGainA2.M4.L1 = (700.00-572.60)/8
+!       - RF transverse focusing: Analytical model for standing wave cavity
+!       - No coupler kicks
+
+!================================================================================================
+!================================================================================================
+
+
+!----- Section Markers  
+
+STSEC.L1.L1: MARKER;
+ENSEC.L1.L1: MARKER;
+
+STAC.A2.1.L1:  MARKER;
+MIAC.A2.1.L1:  MARKER;
+ENAC.A2.1.L1:  MARKER;
+STAC.A2.2.L1:  MARKER;
+MIAC.A2.2.L1:  MARKER;
+ENAC.A2.2.L1:  MARKER;
+STAC.A2.3.L1:  MARKER;
+MIAC.A2.3.L1:  MARKER;
+ENAC.A2.3.L1:  MARKER; 
+STAC.A2.4.L1:  MARKER;
+MIAC.A2.4.L1:  MARKER;
+ENAC.A2.4.L1:  MARKER;
+
+
+!----- BPM at ACC end (TYP BPM)
+BPMC.L1: MONITOR;  ! Cold Button BPM
+BPMR.L1: MONITOR;  ! Re-Entrant BPM
+
+!----- BPM at ACC end (TYP BPM)
+BPMC0.L1: MARKER;  ! Cold Button BPM
+BPMR0.L1: MARKER;  ! Re-Entrant BPM
+
+
+!----- Vacuum Markers and Vacuum Components
+VCST40T78.L1: MARKER;
+VCST78T40.L1: MARKER;
+
+
+!----- Drift for feed and turn box 
+!      Endpoint means bypass to beam distance of 0.7 m and warm vaccuum valve
+CFB.L1:  DRIFT, L = 3.35; 
+CTB.L1:  DRIFT, L = 3.25; 
+
+!-----  Cavity Wake field dummies
+!LTWAKECAV:  DRIFT, L=0.0;
+
+!----- Steerer at ACC end
+!      (zero length kicker, in reality cos(phi) winding in quadrupole)
+CX.L1: HKICKER;
+CY.L1: VKICKER;
+L1COR: LINE=(CX.L1, CY.L1);
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Definition of RF modules: April 2021, in DEFS file
+
+comment
+!----- Here for info
+MIAC: MARKER   
+!--- 1.3 GHz Module
+D01416: DRIFT, L = 0.1416
+D02043: DRIFT, L = 0.2043
+D00432: Drift, L = 0.0432
+D0085:  DRIFT, L = 0.0850
+D00729: DRIFT, L = 0.0729
+!D0300:  DRIFT, L = 0.300     ! defined in DEFS file
+ACC(START,MIAC,C,BPM,Q,COR,END): LINE =                        &
+    (START, D0080, 4*(D01416, C, D02043, LTWAKECAV), MIAC,     &
+     4*(D01416, C, D02043, LTWAKECAV),                         &
+     D00432,Q,D00432,COR, D0085, BPM, D0085, D00729, D0300, END);
+endcomment
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Energy profile in L1 (one RF station)
+
+comment
+!--- Design energy profile --- not used 
+!    Equal distribution of energy gain between modules and cavities
+Gain.L1 = 700.0 - 130.0;
+phi_L1 = 0.0;    ! off-crest phase in deg
+!--- Energy gain per module
+GainA2.M1.L1 = Gain.L1/4;
+GainA2.M2.L1 = Gain.L1/4;
+GainA2.M3.L1 = Gain.L1/4;
+GainA2.M4.L1 = Gain.L1/4;
+!--- Energy gain per cavity
+GainA2.M1.Cav.L1 = GainA2.M1.L1/8;
+GainA2.M2.Cav.L1 = GainA2.M2.L1/8;
+GainA2.M3.Cav.L1 = GainA2.M3.L1/8;
+GainA2.M4.Cav.L1 = GainA2.M4.L1/8;
+!--- Voltage gain per cavity
+VoltA2.M1.Cav.L1 = GainA2.M1.Cav.L1/cos(phi_L1*pi/180);
+VoltA2.M2.Cav.L1 = GainA2.M2.Cav.L1/cos(phi_L1*pi/180);
+VoltA2.M3.Cav.L1 = GainA2.M3.Cav.L1/cos(phi_L1*pi/180);
+VoltA2.M4.Cav.L1 = GainA2.M4.Cav.L1/cos(phi_L1*pi/180);
+!----- Single L1 Cavity (MAD definition)
+C.A2.L1: LCAVITY, L=0.1153*9, PHI0=0/360,         &
+                  DELTAE=GainA2.L1.Cav,           &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+!--- Setting for design energy profile, no coupler kicks
+set, Q.A2.1.L1[k1], +0.307940154760;
+set, Q.A2.2.L1[k1], -0.296160233387;
+set, Q.A2.3.L1[k1], +0.198441048106;
+set, Q.A2.4.L1[k1], -0.203133591328;
+endcomment
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- 26.02.2018: Energy profile in L1 used in operations (from BKR)
+
+!--- Off-crest phase in deg
+
+phi_L1 = 25.0;
+
+!--- Energy gain per module (from BKR at off-crest phase)
+
+GainA2.M1.L1 = (285.41-130.00);
+GainA2.M2.L1 = (433.78-285.41);
+GainA2.M3.L1 = (572.60-433.78);
+GainA2.M4.L1 = (700.00-572.60);
+
+!--- Energy gain per cavity in M1,M2,M3,M4
+
+GainA2.M1.Cav.L1 = GainA2.M1.L1/8;
+GainA2.M2.Cav.L1 = GainA2.M2.L1/8;
+GainA2.M3.Cav.L1 = GainA2.M3.L1/8;
+GainA2.M4.Cav.L1 = GainA2.M4.L1/8;
+
+!--- Voltage per cavity
+
+VoltA2.M1.Cav.L1 = GainA2.M1.Cav.L1/cos(phi_L1*pi/180);
+VoltA2.M2.Cav.L1 = GainA2.M2.Cav.L1/cos(phi_L1*pi/180);
+VoltA2.M3.Cav.L1 = GainA2.M3.Cav.L1/cos(phi_L1*pi/180);
+VoltA2.M4.Cav.L1 = GainA2.M4.Cav.L1/cos(phi_L1*pi/180);
+
+ 
+!----- Linac 1 cavities (MAD definition)
+
+C.A2.1.L1: LCAVITY, L=0.1153*9, PHI0=phi_L1/360,    &
+                  DELTAE=VoltA2.M1.Cav.L1,          &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+
+C.A2.2.L1: LCAVITY, L=0.1153*9, PHI0=phi_L1/360,    &
+                  DELTAE=VoltA2.M2.Cav.L1,          &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+
+C.A2.3.L1: LCAVITY, L=0.1153*9, PHI0=phi_L1/360,    &
+                  DELTAE=VoltA2.M3.Cav.L1,          &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+
+C.A2.4.L1: LCAVITY, L=0.1153*9, PHI0=phi_L1/360,    &
+                  DELTAE=VoltA2.M4.Cav.L1,          &
+                  FREQ=1300000000.0*1e-6,volterr=20*relerr;
+
+
+!----- Quadrupoles in L1
+
+!--- 17.04.2018: BKR energy gain, off-crest=25 deg, no Coupler Kicks
+Q.A2.1.L1: Quadrupole, L = L_Q_eff, K1 = +0.285794743951;
+Q.A2.2.L1: Quadrupole, L = L_Q_eff, K1 = -0.292396459443;
+Q.A2.3.L1: Quadrupole, L = L_Q_eff, K1 = +0.215773246945;
+Q.A2.4.L1: Quadrupole, L = L_Q_eff, K1 = -0.220846590429;
+
+
+!--- Linac L1C: 4 modules, no Coupler Kicks
+
+ACC2.1: LINE=(ACC(STAC.A2.1.L1, MIAC.A2.1.L1, C.A2.1.L1, BPMC.L1, &
+                  Q.A2.1.L1, L1COR, ENAC.A2.1.L1));
+ACC2.2: LINE=(ACC(STAC.A2.2.L1, MIAC.A2.2.L1, C.A2.2.L1, BPMR.L1, &
+                  Q.A2.2.L1, L1COR, ENAC.A2.2.L1));
+ACC2.3: LINE=(ACC(STAC.A2.3.L1, MIAC.A2.3.L1, C.A2.3.L1, BPMC.L1, &
+                  Q.A2.3.L1, L1COR, ENAC.A2.3.L1));
+ACC2.4: LINE=(ACC(STAC.A2.4.L1, MIAC.A2.4.L1, C.A2.4.L1, BPMR.L1, &
+                  Q.A2.4.L1, L1COR, ENAC.A2.4.L1));
+
+L1C: LINE = (ACC2.1, ACC2.2, ACC2.3, ACC2.4);
+
+
+comment
+!--- Linac L1C: 4 modules, with Coupler Kicks
+!call, 'SET_MODEL_CouplerKick_L1.txm'
+!
+!--- 17.04.2018: BKR energy gain, off-crest=25 deg, with Coupler Kicks
+Q.A2.1.L1: Quadrupole, L = L_Q_eff, K1 = +0.281555941470;
+Q.A2.2.L1: Quadrupole, L = L_Q_eff, K1 = -0.299064888676;
+Q.A2.3.L1: Quadrupole, L = L_Q_eff, K1 = +0.213477487703;
+Q.A2.4.L1: Quadrupole, L = L_Q_eff, K1 = -0.220262727501;
+endcomment
+
+
+!----- Linac L1
+
+L1: LINE=(STSEC.L1.L1, VCST40T78.L1, CFB.L1, L1C, CTB.L1,  &
+          VCST78T40.L1, ENSEC.L1.L1);
+
+!------------------------------------------------------------------------------------------------
+
+!----- L1 linac without cavity focussing: for studies
+
+!--- Length of cavity (9-cells)
+
+C.00.L1: DRIFT, L = 1.0377;     ! 0.1153*9=1.0377
+
+!--- Single cavity (9-cells) with surrounding drifts
+!ACC_CAV0: DRIFT, L = 1.3836;   ! 0.1416+1.0377+0.2043 = 1.3836
+
+ACC2.1.F1: LINE=(ACC(STAC.A2.1.L1, MIAC.A2.1.L1, C.00.L1, BPMC.L1,  &
+                     Q.A2.1.L1, L1COR, ENAC.A2.1.L1));
+ACC2.2.D1: LINE=(ACC(STAC.A2.2.L1, MIAC.A2.2.L1, C.00.L1, BPMR.L1,  &
+                     Q.A2.2.L1, L1COR, ENAC.A2.2.L1));
+ACC2.3.F2: LINE=(ACC(STAC.A2.3.L1, MIAC.A2.3.L1, C.00.L1, BPMC.L1,  &
+                     Q.A2.3.L1, L1COR, ENAC.A2.3.L1));
+ACC2.4.D2: LINE=(ACC(STAC.A2.4.L1, MIAC.A2.4.L1, C.00.L1, BPMR.L1,  &
+                     Q.A2.4.L1, L1COR, ENAC.A2.4.L1));
+
+
+fodo_L1_RFoff: Line = (ACC2.1.F1, ACC2.2.D1);
+
+L1C_RFoff: LINE = (ACC2.1.F1, ACC2.2.D1, ACC2.3.F2, ACC2.4.D2);
+
+L1_RFoff:  LINE = (STSEC.L1.L1, VCST40T78.L1, CFB.L1, nL1C, CTB.L1,  &
+              VCST78T40.L1, ENSEC.L1.L1);
+
+!================================================================================================
+!================================================================================================
+

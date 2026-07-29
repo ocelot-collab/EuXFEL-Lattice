@@ -1,0 +1,460 @@
+!===================================================================================
+!
+!--- November 2022, XFEL lattice --- B1 beamline
+!
+!===================================================================================
+!
+!  Section B1:     B1:     Line = (STSEC.B1.B1, B1U, B1M, B1DIA, B1TL2, ENSEC.B1.B1)
+!
+!  Section B1DUMP: B1DUMP: Line = (STSEC.B1.B1, B1U, B1M, B1DIA, B1SPEC)
+!
+!===================================================================================
+
+
+!--- Section and Subsection Markers
+
+STSEC.B1.B1:   MARKER;
+ENSEC.B1.B1:   MARKER;
+STSEC.B1D.B1D: MARKER;
+ENSEC.B1D.B1D: MARKER;
+
+STSUB.B1M.B1:  MARKER;
+ENSUB.B1M.B1:  MARKER;
+STSUB.B1T.B1:  MARKER;
+ENSUB.B1T.B1:  MARKER;
+
+
+!----- Lattice Markers 
+
+STLAT.B1M.B1:  MARKER;
+ENLAT.B1M.B1:  MARKER;
+STLAT.DIA.B1:  MARKER;
+ENLAT.DIA.B1:  MARKER;
+
+
+!----- Matching Markers
+
+MATCH.B1.B1:   MARKER;    ! at the entrance of B1 section 
+MATCH.B1M.B1:  MARKER;    ! at the exit of BC1 bunch compressor
+MATCH.TDS.B1:  MARKER;    ! at TDS entrance
+MATCH.DIA.B1:  MARKER;    ! at B1 diagnoctic FODO lattice, at OTRB.B1
+
+
+!----- Markers for Substitutable Block (different diagnostic FODO lattices) 
+
+STBLOCK.DIA.B1: MARKER;
+ENBLOCK.DIA.B1: MARKER;
+
+
+!----- Girders Markers
+
+STGRD.G1.B1: MARKER;
+ENGRD.G1.B1: MARKER;
+STGRD.G2.B1: MARKER;
+ENGRD.G2.B1: MARKER;
+STGRD.G3.B1: MARKER;
+ENGRD.G3.B1: MARKER;
+STGRD.G4.B1: MARKER;
+ENGRD.G4.B1: MARKER;
+STGRD.G5.B1: MARKER;
+ENGRD.G5.B1: MARKER;
+STGRD.G6.B1: MARKER;
+ENGRD.G6.B1: MARKER;
+STGRD.G7.B1: MARKER;
+ENGRD.G7.B1: MARKER;
+STGRD.G8.B1: MARKER;
+ENGRD.G8.B1: MARKER;
+STGRD.G9.B1: MARKER;
+ENGRD.G9.B1: MARKER;
+
+
+!----- Diagnostics Marker
+
+BPMA.B1:   MONITOR;
+BPMS.B1:   MONITOR;
+MIDBPMF.B1: MARKER;
+BPMF.B1:   MONITOR;
+BPMA.B1D:  MONITOR;
+OTRA.B1:   MARKER;
+OTRB.B1:   MARKER;
+OTRS.B1:   MARKER;
+OTRC.B1D:  MARKER;
+DCM.B1:    MARKER;
+BAM.B1:    MARKER;
+TORA.B1:   MARKER;
+TORA.B1D:  MARKER;
+EOD.B1:    MARKER;
+SRM.B1:    MARKER;
+BCM.B1:    MARKER;
+CRD.B1:    MARKER;
+
+
+!----- Vacuum Markers and Vacuum Components
+
+VCST40T400Y.B1: MARKER;
+VCST400Y.B1:    MARKER;
+VCST400YT40.B1: MARKER;
+VCST40Y.B1:     MARKER;
+VCST40T60.B1D:  MARKER;
+
+VCDST.B1: VCDST;     ! VCDST is defined in DEFS
+
+
+!----- Collimators
+
+COLO.B1:   ECOL, XSIZE=0.02, YSIZE = 0.02;
+COLU.B1:   ECOL, XSIZE=0.02, YSIZE = 0.02;
+
+
+!----- LOLA CAVITY FOR DIAGNOSTICS (MAD definition)
+
+TDSB.B1: LCAVITY, L=1.5, PHI0=0,             &
+                  VOLT=0, FREQ=2800000000.0*1e-6;
+
+
+!----- Longitudinal Feedback Structures LFS 
+
+LFS.B1: DRIFT, L=0.6;
+
+
+!----- Correctors (L_yoke is used)
+
+CIX.B1:  HKICKER, L = 0.1;
+CIY.B1:  VKICKER, L = 0.1;
+CCX.B1:  HKICKER, L = 0.1;
+CCY.B1:  VKICKER, L = 0.1;
+CFX.B1:  HKICKER, L = 0.1;
+
+CCX.B1D: HKICKER, L = 0.1;
+CCY.B1D: VKICKER, L = 0.1;
+
+
+!----- Correction coils
+
+CBB.2.B1:  VKICKER, L=0;
+CBB.3.B1:  VKICKER, L=0;
+CBB.4.B1:  VKICKER, L=0;
+CBB.1.B1D: VKICKER, L=0;
+
+
+!----- Vertical kickers in diagnostic section
+
+KAY.1.B1: VKICKER, L = 0.35, KICK = 0.0;
+KAY.2.B1: VKICKER, L = 0.35, KICK = 0.0;
+KAY.3.B1: VKICKER, L = 0.35, KICK = 0.0;
+KAY.4.B1: VKICKER, L = 0.35, KICK = 0.0;
+
+!***********************************************************************************
+
+!----- Matching from Linac 1: B1U
+
+!--- Quadrupoles
+
+!----- Setting for design angle in BC1 = 2.862780149138321 deg
+QI.1.B1: Quadrupole, L = L_QI_eff, K1 =  0.0;
+QD.3.B1: Quadrupole, L = L_QD_eff, K1 = +0.796012653121;
+QD.4.B1: Quadrupole, L = L_QD_eff, K1 = -0.728595636433;
+
+comment
+!----- Setting for angle in BC1 = +3.05 deg --- Bolko email 03.08.2018
+QI.1.B1: Quadrupole, L = L_QI_eff, K1 =  0.0;
+QD.3.B1: Quadrupole, L = L_QD_eff, K1 = +0.794681845248;
+QD.4.B1: Quadrupole, L = L_QD_eff, K1 = -0.728950560695;
+endcomment
+
+B1U: LINE = (STSUB.B1M.B1, MATCH.B1.B1,                   & 
+             D012573, VCDST.B1, D007427,                  &
+             STGRD.G1.B1,   &
+             D0131, TORA.B1, D0248, BPMA.B1,              &
+             D015215, QI.1.B1, D008215, CIY.B1, D0369,    &
+             DCM.B1, D0530, D0200, D0116, CIX.B1, D0884,  &
+             ENGRD.G1.B1,   &
+             D0050,         &
+             STGRD.G2.B1,   &
+             D0330, EOD.B1, D0349, BPMA.B1,               &
+             D015265, QD.3.B1, D013165, CCX.B1, D0150,    &
+             BCM.B1, D0500, OTRA.B1,                      &
+             D023165, QD.4.B1, D010165, CCY.B1, D0103,    &
+             BAM.B1, D0125, &
+             D01275,MIDBPMF.B1,D0096,BPMF.B1,D00315,D0047,&
+             ENGRD.G2.B1,   &
+             D0250);
+
+!***********************************************************************************
+
+
+!----- Bunch Compressor Chicane: B1M 
+
+!--- Dipoles
+
+!L_BB_yoke = 0.5;        ! defined in DEFS file
+!L_BB_eff  = 0.5582;     ! defined in DEFS file
+
+!--- Model with L_yoke is used
+            
+l_b1 = L_BB_yoke;
+
+ang_b1 = 0.049964939363198;      ! 2.862780149138321 deg - design value
+!ang_b1 = 3.05 * pi / 180;       ! 0.053232542185827 rad - Bolko, email 03.08.2018, used
+!!ang_b1 = 2.89 * pi / 180;      ! 0.050440015382636 rad - Bolko, email 12.04.2017
+!!ang_b1 = 3.09 * pi / 180;      ! 0.053930673886625 rad - used in operations in Spring 2017
+
+arc_b1 = l_b1*ang_b1/sin(ang_b1);
+
+BB.1.1.B1: SBEND, L = arc_b1, ANGLE =  ang_b1, &
+           E1 = 0, E2 = ang_b1, TILT = 1.570796326795;  
+BB.1.2.B1: SBEND, L = arc_b1, ANGLE = -ang_b1, &
+           E1 = -ang_b1, E2 = 0, TILT = 1.570796326795;  
+BB.1.3.B1: SBEND, L = arc_b1, ANGLE = -ang_b1, &
+           E1 = 0, E2 = -ang_b1, TILT = 1.570796326795;  
+BB.1.4.B1: SBEND, L = arc_b1, ANGLE =  ang_b1, &
+           E1 = ang_b1, E2 = 0, TILT = 1.570796326795;
+
+CD8900A = 8.5 / cos(ang_b1);
+CD8900B = 1.05346 / cos(ang_b1);
+CD8900C = (8.5-1.05346) / cos(ang_b1);
+
+D89B1A: DRIFT, L=CD8900A;
+D89B1B: DRIFT, L=CD8900B;  
+D89B1C: DRIFT, L=CD8900C;
+
+B1M: LINE = (STLAT.B1M.B1, D0100,                                 &
+             BB.1.1.B1, VCST40T400Y.B1, D89B1A, VCST400Y.B1,      &
+             BB.1.2.B1,CBB.2.B1, D03975, COLO.B1, D0085, COLU.B1, &
+             D03825, BPMS.B1, D0310, OTRS.B1, D0325,              &
+             BB.1.3.B1,CBB.3.B1, VCST400YT40.B1, D89B1B, SRM.B1,  &
+             D89B1C, VCST40Y.B1,                                  &
+             BB.1.4.B1,CBB.4.B1,                                  &
+             D0100, ENLAT.B1M.B1, MATCH.B1M.B1);
+
+!***********************************************************************************
+
+
+!----- Diagnostic Section: B1DIA = (B1TTDS, B1DIAFODO, B1TSPEC)
+
+
+!----- Section between B1M chicane and TDS: B1TTDS
+
+!--- Transverse Deflecting Structure (TDS)
+
+LTWAKETDS: DRIFT, L=0.0;
+B1TDS: LINE = (D0100, TDSB.B1, LTWAKETDS, D0100);
+
+
+!--- Quadrupoles
+
+!----- Setting for design angle in BC1 = 2.862780149138321 deg
+QI.5.B1:  Quadrupole, L = L_QI_eff, K1 = -0.913739960105;
+QI.6.B1:  Quadrupole, L = L_QI_eff, K1 = +0.041535729408;
+QI.7.B1:  Quadrupole, L = L_QI_eff, K1 = +0.675538486697;
+
+comment
+!----- Setting for angle in BC1 = +3.05 deg --- Bolko email 03.08.2018
+QI.5.B1:  Quadrupole, L = L_QI_eff, K1 = -0.908253821686;
+QI.6.B1:  Quadrupole, L = L_QI_eff, K1 = +0.015226619115;
+QI.7.B1:  Quadrupole, L = L_QI_eff, K1 = +0.691130037363;
+endcomment
+
+
+!----- Setting for FODO lattice: mu_x = 76deg, mu_y = 76deg
+QI.8.B1:  Quadrupole, L = L_QI_eff, K1 = +1.044386249198;
+QD.9.B1:  Quadrupole, L = L_QD_eff, K1 = -2.183150525084;
+QI.10.B1: Quadrupole, L = L_QI_eff, K1 = +0.638611884833;
+QI.11.B1: Quadrupole, L = L_QI_eff, K1 = +1.186969649431; 
+QI.12.B1: Quadrupole, L = L_QI_eff, K1 = -1.123733875319; 
+QI.13.B1: Quadrupole, L = L_QI_eff, K1 = -1.435075819585;   ! in B1DIAFODO
+
+
+B1TTDS: LINE = (D0300,       &
+                STGRD.G3.B1, &
+                D01225, BAM.B1, D0125, D00315,BPMF.B1,D0096,MIDBPMF.B1,D01275, &
+                D02273, TORA.B1, D01542, CIY.B1, D009715, QI.5.B1, D044215,    &
+                EOD.B1, D0223, CIX.B1, D009715, QI.6.B1, D015015, BCM.B1,      &
+                D0473, OTRA.B1, D0108,                                         &
+                ENGRD.G3.B1, &
+                D0050,       &
+                STGRD.G4.B1, &
+                D0378, BPMA.B1, D015315, QI.7.B1, D008115,                     &
+                MATCH.TDS.B1, STBLOCK.DIA.B1, B1TDS,                           &
+                D008115, QI.8.B1, D028115,                                     &
+                ENGRD.G4.B1, &
+                D0150,       &
+                STGRD.G5.B1, &
+                D0100, CIX.B1, D0379, BPMA.B1, D015265, QD.9.B1, D013165,      &
+                CCY.B1, D103115, QI.10.B1, D123015, CIX.B1, D0180, BPMA.B1,    &
+                D015215, QI.11.B1, D008115, CIY.B1, D0050,                     &
+                ENGRD.G5.B1, &
+                D0200,       &
+                STGRD.G6.B1, &
+                D0150, KAY.1.B1, D0579, BPMA.B1, D015215, QI.12.B1, D009715,   &
+                CIX.B1, D0215, KAY.2.B1, D0501, CCY.B1, D0147, BPMA.B1,        &
+                D0121);
+
+
+!----- Diagnostic FODO lattice: B1DIA 
+
+!--- Quadrupoles in FODO lattice
+
+!--- Setting for mu_x = 76deg, mu_y = 76deg
+QD.14.B1: Quadrupole, L = L_QD_eff, K1 = +2.859590703573;
+QD.15.B1: Quadrupole, L = L_QD_eff, K1 = -2.859590928913;
+QD.16.B1: Quadrupole, L = L_QD_eff, K1 = +2.859590703573;   ! = QD.14.B1
+
+
+!----- FODO cell starting from 1st OTRB to find the periodic solution
+fodo_B1_DIA: LINE = (MATCH.DIA.B1, OTRB.B1, D0400,               &
+                     ENGRD.G6.B1,    &
+                     D0200,          &
+                     STGRD.G7.B1,    &
+                     D0099, BPMA.B1, D013265, QD.14.B1, D012565, &
+                     KAY.4.B1, D0356, OTRB.B1,                   & 
+                     D0679, BPMA.B1, D015265, QD.15.B1, D010765, & 
+                     CCY.B1, D015418, DCM.B1, D046982, OTRB.B1);
+
+
+B1DIAFODO: LINE = (D003115, QI.13.B1, D012515, KAY.3.B1, D0356,  &
+                   MATCH.DIA.B1, OTRB.B1, D0400,                 &
+                   ENGRD.G6.B1,    &
+                   D0200,          &
+                   STGRD.G7.B1,    &
+                   D0099, BPMA.B1, D013265, QD.14.B1, D012565,   &
+                   KAY.4.B1, D0356, OTRB.B1,                     & 
+                   D0679, BPMA.B1, D015265, QD.15.B1, D010765,   & 
+                   CCY.B1, D015418, DCM.B1,                      &
+                   D046982, OTRB.B1,                             &
+                   D0679, BPMA.B1, D015265, QD.16.B1, D018165,   &
+                   CFX.B1, D0050,                                &
+                   ENGRD.G7.B1,   &
+                   D0200,         &
+                   STGRD.G8.B1,   &
+                   D0300, OTRB.B1, D0315);
+
+
+!----- Section behind FODO lattice (in the front of B1D dump dipole): B1SPEC
+
+!--- Horizontal kickers
+
+KAX.5.B1: HKICKER, L = 0.35, KICK = 0.0;   ! max 2.8E-03, 2.588e-3 provides 20 mm offset at BB entrance
+!KAX.5.B1: RBEND, L = 0.35, ANGLE = 0.0; 
+
+!--- Help elements: +4.0e-6 m
+HELP.1a.B1: RBEND, L=0.000001;
+HELP.1b.B1: RBEND, L=0.000001;
+HELP.2a.B1: RBEND, L=0.000001;
+HELP.2b.B1: RBEND, L=0.000001;
+
+
+!--- Quadrupoles
+
+!--- The same setting of QI.17/18/19.B1 is used for the straight and B1D dump lines
+QI.17.B1: Quadrupole, L = L_QI_eff, K1 = -0.856583340794;  
+QI.18.B1: Quadrupole, L = L_QI_eff, K1 = -1.561856764081; 
+QI.19.B1: Quadrupole, L = L_QI_eff, K1 = +1.523532902577;
+
+B1TSPEC: LINE=(D003115, QI.17.B1, D012615,                       &
+               KAX.5.B1, D0070, KAX.5.B1, D0332, BPMA.B1,        &
+               D015215, HELP.1a.B1,QI.18.B1,HELP.1b.B1,          &
+               D008115, CIY.B1, D0150, CFX.B1, D0080, D0100,     & 
+               BPMA.B1, D015215, HELP.2a.B1,QI.19.B1,HELP.2b.B1, &
+               D009715, D0100, D0900,                            &
+               ENGRD.G8.B1, D039725);
+
+
+!----- Total diagnostic section: B1DIA
+
+B1DIA: LINE = (STLAT.DIA.B1, B1TTDS, B1DIAFODO, B1TSPEC, & 
+               ENLAT.DIA.B1, ENSUB.B1M.B1);
+
+!***********************************************************************************
+
+
+!----- Matching to Linac 2 (behind B1D dimp dipole): B1TL2
+
+BB.0.B1: DRIFT, L = 0.5;                   ! Placeholder in straight line for BB.1.B1D
+
+!--- Drifts to fit the position of dipole
+D0250D:  DRIFT, L = 0.249996;              ! 0.250 - 0.000004
+D0250DD: DRIFT, L = 0.249970+0.000055;     ! 0.250 + 0.000025 
+
+B1BEND0: LINE = (D0250, D000275, BB.0.B1, CBB.1.B1D, D0250D);
+
+
+!--- Quadrupoles 
+
+!--- 23.10.2017: 5pi optics between BC1 and BC2 chicanes
+QD.20.B1: Quadrupole, L = L_QD_eff, K1 = +1.655730772758;
+QD.21.B1: Quadrupole, L = L_QD_eff, K1 = -1.250171810917;  
+QD.22.B1: Quadrupole, L = L_QD_eff, K1 = -0.439724828262;
+
+B1TL2: LINE = (STSUB.B1T.B1, B1BEND0, D1600, D0100,                & 
+               STGRD.G9.B1,    &
+               D003165, QD.20.B1, D011165, CCX.B1, D0150, TORA.B1, & 
+               D015165, QD.21.B1, D012165, CCY.B1, D0150, BPMA.B1, &
+               D014165, QD.22.B1, D013165, ENBLOCK.DIA.B1,         &
+               ENGRD.G9.B1,    &
+               D007423, VCDST.B1, D012577, ENSUB.B1T.B1);
+
+!***********************************************************************************
+
+!----- Total B1 section: B1
+
+B1: LINE = (STSEC.B1.B1, B1U, B1M, B1DIA, B1TL2, ENSEC.B1.B1);
+
+!***********************************************************************************
+!***********************************************************************************
+
+
+!----- Diagnostic SPECTROMETER: B1SPEC 
+
+DUFLANGE.B1D: MARKER;
+DUABSORB.B1D: MARKER;
+
+!--- Model with L_yoke is used
+
+l_b1d = L_BB_yoke;
+
+ang_b1d = 12/180*acos(-1);
+ang_b1d_ee = ang_b1d / 2;
+arc_b1d    = (l_b1d*ang_b1d)/sin(ang_b1d);
+
+BB.1.B1D: SBEND, L = arc_b1d, ANGLE = ang_b1d,   &
+                 E1 = 0, E2 = ang_b1d,           &
+                 TILT = 1.570796326795;
+
+
+B1DBEND: LINE = (D0250, D000275, BB.1.B1D, D000275, D0250DD);
+
+
+!--- Quadrupoles 
+
+QD.25.B1D: Quadrupole, L = L_QD_eff, K1 = -3.0;
+QD.26.B1D: Quadrupole, L = L_QD_eff, K1 =  0.0;
+
+
+B1SPEC: LINE = (DKICKSEP, STSEC.B1D.B1D,                         &
+                B1DBEND, D0714945, D0300, D0050, BPMA.B1D,       &
+                D015065, QD.25.B1D, D013165, CCY.B1D, D00280,    &
+                D120365, QD.26.B1D, D068965, BPMA.B1D,           &
+                D0181, CCX.B1D, D0050, D0200,                    &
+                D2229, D0105, OTRC.B1D, D01483, TORA.B1D,        &
+                D01543, BPMA.B1D, D02652, VCST40T60.B1D, D01601, &
+                DUFLANGE.B1D, D0724, DUABSORB.B1D, ENSEC.B1D.B1D);
+
+!***********************************************************************************
+
+
+!----- Total section leading to B1D dump: B1DUMP  
+
+B1DUMP: LINE = (STSEC.B1.B1, B1U, B1M, B1DIA, B1SPEC);
+
+
+!--- At B1D dump absorber:
+!         beta_x = 356.370 m
+!         beta_y = 132.853 m
+!         Dy  =  0.0023m
+!         Dpy = -0.057
+
+!===================================================================================
+!===================================================================================
+
+

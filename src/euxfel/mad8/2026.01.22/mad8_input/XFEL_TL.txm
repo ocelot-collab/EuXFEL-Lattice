@@ -1,0 +1,622 @@
+!================================================================================================
+!
+!--- September 2022, XFEL lattice --- Section TL
+!
+!================================================================================================
+!
+!  Section TL:   TL:  LINE = (STSEC.TL.TL, TL1, TL2TL, TL3TL, TL5TL, ENSEC.TL.TL)
+!
+!  Can be different optics in CL: FODO transport, Mode B, Mode A
+!
+!================================================================================================
+!
+!--- July 2019:    T20 is added
+!
+!================================================================================================
+
+!----- Section and Subsection Markers
+
+STSEC.TLD.TLD: MARKER;   ! used in this file
+ENSEC.TLD.TLD: MARKER;   ! used in TLD file
+
+STSEC.T1.T1:   MARKER;   ! used in this file
+ENSEC.T1.T1:   MARKER;   ! used in South file
+STSUB.T1M.T1:  MARKER;   ! used in this file
+
+STSEC.T20.T20: MARKER;   ! used in this file 
+ENSEC.T20.T20: MARKER;   ! used in T20 file 
+
+
+STSEC.TL.TL:  MARKER;
+ENSEC.TL.TL:  MARKER;
+
+STSUB.TL1.TL: MARKER;   ! Start of matching and IBFB section
+ENSUB.TL1.TL: MARKER;
+
+STSUB.TL2.TL: MARKER;   ! Start of KS kickers to TLD line
+ENSUB.TL2.TL: MARKER;
+
+STSUB.TL3.TL: MARKER;   ! Start of first septum to TLD line
+ENSUB.TL3.TL: MARKER;
+
+STSUB.TL4.TL: MARKER;   ! Start of KL kickers to South line
+ENSUB.TL4.TL: MARKER;
+
+STSUB.TL5.TL: MARKER;   ! Start of first septum to South line
+ENSUB.TL5.TL: MARKER;
+
+STSUB.TL6.TL: MARKER;   ! Between T20 and T2
+ENSUB.TL6.TL: MARKER;
+
+STSUB.TL20.TL: MARKER;  ! Start of KL_20 kickers to T20 line
+ENSUB.TL20.TL: MARKER;  
+
+
+!----- Diagnostics Marker
+
+BPMA.TL:  MONITOR;
+BPMD.TL:  MONITOR;
+OTRBW.TL: MARKER;
+OTRE.TL:  MARKER;
+DCM.TL:   MARKER;
+BAM.TL:   MARKER;
+TORA.TL:  MARKER;
+CRD.TL:   MARKER;
+
+
+!----- Vacuum Markers and Vacuum Components 
+
+VCST40T98.TL:   MARKER;  ! Transition 40 to 100
+VCST98T40.TL:   MARKER; 
+VCST40T30.TL:   MARKER; 
+VCST30T40.TL:   MARKER; 
+VCST98T40.TLD:  MARKER; 
+VCST98T40.T1:   MARKER;
+VCST98T40.T20:  MARKER; 
+
+VCV100.TL: DRIFT, L = 0.085;    ! 100 mm diameter valve 
+VCB100.TL: DRIFT, L = 0.180;    ! 100 mm bellow
+VCABSA.TL: DRIFT, L = 0.610;    ! Absorber and pump cross in front of Septum
+
+
+!----- Correctors (L_yoke is used)
+
+CFX.TL: HKICKER, L = 0.100;
+CFY.TL: VKICKER, L = 0.100;
+CHX.TL: HKICKER, L = 0.200;
+CHY.TL: VKICKER, L = 0.200;
+CNX.TL: HKICKER, L = 0.300;   !  HERA CH, Gap 100 mm
+CNY.TL: VKICKER, L = 0.300;   !  HERA CV, Gap 100 mm
+
+
+!----- IBFB BPMs
+
+BPMI.X1.TL: Monitor;
+BPMI.Y1.TL: Monitor;
+BPMI.X2.TL: Monitor;
+BPMI.Y2.TL: Monitor;
+BPMI.X3.TL: Monitor;
+BPMI.Y3.TL: Monitor;
+BPMI.X4.TL: Monitor;
+BPMI.Y4.TL: Monitor;
+
+MIDBPMI.X1.TL: MARKER;
+MIDBPMI.Y1.TL: MARKER;
+MIDBPMI.X2.TL: MARKER;
+MIDBPMI.Y2.TL: MARKER;
+MIDBPMI.X3.TL: MARKER;
+MIDBPMI.Y3.TL: MARKER;
+MIDBPMI.X4.TL: MARKER;
+MIDBPMI.Y4.TL: MARKER;
+
+
+!--- IBFB Kickers
+
+KFB0.TL:    Kicker,  L = 2.0;
+KFBX.11.TL: Hkicker, L = 2.0, kick = 0.0;
+KFBX.12.TL: Hkicker, L = 2.0, kick = 0.0;
+KFBX.21.TL: Hkicker, L = 2.0, kick = 0.0;
+KFBX.22.TL: Hkicker, L = 2.0, kick = 0.0;
+
+KFBY.11.TL: Vkicker, L = 2.0, kick = 0.0;
+KFBY.12.TL: Vkicker, L = 2.0, kick = 0.0;
+KFBY.21.TL: Vkicker, L = 2.0, kick = 0.0;
+KFBY.22.TL: Vkicker, L = 2.0, kick = 0.0;
+
+!************************************************************************************************
+!************************************************************************************************
+
+!----- 30 m FODO cells (mux = muy = 90 degree)
+
+!--- There are 3 QK (HERA quad, L_yoke = 1 m) quadrupoles in 30m FODO lattice:
+!      1) QK.1.TL behind 1st TLD   septum
+!      2) QK.2.TL behind 1st South septum
+!      3) QK.2.TL behind 1st T20   septum
+
+!--- Scaled values for quadrupole strength are used (phase advances are not exactly 90 deg)
+
+KFscale = 0.1906949*0.5/0.5321;    ! 0.17919084758504
+
+
+!--- Quadrupoles
+QF.1.TL:  Quadrupole, L = L_QF_eff, K1 = +KFscale;  
+QF.2.TL:  Quadrupole, L = L_QF_eff, K1 = -KFscale;
+
+
+!--- FODO cell with two QF quadrupoles to find the periodic solution
+
+D14250: Drift, L = 14.250;
+
+fodo_TL: Line = (QF.1.TL, fD0125, D14250, fD0125, QF.2.TL, &
+                          fD0125, D14250, fD0125);
+dofo_TL: Line = (QF.2.TL, fD0125, D14250, fD0125, QF.1.TL, &
+                          fD0125, D14250, fD0125);
+
+
+!----- FODO cell with one QF and one QK quadrupoles to find the periodic solution
+
+QK.1.TL: Quadrupole, L = L_QK_eff, K1 = +KFscale*(0.5321/1.0552);   !  0.090359600075815
+QK.2.TL: Quadrupole, L = L_QK_eff, K1 = -KFscale*(0.5321/1.0552);   !  0.090359600075815
+
+D14000: Drift, L = 14.000;
+
+fodo_TL_QK: Line = (QF.1.TL, fD0125, D14000, kD0125, QK.2.TL,  &
+                             kD0125, D14000, fD0125);
+dofo_TL_QK: Line = (QF.2.TL, fD0125, D14000, kD0125, QK.1.TL,  &
+                             kD0125, D14000, fD0125);
+
+
+! 30m FODO cells from quadrupole center to find the periodic solution
+
+QFH.1.TL: Quadrupole, L = L_QF_eff/2, K1 = +KFscale;
+QFH.2.TL: Quadrupole, L = L_QF_eff/2, K1 = -KFscale;
+QKH.2.TL: Quadrupole, L = L_QK_eff/2, K1 = -KFscale*(0.5321/1.0552);
+
+fodoH_TL: Line = (QFH.1.TL, fD0125, D14250, fD0125, QFH.2.TL,     &
+                  QFH.2.TL, fD0125, D14250, fD0125, QFH.1.TL);
+
+fodoH_TL_QK: Line = (QFH.1.TL, fD0125, D14000, kD0125, QKH.2.TL,  &
+                     QKH.2.TL, kD0125, D14000, fD0125, QFH.1.TL);
+
+
+!************************************************************************************************
+
+!----- Matching from CL to FODO lattice: CLTS 
+
+!--- Quadrupoles
+
+!--- Setting for collimation optics Mode A
+QH.5.TL:  Quadrupole, L = L_QH_eff, k1 = +0.371663341571;
+QH.6.TL:  Quadrupole, L = L_QH_eff, k1 = +0.346055812122;
+QH.7.TL:  Quadrupole, L = L_QH_eff, k1 = -0.378730158462;
+QH.8.TL:  Quadrupole, L = L_QH_eff, k1 = -0.052774084139;
+QF.8.TL:  Quadrupole, L = L_QF_eff, k1 = +0.185898603935;
+QF.9.TL:  Quadrupole, L = L_QF_eff, k1 = -0.055125871203;
+QF.10.TL: Quadrupole, L = L_QF_eff, k1 = +0.119928929237;
+QF.11.TL: Quadrupole, L = L_QF_eff, k1 = -0.200934713109;
+
+CLTS: Line = (STSEC.TL.TL, STSUB.TL1.TL,                          & 
+              fD0125, D0045, CFY.TL, D0490, D0200, CHX.TL, D0045, &
+              hD0125, QH.5.TL, hD0125, hD0125, QH.6.TL, hD0125,   &
+              D0350, &
+              hD0125, QH.7.TL, hD0125, hD0125, QH.8.TL, hD0125,   &
+              D0075, BPMISEC(MIDBPMI.Y1.TL,BPMI.Y1.TL),           &
+              D0170, CHY.TL, D0040, D0505, D1000, D0410,          &  
+              D0100,D00315,BPMI.X1.TL,D0096,MIDBPMI.X1.TL,D01275,D0100,&
+              fD0125, QF.8.TL, fD0125, D0045, CFX.TL, D0040,      &
+              D0890, TORA.TL, D0100, DCM.TL, D2225,               &
+              QFSEC(BPMA.TL, QF.9.TL, CFY.TL),                    &
+              D3715, QFSEC(BPMA.TL, QF.10.TL, CFX.TL),            &
+              D4585, BPMISEC(MIDBPMI.Y2.TL, BPMI.Y2.TL),          &
+              D0250, KFB0.TL, D0125, fD0125, QF.11.TL, fD0125,    &
+              D0125, KFBY.12.TL, D0100, D0170, CFY.TL,            & 
+              D2030, D0200, D0400, D1495,                         &   
+              BPMISEC(MIDBPMI.X2.TL, BPMI.X2.TL),                 &
+              D0250, KFB0.TL, D0125, fD0125, ENBLOCK.FODO.CL);
+
+!************************************************************************************************
+
+!----- IBFB section 
+
+IBFB: Line = (QF.1.TL, fD0125, D0125, KFBX.12.TL,               &
+              D0100, D0200, CFX.TL,                             &
+              D3900, D0200,OTRBW.TL,D0900, D4600,               &   ! 1st screen
+              KFB0.TL, D0125, fD0125, QF.2.TL, fD0125, D0125,   &
+              KFBY.22.TL,                                       &
+              D0250, BPMISEC(MIDBPMI.Y3.TL, BPMI.Y3.TL),        &
+              D0170, CFY.TL,                                    & 
+              D3325, D0200,OTRBW.TL,D0900, D4600,               &   ! 2d screen
+              KFB0.TL, D0125, fD0125, QF.1.TL, fD0125, D0125,   &
+              KFBX.22.TL,                                       &
+              D0250, BPMISEC(MIDBPMI.X3.TL, BPMI.X3.TL),        &
+              D0170, CFX.TL,                                    &
+              D3325, D0200,OTRBW.TL,D0900, D0150,               &   ! 3d screen
+              BPMISEC(MIDBPMI.Y4.TL, BPMI.Y4.TL),               &
+              D0940, BAM.TL, D0300, BAM.TL, D26775, CRD.TL,     &
+              D2000, D00025, QFSEC(D0000, QF.2.TL, CFY.TL),     &
+              D0250, KMX.3.TL, KNY.3.TL, D0055,                 &
+              BPMISEC(MIDBPMI.X4.TL, BPMI.X4.TL), D0250,        &
+              D0100, BL.1.TL, D0150, D0120, ENSUB.TL1.TL);
+
+!************************************************************************************************
+
+!----- TL1: CLTS and IBFB section 
+
+TL1: Line = (CLTS, IBFB);
+
+!************************************************************************************************
+
+!----- Description of TLD, South, T20 kickers and septa 
+
+!----- Septa: Description in files TLD, South, T20
+
+
+!----- Kickers
+
+!--- KS.x.TL:  to TLD,    horizontal kick
+!--- KL.x.TL:  to South,  vertical   kick
+!--- KL.x.TL:  to T20,    vertical   kick
+
+!LEN_KS = 2.0;     ! defined in DEFS file
+!LEN_KL = 0.93;    ! defined in DEFS file
+
+
+!--- KS.TL:  for TLD,  horizontal kick
+KSK.TL:  Hkicker, L = LEN_KS, KICK  = 0;
+Kick_KSK: Line = (D0100, KSK.TL, D0100);         ! L = 2.2 m
+
+KSPOS.1.TL: Rbend, L = LEN_KS/2, ANGLE = 0;
+KS.1.TL: MARKER;
+KSNEG.1.TL: Rbend, L = LEN_KS/2, ANGLE = 0;
+Kick_KS: Line = (D0100, KSPOS.1.TL, KS.1.TL, KSNEG.1.TL, D0100);  ! L = 2.2 m
+
+
+!--- KL.TL:  for South,  vertical   kick
+KLK.TL:  Vkicker, L = LEN_KL, KICK  = 0;
+
+KL.1.TL: Rbend,   L = LEN_KL, ANGLE = 0, TILT = pi/2;
+KL.2.TL: Rbend,   L = LEN_KL, ANGLE = 0, TILT = pi/2;
+Kick1_KL:  Line = (D0035, KL.1.TL, D0035);          
+Kick2_KL:  Line = (D0035, KL.2.TL, D0035);       ! L = 1 m   
+
+!--- KL.TL: compensation kickers, horizontal kick
+KMX.3.TL: Rbend,   L = LEN_KL*7/10, ANGLE = 0;
+KNY.3.TL: Rbend,   L = LEN_KL*3/10, ANGLE = 0, TILT = pi/2;
+KMX.4.TL: Rbend,   L = LEN_KL*7/10, ANGLE = 0;
+KNY.4.TL: Rbend,   L = LEN_KL*3/10, ANGLE = 0, TILT = pi/2;
+KL.5.TL: Rbend,   L = LEN_KL, ANGLE = 0;
+KL.6.TL: Rbend,   L = LEN_KL, ANGLE = 0;
+
+!--- KL kickers for TD20 line                    
+KLK.20.TL: Vkicker, L = LEN_KL, KICK = 0;        ! nina: Naming ?
+
+KL.20.TL:  Rbend,   L = LEN_KL, ANGLE = 0, TILT = pi/2;
+Kick20_KL: Line = (D0035, KL.20.TL, D0035);     ! L = 1 m
+
+!In total 6 Kicker chambers will be build in 
+KL.200.TL:  Rbend,   L = LEN_KL, ANGLE = 0, TILT = pi/2;
+Kick200_KL: Line = (D0035, KL.200.TL, D0035);     ! L = 1 m
+
+
+!************************************************************************************************
+
+
+!----- HELP elements for survey
+
+!--- HELP elements in the straight line
+HELP.0.TL: Drift, L = 0.000001;
+
+!--- For TLD line  
+HELP.1a.TLD: RBEND, L=0.000001;
+HELP.1b.TLD: RBEND, L=0.000001;
+HELP.2a.TLD: RBEND, L=0.000001;
+HELP.2b.TLD: RBEND, L=0.000001;
+HELP.3a.TLD: RBEND, L=0.000001;
+HELP.3b.TLD: RBEND, L=0.000001;
+
+!--- For South line 
+HELP.1a.T1:  RBEND, L=0.000001;
+HELP.1b.T1:  RBEND, L=0.000001;
+HELP.2a.T1:  RBEND, L=0.000001;
+HELP.2b.T1:  RBEND, L=0.000001;
+
+!--- For T20 line  
+HELP.1a.T20: RBEND, L=0.000001;
+HELP.1b.T20: RBEND, L=0.000001;
+HELP.2a.T20: RBEND, L=0.000001;
+HELP.2b.T20: RBEND, L=0.000001;
+
+!************************************************************************************************
+
+
+!----- Commissioning dipoles for TLD, South, T20 beamlines
+
+!----- Commissioning dipoles for TLD beamline
+BL.1.TL:  Hkicker, L = 0.2, KICK = 0;    ! B_max = 0.31 T 
+BL.2.TL:  Hkicker, L = 0.2, KICK = 0;    ! B_max = 0.31 T
+
+!--- Commissioning dipoles for South beamline
+CHY.21.TL:  Vkicker, L = 0.2, KICK = 0.0;   ! B_max = 0.15 T
+CHY.22.TL:  Vkicker, L = 0.2, KICK = 0.0;   ! B_max = 0.15 T 
+
+!--- Commissioning dipoles for T20 beamline (approximate values):
+CMY.23.TL:  Vkicker, L = 0.3, KICK = 0.0;   ! +0.33925e-03   ! B_max = 0.15 T
+CMY.24.TL:  Vkicker, L = 0.3, KICK = 0.0;   ! +0.42e-03;     ! B_max = 0.15 T 
+
+!************************************************************************************************
+
+
+!----- Description of TLD/South/T20 septa in the straight lines
+
+!--- Septa in the straight line
+BZ.0.TL:  Rbend, L = 1.0, ANGLE = 0;
+BZDRIFT:  Drift, L = 1.0;
+
+!--- Septa for T20 line
+BZ1T20: Drift, L = 1.0;
+BZ2T20: Drift, L = 1.0;
+BZ3T20: Drift, L = 1.0;
+
+
+
+!************************************************************************************************
+
+!----- TL2 line: with TLD kickers and 1st TLD septum
+
+!----- TL2TL:   Straight line
+!----- TL2TLD:  With TLD line elements
+
+!--- October 2021
+!      1) Model using combine functions magnets for 
+!         quadrupole QF.1.TL/QF.2.TL between/after KS kickers and
+!         quadrupole QK.1.TL after 1st TLD septum
+!          a) these quads have different descriptions for straight and TLD lines
+!          b) individual name QF.1.TLD.TL for QF.1.TLD in TLD line
+!          c) individual name QF.2.TLD.TL for QF.2.TLD in TLD line
+!          d) quadrupole QK.1.TL is sliced in N slices: QK.1.TLD.TL 
+!          e) description in Run_TLD.txm file
+
+
+!--- TL2TL: Straight line
+!--- Section with TLD kickers and 1st TLD septum
+!--- TLD kickers KS are defined as RBEND with zero angle 
+!--- TLD septum is defined as RBEND with zero angle (BZ.0.TL)
+!--- TLD HELP elements are drifts of 1e-6 m
+
+TL2TL: Line = (STSUB.TL2.TL, VCST40T30.TL,                              &
+        Kick_KS,D0120,Kick_KS,D0120,Kick_KS,D0120,Kick_KS,D0120,Kick_KS,& 
+        D0075, fD0125, HELP.1a.TLD,QF.1.TL,HELP.1b.TLD, fD0125, D0075,  &
+        Kick_KS,D0120,Kick_KS,D0120,Kick_KS,D0120,Kick_KS,D0120,Kick_KS,&
+        VCST30T40.TL, D0120, D0150, BL.2.TL, D0100, D0170, D0100,       &
+        D0020, D0020, CHX.TL, D0225, KMX.4.TL, KNY.4.TL, D0250, D0010,  &
+!       D0100, D0170, CHX.TL, D0135, D0200, D0250, D0200, D0400,        &
+        D0100,BPMA.TL,D0100,                                            &
+        fD0125, HELP.0.TL, QF.2.TL, HELP.0.TL, fD0125,                  &
+        D0045, CHX.TL, D0200, CHY.TL,                                   &
+        D1480, VCST40T98.TL, D5000, D2300, D01044,                      &
+        D01848, CNX.TL, D0100, CNY.TL, D0100,                           &
+        D0050, BPMD.TL, D0050, D0150, OTRE.TL, D0150,                   &
+        D0085, D05857, VCB100.TL, VCABSA.TL, D0250, D000002, D000002,   &
+        ENSUB.TL2.TL,   & 
+        STSUB.TL3.TL,   &
+        VCST98T40.TL, BZ.0.TL, D0375,                                   &
+        kD0125, HELP.0.TL, QK.1.TL, HELP.0.TL, kD0125, D0375);
+
+
+!--- TL2TLD: Line to TLD dump
+!--- Section with TLD kickers and 1st TLD septum
+!--- TLD kickers KS are defined as RBEND in TLD file
+!--- TLD septa are defined in TLD file
+!--- TLD HELP elements can be defined in RUN file (for survey only)
+!--- Quads QF.1.TLD.TL/QF.2.TLD.TL and QK.1.TLD.Tl are defined in Run file
+
+TL2TLD: Line = (STSUB.TL2.TL, VCST40T30.TL,                             &
+        Kick_KS,D0120,Kick_KS,D0120,Kick_KS,D0120,Kick_KS,D0120,Kick_KS,& 
+        D0075, fD0125, HELP.1a.TLD,QF.1.TLD.TL,HELP.1b.TLD, fD0125, D0075, &
+        Kick_KS,D0120,Kick_KS,D0120,Kick_KS,D0120,Kick_KS,D0120,Kick_KS,&
+        VCST30T40.TL, D0120, D0150, BL.2.TL, D0100, D0170, D0100,       &
+        D0100, D0020, CHX.TL, D0145, KMX.4.TL, KNY.4.TL, D0250, D0010,  &   ! with KL.4.TL
+!       D0100, D0170, CHX.TL, D0135, D0200, D0250, D0200, D0400,        &
+        D0100,BPMA.TL,D0100,                                            &
+        fD0125, HELP.2a.TLD, QF.2.TLD.TL, HELP.2b.TLD, fD0125,          &
+        D0045, CHX.TL, D0200, CHY.TL,                                   &
+        D1480, VCST40T98.TL, D5000, D2300, D01044,                      &
+        D01848, CNX.TL, D0100, CNY.TL, D0100,                           &
+        D0050, BPMD.TL, D0050, D0150, OTRE.TL, D0150,                   &
+        D0085, D05857, VCB100.TL, VCABSA.TL, D0250, D000002, D000002,   &
+        ENSUB.TL2.TL,    & 
+        STSEC.TLD.TLD,   &
+        VCST98T40.TLD, BZ.1.TLD, D0375,                                 &
+        kD0125, HELP.3a.TLD, QK.1.TLD.TL, HELP.3b.TLD, kD0125, D0375);
+
+!************************************************************************************************
+
+
+!----- TL3 line: with KL kickers to South line and 1st T1 septum
+
+!----- TL3TL:  Straight line
+!----- TL3T1:  With T1  line elements
+
+!--- October 2021
+!      1) Model using combine functions magnets for 
+!         quadrupole QF.1.TL after KL.x.T1 kickers and
+!         quadrupole QK.2.TL after 1st septum BZ.1.TL
+!          a) these quads have different descriptions for straight and T1 lines
+!          b) individual name QF.1.T1.TL for QF.1.TL in T1 line
+!          c) quadrupole QK.2.TL is sliced in N slices: QK.2.T1.TL 
+!          d) description in Run_South.txm
+
+
+!--- TL3TL: Straight line
+!--- Section with three TLD septa, KL kickers, 1st T1 septum
+!--- TLD septa are defined as RBEND with zero angle (BZ.0.TL)
+!--- KL kickers to South line are defined as RBEND with zero angle  
+!--- first septum to South line is defined as RBEND with zero angle (BZ.0.TL)
+!--- HELP elements are drifts of 1e-6 m
+
+
+TL3TL: Line = (BZ.0.TL, D0500, BZ.0.TL, D0500, BZ.0.TL, D8475,          &
+               D0100, BPMA.TL, D0100, D0950,                            &
+               fD0125, QF.2.TL, fD0125, D0045, CHY.21.TL,               & 
+               ENSUB.TL3.TL,     & 
+               STSUB.TL4.TL,     &
+               D0125, 3*Kick1_KL, D0210, 2*Kick1_KL, Kick2_KL, D0170,   &
+               CHY.22.TL, D0190, KL.5.TL, D0520, KL.6.TL, D3930,        &
+               CFY.TL, D0400, D00457,                                   &   
+!              CHY.22.TL, D6500, CFY.TL, D0400, D00457,                 &
+               TORA.TL, D01543, BPMA.TL, D0100,                         &
+               fD0125, HELP.0.TL, QF.1.TL, HELP.0.TL, fD0125,           &
+               D0045, CHX.TL, D0200, CHY.TL,                            &
+               D1480, VCST40T98.TL, D5000, D1200, D01047,               &
+               CNX.TL, D0100, CNY.TL, D13847,                           &
+               D0050, BPMD.TL, D0050, D0150, OTRE.TL, D0150,            &
+               VCV100.TL, D05857, VCB100.TL, VCABSA.TL, D0250, D000002, &
+               ENSUB.TL4.TL,    &
+               STSUB.TL5.TL,    & 
+               VCST98T40.TL, BZ.0.TL, D0375,                            &
+               kD0125, HELP.0.TL, QK.2.TL, HELP.0.TL, kD0125,           &
+               D0375, D000002, BZ1T20, D0500);
+
+
+!--- TL3T1: South line to T5D dump (SASE2)
+!--- Section with three TLD septa, KL kickers, 1st T1 septum
+!--- TLD septa are defined as RBEND with zero angle (BZ.0.TL)
+!--- KL kickers are defined as RBEND in South file
+!--- T1  septa are defined in South file 
+!--- T20 septum is defined as RBEND with zero angle (BZ.0.TL)
+!--- T1  HELP elements can be defined in Run file (for survey only)
+
+TL3T1: Line = (BZ.0.TL, D0500, BZ.0.TL, D0500, BZ.0.TL, D8475,          &
+               D0100, BPMA.TL, D0100, D0950,                            &
+               fD0125, QF.2.TL, fD0125, D0045, CHY.21.TL,               & 
+               ENSUB.TL3.TL,    & 
+               STSUB.TL4.TL,    &
+               D0125, 3*Kick1_KL, D0210, 2*Kick1_KL, Kick2_KL, D0170,   &
+               CHY.22.TL, D0190, KL.5.TL, D0520, KL.6.TL, D3930,        &
+               CFY.TL, D0400, D00457,                                   & 
+!              CHY.22.TL, D6500, CFY.TL, D0400, D00457,                 &
+               TORA.TL, D01543, BPMA.TL, D0100,                         &
+               fD0125, HELP.1a.T1, QF.1.T1.TL, HELP.1b.T1, fD0125,      &
+               D0045, CHX.TL, D0200, CHY.TL,                            &
+               D1480, VCST40T98.TL, D5000, D1200, D01047,               &
+               CNX.TL, D0100, CNY.TL, D13847,                           &
+               D0050, BPMD.TL, D0050, D0150, OTRE.TL, D0150,            &
+               VCV100.TL, D05857, VCB100.TL, VCABSA.TL, D0250, D000002, &
+               ENSUB.TL4.TL,    &
+               STSEC.T1.T1, STSUB.T1M.T1,     &
+               VCST98T40.T1, BZ.1.T1, D0375,                            &
+               kD0125, HELP.2a.T1, QK.2.T1.TL, HELP.2b.T1, kD0125,      &
+               D0375, D000002, BZ1T20, D0500);
+
+!************************************************************************************************
+
+
+!----- TL5 line: with T1 septa, T20 kickers and 1st T20 septum
+
+!----- TL5TL:   Straight line
+!----- TL5T20:  With T20 line elements
+
+!--- October 2021
+!      1) Revision of diagnostic
+!          a) Commissioning dipoles CHY.23.TL/CHY.24.TL are added
+!          b) TOR, BPM and in T20 arc
+!      2) Model using combine functions magnets for 
+!         quadrupole QF.1.TL after KL.T20 kickers and
+!         quadrupole QK.2.TL after 1st T20 septum
+!          a) these quads have different descriptions for straight and T20 lines
+!          b) individual name QF.1.T20.TL for QF.1.TL in T20 line
+!          c) quadrupole QK.2.TL is sliced in N slices: QK.2.T20.TL 
+!          d) description in Run_T20.txm
+
+!--- July 2019: with diagnostic elements like in the front of T1 septum
+!               the length between QF.1.TL and QK.2.TL will be 15.00012 m
+!               (15.0 + 0.0001 + 0.00002), without 2*HELP=2e-6
+!               nina: to keep the length of 15 m:
+!                a) drift D000002 is not used, 
+!                b) drift 0.0001 is subtracted from D13847  
+
+D13846: Drift, L = 1.3847 - 0.0001;
+
+
+!----- TL5TL: Straight line
+!----- Section with three T1 septa, two T20 kickers, 1st T20 septum
+!----- T1  septa   are defined as RBEND with zero angle (BZ.0.TL)
+!----- T20 kickers are defined as RBEND with zero angle 
+!----- T20 septum  is  defined as RBEND with zero angle (BZ.0.TL)
+!----- TD20 HELP elements are drifts of 1e-6 m
+
+comment
+!2025 This line when T20 is included
+TL5TL: Line = (BZ.0.TL, D0500, BZ.0.TL, D0500, BZ.0.TL, D1075,  & 
+               ENSUB.TL5.TL,                                    &
+               STSUB.TL20.TL,                                   &
+               CMY.23.TL, D0125,                               &
+               Kick20_KL,Kick20_KL, 3*Kick200_KL, D0170,        & 
+               CMY.24.TL, D0555 , D0300, D00457,                &
+               TORA.TL, D00543, D0100, BPMA.TL, D0100,          &
+               fD0125, HELP.0.TL, QF.1.TL, HELP.0.TL, fD0125,   &
+               D0045, CHX.TL, D0200, CHY.TL,                    &
+               D1480, VCST40T98.TL, D5000, D1200, D01047,       &
+               CNX.TL, D0100, CNY.TL, D13846,                   &
+               D0050, BPMD.TL, D0050, D0150,          D0150,    &
+               VCV100.TL, D05857, VCB100.TL, VCABSA.TL, D0250,  &
+               ENSUB.TL20.TL,STSUB.TL6.TL,                      &
+               VCST98T40.TL, BZ2T20, D0375,                     &
+               kD0125, HELP.0.TL, QK.2.TL, HELP.0.TL, kD0125,   & 
+               D0375, D000002, D000002, ENSUB.TL6.TL, ENSEC.TL.TL);
+endcomment
+
+!comment
+! This line without the changes for T20
+TL5TL: Line = (BZ.0.TL, D0500, BZ.0.TL, D0500, BZ.0.TL, D7925,  &
+               D0100, BPMA.TL, D0100,                           &
+               fD0125, D0000001, QF.1.TL, D0000001, fD0125,     &
+               D0045, CFX.TL, D11370,                           &
+               CHX.TL, D0170, CHY.TL,                           &
+               D0170, D0100,BPMA.TL,D0100, D0170,               &
+               BZ2T20, D0375,                                   &    
+               kD0125, D0000001,QK.2.TL,D0000001, kD0125,       &
+               D0375, D000002, D000002, ENSUB.TL5.TL, ENSEC.TL.TL)
+
+!endcomment
+!----- TL5T20: Line T20 to LUXE experiment
+!----- Section with three T1 septa, T20 kickers and 1st T20 septum
+!----- T1 septa are defined as RBEND with zero angle (BZ.0.TL) 
+!----- T20 kickers KL are defined as RBEND in RUN_T20.txm
+!----- T20 septum is defined in T20 file
+!----- TD20 HELP elements are drifts of 1e-6 m
+
+TL5T20: Line = (BZ.0.TL, D0500, BZ.0.TL, D0500, BZ.0.TL, D1075,       &
+               ENSUB.TL5.TL,                                          &
+               STSUB.TL20.TL,                                         &
+               CMY.23.TL, D0125,                                      &
+               Kick20_KL,Kick20_KL, 3*Kick200_KL, D0170,              & 
+               CMY.24.TL, D0555, D0300, D00457,                       &
+               TORA.TL, D00543, D0100, BPMA.TL, D0100,                &
+               fD0125, HELP.1a.T20, QF.1.T20.TL, HELP.1b.T20, fD0125, &
+               D0045, CHX.TL, D0200, CHY.TL,                          &
+               D1480, VCST40T98.TL, D5000, D1200, D01047,             &
+               CNX.TL, D0100, CNY.TL, D13846,                         &
+               D0050, BPMD.TL, D0050, D0150, D0150,                   &
+               VCV100.TL, D05857, VCB100.TL, VCABSA.TL, D0250,        &
+               ENSUB.TL20.TL,                                         &
+               STSEC.T20.T20, VCST98T40.T20, BZ.1.T20, D0375,         &
+               kD0125, HELP.2a.T20, QK.2.T20.TL, HELP.2b.T20, kD0125, &
+               D0375, D000002, D000002);
+
+!************************************************************************************************
+!************************************************************************************************
+
+!----- Parts of TL leading to TLD, South, T20  and North lines 
+
+CLtoTLD:    Line = (TL1, TL2TLD);
+
+CLtoSouth:  Line = (TL1, TL2TL, TL3T1);
+
+CLtoT20:    Line = (TL1, TL2TL, TL3TL, TL5T20);
+
+CLtoNorth:  Line = (TL1, TL2TL, TL3TL, TL5TL);
+
+!================================================================================================
+!================================================================================================
+

@@ -1,0 +1,306 @@
+!================================================================================================
+!
+!--- November 2022
+!
+!================================================================================================
+!
+!  Beam Line TLD (Dump X0): Starting from second (first untilted) septum
+!
+!  TLD: LINE = (TLD1, TLD2, TLD3)
+!
+!================================================================================================
+!
+!----- TLD line:
+!      Horizontal kickers KS: to the left (to positive X) 
+!      Vertical septa BZ:     upwards     (to positive Y)
+!      Vertical dipoles :     downwards   (to negative Y)
+!      Horizontal dipoles:    to the left (to positive X)
+!
+!================================================================================================
+
+!----- Kickers KS (horizontal): to the left (to positive X)
+
+!LEN_KS =  2;    ! defined in DEFS file
+
+cur_KS_matlab = -3.025448745e-05;        ! from Matlab code
+
+!--- SURVEY_TLD_1
+!cur_KS_matlab = -3.025448745e-05*1.0009;
+
+
+!--- MAD definition HKICKER: positive HKICK to kick to positive X  
+
+cur_KS_mad = -cur_KS_matlab;             ! positive value, for Hkicker 
+ang_KS_mad =  asin(cur_KS_mad*LEN_KS);
+arc_KS_mad =  ang_KS_mad / cur_KS_mad;
+
+!ANG_KS_TLD = ang_KS_mad;                 ! sign (+) for KS as Hkicker
+
+
+!--- MAD definition RBEND:   negative ANGLE to kick to positive X
+
+ANG_KS_TLD = -ang_KS_mad;                 ! sign (-) for KS as RBEND
+
+
+!--- for info
+NUM_KS  =  10;
+ANG_KS_TLD_tot = NUM_KS * ANG_KS_TLD;    !  0.6050897493692395e-03 rad
+
+!************************************************************************************************
+
+
+!----- Section and Subsection Markers
+
+!STSEC.TLD.TLD: Marker;    ! defined and used in NORTH file
+!ENSEC.TLD.TLD: Marker;    ! defined in NORTH file, used here
+
+
+!----- Diagnostics Marker
+
+BPMA.TLD: MONITOR;
+BPMD.TLD: MONITOR;
+BPMW.TLD: MONITOR;
+OTRC.TLD: MARKER;
+OTRD.TLD: MARKER;
+TORA.TLD: MARKER;
+TORC.TLD: MARKER;
+SCRW.TLD: MARKER;
+BHM.TLD:  MARKER;
+
+
+!----- Vacuum Markers and Vacuum Components
+
+VCST40T98Y.TLD: MARKER;
+VCST98YT98.TLD: MARKER;
+VCST98T98Y.TLD: MARKER;
+VCST98T200.TLD: MARKER;
+
+
+!----- Correctors (L_yoke is used)
+
+CFX.TLD: HKICKER, L=0.1;
+CFY.TLD: VKICKER, L=0.1;
+CNX.TLD: HKICKER, L=0.3;
+CNY.TLD: VKICKER, L=0.3;
+
+!************************************************************************************************
+
+
+!----- Deflection arc, starting from 2d (1st untilted) septum: TLD1
+
+
+!----- TLD septa (vertical)
+
+!LEN_BZ = 1.0;     ! defined in DEFS file
+
+
+!--- First tilted septum
+
+CUR_TLD1  = -0.0055;
+ANG_TLD1  =  asin(LEN_BZ * CUR_TLD1);       ! E1=0, E2=angle
+ARC_TLD1  =  ANG_TLD1 / CUR_TLD1;
+TILT_TLD1 = -(12.5823302221 / 180.0) * pi;
+
+BZ.1.TLD: Sbend, L = ARC_TLD1, ANGLE = ANG_TLD1,   &
+                 E1 = 0.0, E2 = ANG_TLD1,          &
+                 TILT = +1.570796326794897 + TILT_TLD1;
+
+
+!--- Three untilted septa
+
+CUR_TLD2  = -0.00549987897129556;            ! must be -0.0055, not corrected to keep the geometry 
+ANG_TLD2  =  2*asin(0.5*LEN_BZ*CUR_TLD2);    ! E1=E2=angle/2 (still not correct)
+ARC_TLD2  =  ANG_TLD2 / CUR_TLD2;
+E12_TLD2  =  0.5*ANG_TLD2;
+
+BZ.2.TLD: Sbend, L = ARC_TLD2, ANGLE = ANG_TLD2,   &
+                 E1 = E12_TLD2, E2 = E12_TLD2,     &
+                 TILT = +1.570796326794897;
+
+
+!----- Three vertical dipoles
+
+!LEN_BD   = 1.0;     ! defined in DEFS file
+
+CUR_TLD3 = 0.00714502003227491;
+ANG_TLD3 = 2*asin(0.5*LEN_BD*CUR_TLD3);    ! E1=E2=angle/2
+ARC_TLD3 = ANG_TLD3 / CUR_TLD3;
+E12_TLD3 = 0.5*ANG_TLD3;
+
+BD.3.TLD: Sbend, L = ARC_TLD3, ANGLE = ANG_TLD3,  &
+                 E1 = E12_TLD3, E2 = E12_TLD3,    &
+                 TILT = +1.570796326794897;
+
+CUR_TLD4 = 0.00835475542717171;
+ANG_TLD4 = 2*asin(0.5*LEN_BD*CUR_TLD4);
+ARC_TLD4 = ANG_TLD4 / CUR_TLD4;
+E12_TLD4 = 0.5*ANG_TLD4;
+
+BD.4.TLD: Sbend, L = ARC_TLD4, ANGLE = ANG_TLD4,  &
+                 E1 = E12_TLD4, E2 = E12_TLD4,    &
+                 TILT = +1.570796326794897;
+
+
+!----- Two horizontal dipoles
+
+CUR_TLD5 =-0.0066964006791768;
+ANG_TLD5 = 2*asin(0.5*LEN_BD* CUR_TLD5);     ! E1=E2=angel/2
+ARC_TLD5 = ANG_TLD5 / CUR_TLD5;
+E12_TLD5 = 0.5*ANG_TLD5;
+
+BD.5.TLD: Sbend, L = ARC_TLD5, ANGLE = ANG_TLD5,  &
+                 E1 = E12_TLD5, E2 = E12_TLD5;
+
+
+!----- Quadrupoles and sextupoles
+
+QF.1.TLD:  Quadrupole, L = L_QF_eff, K1 = -0.170714198044;
+QF.2.TLD:  Quadrupole, L = L_QF_eff, K1 = +0.325364444841;
+QF.3.TLD:  Quadrupole, L = L_QF_eff, K1 = -0.333042057457;
+QF.4.TLD:  Quadrupole, L = L_QF_eff, K1 = +0.337328940101;
+QF.5.TLD:  Quadrupole, L = L_QF_eff, K1 = -0.304821510009;
+QF.6.TLD:  Quadrupole, L = L_QF_eff, K1 = +0.174527163450;
+QF.7.TLD:  Quadrupole, L = L_QF_eff, K1 = -0.097250152764;
+
+QF.8.TLD:  Quadrupole, L = L_QF_eff, K1 = +0.016222917157;
+QF.9.TLD:  Quadrupole, L = L_QF_eff, K1 = -0.016449723523;
+
+SA.1.TLD:  Sextupole, L = L_SA_eff, K2 = +3.39871707775837*0.3/0.3164, &
+                      TILT = +(23.0/180.0)*pi;
+SA.2.TLD:  Sextupole, L = L_SA_eff, K2 = -6.46295077988347*0.3/0.3164, &
+                      TILT = +(18.5/180.0)*pi;
+SA.3.TLD:  Sextupole, L = L_SA_eff, K2 = -7.90417620732491*0.3/0.3164, &
+                      TILT = +(36.0/180.0)*pi;
+
+
+!----- These magical drifts are used to keep the fit of
+!      the extraction arc geometry with high precition
+
+DL3:  Drift, L =  0.5373491248539632-0.325;                    !  0.212349124853963
+DL5:  Drift, L =  0.493993232065036-0.325-0.0082;              !  0.160793232065036
+DL7:  Drift, L =  0.487174183509399-0.325+1-0.3+0.7-0.0082;    !  1.553974183509399
+DL8:  Drift, L = 10.042396104859254-0.6-0.325+0.29;            !  9.407396104859254
+DL10: Drift, L =  1.508536281503847-0.0082;                    !  1.500336281503847
+DL11: Drift, L =  5.750000001343736-0.325;                     !  5.425000001343736
+DL12: Drift, L = 12.069139883497630-0.6-0.325+0.29;            ! 11.434139883497631
+DL13: Drift, L =  6.583740527435534-0.6+0.29;                  !  6.273740527435535  
+DL15: Drift, L =  6.988894383436330-0.6-0.325+0.29;            !  6.353894383436330
+DL16: Drift, L =  9.468181983348773+0.048;                     !  9.516181983348773
+
+
+TLD1: Line = (BZ.2.TLD, D0500, BZ.2.TLD, D0500, BZ.2.TLD,      &   ! three untilted septa
+              D7650, D0400, OTRC.TLD, D0100, D00483, TORA.TLD, &
+              D01543, BPMA.TLD, D00974, D0175,                 &
+              fD0125, QF.1.TLD, fD0125, D20585,                &
+              D20705, CFY.TLD, D0200, CFX.TLD, D3546,          &
+              BD.3.TLD, D0500, BD.3.TLD, D0500, BD.5.TLD,      &   ! two vertical and one horizontal dipoles 
+              DL3, D0100, BPMA.TLD, D0100,                     &
+              fD0125, QF.2.TLD, fD0125, D0045, CFX.TLD, D0040, & 
+              D59818, SA.1.TLD, DL5, D0100, BPMA.TLD, D0100,   &  
+              fD0125, QF.3.TLD, fD0125, D0045, CFY.TLD, D0040, & 
+              D3140, D0700, BPMA.TLD, D0200, CFX.TLD,          &
+              D0025, sD0125, SA.2.TLD, DL7, D0200, D0100,      &
+              fD0125, QF.4.TLD, fD0125, D0045, D0100, D0040,   & 
+              DL8, D0100, BPMA.TLD, D0100,                     &
+              fD0125, QF.5.TLD, fD0125, D0045, CFY.TLD, D0040, & 
+              D20818, SA.3.TLD, DL10, BD.5.TLD,                &   ! one (last) horizontal dipole
+              DL11, D0100, BPMA.TLD, D0100,                    &
+              fD0125, QF.6.TLD, fD0125, D0045, CFX.TLD, D0040, & 
+              DL12, D0100, BPMA.TLD, D0100,                    &
+              fD0125, QF.7.TLD, fD0125, D0045, CFY.TLD, D0040, & 
+              DL13, BD.4.TLD,                                  &   ! one (last) vertical dipole
+              D1125, D0100, BPMA.TLD, D0100,                   &   
+              fD0125, QF.8.TLD, fD0125, D0045, CFX.TLD, D0040, & 
+              DL15, D0100, BPMA.TLD, D0100,                    &
+              fD0125, QF.9.TLD, fD0125, D0045, CFY.TLD, D0040, &
+              DL16, VCST40T98Y.TLD, D0208);
+
+!************************************************************************************************
+
+
+!----- Dump line: (TLD2, TLD3)
+
+!----- Arc to beam dump T5D: downwards (to negative y), 14 degree
+
+
+!--- Sweepers
+
+SWEEP.1.TLD: RBEND, L=0.64, ANGLE=0, TILT=-1.570796326795;
+SWEEP.2.TLD: RBEND, L=0.64, ANGLE=0;
+
+
+!--- Dipoles
+
+!LEN_BV = 2.5;     ! defined in DEFS file
+
+ANG_TLD_DEG = (14 / 6);
+
+ANG_TLD = ANG_TLD_DEG*3.141592653589793/180;
+CUR_TLD = 2*sin(0.5*ANG_TLD)/LEN_BV;
+ARC_TLD = ANG_TLD / CUR_TLD;
+E12_TLD = 0.5 * ANG_TLD;
+
+BV.1.TLD: Sbend, L = ARC_TLD, ANGLE = ANG_TLD,  &
+                 E1 = E12_TLD, E2 = E12_TLD,    &
+                 TILT = +1.570796326794897;
+
+
+!--- Quadrupoles and sextupoles with 100 mm aperture
+
+!--- Dump arc 
+QK.1.TLD: Quadrupole, L = L_QK_eff, K1 = -0.181265254082;
+SK.1.TLD: Sextupole,  L = L_SK_eff, K2 = +1.576496626127510,  &
+                      TILT = +1.570796326795;
+
+!--- Dump line 
+QK.2.TLD: Quadrupole, L = L_QK_eff, K1 = +0.19471760655;
+QK.3.TLD: Quadrupole, L = L_QK_eff, K1 = +0.19471760655;
+
+
+TLD2: Line = (BV.1.TLD, D0500, BV.1.TLD, D0500, BV.1.TLD,   &  ! three arc dipoles
+              D0208, VCST98YT98.TLD,                        &
+              D0317, kD0125, QK.1.TLD, kD0125, D0050,       &
+              skD0125, SK.1.TLD, skD0125,                   &
+              D0090, BPMD.TLD, D0835, CNX.TLD,              &
+              D0150, CNY.TLD, D31577, BPMD.TLD, D0090,      &
+              skD0125, SK.1.TLD, skD0125,                   &
+              D0050, kD0125, QK.1.TLD, kD0125, D0317,       &
+              VCST98T98Y.TLD, D0208,                        & 
+              BV.1.TLD, D0500, BV.1.TLD, D0500, BV.1.TLD,   &  ! three arc dipoles
+              D0208, VCST98YT98.TLD,                        &
+              D04037, BPMD.TLD,                             &
+              D00633, kD0125, QK.2.TLD, kD0125,             &
+              D0150,  kD0125, QK.2.TLD, kD0125,             &
+              D0150,  kD0125, QK.3.TLD, kD0125,             & 
+              D0150,  kD0125, QK.3.TLD);
+
+
+DUWINDOW.TLD:   MARKER;
+DUFLANGE.TLD:   MARKER;
+DUCONCRETE.TLD: MARKER;
+DUSTART.TLD:    MARKER;
+DUABSORB.TLD:   MARKER;
+
+TLD3: Line = (kD0125, D0092, D0025, BPMD.TLD, D0150, D0408, &
+              SWEEP.1.TLD, D0500, SWEEP.2.TLD,              &
+              D0822, BPMD.TLD, D0200, OTRD.TLD,             &
+              D0450, TORC.TLD, D0113, D0200, BHM.TLD,       &
+              D0643, VCST98T200.TLD,                        &
+              D3227, BPMW.TLD, D03223, SCRW.TLD,            &
+              DUWINDOW.TLD, D08578, DUFLANGE.TLD,           &
+              D108149, DUCONCRETE.TLD, D200615,             &
+              DUSTART.TLD, DUABSORB.TLD, ENSEC.TLD.TLD);
+
+!************************************************************************************************
+
+TLD: LINE = (TLD1, TLD2, TLD3);
+
+
+!--- At TLD dump absorber: Design optics
+!         beta_x ~= 200 km
+!         beta_y ~= 200 km 
+
+!================================================================================================
+!================================================================================================
+
+

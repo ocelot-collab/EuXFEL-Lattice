@@ -1,0 +1,180 @@
+!---------------------------------------------------------------------------------------
+!
+!  November 2022: XFEL Lattice and Optics --- B1D and B1 beamlines
+!
+!---------------------------------------------------------------------------------------
+
+!assign,print="print"
+option, -echo, info,warn
+
+!---------------------------------------------------------------------------------------
+
+SETPLOT, FONT=1, LWIDTH=8, POST=2, LSCALE=2.0, SSCALE=2.0, &
+         RSCALE=1.6, ASCALE=1.9
+
+!beam, energy=0.150
+!beam, particle=electron, energy=0.7, ex=0.01e-6, ey=0.01e-6, sige=1.0e-03
+
+!---------------------------------------------------------------------------------------
+
+!----- Call files needed for B1 and B1D line
+
+call,"XFEL_DEFS.txm"       ! Definitions
+
+call, "XFEL_I1.txm"
+call, "XFEL_L1.txm"
+call, "XFEL_B1.txm"
+
+! call other model setup and optics in some sections
+!call, "SET_closed_LHund_130MeV_42mm.txm"    ! LH undulator closed
+
+!---------------------------------------------------------------------------------------
+
+!----- GUN.23.I1: Z coordinate
+
+set, z0_start, 23.2
+
+
+!----- L0C8, MATCH.FQ.I1: Z coordinate
+
+set, z0_L0C8, 37.6484
+
+!---------------------------------------------------------------------------------------
+
+!----- Initial Twiss functions at Z = 37.6484 m, MATCH.FQ.I1
+!      Historical values used as initial Twiss functions
+!      for the design of linear beam optics downstream
+B0_I1.ACC1:    BETA0, energy= 0.150, &
+                      betx = 25.543,  alfx = -0.3771,  &
+                      bety = 25.543,  alfy = -0.3771;
+
+!----- Twiss functions at Cathode, GUN.23.I1
+!      Calculated by back tracking from MATCH.FQ.I1 to GUN.23.I1
+!      Back tracking: TWISS command with COUPLE logical flag
+B0_I1.G1:    BETA0, energy= 0.005, &
+                    betx = 55.798075,  alfx = 18.18859573,  &
+                    bety = 55.798075,  alfy = 18.18859573;
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
+!----- Start at Cathode, Gun.23.I1
+
+!----- Beamline B1D
+ 
+title, "XFEL G1 to B1D"
+beam, energy=0.005
+use, I1TB1D
+print, #s/#e
+!twiss, beta0=B0_I1.G1, save, couple, tape=twiss_B1D
+twiss, beta0=B0_I1.G1, save, tape=twiss_B1D
+plot, table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+      vmin=0,vmax=150, vaxis2=dx,dy
+plot, table=twiss,haxis=s, vaxis1=dx,dy, spline,colour=100
+
+survey, y0 = -2.75, z0 = z0_start, tape=survey_B1D
+
+
+
+!----- Beamline (I1, L1, B1) up to Linac 2 entrance
+ 
+title, "XFEL G1 to L2"
+beam, energy=0.005
+use, (I1, L1, B1)
+print, #s/#e
+!twiss, beta0=B0_I1.G1, save, couple, tape=twiss_B1_L2
+twiss, beta0=B0_I1.G1, save, tape=twiss_B1_L2
+plot, table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+      vmin=0,vmax=150, vaxis2=dx,dy
+plot, table=twiss,haxis=s, vaxis1=dx,dy, spline,colour=100
+
+!survey, y0 = -2.75, z0 = z0_start, tape=survey_B1_L2
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
+comment
+!----- Start at Z = 37.6484 m, MATCH.FQ.I1
+
+!----- Beamline B1D
+
+title, "XFEL G1 to B1D"
+beam, energy=0.150
+use, I1TB1D_L0C8
+print, #s/#e
+twiss, beta0=B0_I1.ACC1, save, couple, tape=twiss_tmp
+!twiss, beta0=B0_I1.ACC1, save, tape=twiss_B1D_L0C8
+plot, table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+      vmin=0,vmax=150, vaxis2=dx,dy
+
+survey, y0 = -2.75, z0 = z0_L0C8, tape=survey_B1D_L0C8
+
+endcomment
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
+
+!----- Start at B1 entrance, STSEC.B1.B1
+
+!--- Twiss functions at the entrance of B1 section: at MATCH.B1.B1
+B0_B1.START: BETA0, energy=0.700, &
+                    betx = 61.35719503, alfx = -1.403762058, &
+                    bety = 55.92198705, alfy = +1.702796436;
+
+title, "XFEL B1 section"
+beam, energy=0.700
+use, B1
+print, #s/#e
+twiss, beta0=B0_B1.START, save, couple, tape=twiss_B1
+plot, table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+      vmin=0,vmax=100, vaxis2=dx,dy
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
+!----- Matching subroutines
+
+!call,"Matching_I1.txm"
+!call,"Matching_B1.txm"
+
+comment
+title, "XFEL B1 section, periodic solution for diagnostic FODO lattice"
+beam, energy=0.700
+use, fodo_B1_DIA
+print, #s/#e
+twiss, save, tape=twiss_fodo_B1
+plot, table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+      vmin=0,vmax=20
+endcomment
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
+!----- Twiss function at the matching points and some other positions
+!      (option with COUPLE flag in TWISS command)
+                      
+!--- Twiss functions at the entrance of TDS in B1 section: at MATCH.TDS.B1
+B0_B1.TDS:   BETA0, energy=0.700, &
+                    betx = 30.042006470, alfx = +0.05593330915, &
+                    bety =  3.516470263, alfy = -0.02981502775;
+
+!--- Twiss functions at OTRB.218.B1 in B1 section: at MATCH.DIA.B1
+!    Periodic solution for fodo_B1_DIA
+B0_B1.FODO:   BETA0, energy=0.700, &
+                     betx = 3.203632049, alfx = -1.324374537, &
+                     bety = 3.203631591, alfy = +1.324374463;
+
+!--- Twiss functions at the end of B1 section: at ENSEC.B1.B1 (STSEC.L2.L2)
+B0_L2.START: BETA0, energy=0.7, &
+                    betx =  9.160080276, alfx = -0.6574239986, &
+                    bety = 36.491583350, alfy = +1.0266866600;
+
+!----- Twiss functions at B1D dump
+B0_B1.B1D:    BETA0, energy= 0.700, &
+                     betx = 356.3703045,  alfx = -43.89614212,  &
+                     bety = 132.8529327,  alfy = -26.14663203
+
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+

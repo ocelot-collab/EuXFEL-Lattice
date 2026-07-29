@@ -1,0 +1,1160 @@
+!================================================================================================
+!
+!--- November 2022, XFEL lattice --- Linac 3
+!
+!================================================================================================
+
+!================================================================================================
+! XFEL Linac Definitions
+!
+! February  2016, Nina: Upgrade of all linacs.
+! September 2015, Nina: Upgrade of L0 linac for injector commissioning.
+!
+! Version 7.1 8.03.2011
+!
+! New Nomenclature
+! Extended length of cryo components: Feed and turnbox 3.5 m, connection box 
+! New length of feedbox: 3.35 m
+! New length of endbox : 3.25 m
+! lambda: 0.23061
+! cavity length: 1.0377  (l/2*9
+! module length: 11.9917 (l*52)
+! string connection box: 2.9979 (l*13)
+! module center: 6.20582 from module start (cold) (or at 3.90394*l/2 in the 5th 9-cell cavity)
+! insert marker close to this position, s,x,y,z to be corrected by post-processing
+! updated 3rd harmonic according to design from 12.2.2009
+! changed L3 to maximum of 96 modules with 6 long warm FODO cells at end
+! changed L0 to include 3rd harmonic and end box
+! inserted L0 start/end markers (10/11/09 WD)
+! differentiate BPM types (10/11/09 WD)
+! add TORA at beginning of temporary beamline (4/1/11 WD)
+! changed Injector module and Injector Linac layout to adjust for 3* module (8/3/11 WD)
+! include place holder for left out modules with quadrupole unit below position of ceiling support ... 
+! (position of quad -1.293 m or - 9.093 from module position)
+!================================================================================================
+
+!================================================================================================
+!
+!---------- LINAC 3: 80 modules August 2016 (20 RF stations, A6-A25)
+!---------- LINAC 3: 84 modules   June 2016
+!---------- LINAC 3: 96 modules   full
+!
+!================================================================================================
+!================================================================================================
+
+ 
+!---------- LINAC 3: 80 modules, 20 RF stations - as built in August 2016
+
+!----- RF stations: A6 - A25       (N = 20)
+!----- RF modules:  4 x 20 = 80
+
+!----- Energy profile for E_final = 14 GeV
+! 
+!        E_initial =  2400 MeV
+!        E_final   = 14000 MeV
+!        Energy Gain = (14000-2400) = 11 600 MeV
+
+!----- Model
+!      - Equal distribution of Energy gain between RF stations, modules and cavities
+!      - On-crest phase
+!      - RF transverse focusing: Analytical model for standing wave cavity
+!      - No coupler kicks
+ 
+!================================================================================================
+
+!----- Markers for L3
+
+STSEC.L3.L3:  MARKER;
+ENSEC.L3.L3:  MARKER;
+
+
+STAC.A6.1.L3:  MARKER;
+MIAC.A6.1.L3:  MARKER;
+ENAC.A6.1.L3:  MARKER;
+STAC.A6.2.L3:  MARKER;
+MIAC.A6.2.L3:  MARKER;
+ENAC.A6.2.L3:  MARKER;
+STAC.A6.3.L3:  MARKER;
+MIAC.A6.3.L3:  MARKER;
+ENAC.A6.3.L3:  MARKER;
+STAC.A6.4.L3:  MARKER;
+MIAC.A6.4.L3:  MARKER;
+ENAC.A6.4.L3:  MARKER;
+STAC.A7.1.L3:  MARKER;
+MIAC.A7.1.L3:  MARKER;
+ENAC.A7.1.L3:  MARKER;
+STAC.A7.2.L3:  MARKER;
+MIAC.A7.2.L3:  MARKER;
+ENAC.A7.2.L3:  MARKER;
+STAC.A7.3.L3:  MARKER;
+MIAC.A7.3.L3:  MARKER;
+ENAC.A7.3.L3:  MARKER;
+STAC.A7.4.L3:  MARKER;
+MIAC.A7.4.L3:  MARKER;
+ENAC.A7.4.L3:  MARKER; 
+STAC.A8.1.L3:  MARKER;
+MIAC.A8.1.L3:  MARKER;
+ENAC.A8.1.L3:  MARKER;
+STAC.A8.2.L3:  MARKER;
+MIAC.A8.2.L3:  MARKER;
+ENAC.A8.2.L3:  MARKER;
+STAC.A8.3.L3:  MARKER;
+MIAC.A8.3.L3:  MARKER;
+ENAC.A8.3.L3:  MARKER;
+STAC.A8.4.L3:  MARKER;
+MIAC.A8.4.L3:  MARKER;
+ENAC.A8.4.L3:  MARKER;
+STAC.A9.1.L3:  MARKER;
+MIAC.A9.1.L3:  MARKER;
+ENAC.A9.1.L3:  MARKER;
+STAC.A9.2.L3:  MARKER;
+MIAC.A9.2.L3:  MARKER;
+ENAC.A9.2.L3:  MARKER;
+STAC.A9.3.L3:  MARKER;
+MIAC.A9.3.L3:  MARKER;
+ENAC.A9.3.L3:  MARKER;
+STAC.A9.4.L3:  MARKER;
+MIAC.A9.4.L3:  MARKER;
+ENAC.A9.4.L3:  MARKER;
+STAC.A10.1.L3: MARKER;
+MIAC.A10.1.L3: MARKER;
+ENAC.A10.1.L3: MARKER;
+STAC.A10.2.L3: MARKER;
+MIAC.A10.2.L3: MARKER;
+ENAC.A10.2.L3: MARKER;
+STAC.A10.3.L3: MARKER;
+MIAC.A10.3.L3: MARKER;
+ENAC.A10.3.L3: MARKER;
+STAC.A10.4.L3: MARKER;
+MIAC.A10.4.L3: MARKER;
+ENAC.A10.4.L3: MARKER;
+STAC.A11.1.L3: MARKER;
+MIAC.A11.1.L3: MARKER;
+ENAC.A11.1.L3: MARKER;
+STAC.A11.2.L3: MARKER;
+MIAC.A11.2.L3: MARKER;
+ENAC.A11.2.L3: MARKER;
+STAC.A11.3.L3: MARKER;
+MIAC.A11.3.L3: MARKER;
+ENAC.A11.3.L3: MARKER;
+STAC.A11.4.L3: MARKER;
+MIAC.A11.4.L3: MARKER;
+ENAC.A11.4.L3: MARKER;
+STAC.A12.1.L3: MARKER;
+MIAC.A12.1.L3: MARKER;
+ENAC.A12.1.L3: MARKER;
+STAC.A12.2.L3: MARKER;
+MIAC.A12.2.L3: MARKER;
+ENAC.A12.2.L3: MARKER;
+STAC.A12.3.L3: MARKER;
+MIAC.A12.3.L3: MARKER;
+ENAC.A12.3.L3: MARKER;
+STAC.A12.4.L3: MARKER;
+MIAC.A12.4.L3: MARKER;
+ENAC.A12.4.L3: MARKER; 
+STAC.A13.1.L3: MARKER;
+MIAC.A13.1.L3: MARKER;
+ENAC.A13.1.L3: MARKER;
+STAC.A13.2.L3: MARKER;
+MIAC.A13.2.L3: MARKER;
+ENAC.A13.2.L3: MARKER;
+STAC.A13.3.L3: MARKER;
+MIAC.A13.3.L3: MARKER;
+ENAC.A13.3.L3: MARKER;
+STAC.A13.4.L3: MARKER;
+MIAC.A13.4.L3: MARKER;
+ENAC.A13.4.L3: MARKER;
+STAC.A14.1.L3: MARKER;
+MIAC.A14.1.L3: MARKER;
+ENAC.A14.1.L3: MARKER;
+STAC.A14.2.L3: MARKER;
+MIAC.A14.2.L3: MARKER;
+ENAC.A14.2.L3: MARKER;
+STAC.A14.3.L3: MARKER;
+MIAC.A14.3.L3: MARKER;
+ENAC.A14.3.L3: MARKER;
+STAC.A14.4.L3: MARKER;
+MIAC.A14.4.L3: MARKER;
+ENAC.A14.4.L3: MARKER;
+STAC.A15.1.L3: MARKER;
+MIAC.A15.1.L3: MARKER;
+ENAC.A15.1.L3: MARKER;
+STAC.A15.2.L3: MARKER;
+MIAC.A15.2.L3: MARKER;
+ENAC.A15.2.L3: MARKER;
+STAC.A15.3.L3: MARKER;
+MIAC.A15.3.L3: MARKER;
+ENAC.A15.3.L3: MARKER;
+STAC.A15.4.L3: MARKER;
+MIAC.A15.4.L3: MARKER;
+ENAC.A15.4.L3: MARKER;
+STAC.A16.1.L3: MARKER;
+MIAC.A16.1.L3: MARKER;
+ENAC.A16.1.L3: MARKER;
+STAC.A16.2.L3: MARKER;
+MIAC.A16.2.L3: MARKER;
+ENAC.A16.2.L3: MARKER;
+STAC.A16.3.L3: MARKER;
+MIAC.A16.3.L3: MARKER;
+ENAC.A16.3.L3: MARKER;
+STAC.A16.4.L3: MARKER;
+MIAC.A16.4.L3: MARKER;
+ENAC.A16.4.L3: MARKER;
+STAC.A17.1.L3: MARKER;
+MIAC.A17.1.L3: MARKER;
+ENAC.A17.1.L3: MARKER;
+STAC.A17.2.L3: MARKER;
+MIAC.A17.2.L3: MARKER;
+ENAC.A17.2.L3: MARKER;
+STAC.A17.3.L3: MARKER;
+MIAC.A17.3.L3: MARKER;
+ENAC.A17.3.L3: MARKER;
+STAC.A17.4.L3: MARKER;
+MIAC.A17.4.L3: MARKER;
+ENAC.A17.4.L3: MARKER;
+STAC.A18.1.L3: MARKER;
+MIAC.A18.1.L3: MARKER;
+ENAC.A18.1.L3: MARKER;
+STAC.A18.2.L3: MARKER;
+MIAC.A18.2.L3: MARKER;
+ENAC.A18.2.L3: MARKER;
+STAC.A18.3.L3: MARKER;
+MIAC.A18.3.L3: MARKER;
+ENAC.A18.3.L3: MARKER;
+STAC.A18.4.L3: MARKER;
+MIAC.A18.4.L3: MARKER;
+ENAC.A18.4.L3: MARKER;
+STAC.A19.1.L3: MARKER;
+MIAC.A19.1.L3: MARKER;
+ENAC.A19.1.L3: MARKER;
+STAC.A19.2.L3: MARKER;
+MIAC.A19.2.L3: MARKER;
+ENAC.A19.2.L3: MARKER;
+STAC.A19.3.L3: MARKER;
+MIAC.A19.3.L3: MARKER;
+ENAC.A19.3.L3: MARKER;
+STAC.A19.4.L3: MARKER;
+MIAC.A19.4.L3: MARKER;
+ENAC.A19.4.L3: MARKER;
+STAC.A20.1.L3: MARKER;
+MIAC.A20.1.L3: MARKER;
+ENAC.A20.1.L3: MARKER;
+STAC.A20.2.L3: MARKER;
+MIAC.A20.2.L3: MARKER;
+ENAC.A20.2.L3: MARKER;
+STAC.A20.3.L3: MARKER;
+MIAC.A20.3.L3: MARKER;
+ENAC.A20.3.L3: MARKER;
+STAC.A20.4.L3: MARKER;
+MIAC.A20.4.L3: MARKER;
+ENAC.A20.4.L3: MARKER;
+STAC.A21.1.L3: MARKER;
+MIAC.A21.1.L3: MARKER;
+ENAC.A21.1.L3: MARKER;
+STAC.A21.2.L3: MARKER;
+MIAC.A21.2.L3: MARKER;
+ENAC.A21.2.L3: MARKER;
+STAC.A21.3.L3: MARKER;
+MIAC.A21.3.L3: MARKER;
+ENAC.A21.3.L3: MARKER;
+STAC.A21.4.L3: MARKER;
+MIAC.A21.4.L3: MARKER;
+ENAC.A21.4.L3: MARKER;
+STAC.A22.1.L3: MARKER;
+MIAC.A22.1.L3: MARKER;
+ENAC.A22.1.L3: MARKER;
+STAC.A22.2.L3: MARKER;
+MIAC.A22.2.L3: MARKER;
+ENAC.A22.2.L3: MARKER;
+STAC.A22.3.L3: MARKER;
+MIAC.A22.3.L3: MARKER;
+ENAC.A22.3.L3: MARKER;
+STAC.A22.4.L3: MARKER;
+MIAC.A22.4.L3: MARKER;
+ENAC.A22.4.L3: MARKER; 
+STAC.A23.1.L3: MARKER;
+MIAC.A23.1.L3: MARKER;
+ENAC.A23.1.L3: MARKER;
+STAC.A23.2.L3: MARKER;
+MIAC.A23.2.L3: MARKER;
+ENAC.A23.2.L3: MARKER;
+STAC.A23.3.L3: MARKER;
+MIAC.A23.3.L3: MARKER;
+ENAC.A23.3.L3: MARKER;
+STAC.A23.4.L3: MARKER;
+MIAC.A23.4.L3: MARKER;
+ENAC.A23.4.L3: MARKER;
+STAC.A24.1.L3: MARKER;
+MIAC.A24.1.L3: MARKER;
+ENAC.A24.1.L3: MARKER;
+STAC.A24.2.L3: MARKER;
+MIAC.A24.2.L3: MARKER;
+ENAC.A24.2.L3: MARKER;
+STAC.A24.3.L3: MARKER;
+MIAC.A24.3.L3: MARKER;
+ENAC.A24.3.L3: MARKER;
+STAC.A24.4.L3: MARKER;
+MIAC.A24.4.L3: MARKER;
+ENAC.A24.4.L3: MARKER;
+STAC.A25.1.L3: MARKER;
+MIAC.A25.1.L3: MARKER;
+ENAC.A25.1.L3: MARKER;
+STAC.A25.2.L3: MARKER;
+MIAC.A25.2.L3: MARKER;
+ENAC.A25.2.L3: MARKER;
+STAC.A25.3.L3: MARKER;
+MIAC.A25.3.L3: MARKER;
+ENAC.A25.3.L3: MARKER;
+STAC.A25.4.L3: MARKER;
+MIAC.A25.4.L3: MARKER;
+ENAC.A25.4.L3: MARKER;
+
+!----- Last 16 modules, 4 RF stations
+STAC.A26.1.L3: MARKER;
+MIAC.A26.1.L3: MARKER;
+ENAC.A26.1.L3: MARKER;
+STAC.A26.2.L3: MARKER;
+MIAC.A26.2.L3: MARKER;
+ENAC.A26.2.L3: MARKER;
+STAC.A26.3.L3: MARKER;
+MIAC.A26.3.L3: MARKER;
+ENAC.A26.3.L3: MARKER;
+STAC.A26.4.L3: MARKER;
+MIAC.A26.4.L3: MARKER;
+ENAC.A26.4.L3: MARKER;
+STAC.A27.1.L3: MARKER;
+MIAC.A27.1.L3: MARKER;
+ENAC.A27.1.L3: MARKER;
+STAC.A27.2.L3: MARKER;
+MIAC.A27.2.L3: MARKER;
+ENAC.A27.2.L3: MARKER;
+STAC.A27.3.L3: MARKER;
+MIAC.A27.3.L3: MARKER;
+ENAC.A27.3.L3: MARKER;
+STAC.A27.4.L3: MARKER;
+MIAC.A27.4.L3: MARKER;
+ENAC.A27.4.L3: MARKER;
+STAC.A28.1.L3: MARKER;
+MIAC.A28.1.L3: MARKER;
+ENAC.A28.1.L3: MARKER;
+STAC.A28.2.L3: MARKER;
+MIAC.A28.2.L3: MARKER;
+ENAC.A28.2.L3: MARKER;
+STAC.A28.3.L3: MARKER;
+MIAC.A28.3.L3: MARKER;
+ENAC.A28.3.L3: MARKER;
+STAC.A28.4.L3: MARKER;
+MIAC.A28.4.L3: MARKER;
+ENAC.A28.4.L3: MARKER;
+STAC.A29.1.L3: MARKER;
+MIAC.A29.1.L3: MARKER;
+ENAC.A29.1.L3: MARKER;
+STAC.A29.2.L3: MARKER;
+MIAC.A29.2.L3: MARKER;
+ENAC.A29.2.L3: MARKER; 
+STAC.A29.3.L3: MARKER;
+MIAC.A29.3.L3: MARKER;
+ENAC.A29.3.L3: MARKER;
+STAC.A29.4.L3: MARKER;
+MIAC.A29.4.L3: MARKER;
+ENAC.A29.4.L3: MARKER;
+
+
+!----- BPM at ACC end (TYP BPM)
+BPMC.L3: MONITOR;  ! Cold Button BPM
+BPMR.L3: MONITOR;  ! Re-Entrant BPM
+
+
+!----- Steerer at ACC end
+!      (zero length kicker, in reality cos(phi) winding in quadrupole)
+CX.L3: HKICKER;
+CY.L3: VKICKER;
+L3COR: LINE=(CX.L3, CY.L3);
+
+
+!----- Vacuum Markers and Vacuum Components
+VCST40T78.L3: MARKER;
+VCST78T40.L3: MARKER;
+
+
+!----- Drift for feed and turn box 
+!      Endpoint means bypass to beam distance of 0.7 m and warm vaccuum valve
+CFB.L3:   DRIFT, L = 3.35;
+CTB.L3:   DRIFT, L = 3.25;
+CSC.L3:   DRIFT, L = 2.9978;   ! Drift for string connection box
+VCDST.L3: DRIFT, L = 1.215;    ! Pumpstation around cold sections
+
+
+!----- Cavity Wake field dummies
+!LTWAKECAV:  DRIFT, L=0.0;
+!LTWAKECAV3: DRIFT, L=0.0;
+
+
+!----- Matching Markers
+
+MATCH.L3.L3:  MARKER;    ! matching point in L3
+
+
+!************************************************************************************************
+
+!----- Definition of RF modules: April 2021, in DEFS file
+
+
+comment
+!----- Here for info
+!--- Definition of RF Modules
+MIAC: MARKER   
+!--- 1.3 GHz Module
+D01416: DRIFT, L = 0.1416
+D02043: DRIFT, L = 0.2043
+D00432: Drift, L = 0.0432
+D0085:  DRIFT, L = 0.0850
+D00729: DRIFT, L = 0.0729
+!D0300:  DRIFT, L = 0.300     ! defined in DEFS file
+ACC(START,MIAC,C,BPM,Q,COR,END): LINE =                        &
+    (START, D0080, 4*(D01416, C, D02043, LTWAKECAV), MIAC,     &
+     4*(D01416, C, D02043, LTWAKECAV),                         &
+     D00432,Q,D00432,COR, D0085, BPM, D0085, D00729, D0300, END)
+endcomment
+
+!************************************************************************************************
+
+!----- Energy profile in L3
+
+!----- 18.04.2018: Design energy gain is used
+!                  On-crest phase
+!                  Equal distribution between RF stations, modules and cavities.
+
+
+!--- Off-crest phase in deg
+
+phi_L3 = 0.0;     
+
+!--- Energy gain (in MeV)
+
+Gain.L3 = (14000.0 - 2400.0);
+
+!--- Number of RF stations: August 2016
+
+N.RF.L3 = 25 - 5;     ! A1 (I1), A2 (L1), A3,A4,A5 (L2)
+
+
+!--- Energy gain per RF station (20 RF stations)
+
+GainA6.L3  = Gain.L3/N.RF.L3;
+GainA7.L3  = Gain.L3/N.RF.L3;
+GainA8.L3  = Gain.L3/N.RF.L3;
+GainA9.L3  = Gain.L3/N.RF.L3;
+GainA10.L3 = Gain.L3/N.RF.L3;
+GainA11.L3 = Gain.L3/N.RF.L3;
+GainA12.L3 = Gain.L3/N.RF.L3;
+GainA13.L3 = Gain.L3/N.RF.L3;
+GainA14.L3 = Gain.L3/N.RF.L3;
+GainA15.L3 = Gain.L3/N.RF.L3;
+GainA16.L3 = Gain.L3/N.RF.L3;
+GainA17.L3 = Gain.L3/N.RF.L3;
+GainA18.L3 = Gain.L3/N.RF.L3;
+GainA19.L3 = Gain.L3/N.RF.L3;
+GainA20.L3 = Gain.L3/N.RF.L3;
+GainA21.L3 = Gain.L3/N.RF.L3;
+GainA22.L3 = Gain.L3/N.RF.L3;
+GainA23.L3 = Gain.L3/N.RF.L3;
+GainA24.L3 = Gain.L3/N.RF.L3;
+GainA25.L3 = Gain.L3/N.RF.L3;
+
+
+!--- Energy gain per cavity 
+
+GainA6.L3.Cav  = GainA6.L3/4/8;
+GainA7.L3.Cav  = GainA7.L3/4/8;
+GainA8.L3.Cav  = GainA8.L3/4/8;
+GainA9.L3.Cav  = GainA9.L3/4/8;
+GainA10.L3.Cav = GainA10.L3/4/8;
+GainA11.L3.Cav = GainA11.L3/4/8;
+GainA12.L3.Cav = GainA12.L3/4/8;
+GainA13.L3.Cav = GainA13.L3/4/8;
+GainA14.L3.Cav = GainA14.L3/4/8;
+GainA15.L3.Cav = GainA15.L3/4/8;
+GainA16.L3.Cav = GainA16.L3/4/8;
+GainA17.L3.Cav = GainA17.L3/4/8;
+GainA18.L3.Cav = GainA18.L3/4/8;
+GainA19.L3.Cav = GainA19.L3/4/8;
+GainA20.L3.Cav = GainA20.L3/4/8;
+GainA21.L3.Cav = GainA21.L3/4/8;
+GainA22.L3.Cav = GainA22.L3/4/8;
+GainA23.L3.Cav = GainA23.L3/4/8;
+GainA24.L3.Cav = GainA24.L3/4/8;
+GainA25.L3.Cav = GainA25.L3/4/8;
+
+
+!--- Last 16 modules - not in the beamline 2016
+
+GainA26.L3 = 0.0;
+GainA27.L3 = 0.0;
+GainA28.L3 = 0.0;
+GainA29.L3 = 0.0;
+
+GainA26.L3.Cav = GainA26.L3/4/8;
+GainA27.L3.Cav = GainA27.L3/4/8;
+GainA28.L3.Cav = GainA28.L3/4/8;
+GainA29.L3.Cav = GainA29.L3/4/8;
+
+!************************************************************************************************
+
+
+!--- Linac 3 cavities (MAD definition)
+
+!relerr:=0e-3;
+
+C.A6.L3:  LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA6.L3.Cav,      &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A7.L3:  LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA7.L3.Cav,      &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A8.L3:  LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA8.L3.Cav,      &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A9.L3:  LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA9.L3.Cav,      &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A10.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA10.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A11.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA11.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A12.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA12.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A13.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA13.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A14.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA14.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A15.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA15.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A16.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA16.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A17.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA17.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A18.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA18.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A19.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA19.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A20.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA20.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A21.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA21.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A22.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA22.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A23.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA23.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A24.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA24.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A25.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA25.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+
+
+!--- Last 16 modules - not in the beamline 2016
+
+C.A26.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA26.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A27.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA27.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A28.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA28.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+C.A29.L3: LCAVITY, L=0.1153*9, PHI0=0/360,    &
+                   DELTAE=GainA29.L3.Cav,     &
+                   FREQ=1300000000.0*1e-6,volterr=20*relerr;
+
+!************************************************************************************************
+
+
+!--- Quadrupoles in L3
+
+!--- FODO cell: 45 phase advance in both planes (setting without RF focusing)
+Q.F.L3:  QUADRUPOLE, L = L_Q_eff, K1 = +0.300595266075;
+Q.D.L3:  QUADRUPOLE, L = L_Q_eff, K1 = -0.300595266075;
+
+Q.A6.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = -0.333914716359;   ! matching quad
+Q.A6.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = +0.426925675652;   ! matching quad
+Q.A6.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = -0.270100732254;   ! matching quad
+Q.A6.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = -0.080361950346;   ! matching quad
+
+Q.A7.1.L3:  QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A7.2.L3:  QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A7.3.L3:  QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A7.4.L3:  QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A8.1.L3:  QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A8.2.L3:  QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A8.3.L3:  Quadrupole, L = L_Q_eff, K1 = +2.258091E-01*0.3/0.2136;   ! matching quad
+Q.A8.4.L3:  Quadrupole, L = L_Q_eff, K1 = -2.094214E-01*0.3/0.2136;   ! matching quad
+
+Q.A9.1.L3:  Quadrupole, L = L_Q_eff, K1 = +2.067368E-01*0.3/0.2136;   ! matching quad
+Q.A9.2.L3:  Quadrupole, L = L_Q_eff, K1 = -2.181746E-01*0.3/0.2136;   ! matching quad
+Q.A9.3.L3:  QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A9.4.L3:  QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A10.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A10.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A10.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A10.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A11.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A11.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A11.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A8.3.L3[K1];   ! matching quad
+Q.A11.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A8.4.L3[K1];   ! matching quad
+
+Q.A12.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A9.1.L3[K1];   ! matching quad
+Q.A12.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A9.2.L3[K1];   ! matching quad
+Q.A12.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A12.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A13.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A13.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A13.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A13.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1]; 
+
+Q.A14.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A14.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A14.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A8.3.L3[K1];   ! matching quad
+Q.A14.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A8.4.L3[K1];   ! matching quad
+
+Q.A15.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A9.1.L3[K1];   ! matching quad
+Q.A15.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A9.2.L3[K1];   ! matching quad
+Q.A15.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A15.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A16.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A16.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A16.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A16.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A17.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A17.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A17.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A8.3.L3[K1];   ! matching quad
+Q.A17.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A8.4.L3[K1];   ! macthing quad
+
+Q.A18.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A9.1.L3[K1];   ! matching quad
+Q.A18.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A9.2.L3[K1];   ! matching quad
+Q.A18.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A18.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A19.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A19.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A19.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A19.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A20.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A20.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A20.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A8.3.L3[K1];   ! matching quad
+Q.A20.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A8.4.L3[K1];   ! matching quad
+
+Q.A21.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A9.1.L3[K1];   ! matching quad
+Q.A21.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A9.2.L3[K1];   ! matching quad
+Q.A21.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A21.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A22.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A22.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A22.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A22.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A23.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A23.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A23.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A8.3.L3[K1];   ! matching quad
+Q.A23.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A8.4.L3[K1];   ! matching quad
+
+Q.A24.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A9.1.L3[K1];   ! matching quad
+Q.A24.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.A9.2.L3[K1];   ! matching quad
+Q.A24.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A24.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A25.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A25.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A25.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A25.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+!************************************************************************************************
+
+
+!--- Linac 3: First 80 modules (A6-A25 RF stations)
+
+ACC6.1: LINE=(ACC(STAC.A6.1.L3, MIAC.A6.1.L3, C.A6.L3, BPMC.L3,  &
+                  Q.A6.1.L3, CX.L3, ENAC.A6.1.L3));
+ACC6.2: LINE=(ACC(STAC.A6.2.L3, MIAC.A6.2.L3, C.A6.L3, BPMC.L3,  &
+                  Q.A6.2.L3, CY.L3, ENAC.A6.2.L3));
+ACC6.3: LINE=(ACC(STAC.A6.3.L3, MIAC.A6.3.L3, C.A6.L3, BPMC.L3,  &
+                  Q.A6.3.L3, CX.L3, ENAC.A6.3.L3));
+ACC6.4: LINE=(ACC(STAC.A6.4.L3, MIAC.A6.4.L3, C.A6.L3, BPMC.L3,  &
+                  Q.A6.4.L3, CY.L3, ENAC.A6.4.L3));
+
+ACC7.1: LINE=(ACC(STAC.A7.1.L3, MIAC.A7.1.L3, C.A7.L3, BPMC.L3,  &
+                  Q.A7.1.L3, CX.L3, ENAC.A7.1.L3));
+ACC7.2: LINE=(ACC(STAC.A7.2.L3, MIAC.A7.2.L3, C.A7.L3, BPMC.L3,  &
+                  Q.A7.2.L3, CY.L3, ENAC.A7.2.L3));
+ACC7.3: LINE=(ACC(STAC.A7.3.L3, MIAC.A7.3.L3, C.A7.L3, BPMC.L3,  &
+                  Q.A7.3.L3, CX.L3, ENAC.A7.3.L3));
+ACC7.4: LINE=(ACC(STAC.A7.4.L3, MIAC.A7.4.L3, C.A7.L3, BPMR.L3,  &
+                  Q.A7.4.L3, CY.L3, ENAC.A7.4.L3));
+
+ACC8.1: LINE=(ACC(STAC.A8.1.L3, MIAC.A8.1.L3, C.A8.L3, BPMC.L3,  &
+                  Q.A8.1.L3, CX.L3, ENAC.A8.1.L3));
+ACC8.2: LINE=(ACC(STAC.A8.2.L3, MIAC.A8.2.L3, C.A8.L3, BPMC.L3,  &
+                  Q.A8.2.L3, CY.L3, ENAC.A8.2.L3));
+ACC8.3: LINE=(ACC(STAC.A8.3.L3, MIAC.A8.3.L3, C.A8.L3, BPMR.L3,  &
+                  Q.A8.3.L3, CX.L3, ENAC.A8.3.L3));
+ACC8.4: LINE=(ACC(STAC.A8.4.L3, MIAC.A8.4.L3, C.A8.L3, BPMC.L3,  &
+                  Q.A8.4.L3, CY.L3, ENAC.A8.4.L3));
+
+ACC9.1: LINE=(ACC(STAC.A9.1.L3, MIAC.A9.1.L3, C.A9.L3, BPMC.L3,  &
+                  Q.A9.1.L3, CX.L3, ENAC.A9.1.L3));
+ACC9.2: LINE=(ACC(STAC.A9.2.L3, MIAC.A9.2.L3, C.A9.L3, BPMC.L3,  &
+                  Q.A9.2.L3, CY.L3, ENAC.A9.2.L3));
+ACC9.3: LINE=(ACC(STAC.A9.3.L3, MIAC.A9.3.L3, C.A9.L3, BPMC.L3,  &
+                  Q.A9.3.L3, CX.L3, ENAC.A9.3.L3));
+ACC9.4: LINE=(ACC(STAC.A9.4.L3, MIAC.A9.4.L3, C.A9.L3, BPMC.L3,  &
+                  Q.A9.4.L3, CY.L3, ENAC.A9.4.L3));
+
+ACC10.1: LINE=(ACC(STAC.A10.1.L3, MIAC.A10.1.L3, C.A10.L3, BPMC.L3,  &
+                   Q.A10.1.L3, CX.L3, ENAC.A10.1.L3));
+ACC10.2: LINE=(ACC(STAC.A10.2.L3, MIAC.A10.2.L3, C.A10.L3, BPMR.L3,  &
+                   Q.A10.2.L3, CY.L3, ENAC.A10.2.L3));
+ACC10.3: LINE=(ACC(STAC.A10.3.L3, MIAC.A10.3.L3, C.A10.L3, BPMR.L3,  &
+                   Q.A10.3.L3, CX.L3, ENAC.A10.3.L3));
+ACC10.4: LINE=(ACC(STAC.A10.4.L3, MIAC.A10.4.L3, C.A10.L3, BPMC.L3,  &
+                   Q.A10.4.L3, CY.L3, ENAC.A10.4.L3));
+
+ACC11.1: LINE=(ACC(STAC.A11.1.L3, MIAC.A11.1.L3, C.A11.L3, BPMC.L3,  &
+                   Q.A11.1.L3, CX.L3, ENAC.A11.1.L3));
+ACC11.2: LINE=(ACC(STAC.A11.2.L3, MIAC.A11.2.L3, C.A11.L3, BPMC.L3,  &
+                   Q.A11.2.L3, CY.L3, ENAC.A11.2.L3));
+ACC11.3: LINE=(ACC(STAC.A11.3.L3, MIAC.A11.3.L3, C.A11.L3, BPMR.L3,  &
+                   Q.A11.3.L3, CX.L3, ENAC.A11.3.L3));
+ACC11.4: LINE=(ACC(STAC.A11.4.L3, MIAC.A11.4.L3, C.A11.L3, BPMC.L3,  &
+                   Q.A11.4.L3, CY.L3, ENAC.A11.4.L3));
+
+ACC12.1: LINE=(ACC(STAC.A12.1.L3, MIAC.A12.1.L3, C.A12.L3, BPMC.L3,  &
+                   Q.A12.1.L3, CX.L3, ENAC.A12.1.L3));
+ACC12.2: LINE=(ACC(STAC.A12.2.L3, MIAC.A12.2.L3, C.A12.L3, BPMC.L3,  &
+                   Q.A12.2.L3, CY.L3, ENAC.A12.2.L3));
+ACC12.3: LINE=(ACC(STAC.A12.3.L3, MIAC.A12.3.L3, C.A12.L3, BPMR.L3,  &
+                   Q.A12.3.L3, CX.L3, ENAC.A12.3.L3));
+ACC12.4: LINE=(ACC(STAC.A12.4.L3, MIAC.A12.4.L3, C.A12.L3, BPMR.L3,  &
+                   Q.A12.4.L3, CY.L3, ENAC.A12.4.L3));
+
+ACC13.1: LINE=(ACC(STAC.A13.1.L3, MIAC.A13.1.L3, C.A13.L3, BPMC.L3,  &
+                   Q.A13.1.L3, CX.L3, ENAC.A13.1.L3));
+ACC13.2: LINE=(ACC(STAC.A13.2.L3, MIAC.A13.2.L3, C.A13.L3, BPMC.L3,  &
+                   Q.A13.2.L3, CY.L3, ENAC.A13.2.L3));
+ACC13.3: LINE=(ACC(STAC.A13.3.L3, MIAC.A13.3.L3, C.A13.L3, BPMC.L3,  &
+                   Q.A13.3.L3, CX.L3, ENAC.A13.3.L3));
+ACC13.4: LINE=(ACC(STAC.A13.4.L3, MIAC.A13.4.L3, C.A13.L3, BPMC.L3,  &
+                   Q.A13.4.L3, CY.L3, ENAC.A13.4.L3));
+
+ACC14.1: LINE=(ACC(STAC.A14.1.L3, MIAC.A14.1.L3, C.A14.L3, BPMC.L3,  &
+                   Q.A14.1.L3, CX.L3, ENAC.A14.1.L3));
+ACC14.2: LINE=(ACC(STAC.A14.2.L3, MIAC.A14.2.L3, C.A14.L3, BPMC.L3,  &
+                   Q.A14.2.L3, CY.L3, ENAC.A14.2.L3));
+ACC14.3: LINE=(ACC(STAC.A14.3.L3, MIAC.A14.3.L3, C.A14.L3, BPMC.L3,  &
+                   Q.A14.3.L3, CX.L3, ENAC.A14.3.L3));
+ACC14.4: LINE=(ACC(STAC.A14.4.L3, MIAC.A14.4.L3, C.A14.L3, BPMC.L3,  &
+                   Q.A14.4.L3, CY.L3, ENAC.A14.4.L3));
+
+ACC15.1: LINE=(ACC(STAC.A15.1.L3, MIAC.A15.1.L3, C.A15.L3, BPMC.L3,  &
+                   Q.A15.1.L3, CX.L3, ENAC.A15.1.L3));
+ACC15.2: LINE=(ACC(STAC.A15.2.L3, MIAC.A15.2.L3, C.A15.L3, BPMC.L3,  &
+                   Q.A15.2.L3, CY.L3, ENAC.A15.2.L3));
+ACC15.3: LINE=(ACC(STAC.A15.3.L3, MIAC.A15.3.L3, C.A15.L3, BPMC.L3,  &
+                   Q.A15.3.L3, CX.L3, ENAC.A15.3.L3));
+ACC15.4: LINE=(ACC(STAC.A15.4.L3, MIAC.A15.4.L3, C.A15.L3, BPMC.L3,  &
+                   Q.A15.4.L3, CY.L3, ENAC.A15.4.L3));
+
+ACC16.1: LINE=(ACC(STAC.A16.1.L3, MIAC.A16.1.L3, C.A16.L3, BPMC.L3,  &
+                   Q.A16.1.L3, CX.L3, ENAC.A16.1.L3));
+ACC16.2: LINE=(ACC(STAC.A16.2.L3, MIAC.A16.2.L3, C.A16.L3, BPMC.L3,  &
+                   Q.A16.2.L3, CY.L3, ENAC.A16.2.L3));
+ACC16.3: LINE=(ACC(STAC.A16.3.L3, MIAC.A16.3.L3, C.A16.L3, BPMC.L3,  &
+                   Q.A16.3.L3, CX.L3, ENAC.A16.3.L3));
+ACC16.4: LINE=(ACC(STAC.A16.4.L3, MIAC.A16.4.L3, C.A16.L3, BPMC.L3,  &
+                   Q.A16.4.L3, CY.L3, ENAC.A16.4.L3));
+
+ACC17.1: LINE=(ACC(STAC.A17.1.L3, MIAC.A17.1.L3, C.A17.L3, BPMC.L3,  &
+                   Q.A17.1.L3, CX.L3, ENAC.A17.1.L3));
+ACC17.2: LINE=(ACC(STAC.A17.2.L3, MIAC.A17.2.L3, C.A17.L3, BPMC.L3,  &
+                   Q.A17.2.L3, CY.L3, ENAC.A17.2.L3));
+ACC17.3: LINE=(ACC(STAC.A17.3.L3, MIAC.A17.3.L3, C.A17.L3, BPMC.L3,  &
+                   Q.A17.3.L3, CX.L3, ENAC.A17.3.L3));
+ACC17.4: LINE=(ACC(STAC.A17.4.L3, MIAC.A17.4.L3, C.A17.L3, BPMC.L3,  &
+                   Q.A17.4.L3, CY.L3, ENAC.A17.4.L3));
+
+ACC18.1: LINE=(ACC(STAC.A18.1.L3, MIAC.A18.1.L3, C.A18.L3, BPMC.L3,  &
+                   Q.A18.1.L3, CX.L3, ENAC.A18.1.L3));
+ACC18.2: LINE=(ACC(STAC.A18.2.L3, MIAC.A18.2.L3, C.A18.L3, BPMR.L3, &
+                   Q.A18.2.L3, CY.L3, ENAC.A18.2.L3));
+ACC18.3: LINE=(ACC(STAC.A18.3.L3, MIAC.A18.3.L3, C.A18.L3, BPMC.L3,  &
+                   Q.A18.3.L3, CX.L3, ENAC.A18.3.L3));
+ACC18.4: LINE=(ACC(STAC.A18.4.L3, MIAC.A18.4.L3, C.A18.L3, BPMR.L3,  &
+                   Q.A18.4.L3, CY.L3, ENAC.A18.4.L3));
+
+ACC19.1: LINE=(ACC(STAC.A19.1.L3, MIAC.A19.1.L3, C.A19.L3, BPMC.L3,  &
+                   Q.A19.1.L3, CX.L3, ENAC.A19.1.L3));
+ACC19.2: LINE=(ACC(STAC.A19.2.L3, MIAC.A19.2.L3, C.A19.L3, BPMC.L3,  &
+                   Q.A19.2.L3, D0000, ENAC.A19.2.L3));     !No corrector connected because of wiring problem
+ACC19.3: LINE=(ACC(STAC.A19.3.L3, MIAC.A19.3.L3, C.A19.L3, BPMC.L3,  &
+                   Q.A19.3.L3, L3COR, ENAC.A19.3.L3));     !Both correctors connected
+ACC19.4: LINE=(ACC(STAC.A19.4.L3, MIAC.A19.4.L3, C.A19.L3, BPMC.L3,  &
+                   Q.A19.4.L3, CY.L3, ENAC.A19.4.L3));
+
+ACC20.1: LINE=(ACC(STAC.A20.1.L3, MIAC.A20.1.L3, C.A20.L3, BPMR.L3, &
+                   Q.A20.1.L3, CX.L3, ENAC.A20.1.L3));
+ACC20.2: LINE=(ACC(STAC.A20.2.L3, MIAC.A20.2.L3, C.A20.L3, BPMR.L3,  &
+                   Q.A20.2.L3, CY.L3, ENAC.A20.2.L3));
+ACC20.3: LINE=(ACC(STAC.A20.3.L3, MIAC.A20.3.L3, C.A20.L3, BPMC.L3,  &
+                   Q.A20.3.L3, CX.L3, ENAC.A20.3.L3));
+ACC20.4: LINE=(ACC(STAC.A20.4.L3, MIAC.A20.4.L3, C.A20.L3, BPMC.L3,  &
+                   Q.A20.4.L3, CY.L3, ENAC.A20.4.L3));
+
+ACC21.1: LINE=(ACC(STAC.A21.1.L3, MIAC.A21.1.L3, C.A21.L3, BPMR.L3, &
+                   Q.A21.1.L3, CX.L3, ENAC.A21.1.L3));
+ACC21.2: LINE=(ACC(STAC.A21.2.L3, MIAC.A21.2.L3, C.A21.L3, BPMC.L3,  &
+                   Q.A21.2.L3, CY.L3, ENAC.A21.2.L3));
+ACC21.3: LINE=(ACC(STAC.A21.3.L3, MIAC.A21.3.L3, C.A21.L3, BPMC.L3,  &
+                   Q.A21.3.L3, CX.L3, ENAC.A21.3.L3));
+ACC21.4: LINE=(ACC(STAC.A21.4.L3, MIAC.A21.4.L3, C.A21.L3, BPMC.L3,  &
+                   Q.A21.4.L3, CY.L3, ENAC.A21.4.L3));
+
+ACC22.1: LINE=(ACC(STAC.A22.1.L3, MIAC.A22.1.L3, C.A22.L3, BPMC.L3, &
+                   Q.A22.1.L3, CX.L3, ENAC.A22.1.L3));
+ACC22.2: LINE=(ACC(STAC.A22.2.L3, MIAC.A22.2.L3, C.A22.L3, BPMC.L3,  &
+                   Q.A22.2.L3, CY.L3, ENAC.A22.2.L3));
+ACC22.3: LINE=(ACC(STAC.A22.3.L3, MIAC.A22.3.L3, C.A22.L3, BPMC.L3,  &
+                   Q.A22.3.L3, CX.L3, ENAC.A22.3.L3));
+ACC22.4: LINE=(ACC(STAC.A22.4.L3, MIAC.A22.4.L3, C.A22.L3, BPMR.L3,  &
+                   Q.A22.4.L3, CY.L3, ENAC.A22.4.L3));
+
+ACC23.1: LINE=(ACC(STAC.A23.1.L3, MIAC.A23.1.L3, C.A23.L3, BPMC.L3,  &
+                   Q.A23.1.L3, CX.L3, ENAC.A23.1.L3));
+ACC23.2: LINE=(ACC(STAC.A23.2.L3, MIAC.A23.2.L3, C.A23.L3, BPMC.L3,  &
+                   Q.A23.2.L3, CY.L3, ENAC.A23.2.L3));
+ACC23.3: LINE=(ACC(STAC.A23.3.L3, MIAC.A23.3.L3, C.A23.L3, BPMC.L3,  &
+                   Q.A23.3.L3, CX.L3, ENAC.A23.3.L3));
+ACC23.4: LINE=(ACC(STAC.A23.4.L3, MIAC.A23.4.L3, C.A23.L3, BPMC.L3,  &
+                   Q.A23.4.L3, CY.L3, ENAC.A23.4.L3));
+
+ACC24.1: LINE=(ACC(STAC.A24.1.L3, MIAC.A24.1.L3, C.A24.L3, BPMC.L3, &
+                   Q.A24.1.L3, CX.L3, ENAC.A24.1.L3));
+ACC24.2: LINE=(ACC(STAC.A24.2.L3, MIAC.A24.2.L3, C.A24.L3, BPMC.L3,  &
+                   Q.A24.2.L3, CY.L3, ENAC.A24.2.L3));
+ACC24.3: LINE=(ACC(STAC.A24.3.L3, MIAC.A24.3.L3, C.A24.L3, BPMC.L3,  &
+                   Q.A24.3.L3, CX.L3, ENAC.A24.3.L3));
+ACC24.4: LINE=(ACC(STAC.A24.4.L3, MIAC.A24.4.L3, C.A24.L3, BPMR.L3,  &
+                   Q.A24.4.L3, CY.L3, ENAC.A24.4.L3));
+
+ACC25.1: LINE=(ACC(STAC.A25.1.L3, MIAC.A25.1.L3, C.A25.L3, BPMC.L3, &
+                   Q.A25.1.L3, CX.L3, ENAC.A25.1.L3));
+ACC25.2: LINE=(ACC(STAC.A25.2.L3, MIAC.A25.2.L3, C.A25.L3, BPMR.L3,  &
+                   Q.A25.2.L3, CY.L3, ENAC.A25.2.L3));
+ACC25.3: LINE=(ACC(STAC.A25.3.L3, MIAC.A25.3.L3, C.A25.L3, BPMC.L3,  &
+                   Q.A25.3.L3, CX.L3, ENAC.A25.3.L3));
+ACC25.4: LINE=(ACC(STAC.A25.4.L3, MIAC.A25.4.L3, C.A25.L3, BPMC.L3,  &
+                   Q.A25.4.L3, CY.L3, ENAC.A25.4.L3));
+
+!************************************************************************************************
+
+!----- Last 16 modules in L3 - not in the beamline 2016
+
+!--- Quadrupoles in last 16 modules
+!--- August 2016: defined as FODO quads
+
+Q.A26.1.L3: Quadrupole, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A26.2.L3: Quadrupole, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A26.3.L3: Quadrupole, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A26.4.L3: Quadrupole, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A27.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A27.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A27.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A27.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A28.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A28.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A28.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A28.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+Q.A29.1.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A29.2.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+Q.A29.3.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.F.L3[K1];
+Q.A29.4.L3: QUADRUPOLE, L = L_Q_eff, K1 = Q.D.L3[K1];
+
+
+!--- Linac 3: Last 16 modules (A26-A29)
+
+ACC26.1: LINE=(ACC(STAC.A26.1.L3, MIAC.A26.1.L3, C.A26.L3, BPMC.L3,  &
+                   Q.A26.1.L3, CX.L3, ENAC.A26.1.L3));
+ACC26.2: LINE=(ACC(STAC.A26.2.L3, MIAC.A26.2.L3, C.A26.L3, BPMC.L3,  &
+                   Q.A26.2.L3, CY.L3, ENAC.A26.2.L3));
+ACC26.3: LINE=(ACC(STAC.A26.3.L3, MIAC.A26.3.L3, C.A26.L3, BPMC.L3,  &
+                   Q.A26.3.L3, CX.L3, ENAC.A26.3.L3));
+ACC26.4: LINE=(ACC(STAC.A26.4.L3, MIAC.A26.4.L3, C.A26.L3, BPMC.L3,  &
+                   Q.A26.4.L3, CY.L3, ENAC.A26.4.L3));
+
+ACC27.1: LINE=(ACC(STAC.A27.1.L3, MIAC.A27.1.L3, C.A27.L3, BPMC.L3,  &
+                   Q.A27.1.L3, CX.L3, ENAC.A27.1.L3));
+ACC27.2: LINE=(ACC(STAC.A27.2.L3, MIAC.A27.2.L3, C.A27.L3, BPMC.L3,  &
+                   Q.A27.2.L3, CY.L3, ENAC.A27.2.L3));
+ACC27.3: LINE=(ACC(STAC.A27.3.L3, MIAC.A27.3.L3, C.A27.L3, BPMC.L3,  &
+                   Q.A27.3.L3, CX.L3, ENAC.A27.3.L3));
+ACC27.4: LINE=(ACC(STAC.A27.4.L3, MIAC.A27.4.L3, C.A27.L3, BPMC.L3,  &
+                   Q.A27.4.L3, CY.L3, ENAC.A27.4.L3));
+
+ACC28.1: LINE=(ACC(STAC.A28.1.L3, MIAC.A28.1.L3, C.A28.L3, BPMC.L3,  &
+                   Q.A28.1.L3, CX.L3, ENAC.A28.1.L3));
+ACC28.2: LINE=(ACC(STAC.A28.2.L3, MIAC.A28.2.L3, C.A28.L3, BPMC.L3,  &
+                   Q.A28.2.L3, CY.L3, ENAC.A28.2.L3));
+ACC28.3: LINE=(ACC(STAC.A28.3.L3, MIAC.A28.3.L3, C.A28.L3, BPMC.L3,  &
+                   Q.A28.3.L3, CX.L3, ENAC.A28.3.L3));
+ACC28.4: LINE=(ACC(STAC.A28.4.L3, MIAC.A28.4.L3, C.A28.L3, BPMC.L3,  &
+                   Q.A28.4.L3, CY.L3, ENAC.A28.4.L3));
+
+ACC29.1: LINE=(ACC(STAC.A29.1.L3, MIAC.A29.1.L3, C.A29.L3, BPMC.L3,  &
+                   Q.A29.1.L3, CX.L3, ENAC.A29.1.L3));
+ACC29.2: LINE=(ACC(STAC.A29.2.L3, MIAC.A29.2.L3, C.A29.L3, BPMC.L3,  &
+                   Q.A29.2.L3, CY.L3, ENAC.A29.2.L3));
+ACC29.3: LINE=(ACC(STAC.A29.3.L3, MIAC.A29.3.L3, C.A29.L3, BPMC.L3,  &
+                   Q.A29.3.L3, CX.L3, ENAC.A29.3.L3));
+ACC29.4: LINE=(ACC(STAC.A29.4.L3, MIAC.A29.4.L3, C.A29.L3, BPMC.L3,  &
+                   Q.A29.4.L3, CY.L3, ENAC.A29.4.L3));
+
+!************************************************************************************************
+
+!----- Definition of FODO cells
+
+!--- One L3 FODO cell with RF focusing: as an example
+
+fodo_L3_RFon: Line = (ACC7.1, ACC7.2);
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- L3 linac without cavity focusing: for studies
+
+!--- Length of cavity (9-cells)
+                  
+C.00.L3: DRIFT, L = 1.0377;    ! 0.1153*9=1.0377
+
+!--- Single cavity (9-cells) with surrounding drifts
+!ACC_CAV0: DRIFT, L = 1.3836;   ! 0.1416+1.0377+0.2043 = 1.3836
+
+
+ACC7.F.L3: LINE=(ACC(STAC.A7.1.L3, MIAC.A7.1.L3, C.00.L3, BPMC.L3,  &
+                     Q.F.L3, CX.L3, ENAC.A7.1.L3));
+ACC7.D.L3: LINE=(ACC(STAC.A7.2.L3, MIAC.A7.2.L3, C.00.L3, BPMC.L3,  &
+                     Q.D.L3, CY.L3, ENAC.A7.2.L3));
+
+fodo_L3_RFoff: Line = (ACC7.F.L3, ACC7.D.L3);
+dofo_L3_RFoff: Line = (ACC7.D.L3, ACC7.F.L3);
+
+!************************************************************************************************
+
+
+!----- Main Linac L3C (80 Modules, 20 RF stations --- as built in August 2016)
+
+L3C: LINE = (ACC6.1,  ACC6.2,  ACC6.3,  ACC6.4, MATCH.L3.L3,  &
+             ACC7.1,  ACC7.2,  ACC7.3,  ACC7.4,               &
+             ACC8.1,  ACC8.2,  ACC8.3,  ACC8.4,  CSC.L3,      &
+             ACC9.1,  ACC9.2,  ACC9.3,  ACC9.4,               &
+             ACC10.1, ACC10.2, ACC10.3, ACC10.4,              &
+             ACC11.1, ACC11.2, ACC11.3, ACC11.4, CSC.L3,      &
+             ACC12.1, ACC12.2, ACC12.3, ACC12.4,              &
+             ACC13.1, ACC13.2, ACC13.3, ACC13.4,              &
+             ACC14.1, ACC14.2, ACC14.3, ACC14.4, CSC.L3,      &
+             ACC15.1, ACC15.2, ACC15.3, ACC15.4,              &
+             ACC16.1, ACC16.2, ACC16.3, ACC16.4,              &
+             ACC17.1, ACC17.2, ACC17.3, ACC17.4, CSC.L3,      &
+             ACC18.1, ACC18.2, ACC18.3, ACC18.4,              &
+             ACC19.1, ACC19.2, ACC19.3, ACC19.4,              &
+             ACC20.1, ACC20.2, ACC20.3, ACC20.4, CSC.L3,      &
+             ACC21.1, ACC21.2, ACC21.3, ACC21.4               &  
+             ACC22.1, ACC22.2, ACC22.3, ACC22.4,              &
+             ACC23.1, ACC23.2, ACC23.3, ACC23.4, CSC.L3,      &
+             ACC24.1, ACC24.2, ACC24.3, ACC24.4,              &
+             ACC25.1, ACC25.2, ACC25.3, ACC25.4 );
+
+!************************************************************************************************
+
+
+!----- Line in the end of L3 Linac: FODO cells and matching section
+
+!--- Subsection Markers
+
+STSUB.L3T.L3: MARKER;
+ENSUB.L3T.L3: MARKER;
+
+
+!--- Diagnostic Marker
+
+BPMA.L3:  MONITOR;    ! Warm Button BPM  40.5 mm diameter
+TORA.L3:  MARKER;     ! Toroid at beginning of temporary beamline
+OTRBW.L3: MARKER;
+
+
+!--- Correctors
+
+CEX.L3: HKICKER, L = 0.1;
+CEY.L3: VKICKER, L = 0.1;
+CFX.L3: HKICKER, L = 0.1;
+CFY.L3: VKICKER, L = 0.1;
+
+CMX.L3: HKICKER, L = 0.3;   ! for L3_80
+CMY.L3: VKICKER, L = 0.3;   ! for L3_80
+
+!------------------------------------------------------------------------------------------------
+
+!----- Substitute cells for missing 4 modules (RF station A26)
+!----- uses 300 mm TQB quadrupole and 300 mm HERA CH/CV coil
+
+!--- Drifts needed only for L3_80 case
+
+ACC000:  DRIFT, L = 11.9917;
+D67417:  Drift, L =  6.7417;
+D90058:  Drift, L =  9.0058;
+D023555: Drift, L =  0.23555;
+D033555: Drift, L =  0.33555;
+D17859:  Drift, L =  1.7859;
+D5250:   Drift, L =  5.250;
+
+
+!--- Quad Package under downstream support
+ACC002(COR,Q,BPM): LINE = &
+    (D90058, BPM, D023555, Q, D033555, COR, D17859);
+
+!--- Quad package under upstream support (not used)
+!D18058: Drift, L=1.5058
+!D92859: Drift, L=9.2859
+!ACC001(COR,Q,BPM): LINE = &
+!    (D15058, BPM, D0250, Q, D0350, COR, D92859);
+
+
+!--- Quadrupoles for missing 4 modules (A26)
+
+QB.1.L3: Quadrupole, L = L_TQB_eff, K1 = +0.140392839004;
+QB.2.L3: Quadrupole, L = L_TQB_eff, K1 = -0.130838992716;
+
+!------------------------------------------------------------------------------------------------
+
+
+!----- Substitute cells for last 12 modules (RF stations: A27-A29)
+
+!--- Drifts needed for L3_84 case
+D002575:  Drift, L =  0.02575;
+D020505:  Drift, L =  0.20505;
+D04542:   Drift, L =  0.45420;
+D11263:   Drift, L =  1.1263;
+D5745:    Drift, L =  5.745;
+D5780:    Drift, L =  5.780;
+D8215:    Drift, L =  8.215;
+D1277325: Drift, L = 12.77325;
+
+
+!--- L = (n_missing_modules * l_module + n_missing_scb * l_scb)/(n_fodo*2) - l_quadpackage =  35.90955 m 
+D359096: DRIFT, L = (12*11.9917 + 2.9978)/4 - 0.815;  
+
+!--- 01.02.2013: 73.4491 m long FODO cells (1.5) after LINAC with 4 screens
+D359096a: Drift, L = (D359096[L]+0.290+0.325)/2-0.290-0.200;     !  17.772275
+D359096b: Drift, L = (D359096[L]+0.290+0.325)/2-0.325-0.400;     !  17.537275
+D359096c: Drift, L = (D359096[L]+0.290+0.325)/2-0.290-0.200-2;   !  15.772275
+
+
+!--- Quadupoles in substitute cells for last 12 modules (A27-A29)
+
+QE.1.1.L3: Quadrupole, L = L_QE_eff, K1 = +0.1280915;    
+QE.1.2.L3: Quadrupole, L = L_QE_eff, K1 = -0.1280915;
+
+
+!----- Long FODO cells: 3 screens
+
+L3F1: LINE = (D359096c, D0200, OTRBW.L3, D0400, D359096b, &
+              QESEC(BPMA.L3, QE.1.1.L3, CEX.L3));
+
+L3F:  LINE = (D359096a, D0200, OTRBW.L3, D0400, D359096b, &
+              QESEC(BPMA.L3, QE.1.1.L3, CEX.L3));
+
+L3D0: LINE = (D359096a, D0200,           D0400, D359096b, &
+              QESEC(BPMA.L3, QE.1.2.L3, CEY.L3));
+
+
+! L3D0 with OTRW.L3: not used
+!L3D:  LINE = (D359096a, D0200, OTRBW.L3, D0400, D359096b, &
+!              QESEC(BPMA.L3, QE.1.2.L3, CEY.L3))
+
+fodo_L3_end: Line = (L3F,  L3D0);
+dofo_L3_end: Line = (L3D0, L3F);
+
+!************************************************************************************************
+
+
+!----- Matching section to CL
+
+!--- Setting for collimation optics Mode A
+QE.2.L3:   Quadrupole, L = L_QE_eff, K1 = -0.121486717856;
+QF.1.L3:   Quadrupole, L = L_QF_eff, K1 = +0.073704105966;
+QF.2.L3:   Quadrupole, L = L_QF_eff, K1 = -0.112280859682;
+
+L3TCL: LINE=(D1277325,                                 & 
+             QESEC(BPMA.L3, QE.2.L3, CEY.L3),          &
+             D5780, OTRBW.L3, D5745,                   & 
+             QFSEC(BPMA.L3, QF.1.L3, CFX.L3), D8215,   &
+             QFSEC(BPMA.L3, QF.2.L3, CFY.L3), D11263);    
+
+!************************************************************************************************
+
+
+!----- L3: 80, 84 and 96 modules, FODO cells and matching to CL
+
+L3_80: LINE=(STSEC.L3.L3, VCST40T78.L3,                          &
+             CFB.L3, L3C,                                        &
+             CTB.L3, VCST78T40.L3, STSUB.L3T.L3,                 &
+             D0100, D002575, VCDST.L3, D020505, TORA.L3, D04542, &
+             D67417, ACC002(CMX.L3,QB.1.L3,BPMA.L3), ACC000,     &  
+             ACC002(CMY.L3,QB.2.L3,BPMA.L3), D5250,              &
+             L3F1, L3D0, L3F, L3TCL, ENSUB.L3T.L3, ENSEC.L3.L3);
+
+L3_84: LINE=(STSEC.L3.L3, VCST40T78.L3,                          &
+             CFB.L3, L3C,                                        &   
+             ACC26.1, ACC26.2, ACC26.3, ACC26.4,                 &
+             CTB.L3, VCST78T40.L3, STSUB.L3T.L3,                 &
+             D0100, D002575, VCDST.L3, D020505, TORA.L3, D04542, &
+             L3F1, L3D0, L3F, L3TCL, ENSUB.L3T.L3, ENSEC.L3.L3);
+
+L3_96: LINE=(STSEC.L3.L3, VCST40T78.L3,                          &
+             CFB.L3, L3C,                                        &   
+             ACC26.1, ACC26.2, ACC26.3, ACC26.4,                 &
+             CSC.L3,                                             &
+             ACC27.1, ACC27.2, ACC27.3, ACC27.4,                 &
+             ACC28.1, ACC28.2, ACC28.3, ACC28.4,                 &
+             ACC29.1, ACC29.2, ACC29.3, ACC29.4                  & 
+             CTB.L3, ENSEC.L3.L3);
+
+L3: LINE=(L3_80);
+
+!=========================================================================================
+!=========================================================================================
+

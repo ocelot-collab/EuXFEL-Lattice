@@ -1,0 +1,279 @@
+!---------------------------------------------------------------------------------------
+!
+!  November 2022: XFEL Lattice and Optics --- T20 beamline
+!
+!---------------------------------------------------------------------------------------
+
+!assign,print="print"
+option, -echo,-info,warn
+
+!---------------------------------------------------------------------------------------
+
+SETPLOT, FONT=1, LWIDTH=8, POST=2, LSCALE=2.0, SSCALE=2.0, &
+         RSCALE=1.6, ASCALE=1.9
+
+!beam, energy=0.150
+!beam, particle=electron, energy=0.7, ex=0.01e-6, ey=0.01e-6, sige=1.0e-03
+
+!---------------------------------------------------------------------------------------
+
+!----- GUN.23.I1: Z coordinate 
+
+set, z0_start, 23.2
+
+
+!----- L0C8, MATCH.FQ.I1: Z coordinate
+
+set, z0_L0C8, 37.6484
+
+!---------------------------------------------------------------------------------------
+
+
+!----- Call files needed for T20 line
+
+call,"XFEL_DEFS.txm"       ! Definitions
+
+call, "XFEL_I1.txm"
+call, "XFEL_L1.txm"
+call, "XFEL_B1.txm"
+call, "XFEL_L2.txm"
+call, "XFEL_B2.txm"
+call, "XFEL_L3.txm"
+call, "XFEL_CL.txm"
+call, "XFEL_TL.txm"
+call, "XFEL_T20.txm"
+
+! call other model setup and optics in sections
+!call, "SET_closed_LHund_130MeV_42mm.txm"   ! LH undulator closed
+
+!---------------------------------------------------------------------------------------
+
+!----- T20
+
+!----- Initial Twiss functions at Z = 37.6484 m, MATCH.FQ.I1
+!      Historical values used as initial Twiss functions
+!      for the design of linear beam optics downstream
+B0_I1.ACC1:  BETA0, energy= 0.150, &
+                    betx = 25.543,  alfx = -0.3771,  &
+                    bety = 25.543,  alfy = -0.3771;
+
+!----- Twiss functions at Cathode, GUN.23.I1
+!      Calculated by back tracking from MATCH.FQ.I1 to GUN.23.I1
+!      Back tracking: TWISS command with COUPLE logical flag
+B0_I1.G1:    BETA0, energy= 0.005, &
+                    betx = 55.798075,  alfx = 18.18859573,  &
+                    bety = 55.798075,  alfy = 18.18859573;
+
+!----- Remark:
+!      Back and forward trackings are consistent using COUPLE flag
+
+!---------------------------------------------------------------------------------------
+
+!----- Setting of TLD beamline elements
+!         1) Only setting for KS kickers are needed
+!         2) Quadrupoles between KS and 2d septum have
+!            individual names and defined in XFEL_Run_TLD.txm
+
+!----- Setting of KS kickers 
+
+!--- KS kickers are RBEND with zero angle
+set, KSPOS.1.TL[ANGLE],     0
+set, KSNEG.1.TL[ANGLE],     0
+
+
+comment
+!--- QF.1.TLD.TL quadrupole is SBEND with zero angle
+set, QF.1.TLD.TL[ANGLE],    0
+set, QF.1.TLD.TL[E1],       0
+set, QF.1.TLD.TL[E2],       0
+
+!--- QF.2.TLD.TL quadrupole is SBEND with zero angle
+set, QF.2.TLD.TL[ANGLE],    0
+set, QF.2.TLD.TL[E1],       0
+set, QF.2.TLD.TL[E2],       0
+
+!--- QK.1.TLD.TL quadrupole is sliced in N slices: Exception
+endcomment
+
+
+!----- Model with HELP elements is still possible
+
+!--- HELP elements are RBEND with zero angle
+set, HELP.1a.TLD[ANGLE], 0
+set, HELP.1b.TLD[ANGLE], 0
+set, HELP.2a.TLD[ANGLE], 0
+set, HELP.2b.TLD[ANGLE], 0
+set, HELP.3a.TLD[ANGLE], 0
+set, HELP.3b.TLD[ANGLE], 0
+
+!---------------------------------------------------------------------------------------
+
+
+!----- Setting of T5D beamline elements
+!         1) Only setting for KL kickers are needed
+!         2) Quadrupoles between KL and 2d septum have
+!            individual names and defined in XFEL_Run_South.txm
+
+!----- Setting of KL kickers 
+
+!--- KL kickers are RBEND with zero angle
+set, KL.1.TL[ANGLE],  0
+set, KL.2.TL[ANGLE],  0
+
+comment
+!--- QF.1.T1.TL quadrupole is SBEND with zero angle
+set, QF.1.T1.TL[ANGLE],    0
+set, QF.1.T1.TL[E1],       0
+set, QF.1.T1.TL[E2],       0
+
+!--- QK.2.T1.TL quadrupole is sliced in N slices: Exception
+endcomment
+
+
+!----- Model with HELP elements is still possible
+
+!--- HELP elements are RBEND with zero angle
+set, HELP.1a.T1[ANGLE], 0 
+set, HELP.1b.T1[ANGLE], 0 
+set, HELP.2a.T1[ANGLE], 0 
+set, HELP.2b.T1[ANGLE], 0
+
+!---------------------------------------------------------------------------------------
+
+
+!----- TD20: Setting for KL kickers and quadrupoles between KL and 2d septum
+
+
+!--- KL kickers are RBEND dipole
+set, KL.20.TL[ANGLE],     ANG_KL_T20
+
+
+!--- Quad QF.1.TL between KL kickers and 1st septum: Combine function magnet SBEND
+!      1) horizontally focusing quadrupole, k1 > 0
+!      2) trajectory is shifted in Y-plane at the entrance => vertical dipole
+!      3) vert dipole => TILT = pi/2 => k1 < 0 to be focusing in X-plane
+
+!--- Trajectory from Matlab code
+E1_QF_T20 = +0.0007548342024;
+E2_QF_T20 = +0.0011902429655;
+
+angleQF_T20 = -(E2_QF_T20 - E1_QF_T20);      ! sign (-) for deflection to positive Y
+
+QF.1.T20.TL: SBEND, L = L_QF_eff, ANGLE = angleQF_T20,  &
+                    E1 = E1_QF_T20, E2 = E2_QF_T20,     &
+                    K1 = -KFscale,                      &
+                    TILT = pi/2;
+               
+
+!--- Quad QK.2.T20.TL is sliced in N slices: Exception
+!      1) vertically focusing quadrupole, k1 < 0
+!      2) trajectory is shifted in both planes at the entrance => hor and ver dipole
+
+!--- Horizontal trajectory at entrance and exit of QK.2.TL
+
+!xE1_QK_T20 = -0.0053973151221;   ! from Matlab code
+xE1_QK_T20 = -5.397213228E-03;    ! from MAD8, used
+xE2_QK_T20 = -0.0061799810553;    ! from Matlab code
+
+angleX_T20 = -(xE2_QK_T20 - xE1_QK_T20);
+
+
+!--- Vertical trajectory at entrance and exit of QK.2.TL
+
+!yE1_QK_T20 = +0.0022480661411;   ! from Matlab code
+yE1_QK_T20 = +2.248663716E-03;    ! from MAD8, used
+yE2_QK_T20 = +0.0;                ! from Matlab code
+                    
+angleY_T20 = -(yE2_QK_T20 - yE1_QK_T20);    ! sign (+) to deflect down (to negative Y)
+
+
+!--- QK.2.TL is splitted in 200 parts: 10 hor and 190 ver slices
+
+z3_slice = 200;                  ! total number of slices
+x3_slice = 10;                   ! number of X-slices, for angle
+y3_slice = z3_slice - x3_slice;  ! number of Y-slices, for angle
+
+
+xQK.2.TL.T20: SBEND, L = L_QK_eff/z3_slice, ANGLE = angleX_T20/x3_slice,  &
+                     E1 = 0, E2 = 0,                                      &
+                     K1 = -KFscale*(0.5321/1.0552);
+
+yQK.2.TL.T20: SBEND, L = L_QK_eff/z3_slice, ANGLE = angleY_T20/y3_slice, &
+                     E1 = 0, E2 = 0,                                     &
+                     K1 = +KFscale*(0.5321/1.0552),                      &
+                     TILT = pi/2;
+
+QK_T20_slice20: Line = (19 * yQK.2.TL.T20, 1 * xQK.2.TL.T20);
+QK.2.T20.TL: Line = (10 * QK_T20_slice20);
+                    
+!---------------------------------------------------------------------------------------
+
+!----- Model with HELP elements is still possible
+
+!--- HELP elements are RBEND with zero angle
+set, HELP.1a.T20[ANGLE], 0
+set, HELP.1b.T20[ANGLE], 0
+set, HELP.2a.T20[ANGLE], 0
+set, HELP.2b.T20[ANGLE], 0
+
+!---------------------------------------------------------------------------------------
+
+!nI1TT20_L0C8: LINE = (I1_L0C8, L1, B1, L2, B2, L3, CL,  &
+!                      TL1, TL2TL, TL3TL, TL5T20, T20, Dxx)
+
+nI1TT20:      LINE = (I1, L1, B1, L2, B2, L3, CL,  &
+                      TL1, TL2TL, TL3TL, TL5T20, T20, FF_T20)
+
+nI1TT20_L0C8: LINE = (I1_L0C8, L1, B1, L2, B2, L3, CL,  &
+                      TL1, TL2TL, TL3TL, TL5T20, T20, FF_T20)
+
+!---------------------------------------------------------------------------------------
+
+
+!----- Twiss functions and Survey
+
+!--- Start at Cathode
+
+title, "XFEL G1 to T20: November 2022"
+beam, energy=0.005
+use, nI1TT20
+print, #s/#e
+twiss, beta0=B0_I1.G1, save, couple, tape=twiss_T20
+plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, vaxis2=dx,dy
+plot,table=twiss, haxis=s, vaxis=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, hmin=0,hmax=3000
+!
+plot,table=twiss, haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=100, hmin=2000,hmax=2200, vaxis2=dx,dy
+
+!static, map
+
+survey, y0 = -2.75, z0 = z0_start, tape=survey_T20
+
+
+
+!--- Start at Z = 37.6484 m
+
+title, "XFEL G1 to T20: September 2021"
+beam, energy=0.150
+use, nI1TT20_L0C8
+print, #s/#e
+twiss, beta0=B0_I1.ACC1, save, couple, tape=twiss_T20_L0C8
+plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, vaxis2=dx,dy
+plot,table=twiss, haxis=s, vaxis=betx,bety, spline,colour=100, &
+     vmin=0,vmax=500, hmin=0,hmax=3000
+
+!static, map
+
+survey, y0 = -2.75, z0 = z0_L0C8, tape=survey_T20_L0C8
+
+
+!---------------------------------------------------------------------------------------
+
+!call,"Matching_T20.txm"
+   
+!---------------------------------------------------------------------------------------
+!---------------------------------------------------------------------------------------
+
