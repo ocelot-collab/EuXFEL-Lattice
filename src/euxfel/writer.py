@@ -30,7 +30,13 @@ DEFAULT_ELEMENT_ORDER = [
     "Matrix",
     "Aperture",
     "SlicedElement",
+    "SRot",
+    "YRot",
 ]
+
+# Elements this repository defines because Ocelot has no equivalent.  They are
+# written the same way as any other element, but imported from here.
+EUXFEL_ELEMENT_MODULES = {"SRot": "euxfel.rotations", "YRot": "euxfel.rotations"}
 
 
 class PythonSubsequenceWriter:
@@ -218,11 +224,18 @@ class PythonSubsequenceWriter:
         # This is a special case, as it is written not as a SlicedElement at all,
         # And instead just as lists of elements multiplied by integers:
         class_names.discard("SlicedElement")
-        elements_to_import = ", ".join(sorted(class_names))
-        lines = [
-            "from ocelot.cpbd.beam import Twiss",
-            f"from ocelot.cpbd.elements import {elements_to_import}",
-        ]
+
+        # Elements we define ourselves come from euxfel, not ocelot.
+        by_module = defaultdict(set)
+        for name in class_names:
+            by_module[EUXFEL_ELEMENT_MODULES.get(name, "ocelot.cpbd.elements")].add(
+                name
+            )
+
+        lines = ["from ocelot.cpbd.beam import Twiss"]
+        for module in sorted(by_module):
+            names = ", ".join(sorted(by_module[module]))
+            lines.append(f"from {module} import {names}")
         return "\n".join(lines)
 
     def write_module(

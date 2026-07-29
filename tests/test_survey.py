@@ -28,18 +28,25 @@ AUDITED_SHEETS = ["I1toT4D", "I1toT5D"]
 # micro-radian level is a genuine disagreement rather than rounding.
 ANGLE_TOLERANCE_URAD = 0.5
 
-# Bends known to disagree with their own BENDIN/BENDOUT markers, and by how much.
+# Bends that disagree with their own BENDIN/BENDOUT markers.
 #
 # BZ.2030.T1: the BENDOUT roll is 4.298e-06 where propagating from its own
 # BENDIN row gives -5.471e-06, a difference of 9.769 urad.  X, Y, Z, THETA and
-# PHI on that row all agree to better than 0.1 um / 0.1 urad, so it is isolated
-# to CHI.  The value is inherited by the rows downstream, which leaves the T5
-# branch rolled by ~9.8 urad and displaced by ~2.3 mm at the dump.  Whether the
-# value is wrong, or whether CHI at BENDOUT means something other than the exit
-# roll, is an open question with the component list's maintainers -- it is
-# identical to the BENDSTR value on every bend, and this is the only one where
-# that differs from the propagated exit.  Present in the 2026.01.21 and
-# 2026.02.13 releases alike.
+# PHI on that row agree to better than 0.1 um / 0.1 urad, so it is isolated
+# to CHI.
+#
+# The cause is settled, and the component list is right: MAD-8 applies three
+# zero-length frame rotations immediately before this bend, and
+# makelist_release.m:56 discards them on the way into the spreadsheet.  BENDIN
+# is a copy of the row *before* the rotations while BENDOUT is the magnet's own
+# surveyed row *after* them, so the deleted 9.769 urad surfaces here.  This is
+# the only bend in 134 that straddles a rotation, which is why it is the only
+# one that fails.  See euxfel.rotations and tests/test_mad8_survey.py.
+#
+# So this entry is permanent: it records a real hole in the component list, not
+# a defect in our conversion.  Our own model no longer has the error --
+# test_mad8_survey.py checks the full SASE2 branch against MAD-8 directly and
+# requires sub-micron agreement.
 KNOWN_INCONSISTENT_BENDS = {"BZ.2030.T1"}
 
 

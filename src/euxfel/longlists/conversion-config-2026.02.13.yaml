@@ -175,10 +175,40 @@ sections:
             k1: 0.090359600075815
             tilt: 1.570796327
 
+      # MAD-8's RotSystemTD1, at the head of T1M and so immediately before the
+      # first untilted septum BZ.2030.T1.  Defined in Run_South_2025.txm:299-322
+      # and used only by the survey line I1TT5D_sur, never by the Twiss line, so
+      # it patches the design geometry onto the as-built XTD1 tunnel without
+      # touching the optics.  makelist_release.m:56 discards every row whose name
+      # begins ROT, which is why these are absent from the component list.
+      #
+      # az1 + az2 = +9.769e-06 is a deliberate residual roll: without it the
+      # SASE2 branch is rolled by 9.769 urad and the T5D dump lands 2.3 mm out.
+      # Order matters -- roll, pitch, roll back.
+      ROT.Z1.T1:
+        position: { reference: MBZ.2030a.T1, adjacent: before }
+        type: SRot
+        angle: -0.00440392786446921
+      ROT.Y.T1:
+        position: { reference: MBZ.2030a.T1, adjacent: before }
+        type: YRot
+        angle: 9.27121409529346e-08
+      ROT.Z2.T1:
+        position: { reference: MBZ.2030a.T1, adjacent: before }
+        type: SRot
+        angle: 0.00441369699554469
+
   SASE2:
     sheet: I1toT5D
     start_marker_name1: STSEC.2197.SA2
     stop_marker_name1: ENSEC.2473.SA2
+    new_elements:
+      # Run_South_2025.txm:318, at the SA2 entrance ("Sa2_Ursprung"), survey
+      # line only.  Same story as RotSystemTD1 above.
+      ROT.Y.SA2:
+        position: { reference: STSEC.2197.SA2, adjacent: after }
+        type: YRot
+        angle: -2.365095999996847e-06
 
   T3:
     sheet: I1toT5D

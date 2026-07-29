@@ -20,6 +20,7 @@ from ocelot.cpbd.elements.optic_element import OpticElement
 from ocelot.cpbd.match import match
 from ocelot.cpbd.optics import twiss as calc_twiss
 
+from euxfel import rotations
 from euxfel.complist import ComponentList
 from euxfel.slicing import SlicedElement
 from euxfel.writer import PythonSubsequenceWriter
@@ -1524,8 +1525,13 @@ def _parse_new_elements_dict(dconf: dict[str, dict[str, Any]]) -> dict[str, Plac
             placement = _parse_element_placement(element, properties["position"])
             new_elements[name] = placement
         else:
-            # I could add the rest relatively easily, but not necessary atm.
-            raise ValueError("Unsupported element type, %s", etype)
+            # Any other element is built straight from its config, the same way
+            # a SlicedElement's own slices are.
+            properties = dict(properties)
+            position = properties.pop("position")
+            element = _dict_to_element(name, properties)
+            assert name not in new_elements
+            new_elements[name] = _parse_element_placement(element, position)
     return new_elements
 
 
@@ -1564,6 +1570,18 @@ class MalformedConversionConfig(Exception):
     pass
 
 
+def _element_class(etype: str) -> type:
+    """Resolve an element class name from the config to a class.
+
+    Looks in Ocelot first, then at the elements this repository defines because
+    Ocelot has no equivalent (`euxfel.rotations`).
+    """
+    for module in (elements, rotations):
+        if hasattr(module, etype):
+            return getattr(module, etype)
+    raise MalformedConversionConfig(f"Unknown element type: {etype}")
+
+
 def _dict_to_element(name: str, dconf: dict[str, Any]):
     try:
         etype = dconf.pop("type")  # type: ignore
@@ -1571,7 +1589,7 @@ def _dict_to_element(name: str, dconf: dict[str, Any]):
         raise MalformedConversionConfig("Missing type tag for new element") from e
 
     eid = dconf.pop("eid", name)
-    return getattr(elements, etype)(**dconf, eid=eid)
+    return _element_class(etype)(**dconf, eid=eid)
 
 
 def _parse_config_dict(dconf: dict) -> list[SubsequenceModule]:

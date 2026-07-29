@@ -25,6 +25,7 @@ from ocelot.cpbd.magnetic_lattice import MagneticLattice
 
 from euxfel import pand8, sequences
 from euxfel.mad8 import TAPE_TARGETS, survey_tape
+from euxfel.rotations import SRot, YRot
 
 # Targets that have both an archived tape and a generated sequence.  G1D has a
 # tape but is not yet a conversion target.
@@ -42,23 +43,17 @@ ANGLE_TOLERANCE_RAD = 1e-9
 # Arc lengths are matched at nanometre resolution before comparing.
 ARC_LENGTH_MATCH_M = 1e-9
 
-# T5D alone disagrees, and by a known and fully explained amount.
+# T5D used to be the one target that failed here, by 2.3 mm and 9.769 urad,
+# because MAD-8 applies four zero-length frame rotations on the SASE2 branch
+# that the component list has no record of -- `makelist_release.m:56` discards
+# every row whose name begins ROT.  They are now modelled explicitly; see
+# `euxfel.rotations` for the full account.  Nothing here special-cases T5D any
+# more, which is the point: if the rotations are ever dropped from the
+# conversion config, this test is what notices.
 #
-# `Run_South_2025.txm:299-322` puts three zero-length frame rotations at the
-# head of T1M -- SROT(-4.40392786446921e-3), YROT(+9.27121409529346e-8),
-# SROT(+4.41369699554469e-3) -- and another, YROT(-2.365096e-6), at the SA2
-# entrance.  They sit in the *survey* line (`I1TT5D_sur`) and not the Twiss line,
-# so they patch the as-built XTD1 tunnel geometry without touching the optics.
-#
-# `makelist_release.m:56` strips every row whose name starts with ROT, so they
-# never reach the component list and our converter cannot know about them.  The
-# net roll, az1 + az2 = +9.769e-06, is what leaves the SASE2 branch rolled and
-# the T5D dump displaced by ~2.3 mm.  It is also the origin of `BZ.2030.T1` in
-# `KNOWN_INCONSISTENT_BENDS` in test_survey.py -- that bend is the one that
-# straddles the rotation.
-KNOWN_MISSING_ROTATIONS = {"T5D"}
-EXPECTED_ROLL_DEFICIT_RAD = 9.769e-6
-EXPECTED_DISPLACEMENT_M = 2.29e-3
+# RotSystemTD1 sits at the head of T1M, immediately before the first untilted
+# septum, and leaves a deliberate residual roll of az1 + az2.
+NET_ROLL_RAD = -0.00440392786446921 + 0.00441369699554469
 
 
 def _ocelot_survey(target: str, seed: dict) -> pl.DataFrame:
@@ -128,9 +123,7 @@ def test_total_length_matches_mad8(target: str) -> None:
     )
 
 
-@pytest.mark.parametrize(
-    "target", [t for t in COMPARED_TARGETS if t not in KNOWN_MISSING_ROTATIONS]
-)
+@pytest.mark.parametrize("target", COMPARED_TARGETS)
 def test_survey_matches_mad8(target: str, surveys) -> None:
     """Position and orientation must match MAD-8 wherever the arcs coincide."""
     joined = surveys[target]
@@ -151,39 +144,42 @@ def test_survey_matches_mad8(target: str, surveys) -> None:
     )
 
 
-def test_t5d_differs_only_by_the_missing_survey_rotations(surveys) -> None:
-    """Pin the one known disagreement to its explained magnitude.
+def test_sase2_branch_carries_the_mad8_rotations() -> None:
+    """The four survey-only rotations must be in the T5D lattice, in order.
 
-    Asserted as an equality rather than a bound so that *fixing* it fails too:
-    once the rotations are modelled this test must be deleted and T5D returned
-    to `test_survey_matches_mad8`.
+    `test_survey_matches_mad8` already catches their removal, but only as one
+    number among thousands and with no hint as to the cause.  This names the
+    thing that was wrong: nothing in the component list can put these elements
+    into the model, so only the conversion config holds them, and a config edit
+    is exactly how they would go missing again.
     """
-    joined = surveys["T5D"]
+    mlat = MagneticLattice(sequences.cathode_to_t5d)
+    found = [
+        (element.id, element.angle)
+        for element in mlat.sequence
+        if isinstance(element, (SRot, YRot))
+    ]
 
-    worst_position = _worst(joined, ("X", "Y", "Z"))
-    worst_angle = _worst(joined, ("THETA", "PHI", "PSI"))
-
-    assert worst_angle == pytest.approx(EXPECTED_ROLL_DEFICIT_RAD, rel=0.05), (
-        f"T5D's angular disagreement with MAD-8 is {worst_angle:.4e} rad, not the "
-        f"{EXPECTED_ROLL_DEFICIT_RAD:.4e} rad of the missing survey rotations. If the "
-        f"rotations are now modelled, delete this test and add T5D back to "
-        f"test_survey_matches_mad8."
+    assert found == [
+        ("ROT.Z1.T1", -0.00440392786446921),
+        ("ROT.Y.T1", 9.27121409529346e-08),
+        ("ROT.Z2.T1", 0.00441369699554469),
+        ("ROT.Y.SA2", -2.365095999996847e-06),
+    ], (
+        "the SASE2 survey rotations are missing or altered; they come only from "
+        "the conversion config, since makelist_release.m:56 strips them out of "
+        "the component list"
     )
-    assert worst_position == pytest.approx(EXPECTED_DISPLACEMENT_M, rel=0.05), (
-        f"T5D's positional disagreement with MAD-8 is {worst_position:.4e} m, not the "
-        f"expected {EXPECTED_DISPLACEMENT_M:.4e} m"
+
+    # Deliberately not cancelling: this residual is the whole reason T5D used
+    # to be 2.3 mm out.
+    net_roll = found[0][1] + found[2][1]
+    assert net_roll == pytest.approx(NET_ROLL_RAD, rel=1e-12)
+
+    # And the rotations must be zero-length, or they would displace the branch
+    # rather than merely reorient it.
+    assert all(
+        element.l == 0.0
+        for element in mlat.sequence
+        if isinstance(element, (SRot, YRot))
     )
-
-
-def test_t5d_agrees_upstream_of_the_rotations(surveys) -> None:
-    """Everything before the T1 septa must still match to the same tolerance.
-
-    Confines the disagreement to the rotations rather than letting it stand as
-    a blanket exemption for the whole SASE2 branch.
-    """
-    # RotSystemTD1 sits at the head of T1M, at s = 2006.68585 m.
-    upstream = surveys["T5D"].filter(pl.col("S") < 2006.0)
-
-    assert upstream.height > 1000
-    assert _worst(upstream, ("X", "Y", "Z")) < POSITION_TOLERANCE_M
-    assert _worst(upstream, ("THETA", "PHI", "PSI")) < ANGLE_TOLERANCE_RAD

@@ -12,6 +12,8 @@ from ocelot.cpbd.elements import (
     Vcor,
 )
 
+from euxfel.rotations import YRot
+
 twiss0 = Twiss()
 twiss0.E = 14.0000000004506
 twiss0.alpha_x = 1.2498244249567936
@@ -854,11 +856,15 @@ u00_2470_sa2 = Marker(eid="U00.2470.SA2")
 enucell_2473_sa2 = Marker(eid="ENUCELL.2473.SA2")
 ensub_2473_sa2 = Marker(eid="ENSUB.2473.SA2")
 ensec_2473_sa2 = Marker(eid="ENSEC.2473.SA2")
+
+# YRots:
+rot_y_sa2 = YRot(angle=-2.365095999996847e-06, eid="ROT.Y.SA2")
 # fmt: on
 
 # Sequence:
 cell = (
     stsec_2197_sa2,
+    rot_y_sa2,
     d_0,
     match_2197_sa2,
     stucell_2197_sa2,

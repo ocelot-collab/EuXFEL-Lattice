@@ -15,6 +15,8 @@ from ocelot.cpbd.elements import (
     Vcor,
 )
 
+from euxfel.rotations import SRot, YRot
+
 twiss0 = Twiss()
 twiss0.E = 14.0000000004506
 twiss0.alpha_x = 0.6814940548723414
@@ -247,6 +249,13 @@ ensec_2197_t1 = Marker(eid="ENSEC.2197.T1")
 xslice2027 = RBend(l=0.005276, angle=-7.791933105545399e-05, k1=-0.090359600075815, e1=0.0, e2=0.0, eid="xslice2027")
 yslice2027 = RBend(l=0.005276, angle=1.181521439452105e-05, k1=0.090359600075815, e1=0.0, e2=0.0, tilt=1.570796327, eid="yslice2027")
 qk_2027_tl = (19 * [yslice2027] + [xslice2027]) * 10
+
+# SRots:
+rot_z1_t1 = SRot(angle=-0.00440392786446921, eid="ROT.Z1.T1")
+rot_z2_t1 = SRot(angle=0.00441369699554469, eid="ROT.Z2.T1")
+
+# YRots:
+rot_y_t1 = YRot(angle=9.27121409529346e-08, eid="ROT.Y.T1")
 # fmt: on
 
 # Sequence:
@@ -260,6 +269,9 @@ cell = (
     d_0,
     qk_2027_tl,
     d_1,
+    rot_z1_t1,
+    rot_y_t1,
+    rot_z2_t1,
     mbz_2030a_t1,
     bz_2030_t1,
     mbz_2030d_t1,
