@@ -42,13 +42,20 @@ from ocelot.cpbd.elements import (
 )
 from ocelot.cpbd.elements.optic_element import OpticElement
 
-from euxfel import metadata, pand8
+from euxfel import kickers, metadata, pand8
+from euxfel.conversion import load_conversion_config
 from euxfel.mad8 import survey_tape
 from euxfel.rotations import SRot, YRot
 
 #: Keywords `makelist_release.m` drops on the way into the spreadsheet, so the
 #: sheet has no row for them.  `DRIF` at :333-339, the rotations at :56.
 DROPPED_KEYWORDS = frozenset({"DRIF", "SROT", "YROT"})
+
+#: Zero-strength RBends MAD-8 uses as survey fitting handles
+#: (`XFEL_TL.txm:307-327`).  The MAD-8 author has confirmed they carry no
+#: information and can be dropped; the data agrees, with no HELP row in any
+#: sheet against 4-14 records per tape.
+DROPPED_NAME_PREFIXES = ("HELP",)
 
 #: Transverse-deflecting structures, which share the `LCAV` keyword with the
 #: accelerating cavities and are told apart by frequency.
@@ -91,7 +98,52 @@ def _cavity(record: dict[str, Any], eid: str) -> Cavity | TDCavity:
     )
 
 
-def _element_from(record: dict[str, Any], eid: str) -> OpticElement:
+def kicker_families(config: dict[str, Any] | None = None) -> dict[str, str]:
+    """MAD-8 name stem -> kicker family, from the conversion config.
+
+    A tape record `HKICKER, L=0.1` named `KIX.I1` is indistinguishable from one
+    named `CIX.I1`, an ordinary steerer -- only the stem separates them, exactly
+    as `makelist_release.m:447-478` does it.  The longlist route needs none of
+    this because it has a `GROUP` column, which is what makes the two a
+    cross-check on each other.
+    """
+    if config is None:
+        config = load_conversion_config()
+    declared = config.get("kicker_classes") or {}
+    return {
+        stem: family
+        for family, stems in declared.items()
+        if family != "overrides"
+        for stem in stems
+    }
+
+
+def kicker_overrides(config: dict[str, Any] | None = None) -> dict[str, str]:
+    """NAME1 -> family, for the by-name overrides at `makelist:803-812`."""
+    if config is None:
+        config = load_conversion_config()
+    return (config.get("kicker_classes") or {}).get("overrides") or {}
+
+
+def _kicker_plane(record: dict[str, Any]) -> str:
+    """Which plane a kicker record deflects in.
+
+    MAD-8 says it two ways: with the keyword for the ones modelled as kickers,
+    and with the tilt for the ones modelled as bends (`KNY`, and the six `KL`s
+    in the TL that really do carry `pi/2`).
+    """
+    if record["KEYWORD"] == "HKIC":
+        return "H"
+    if record["KEYWORD"] == "VKIC":
+        return "V"
+    return "V" if abs(record["TILT"] or 0.0) > 1e-9 else "H"
+
+
+def _element_from(
+    record: dict[str, Any],
+    eid: str,
+    kicker_family: str | None = None,
+) -> OpticElement:
     """One Ocelot element from one tape record."""
     keyword, length = record["KEYWORD"], record["L"] or 0.0
     common = {"l": length, "eid": eid}
@@ -99,6 +151,18 @@ def _element_from(record: dict[str, Any], eid: str) -> OpticElement:
 
     if _is_undulator(record):
         return _undulator(record, eid)
+
+    if kicker_family is not None:
+        # The plane is in the class name, so the tilt is passed through as it
+        # stands rather than being synthesised or stripped.
+        kind = kickers.BY_FAMILY_AND_PLANE[kicker_family, _kicker_plane(record)]
+        return kind(
+            angle=record["ANGLE"] or 0.0,
+            e1=record["E1"] or 0.0,
+            e2=record["E2"] or 0.0,
+            tilt=tilt,
+            **common,
+        )
 
     match keyword:
         case "DRIF":
@@ -163,6 +227,12 @@ def read_tape(target: str) -> pl.DataFrame:
     whole reason the SASE2 geometry comes out right.
     """
     tape = pand8.read_survey(survey_tape(target))
+    # HELP.* are survey fitting handles that carry no information and appear in
+    # no sheet, so dropping them is right -- but note it *widens* the alignment
+    # gap rather than closing it (B1D from -4 to -8), because the tape already
+    # had fewer rows than the sheet there.  Whatever the sheet has that the tape
+    # does not is still unaccounted for.
+    tape = tape.filter(~pl.col("NAME").str.starts_with(DROPPED_NAME_PREFIXES[0]))
     # MATR records print no length, but SUML still advances across them.
     return tape.slice(1).with_columns(
         pl.when(pl.col("KEYWORD") == "MATR")
@@ -214,6 +284,7 @@ def build_sequence(target: str, sheet: pl.DataFrame) -> list[OpticElement]:
     tape = read_tape(target)
     names = align_to_sheet(tape, sheet)
     by_name = {row["NAME1"]: row for row in sheet.iter_rows(named=True)}
+    families, overrides = kicker_families(), kicker_overrides()
 
     sequence, drift_index = [], 0
     for record, name in zip(tape.iter_rows(named=True), names):
@@ -224,7 +295,12 @@ def build_sequence(target: str, sheet: pl.DataFrame) -> list[OpticElement]:
             continue
 
         eid = name if name is not None else record["NAME"]
-        element = _element_from(record, eid)
+        # A kicker is identified by its MAD-8 name stem; the by-name overrides
+        # mirror makelist_release.m:803-812 and win where they apply.
+        family = None
+        if name is not None:
+            family = overrides.get(name) or families.get(_stem(record["NAME"]))
+        element = _element_from(record, eid, kicker_family=family)
         if name is not None:
             element.ps_id = by_name[name]["NAME2"]
             metadata.attach(element, by_name[name])

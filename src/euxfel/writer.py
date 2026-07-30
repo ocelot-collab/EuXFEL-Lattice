@@ -34,11 +34,26 @@ DEFAULT_ELEMENT_ORDER = [
     "SlicedElement",
     "SRot",
     "YRot",
+    "HFastKicker",
+    "VFastKicker",
+    "HRampKicker",
+    "VRampKicker",
+    "HFeedbackKicker",
+    "VFeedbackKicker",
 ]
 
 # Elements this repository defines because Ocelot has no equivalent.  They are
 # written the same way as any other element, but imported from here.
-EUXFEL_ELEMENT_MODULES = {"SRot": "euxfel.rotations", "YRot": "euxfel.rotations"}
+EUXFEL_ELEMENT_MODULES = {
+    "SRot": "euxfel.rotations",
+    "YRot": "euxfel.rotations",
+    "HFastKicker": "euxfel.kickers",
+    "VFastKicker": "euxfel.kickers",
+    "HRampKicker": "euxfel.kickers",
+    "VRampKicker": "euxfel.kickers",
+    "HFeedbackKicker": "euxfel.kickers",
+    "VFeedbackKicker": "euxfel.kickers",
+}
 
 
 class PythonSubsequenceWriter:

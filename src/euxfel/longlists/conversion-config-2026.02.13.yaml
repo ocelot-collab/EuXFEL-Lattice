@@ -51,6 +51,27 @@ rows:
 written_s_offsets:
   SOLA.23.I1: -0.102
 
+# Which MAD-8 name stems are kickers, and which family each belongs to.
+#
+# Needed only by the MAD-8 route: a tape record `HKICKER, L=0.1` named KIX.I1 is
+# indistinguishable from one named CIX.I1, which is an ordinary steerer.  Only
+# the name stem separates them, which is exactly how makelist_release.m:447-478
+# does it.  The longlist route does not need this -- GROUP already says -- so the
+# two are cross-checked against each other in tests/test_kickers.py.
+#
+# The plane is not here: it comes from the MAD-8 keyword (HKICKER/VKICKER) or,
+# for the RBEND-modelled ones, from the tilt.
+kicker_classes:
+  FastKicker: [KAX, KAY, KDY, KL, KSPOS, KSNEG]
+  RampKicker: [KIX, KIY, KJX, KJY, KMX, KNY]
+  FeedbackKicker: [KFBX, KFBY]
+  # By NAME1, mirroring the name overrides at makelist_release.m:803-812.  The
+  # same block also names KL.1938.TL and KL.1965.TL, but those magnets no longer
+  # exist -- their slots now hold KMX/KNY pairs, which the type rule above
+  # already sends to RampKicker.  Only this one still does anything.
+  overrides:
+    KL.2005.TL: RampKicker
+
 targets: # Each subsequence corresponds to the name of a section below (case insensitive)
   g1d: ["g1", "g1d"]
   i1d: ["i1", "i1d"]
