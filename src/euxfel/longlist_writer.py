@@ -116,14 +116,22 @@ def _tangent_length(element: OpticElement) -> float:
 
 
 def _synthetic_marker(name: str, like: OpticElement) -> OpticElement:
-    """A stand-in for a bend marker the forward conversion dropped.
+    """A stand-in for a bend marker that is not in the model.
 
-    BENDSTR and BENDARC lie inside the magnet, so the converter discards them.
-    Rebuild them from their surviving sibling: everything but the name is shared
-    across the four markers of a block.
+    A list-built model has BENDIN and BENDOUT but not BENDSTR/BENDARC, which lie
+    inside the magnet and are dropped on conversion.  A tape-built model has
+    none of the four: MAD-8 has no such elements, they are invented by
+    `makelist_release.m:235`.
+
+    Everything but the name is shared across a block, so rebuild from whichever
+    sibling exists -- or from the bend itself, whose NAME2 takes the same `M`
+    prefix its markers' names do (`BK.1.I1` -> `MBK.1.I1`).
     """
     marker = Marker(eid=name)
-    marker.ps_id = getattr(like, "ps_id", "")
+    ps_id = getattr(like, "ps_id", "") or ""
+    marker.ps_id = (
+        ps_id if name.startswith("M") == ps_id.startswith("M") else f"M{ps_id}"
+    )
     marker.metadata = dict(metadata.of(like))
     return marker
 
@@ -217,8 +225,11 @@ class ComponentListWriter:
                 ),
                 None,
             )
-            if before is None or after is None:
-                raise ValueError(f"{element.id} has no BENDIN/BENDOUT markers")
+            # A tape-built model has none of the four: they are invented by
+            # makelist_release.m:235 and exist only in the spreadsheet.  A
+            # list-built model has BENDIN and BENDOUT, the two that sit on the
+            # bend faces and so survive conversion.  Either way the missing ones
+            # are synthesised in _bend_rows.
             pairs[index] = (before, after)
         return pairs
 
@@ -341,8 +352,11 @@ class ComponentListWriter:
         # names are rebuilt from the magnet's (makelist_release.m:721-729):
         # 'M' + everything before the final dot + a letter + the section.
         stem, _, section = element.id.rpartition(".")
-        bendstr = _synthetic_marker(f"M{stem}b.{section}", bendin)
-        bendarc = _synthetic_marker(f"M{stem}c.{section}", bendin)
+        template = bendin if bendin is not None else element
+        bendin = bendin or _synthetic_marker(f"M{stem}a.{section}", element)
+        bendout = bendout or _synthetic_marker(f"M{stem}d.{section}", element)
+        bendstr = _synthetic_marker(f"M{stem}b.{section}", template)
+        bendarc = _synthetic_marker(f"M{stem}c.{section}", template)
 
         # BENDSTR is not a blank marker: makelist_release.m:293-296 gives it the
         # bend's angle and tilt, and splits the angle into the E1/E2 columns as
