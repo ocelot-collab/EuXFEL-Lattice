@@ -10,6 +10,8 @@ from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.elements import RBend
 from ocelot.cpbd.elements.optic_element import OpticElement
 
+from euxfel import metadata
+
 DEFAULT_ELEMENT_ORDER = [
     "Drift",
     "Quadrupole",
@@ -198,7 +200,14 @@ class PythonSubsequenceWriter:
 
         element_order = element_order or DEFAULT_ELEMENT_ORDER
         elements_by_type = self.make_element_class_names_to_instances_map()
-        write_types_power_supplies = set(write_types_power_supplies) or set()
+        # None means every type.  `ps_id` holds the component list's NAME2 for
+        # every element, magnet or not, and writing the component list back out
+        # needs all of them -- so restricting this to the magnet types would
+        # discard data the reverse conversion depends on.
+        if write_types_power_supplies is None:
+            write_types_power_supplies = set(element_order)
+        else:
+            write_types_power_supplies = set(write_types_power_supplies)
 
         if variable_names is None:
             variable_names = self.make_var_names(self.sequence)
@@ -218,6 +227,44 @@ class PythonSubsequenceWriter:
                 lines.append(f'{variable_name}.ps_id = "{element.ps_id}"')
 
         return f"# Power Supply IDs:{'\n'.join(lines)}"
+
+    def metadata_to_string(
+        self,
+        element_order: list[str] | None = None,
+        variable_names: dict[OpticElement, str] = None,
+    ) -> str:
+        """Write each element's component-list bookkeeping.
+
+        See `euxfel.metadata` for what these fields are and why they are stored
+        rather than derived.  Elements inserted by the conversion config rather
+        than read from the component list have none, and are skipped.
+        """
+        element_order = element_order or DEFAULT_ELEMENT_ORDER
+        elements_by_type = self.make_element_class_names_to_instances_map()
+
+        if variable_names is None:
+            variable_names = self.make_var_names(self.sequence)
+
+        lines = []
+        for element_type_name in element_order:
+            with_metadata = [
+                element
+                for element in elements_by_type[element_type_name]
+                if metadata.of(element)
+            ]
+            if with_metadata:
+                lines.append(f"\n# {element_type_name} metadata:")
+            for element in with_metadata:
+                fields = ", ".join(
+                    f"{key!r}: {value!r}" for key, value in metadata.of(element).items()
+                )
+                lines.append(f"{variable_names[element]}.metadata = {{{fields}}}")
+
+        # As in elements_to_string: without this ruff format would break every
+        # dict over nine lines, which across the whole lattice is tens of
+        # thousands of lines of nothing.
+        body = "\n".join(lines).lstrip("\n")
+        return f"# Component list metadata:\n# fmt: off\n{body}\n# fmt: on"
 
     def make_import_string(self) -> str:
         class_names = set(type(element).__name__ for element in self.sequence)
@@ -278,6 +325,8 @@ class PythonSubsequenceWriter:
                 variable_names=variable_names,
                 write_types_power_supplies=write_types_power_supplies,
             )
+            + "\n\n"
+            + self.metadata_to_string(variable_names=variable_names)
         )
 
     def rbend_to_string(self, element: RBend, variable_name: str) -> str:

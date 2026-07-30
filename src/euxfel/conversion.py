@@ -20,7 +20,7 @@ from ocelot.cpbd.elements.optic_element import OpticElement
 from ocelot.cpbd.match import match
 from ocelot.cpbd.optics import twiss as calc_twiss
 
-from euxfel import rotations
+from euxfel import metadata, rotations
 from euxfel.complist import ComponentList
 from euxfel.slicing import SlicedElement
 from euxfel.writer import PythonSubsequenceWriter
@@ -1004,13 +1004,15 @@ class LongListConverter:
         """
         group = row["GROUP"]
         if group in self.DRIFTABLE_GROUPS:
-            return self.convert_drift_equivalent(row)
+            return metadata.attach(self.convert_drift_equivalent(row), row)
 
         ocelot_class_name = group.lower()
         try:
             oelement = getattr(self, f"convert_{ocelot_class_name}")(row)
             self._apply_manual_changes(oelement)
-            return oelement
+            # Every element carries the row's bookkeeping columns, which the
+            # optics do not need but writing the component list back out does.
+            return metadata.attach(oelement, row)
         except AttributeError:
             raise UnknownLongListElement(
                 "Unknown element to be converted:"

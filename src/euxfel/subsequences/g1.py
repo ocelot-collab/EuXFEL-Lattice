@@ -92,3 +92,57 @@ cell = (
 # RBend power supplies:
 kix_24_i1.ps_id = "KIX.24.I1"
 kiy_24_i1.ps_id = "KIY.24.I1"
+
+# Hcor power supplies:
+clx_23_i1.ps_id = "GunC7&GunC5"
+ckx_24_i1.ps_id = "CKX.2.I1"
+
+# Vcor power supplies:
+cly_23_i1.ps_id = "GunC8&GunC6"
+cky_24_i1.ps_id = "CKY.2.I1"
+
+# Solenoid power supplies:
+solb_23_i1.ps_id = "SOLB.1.I1"
+
+# Monitor power supplies:
+bpmg_24_i1.ps_id = "BPMG.I1"
+
+# Marker power supplies:
+stsec_23_i1.ps_id = "STSEC.I1.I1"
+stsub_23_i1.ps_id = "STSUB.G1.I1"
+gun_23_i1.ps_id = "GUN.I1"
+scrn_24_i1.ps_id = "SCRN.I1"
+fcup_24_i1.ps_id = "FCUP.I1"
+ensub_24_i1.ps_id = "ENSUB.G1.I1"
+
+# Component list metadata:
+# fmt: off
+# Quadrupole metadata:
+qln_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QLN', 'xaper': 0.035, 'yaper': 0.035}
+qls_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QLS', 'xaper': 0.035, 'yaper': 0.035}
+
+# RBend metadata:
+kix_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'RAMPKICK', 'class': 'HKIC', 'type': 'KIX', 'xaper': 0.035, 'yaper': 0.035}
+kiy_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'RAMPKICK', 'class': 'VKIC', 'type': 'KIY', 'xaper': 0.035, 'yaper': 0.035}
+
+# Hcor metadata:
+clx_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CLX', 'xaper': 0.035, 'yaper': 0.035}
+ckx_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CKX', 'xaper': 0.035, 'yaper': 0.035}
+
+# Vcor metadata:
+cly_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CLY', 'xaper': 0.035, 'yaper': 0.035}
+cky_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CKY', 'xaper': 0.035, 'yaper': 0.035}
+
+# Solenoid metadata:
+solb_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SOLE', 'type': 'SOLB', 'xaper': 0.035, 'yaper': 0.035}
+
+# Monitor metadata:
+bpmg_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMG', 'xaper': 0.035, 'yaper': 0.035}
+
+# Marker metadata:
+stsec_23_i1.metadata = {'section': 'I1', 'subsection': 'I1', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'STSEC', 'xaper': 0.035, 'yaper': 0.035}
+stsub_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'STSUB', 'xaper': 0.035, 'yaper': 0.035}
+gun_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'GUN', 'xaper': 0.035, 'yaper': 0.035}
+scrn_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'SCRN', 'xaper': 0.035, 'yaper': 0.035}
+fcup_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'FCUP', 'xaper': 0.035, 'yaper': 0.035}
+# fmt: on

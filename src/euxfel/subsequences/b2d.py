@@ -145,3 +145,76 @@ qf_477_b2d.ps_id = "QF.35.B2D"
 # SBend power supplies:
 bg_467_b2d.ps_id = "BG.1.B2D"
 bg_474_b2d.ps_id = "BG.1.B2D"
+
+# Hcor power supplies:
+cfx_470_b2d.ps_id = "CFX.1.B2D"
+cfx_477_b2d.ps_id = "CFX.2.B2D"
+
+# Vcor power supplies:
+cfy_468_b2d.ps_id = "CFY.1.B2D"
+cfy_471_b2d.ps_id = "CFY.2.B2D"
+cfy_476_b2d.ps_id = "CFY.3.B2D"
+
+# Monitor power supplies:
+bpma_469_b2d.ps_id = "BPMA.B2D"
+bpma_471_b2d.ps_id = "BPMA.B2D"
+bpma_477_b2d.ps_id = "BPMA.B2D"
+bpmd_479_b2d.ps_id = "BPMD.B2D"
+
+# Marker power supplies:
+stsec_466_b2d.ps_id = "STSEC.B2D.B2D"
+mbg_467a_b2d.ps_id = "MBG.1.1.B2D"
+mbg_467d_b2d.ps_id = "MBG.1.1.B2D"
+otra_473_b2d.ps_id = "OTRA.B2D"
+mbg_474a_b2d.ps_id = "MBG.1.2.B2D"
+mbg_474d_b2d.ps_id = "MBG.1.2.B2D"
+vcst40t98_478_b2d.ps_id = "VCST40T98.B2D"
+otrd_478_b2d.ps_id = "OTRD.B2D"
+torc_479_b2d.ps_id = "TORC.B2D"
+vcst98t60_479_b2d.ps_id = "VCST98T60.B2D"
+duflange_479_b2d.ps_id = "DUFLANGE.B2D"
+duabsorb_480_b2d.ps_id = "DUABSORB.B2D"
+ensec_480_b2d.ps_id = "ENSEC.B2D.B2D"
+
+# Component list metadata:
+# fmt: off
+# Quadrupole metadata:
+qf_469_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qe_471_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QE', 'xaper': 0.04, 'yaper': 0.04}
+qf_472_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_476_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_477_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+
+# SBend metadata:
+bg_467_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BG', 'xaper': 0.04, 'yaper': 0.04}
+bg_474_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BG', 'xaper': 0.04, 'yaper': 0.04}
+
+# Hcor metadata:
+cfx_470_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CFX', 'xaper': 0.04, 'yaper': 0.04}
+cfx_477_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CFX', 'xaper': 0.04, 'yaper': 0.04}
+
+# Vcor metadata:
+cfy_468_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CFY', 'xaper': 0.04, 'yaper': 0.04}
+cfy_471_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CFY', 'xaper': 0.04, 'yaper': 0.04}
+cfy_476_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CFY', 'xaper': 0.04, 'yaper': 0.04}
+
+# Monitor metadata:
+bpma_469_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_471_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_477_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpmd_479_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMD', 'xaper': 0.098, 'yaper': 0.098}
+
+# Marker metadata:
+stsec_466_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MARK', 'class': 'MARK', 'type': 'STSEC', 'xaper': 0.04, 'yaper': 0.04}
+mbg_467a_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbg_467d_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+otra_473_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRA', 'xaper': 0.04, 'yaper': 0.04}
+mbg_474a_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbg_474d_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+vcst40t98_478_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST40T98', 'xaper': 0.098, 'yaper': 0.098}
+otrd_478_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRD', 'xaper': 0.098, 'yaper': 0.098}
+torc_479_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'DIAG', 'class': 'CM', 'type': 'TORC', 'xaper': 0.098, 'yaper': 0.098}
+vcst98t60_479_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST98T60', 'xaper': 0.098, 'yaper': 0.098}
+duflange_479_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUFLANGE', 'xaper': 0.098, 'yaper': 0.098}
+duabsorb_480_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUABSORB', 'xaper': 0.098, 'yaper': 0.098}
+# fmt: on

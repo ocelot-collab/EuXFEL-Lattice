@@ -53,3 +53,32 @@ cell = (
 # Power Supply IDs:
 # SBend power supplies:
 bk_24_i1.ps_id = "BK.1.I1"
+
+# Monitor power supplies:
+bpmg_25ii_i1.ps_id = "BPMG.I1"
+
+# Marker power supplies:
+stsub_24ii_i1.ps_id = "STSUB.G1D.I1"
+mbk_24a_i1.ps_id = "MBK.1.I1"
+mbk_24d_i1.ps_id = "MBK.1.I1"
+fcup_25ii_i1.ps_id = "FCUP.I1"
+scrn_25ii_i1.ps_id = "SCRN.I1"
+fcup_25iii_i1.ps_id = "FCUP.I1"
+ensub_25_i1.ps_id = "ENSUB.G1D.I1"
+
+# Component list metadata:
+# fmt: off
+# SBend metadata:
+bk_24_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BK', 'xaper': 0.035, 'yaper': 0.035}
+
+# Monitor metadata:
+bpmg_25ii_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMG', 'xaper': 0.035, 'yaper': 0.035}
+
+# Marker metadata:
+stsub_24ii_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'STSUB', 'xaper': 0.035, 'yaper': 0.035}
+mbk_24a_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.035, 'yaper': 0.035}
+mbk_24d_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.035, 'yaper': 0.035}
+fcup_25ii_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'FCUP', 'xaper': 0.035, 'yaper': 0.035}
+scrn_25ii_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'SCRN', 'xaper': 0.035, 'yaper': 0.035}
+fcup_25iii_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'FCUP', 'xaper': 0.035, 'yaper': 0.035}
+# fmt: on

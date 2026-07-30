@@ -97,3 +97,50 @@ qi_64_i1d.ps_id = "QI.42.I1D"
 
 # SBend power supplies:
 bb_62_i1d.ps_id = "BB.5.I1D"
+
+# Monitor power supplies:
+bpma_63_i1d.ps_id = "BPMA.I1D"
+bpmd_64_i1d.ps_id = "BPMD.I1D"
+
+# Marker power supplies:
+stsec_62_i1d.ps_id = "STSEC.I1D.I1D"
+mbb_62a_i1d.ps_id = "MBB.5.I1D"
+mbb_62d_i1d.ps_id = "MBB.5.I1D"
+otrc_64_i1d.ps_id = "OTRC.I1D"
+vcst40t98_64_i1d.ps_id = "VCST40T98.I1D"
+otrd_64_i1d.ps_id = "OTRD.I1D"
+torc_64_i1d.ps_id = "TORC.I1D"
+vcst98t60_64_i1d.ps_id = "VCST98T60.I1D"
+duflange_65_i1d.ps_id = "DUFLANGE.I1D"
+duconcrete_65_i1d.ps_id = "DUCONCRETE.I1D"
+bhm_66_i1d.ps_id = "BHM.I1D"
+duabsorb_66_i1d.ps_id = "DUABSORB.I1D"
+ensec_66_i1d.ps_id = "ENSEC.I1D.I1D"
+
+# Component list metadata:
+# fmt: off
+# Quadrupole metadata:
+qi_63_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+qi_64_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+
+# SBend metadata:
+bb_62_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BB', 'xaper': 0.04, 'yaper': 0.04}
+
+# Monitor metadata:
+bpma_63_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpmd_64_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMD', 'xaper': 0.098, 'yaper': 0.098}
+
+# Marker metadata:
+stsec_62_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'STSEC', 'xaper': 0.04, 'yaper': 0.04}
+mbb_62a_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbb_62d_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+otrc_64_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRC', 'xaper': 0.04, 'yaper': 0.04}
+vcst40t98_64_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST40T98', 'xaper': 0.098, 'yaper': 0.098}
+otrd_64_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRD', 'xaper': 0.098, 'yaper': 0.098}
+torc_64_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'CM', 'type': 'TORC', 'xaper': 0.098, 'yaper': 0.098}
+vcst98t60_64_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST98T60', 'xaper': 0.098, 'yaper': 0.098}
+duflange_65_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUFLANGE', 'xaper': 0.098, 'yaper': 0.098}
+duconcrete_65_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUCONCRETE', 'xaper': 0.098, 'yaper': 0.098}
+bhm_66_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'BHM', 'xaper': 0.098, 'yaper': 0.098}
+duabsorb_66_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUABSORB', 'xaper': 0.098, 'yaper': 0.098}
+# fmt: on

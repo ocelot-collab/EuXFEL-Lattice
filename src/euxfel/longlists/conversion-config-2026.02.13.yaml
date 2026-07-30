@@ -5,7 +5,10 @@ component_list: component_list_2026.02.13.xls
 
 
 writer:
-  write_types_power_supplies: ["Quadrupole", "Sextupole", "Octupole", "Cavity", "RBend", "SBend"]
+  # NAME2 is stored as `ps_id` on every element, not just the magnets, and
+  # regenerating the component list needs all of them.  Omitting this key writes
+  # it for every element type; list types explicitly to narrow it.
+  write_types_power_supplies: null
 
 rows:
   skip:

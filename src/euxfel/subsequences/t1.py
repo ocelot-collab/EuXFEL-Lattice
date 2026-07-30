@@ -461,6 +461,11 @@ cell = (
 )
 
 # Power Supply IDs:
+# Drift power supplies:
+vcbshut_2130_t1.ps_id = "VCBSHUT.T1"
+vcbshut_2185_t1.ps_id = "VCBSHUT.T1"
+absp_2197_t1.ps_id = "ABSP.T1"
+
 # Quadrupole power supplies:
 qf_2041_t1.ps_id = "QF.1.T1"
 qf_2045_t1.ps_id = "QF.2.T1"
@@ -502,3 +507,226 @@ sa_2067_t1.ps_id = "SA.2.T1"
 # Octupole power supplies:
 oa_2042_t1.ps_id = "OA.1.T1"
 oa_2056_t1.ps_id = "OA.2.T1"
+
+# Hcor power supplies:
+cfx_2041_t1.ps_id = "CFX.1.T1"
+cfx_2056_t1.ps_id = "CFX.2.T1"
+cfx_2069_t1.ps_id = "CFX.3.T1"
+cfx_2089_t1.ps_id = "CFX.4.T1"
+cfx_2098_t1.ps_id = "CFX.5.T1"
+cfx_2125_t1.ps_id = "CFX.6.T1"
+cfx_2154_t1.ps_id = "CFX.7.T1"
+cfx_2180_t1.ps_id = "CFX.8.T1"
+cex_2192_t1.ps_id = "CEX.9.T1"
+cex_2196_t1.ps_id = "CEX.10.T1"
+
+# Vcor power supplies:
+cfy_2045_t1.ps_id = "CFY.1.T1"
+cfy_2063_t1.ps_id = "CFY.2.T1"
+cfy_2083_t1.ps_id = "CFY.3.T1"
+cfy_2092_t1.ps_id = "CFY.4.T1"
+cfy_2110_t1.ps_id = "CFY.5.T1"
+cfy_2139_t1.ps_id = "CFY.6.T1"
+cfy_2168_t1.ps_id = "CFY.7.T1"
+cny_2191_t1.ps_id = "CNY.8.T1"
+cny_2196_t1.ps_id = "CNY.9.T1"
+
+# Undulator power supplies:
+u40s_2194_t1.ps_id = "U40S.T1"
+
+# Monitor power supplies:
+bpma_2040_t1.ps_id = "BPMA.T1"
+bpma_2044_t1.ps_id = "BPMA.T1"
+bpma_2055_t1.ps_id = "BPMA.T1"
+bpma_2062_t1.ps_id = "BPMA.T1"
+bpma_2068_t1.ps_id = "BPMA.T1"
+bpma_2082_t1.ps_id = "BPMA.T1"
+bpma_2088_t1.ps_id = "BPMA.T1"
+bpma_2092_t1.ps_id = "BPMA.T1"
+bpma_2097_t1.ps_id = "BPMA.T1"
+bpma_2109_t1.ps_id = "BPMA.T1"
+bpma_2124_t1.ps_id = "BPMA.T1"
+bpma_2138_t1.ps_id = "BPMA.T1"
+bpma_2153_t1.ps_id = "BPMA.T1"
+bpma_2167_t1.ps_id = "BPMA.T1"
+bpma_2179_t1.ps_id = "BPMA.T1"
+bpma_2184_t1.ps_id = "BPMA.T1"
+bpme_2191_t1.ps_id = "BPME.T1"
+bpme_2197_t1.ps_id = "BPME.T1"
+
+# Marker power supplies:
+stsec_2025_t1.ps_id = "STSEC.T1.T1"
+stsub_2025_t1.ps_id = "STSUB.T1M.T1"
+vcst98t40_2025_t1.ps_id = "VCST98T40.T1"
+mbz_2025a_t1.ps_id = "MBZ.1.T1"
+mbz_2025d_t1.ps_id = "MBZ.1.T1"
+mbz_2030a_t1.ps_id = "MBZ.2.T1"
+mbz_2030d_t1.ps_id = "MBZ.2.T1"
+mbz_2031a_t1.ps_id = "MBZ.2.T1"
+mbz_2031d_t1.ps_id = "MBZ.2.T1"
+mbz_2033a_t1.ps_id = "MBZ.2.T1"
+mbz_2033d_t1.ps_id = "MBZ.2.T1"
+tora_2038_t1.ps_id = "TORA.T1"
+otra_2038_t1.ps_id = "OTRA.T1"
+mbd_2050a_t1.ps_id = "MBD.2.T1"
+mbd_2050d_t1.ps_id = "MBD.2.T1"
+mbd_2062a_t1.ps_id = "MBD.2.T1"
+mbd_2062d_t1.ps_id = "MBD.2.T1"
+mbd_2077a_t1.ps_id = "MBD.1.T1"
+mbd_2077d_t1.ps_id = "MBD.1.T1"
+mbd_2079a_t1.ps_id = "MBD.1.T1"
+mbd_2079d_t1.ps_id = "MBD.1.T1"
+mbd_2080a_t1.ps_id = "MBD.1.T1"
+mbd_2080d_t1.ps_id = "MBD.1.T1"
+mbd_2082a_t1.ps_id = "MBD.1.T1"
+mbd_2082d_t1.ps_id = "MBD.1.T1"
+mbd_2084a_t1.ps_id = "MBD.3.T1"
+mbd_2084d_t1.ps_id = "MBD.3.T1"
+mbd_2097a_t1.ps_id = "MBD.4.T1"
+mbd_2097d_t1.ps_id = "MBD.4.T1"
+ensub_2097_t1.ps_id = "ENSUB.T1M.T1"
+stsub_2097_t1.ps_id = "STSUB.T1D.T1"
+otrbw_2117_t1.ps_id = "OTRBW.T1"
+otrbw_2146_t1.ps_id = "OTRBW.T1"
+otrbw_2161_t1.ps_id = "OTRBW.T1"
+otrbw_2174_t1.ps_id = "OTRBW.T1"
+tora_2190_t1.ps_id = "TORA.T1"
+vcst40t10_2190_t1.ps_id = "VCST40T10.T1"
+ensub_2197_t1.ps_id = "ENSUB.T1D.T1"
+ensec_2197_t1.ps_id = "ENSEC.T1.T1"
+
+# Component list metadata:
+# fmt: off
+# Drift metadata:
+vcbshut_2130_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'VACUUM', 'class': 'VAC', 'type': 'VCBSHUT', 'xaper': 0.04, 'yaper': 0.04}
+vcbshut_2185_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'VACUUM', 'class': 'VAC', 'type': 'VCBSHUT', 'xaper': 0.04, 'yaper': 0.04}
+absp_2197_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'VACUUM', 'class': 'ABSORBER', 'type': 'ABSP', 'xaper': 0.009, 'yaper': 0.008}
+
+# Quadrupole metadata:
+qf_2041_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_039', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2045_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_039', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2055_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2063_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2069_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2083_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2098_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2110_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2124_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2139_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2153_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2168_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qf_2180_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QF', 'xaper': 0.04, 'yaper': 0.04}
+qa_2191_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QA', 'xaper': 0.01, 'yaper': 0.01}
+qa_2197_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QA', 'xaper': 0.01, 'yaper': 0.01}
+
+# SBend metadata:
+bz_2025_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BZ', 'xaper': 0.04, 'yaper': 0.04}
+bz_2030_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BZ', 'xaper': 0.04, 'yaper': 0.04}
+bz_2031_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BZ', 'xaper': 0.04, 'yaper': 0.04}
+bz_2033_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BZ', 'xaper': 0.04, 'yaper': 0.04}
+bd_2050_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BD', 'xaper': 0.04, 'yaper': 0.04}
+bd_2062_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BD', 'xaper': 0.04, 'yaper': 0.04}
+bd_2077_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BD', 'xaper': 0.04, 'yaper': 0.04}
+bd_2079_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BD', 'xaper': 0.04, 'yaper': 0.04}
+bd_2080_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BD', 'xaper': 0.04, 'yaper': 0.04}
+bd_2082_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BD', 'xaper': 0.04, 'yaper': 0.04}
+bd_2084_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BD', 'xaper': 0.04, 'yaper': 0.04}
+bd_2097_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BD', 'xaper': 0.04, 'yaper': 0.04}
+
+# RBend metadata:
+bsect_2102_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'PMAGNET', 'class': 'RBEN', 'type': 'BSECT', 'xaper': 0.04, 'yaper': 0.04}
+
+# Sextupole metadata:
+sa_2052_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'SEXT', 'type': 'SA', 'xaper': 0.04, 'yaper': 0.04}
+sa_2067_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'SEXT', 'type': 'SA', 'xaper': 0.04, 'yaper': 0.04}
+
+# Octupole metadata:
+oa_2042_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_039', 'group': 'MAGNET', 'class': 'OCTU', 'type': 'OA', 'xaper': 0.04, 'yaper': 0.04}
+oa_2056_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'OCTU', 'type': 'OA', 'xaper': 0.04, 'yaper': 0.04}
+
+# Hcor metadata:
+cfx_2041_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_039', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CFX', 'xaper': 0.04, 'yaper': 0.04}
+cfx_2056_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CFX', 'xaper': 0.04, 'yaper': 0.04}
+cfx_2069_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CFX', 'xaper': 0.04, 'yaper': 0.04}
+cfx_2089_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CFX', 'xaper': 0.04, 'yaper': 0.04}
+cfx_2098_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CFX', 'xaper': 0.04, 'yaper': 0.04}
+cfx_2125_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CFX', 'xaper': 0.04, 'yaper': 0.04}
+cfx_2154_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CFX', 'xaper': 0.04, 'yaper': 0.04}
+cfx_2180_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CFX', 'xaper': 0.04, 'yaper': 0.04}
+cex_2192_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CEX', 'xaper': 0.015, 'yaper': 0.0088}
+cex_2196_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CEX', 'xaper': 0.015, 'yaper': 0.0088}
+
+# Vcor metadata:
+cfy_2045_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_039', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CFY', 'xaper': 0.04, 'yaper': 0.04}
+cfy_2063_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CFY', 'xaper': 0.04, 'yaper': 0.04}
+cfy_2083_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CFY', 'xaper': 0.04, 'yaper': 0.04}
+cfy_2092_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CFY', 'xaper': 0.04, 'yaper': 0.04}
+cfy_2110_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CFY', 'xaper': 0.04, 'yaper': 0.04}
+cfy_2139_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CFY', 'xaper': 0.04, 'yaper': 0.04}
+cfy_2168_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CFY', 'xaper': 0.04, 'yaper': 0.04}
+cny_2191_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CNY', 'xaper': 0.015, 'yaper': 0.0088}
+cny_2196_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CNY', 'xaper': 0.015, 'yaper': 0.0088}
+
+# Undulator metadata:
+u40s_2194_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'UNDU', 'class': 'UNDULATOR', 'type': 'U40S', 'xaper': 0.015, 'yaper': 0.0088}
+
+# Monitor metadata:
+bpma_2040_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_039', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2044_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_039', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2055_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2062_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2068_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2082_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2088_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2092_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2097_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTL_040', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2109_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2124_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2138_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2153_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2167_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2179_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_2184_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpme_2191_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPME', 'xaper': 0.01, 'yaper': 0.01}
+bpme_2197_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPME', 'xaper': 0.01, 'yaper': 0.01}
+
+# Marker metadata:
+stsec_2025_t1.metadata = {'section': 'T1', 'subsection': 'T1', 'cad_room': 'XTL_038', 'group': 'MARK', 'class': 'MARK', 'type': 'STSEC', 'xaper': 0.098, 'yaper': 0.098}
+stsub_2025_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MARK', 'class': 'MARK', 'type': 'STSUB', 'xaper': 0.098, 'yaper': 0.098}
+vcst98t40_2025_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST98T40', 'xaper': 0.04, 'yaper': 0.04}
+mbz_2025a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbz_2025d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbz_2030a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbz_2030d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbz_2031a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbz_2031d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbz_2033a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbz_2033d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+tora_2038_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'DIAG', 'class': 'CM', 'type': 'TORA', 'xaper': 0.04, 'yaper': 0.04}
+otra_2038_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_038', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRA', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2050a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2050d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2062a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2062d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2077a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2077d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2079a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2079d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2080a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2080d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2082a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2082d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2084a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2084d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2097a_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+mbd_2097d_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+ensub_2097_t1.metadata = {'section': 'T1', 'subsection': 'T1M', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.04, 'yaper': 0.04}
+stsub_2097_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTL_040', 'group': 'MARK', 'class': 'MARK', 'type': 'STSUB', 'xaper': 0.04, 'yaper': 0.04}
+otrbw_2117_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRBW', 'xaper': 0.04, 'yaper': 0.04}
+otrbw_2146_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XS1_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRBW', 'xaper': 0.04, 'yaper': 0.04}
+otrbw_2161_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRBW', 'xaper': 0.04, 'yaper': 0.04}
+otrbw_2174_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRBW', 'xaper': 0.04, 'yaper': 0.04}
+tora_2190_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'DIAG', 'class': 'CM', 'type': 'TORA', 'xaper': 0.04, 'yaper': 0.04}
+vcst40t10_2190_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST40T10', 'xaper': 0.015, 'yaper': 0.0088}
+ensub_2197_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.015, 'yaper': 0.0088}
+# fmt: on

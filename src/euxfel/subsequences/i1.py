@@ -519,6 +519,9 @@ cell = (
 )
 
 # Power Supply IDs:
+# Drift power supplies:
+cfbi_44_i1.ps_id = "CFBI.I1"
+
 # Quadrupole power supplies:
 q_37_i1.ps_id = "Q.A1.1.I1"
 q_38_i1.ps_id = "Q.AH1.1.I1"
@@ -550,6 +553,30 @@ kax_56_i1.ps_id = "KAX.56.I1"
 kjx_57_i1.ps_id = "KJX.57.I1"
 kjy_57_i1.ps_id = "KJY.57.I1"
 
+# Hcor power supplies:
+clx_23_i1.ps_id = "GunC7&GunC5"
+ckx_24_i1.ps_id = "CKX.2.I1"
+ckx_25_i1.ps_id = "CKX.3.I1"
+cx_37_i1.ps_id = "CX.A1.1.I1"
+cx_39_i1.ps_id = "CX.AH1.1.I1"
+cwx_47_i1.ps_id = "CWX.1.I1"
+cix_51_i1.ps_id = "CIX.4.I1"
+cix_57_i1.ps_id = "CIX.5.I1"
+
+# Vcor power supplies:
+cly_23_i1.ps_id = "GunC8&GunC6"
+cky_24_i1.ps_id = "CKY.2.I1"
+cky_25_i1.ps_id = "CKY.3.I1"
+cy_37_i1.ps_id = "CY.A1.1.I1"
+cy_39_i1.ps_id = "CY.AH1.1.I1"
+cwy_47_i1.ps_id = "CWY.1.I1"
+ciy_51_i1.ps_id = "CIY.4.I1"
+ciy_55_i1.ps_id = "CIY.5.I1"
+ciy_58_i1.ps_id = "CIY.6.I1"
+
+# Undulator power supplies:
+u74_49_i1.ps_id = "U74.I1"
+
 # Cavity power supplies:
 c_a1_1_1_i1.ps_id = "C.A1.I1"
 c_a1_1_2_i1.ps_id = "C.A1.I1"
@@ -567,3 +594,233 @@ c3_ah1_1_5_i1.ps_id = "C3.AH1.I1"
 c3_ah1_1_6_i1.ps_id = "C3.AH1.I1"
 c3_ah1_1_7_i1.ps_id = "C3.AH1.I1"
 c3_ah1_1_8_i1.ps_id = "C3.AH1.I1"
+
+# TDCavity power supplies:
+tdsa_52_i1.ps_id = "TDSA.I1"
+
+# Solenoid power supplies:
+solb_23_i1.ps_id = "SOLB.1.I1"
+
+# Monitor power supplies:
+bpmg_24_i1.ps_id = "BPMG.I1"
+bpmg_25i_i1.ps_id = "BPMG.I1"
+bpmc_38i_i1.ps_id = "BPMC.A1.1.I1"
+bpmr_38ii_i1.ps_id = "BPMR.AH1.1.I1"
+bpmf_47_i1.ps_id = "BPMF.I1"
+bpmf_48_i1.ps_id = "BPMF.I1"
+bpmf_52_i1.ps_id = "BPMF.I1"
+bpma_55_i1.ps_id = "BPMA.I1"
+bpma_57_i1.ps_id = "BPMA.I1"
+bpma_59_i1.ps_id = "BPMA.I1"
+bpma_60_i1.ps_id = "BPMA.I1"
+
+# Marker power supplies:
+stsec_23_i1.ps_id = "STSEC.I1.I1"
+stsub_23_i1.ps_id = "STSUB.G1.I1"
+gun_23_i1.ps_id = "GUN.I1"
+scrn_24_i1.ps_id = "SCRN.I1"
+fcup_24_i1.ps_id = "FCUP.I1"
+ensub_24_i1.ps_id = "ENSUB.G1.I1"
+stsub_24i_i1.ps_id = "STSUB.I1M.I1"
+tora_25_i1.ps_id = "TORA.I1"
+scrn_25i_i1.ps_id = "SCRN.I1"
+fcup_25i_i1.ps_id = "FCUP.I1"
+dccol_25_i1.ps_id = "DCCOL.I1"
+dcm_25_i1.ps_id = "DCM.I1"
+vcst35t78_25_i1.ps_id = "VCST35T78.I1"
+stac_26_i1.ps_id = "STAC.A1.1.I1"
+match_37_i1.ps_id = "MATCH.FQ.I1"
+enac_38_i1.ps_id = "ENAC.A1.1.I1"
+vcst78t30_38_i1.ps_id = "VCST78T30.I1"
+stac_38_i1.ps_id = "STAC.AH1.1.I1"
+enac_44_i1.ps_id = "ENAC.AH1.1.I1"
+vcst30t78_44_i1.ps_id = "VCST30T78.I1"
+vcst78t40_45_i1.ps_id = "VCST78T40.I1"
+tora_46_i1.ps_id = "TORA.I1"
+cmvqi_46_i1.ps_id = "CMVQI.I1"
+bam_47_i1.ps_id = "BAM.I1"
+midbpmf_47_i1.ps_id = "MIDBPMF.I1"
+dcm_47_i1.ps_id = "DCM.I1"
+cmvqi_47_i1.ps_id = "CMVQI.I1"
+stlat_47_i1.ps_id = "STLAT.LHT.I1"
+vcst40t35_47_i1.ps_id = "VCST40T35.I1"
+mbl_48ia_i1.ps_id = "MBL.1.1.I1"
+mbl_48id_i1.ps_id = "MBL.1.1.I1"
+mbl_48iia_i1.ps_id = "MBL.1.2.I1"
+mbl_48iid_i1.ps_id = "MBL.1.2.I1"
+midbpmf_48_i1.ps_id = "MIDBPMF.I1"
+otrl_48_i1.ps_id = "OTRL.I1"
+otrl_50_i1.ps_id = "OTRL.I1"
+mbl_50ia_i1.ps_id = "MBL.3.I1"
+mbl_50id_i1.ps_id = "MBL.3.I1"
+mbl_50iia_i1.ps_id = "MBL.4.I1"
+mbl_50iid_i1.ps_id = "MBL.4.I1"
+vcst35t40_50_i1.ps_id = "VCST35T40.I1"
+enlat_50_i1.ps_id = "ENLAT.LHT.I1"
+eod_51_i1.ps_id = "EOD.I1"
+midbpmf_52_i1.ps_id = "MIDBPMF.I1"
+match_52_i1.ps_id = "MATCH.QI52.I1"
+stlat_55_i1.ps_id = "STLAT.DIA.I1"
+match_55_i1.ps_id = "MATCH.DIA.I1"
+otrc_55_i1.ps_id = "OTRC.I1"
+otrc_56_i1.ps_id = "OTRC.I1"
+otrc_58_i1.ps_id = "OTRC.I1"
+otrc_59_i1.ps_id = "OTRC.I1"
+tora_60_i1.ps_id = "TORA.I1"
+bpmatest_61_i1.ps_id = "BPMATEST.I1"
+ensub_62_i1.ps_id = "ENSUB.I1M.I1"
+
+# Component list metadata:
+# fmt: off
+# Drift metadata:
+cfbi_44_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CRYO', 'class': 'CRYO', 'type': 'CFBI', 'xaper': 0.078, 'yaper': 0.078}
+
+# Quadrupole metadata:
+qln_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QLN', 'xaper': 0.035, 'yaper': 0.035}
+qls_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QLS', 'xaper': 0.035, 'yaper': 0.035}
+q_37_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'Q', 'xaper': 0.078, 'yaper': 0.078}
+q_38_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'Q', 'xaper': 0.03, 'yaper': 0.03}
+qi_46_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+qi_47_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+qi_50_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+qi_52_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+qi_53_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+qi_54_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+qi_55_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+qi_57_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+qi_59_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+qi_60_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+qi_61_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'QUAD', 'type': 'QI', 'xaper': 0.04, 'yaper': 0.04}
+
+# SBend metadata:
+bl_48i_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BL', 'xaper': 0.035, 'yaper': 0.035}
+bl_48ii_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BL', 'xaper': 0.035, 'yaper': 0.035}
+bl_50i_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BL', 'xaper': 0.035, 'yaper': 0.035}
+bl_50ii_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SBEN', 'type': 'BL', 'xaper': 0.035, 'yaper': 0.035}
+
+# RBend metadata:
+kix_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'RAMPKICK', 'class': 'HKIC', 'type': 'KIX', 'xaper': 0.035, 'yaper': 0.035}
+kiy_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'RAMPKICK', 'class': 'VKIC', 'type': 'KIY', 'xaper': 0.035, 'yaper': 0.035}
+kjx_54_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'RAMPKICK', 'class': 'HKIC', 'type': 'KJX', 'xaper': 0.04, 'yaper': 0.04}
+kjy_54_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'RAMPKICK', 'class': 'VKIC', 'type': 'KJY', 'xaper': 0.04, 'yaper': 0.04}
+kax_55_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'FASTKICK', 'class': 'HKIC', 'type': 'KAX', 'xaper': 0.04, 'yaper': 0.04}
+kax_56_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'FASTKICK', 'class': 'HKIC', 'type': 'KAX', 'xaper': 0.04, 'yaper': 0.04}
+kjx_57_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'RAMPKICK', 'class': 'HKIC', 'type': 'KJX', 'xaper': 0.04, 'yaper': 0.04}
+kjy_57_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'RAMPKICK', 'class': 'VKIC', 'type': 'KJY', 'xaper': 0.04, 'yaper': 0.04}
+
+# Hcor metadata:
+clx_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CLX', 'xaper': 0.035, 'yaper': 0.035}
+ckx_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CKX', 'xaper': 0.035, 'yaper': 0.035}
+ckx_25_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CKX', 'xaper': 0.035, 'yaper': 0.035}
+cx_37_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CX', 'xaper': 0.078, 'yaper': 0.078}
+cx_39_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CX', 'xaper': 0.03, 'yaper': 0.03}
+cwx_47_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CWX', 'xaper': 0.04, 'yaper': 0.04}
+cix_51_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CIX', 'xaper': 0.04, 'yaper': 0.04}
+cix_57_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'HKIC', 'type': 'CIX', 'xaper': 0.04, 'yaper': 0.04}
+
+# Vcor metadata:
+cly_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CLY', 'xaper': 0.035, 'yaper': 0.035}
+cky_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CKY', 'xaper': 0.035, 'yaper': 0.035}
+cky_25_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CKY', 'xaper': 0.035, 'yaper': 0.035}
+cy_37_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CY', 'xaper': 0.078, 'yaper': 0.078}
+cy_39_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CY', 'xaper': 0.03, 'yaper': 0.03}
+cwy_47_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CWY', 'xaper': 0.04, 'yaper': 0.04}
+ciy_51_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CIY', 'xaper': 0.04, 'yaper': 0.04}
+ciy_55_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CIY', 'xaper': 0.04, 'yaper': 0.04}
+ciy_58_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CIY', 'xaper': 0.04, 'yaper': 0.04}
+
+# Undulator metadata:
+u74_49_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'UNDU', 'class': 'UNDULATOR', 'type': 'U74', 'xaper': 0.035, 'yaper': 0.035}
+
+# Cavity metadata:
+c_a1_1_1_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C', 'xaper': 0.078, 'yaper': 0.078}
+c_a1_1_2_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C', 'xaper': 0.078, 'yaper': 0.078}
+c_a1_1_3_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C', 'xaper': 0.078, 'yaper': 0.078}
+c_a1_1_4_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C', 'xaper': 0.078, 'yaper': 0.078}
+c_a1_1_5_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C', 'xaper': 0.078, 'yaper': 0.078}
+c_a1_1_6_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C', 'xaper': 0.078, 'yaper': 0.078}
+c_a1_1_7_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C', 'xaper': 0.078, 'yaper': 0.078}
+c_a1_1_8_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C', 'xaper': 0.078, 'yaper': 0.078}
+c3_ah1_1_1_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C3', 'xaper': 0.03, 'yaper': 0.03}
+c3_ah1_1_2_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C3', 'xaper': 0.03, 'yaper': 0.03}
+c3_ah1_1_3_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C3', 'xaper': 0.03, 'yaper': 0.03}
+c3_ah1_1_4_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C3', 'xaper': 0.03, 'yaper': 0.03}
+c3_ah1_1_5_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C3', 'xaper': 0.03, 'yaper': 0.03}
+c3_ah1_1_6_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C3', 'xaper': 0.03, 'yaper': 0.03}
+c3_ah1_1_7_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C3', 'xaper': 0.03, 'yaper': 0.03}
+c3_ah1_1_8_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'C3', 'xaper': 0.03, 'yaper': 0.03}
+
+# TDCavity metadata:
+tdsa_52_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'TDSA', 'xaper': 0.04, 'yaper': 0.04}
+
+# Solenoid metadata:
+solb_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SOLE', 'type': 'SOLB', 'xaper': 0.035, 'yaper': 0.035}
+
+# Monitor metadata:
+bpmg_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMG', 'xaper': 0.035, 'yaper': 0.035}
+bpmg_25i_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMG', 'xaper': 0.035, 'yaper': 0.035}
+bpmc_38i_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMC', 'xaper': 0.078, 'yaper': 0.078}
+bpmr_38ii_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMR', 'xaper': 0.03, 'yaper': 0.03}
+bpmf_47_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMF', 'xaper': 0.04, 'yaper': 0.04}
+bpmf_48_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMF', 'xaper': 0.035, 'yaper': 0.035}
+bpmf_52_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMF', 'xaper': 0.04, 'yaper': 0.04}
+bpma_55_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_57_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_59_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+bpma_60_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'MONI', 'type': 'BPMA', 'xaper': 0.04, 'yaper': 0.04}
+
+# Marker metadata:
+stsec_23_i1.metadata = {'section': 'I1', 'subsection': 'I1', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'STSEC', 'xaper': 0.035, 'yaper': 0.035}
+stsub_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'STSUB', 'xaper': 0.035, 'yaper': 0.035}
+gun_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'GUN', 'xaper': 0.035, 'yaper': 0.035}
+scrn_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'SCRN', 'xaper': 0.035, 'yaper': 0.035}
+fcup_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'FCUP', 'xaper': 0.035, 'yaper': 0.035}
+ensub_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.035, 'yaper': 0.035}
+stsub_24i_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'STSUB', 'xaper': 0.035, 'yaper': 0.035}
+tora_25_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'CM', 'type': 'TORA', 'xaper': 0.035, 'yaper': 0.035}
+scrn_25i_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'SCRN', 'xaper': 0.035, 'yaper': 0.035}
+fcup_25i_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'FCUP', 'xaper': 0.035, 'yaper': 0.035}
+dccol_25_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'VACUUM', 'class': 'ECOL', 'type': 'DCCOL', 'xaper': 0.035, 'yaper': 0.035}
+dcm_25_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'DCM', 'xaper': 0.035, 'yaper': 0.035}
+vcst35t78_25_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST35T78', 'xaper': 0.078, 'yaper': 0.078}
+stac_26_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'STAC', 'xaper': 0.078, 'yaper': 0.078}
+match_37_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'MATCH', 'xaper': 0.078, 'yaper': 0.078}
+enac_38_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'ENAC', 'xaper': 0.078, 'yaper': 0.078}
+vcst78t30_38_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST78T30', 'xaper': 0.03, 'yaper': 0.03}
+stac_38_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'STAC', 'xaper': 0.03, 'yaper': 0.03}
+enac_44_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'ENAC', 'xaper': 0.03, 'yaper': 0.03}
+vcst30t78_44_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST30T78', 'xaper': 0.078, 'yaper': 0.078}
+vcst78t40_45_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST78T40', 'xaper': 0.04, 'yaper': 0.04}
+tora_46_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'CM', 'type': 'TORA', 'xaper': 0.04, 'yaper': 0.04}
+cmvqi_46_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MOVER', 'class': 'KICK', 'type': 'CMVQI', 'xaper': 0.04, 'yaper': 0.04}
+bam_47_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'BAM', 'xaper': 0.04, 'yaper': 0.04}
+midbpmf_47_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'MIDBPMF', 'xaper': 0.04, 'yaper': 0.04}
+dcm_47_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'DCM', 'xaper': 0.04, 'yaper': 0.04}
+cmvqi_47_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MOVER', 'class': 'KICK', 'type': 'CMVQI', 'xaper': 0.04, 'yaper': 0.04}
+stlat_47_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'STLAT', 'xaper': 0.04, 'yaper': 0.04}
+vcst40t35_47_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST40T35', 'xaper': 0.035, 'yaper': 0.035}
+mbl_48ia_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.035, 'yaper': 0.035}
+mbl_48id_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.035, 'yaper': 0.035}
+mbl_48iia_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.035, 'yaper': 0.035}
+mbl_48iid_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.035, 'yaper': 0.035}
+midbpmf_48_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'MIDBPMF', 'xaper': 0.035, 'yaper': 0.035}
+otrl_48_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRL', 'xaper': 0.035, 'yaper': 0.035}
+otrl_50_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRL', 'xaper': 0.035, 'yaper': 0.035}
+mbl_50ia_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.035, 'yaper': 0.035}
+mbl_50id_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.035, 'yaper': 0.035}
+mbl_50iia_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.035, 'yaper': 0.035}
+mbl_50iid_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.035, 'yaper': 0.035}
+vcst35t40_50_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST35T40', 'xaper': 0.04, 'yaper': 0.04}
+enlat_50_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'ENLAT', 'xaper': 0.04, 'yaper': 0.04}
+eod_51_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'EOD', 'xaper': 0.04, 'yaper': 0.04}
+midbpmf_52_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'MIDBPMF', 'xaper': 0.04, 'yaper': 0.04}
+match_52_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'MATCH', 'xaper': 0.04, 'yaper': 0.04}
+stlat_55_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'STLAT', 'xaper': 0.04, 'yaper': 0.04}
+match_55_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'MATCH', 'xaper': 0.04, 'yaper': 0.04}
+otrc_55_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRC', 'xaper': 0.04, 'yaper': 0.04}
+otrc_56_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRC', 'xaper': 0.04, 'yaper': 0.04}
+otrc_58_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRC', 'xaper': 0.04, 'yaper': 0.04}
+otrc_59_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRC', 'xaper': 0.04, 'yaper': 0.04}
+tora_60_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'CM', 'type': 'TORA', 'xaper': 0.04, 'yaper': 0.04}
+bpmatest_61_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'BPMATEST', 'xaper': 0.04, 'yaper': 0.04}
+# fmt: on
