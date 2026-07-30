@@ -55,12 +55,21 @@ def convert(outdir, config):
     multiple=True,
     help="One or more marker strings",
 )
-def compare(targets, marker):
+@click.option(
+    "--mad8",
+    is_flag=True,
+    help=(
+        "Also plot MAD-8's own optics, read from the archived TWISS tapes. "
+        "MAD-8 is upstream of both the Component List and our model, so this "
+        "shows which of the two a disagreement actually follows."
+    ),
+)
+def compare(targets, marker, mad8):
     clist = ComponentList(str(USED_COMPONENT_LIST))
     selected_targets = targets or reversed(TARGET_NAMES)
     for target in selected_targets:
         print(f"Target: {target}")
-        twiss, mlat, fig = compare_cathode_to_target(target.lower(), clist)
+        twiss, mlat, fig = compare_cathode_to_target(target.lower(), clist, mad8=mad8)
         fig.suptitle(USED_COMPONENT_LIST.name)
         print("Optics:")
         print_optics_at_points(twiss, markers=list(marker))

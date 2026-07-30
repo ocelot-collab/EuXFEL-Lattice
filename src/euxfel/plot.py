@@ -3,10 +3,11 @@ import polars as pl
 from ocelot.cpbd.magnetic_lattice import MagneticLattice
 from ocelot.cpbd.track import twiss
 
-from euxfel import subsequences
+from euxfel import pand8, subsequences
 from euxfel.complist import ComponentList
 from euxfel.complist_draw import draw_to_target
 from euxfel.latdraw.convert import from_ocelot
+from euxfel.mad8 import twiss_tape
 from euxfel.latdraw.lattice import Beamline
 from euxfel.latdraw.plot import (
     beta_label,
@@ -52,8 +53,22 @@ def plot_cathode_to_target(
     return twiss, mlat, fig
 
 
+def _mad8_optics(target: str) -> pl.DataFrame | None:
+    """MAD-8's own optics for a target, or None if no tape is archived.
+
+    `MUX`/`MUY` are in units of 2*pi on the tape, matching the component list;
+    `SUML` is the same arc length Ocelot and the list both use, so all three
+    series share an abscissa without any rescaling.
+    """
+    try:
+        path = twiss_tape(target)
+    except FileNotFoundError:
+        return None
+    return pand8.read_twiss(path)
+
+
 def compare_cathode_to_target(
-    target: str, complist: ComponentList
+    target: str, complist: ComponentList, mad8: bool = False
 ) -> tuple[pl.DataFrame, MagneticLattice, plt.Figure]:
     sequence = getattr(sequences, f"cathode_to_{target}")
     twiss0 = sequences.CATHODE_TWISS0
@@ -113,11 +128,28 @@ def compare_cathode_to_target(
         color=l1.get_color(),  # , label="$D_y$, OCELOT"
     )
 
+    # MAD-8's own optics, the upstream both of the others derive from.  Dotted
+    # so it reads as a third opinion rather than competing with the pair above.
+    tape = _mad8_optics(target) if mad8 else None
+    if tape is not None:
+        ax1.plot(tape["SUML"], tape["BETX"], label=r"$x$, MAD-8", linestyle=":",
+                 color="k", linewidth=1.3, zorder=10)  # fmt: skip
+        ax1.plot(tape["SUML"], tape["BETY"], label=r"$y$, MAD-8", linestyle=":",
+                 color="dimgrey", linewidth=1.3, zorder=10)  # fmt: skip
+        ax2.plot(
+            tape["SUML"], tape["DX"], linestyle=":", color="k", linewidth=1.3, zorder=10
+        )
+        ax2.plot(tape["SUML"], tape["DY"], linestyle=":", color="dimgrey",
+                 linewidth=1.0)  # fmt: skip
+
     ax1.legend(ncol=2)
     # ax2.legend(ncol=2)
 
     (l1,) = ax3.plot(lldf["S"], lldf["ENERGY"], label="Long List", linestyle="--")
     ax3.plot(optics_df["s"], optics_df["E"], label="OCELOT", color=l1.get_color())
+    if tape is not None:
+        ax3.plot(tape["SUML"], tape["E"], label="MAD-8", linestyle=":", color="k",
+                 linewidth=1.0)  # fmt: skip
 
     ax3.legend()
 
