@@ -15,7 +15,14 @@ Layout of each dated release directory:
     tapes/{TWISS,SURVEY}_<PATH>.gz   MAD-8 output, gzipped (~10x)
     mad8_input/*.txm                 the lattice source that produced them
     makelist_release.m               DESY's component-list generator
+    mad8-config-<date>.yaml          rules for reading the tapes, from the above
     ReadMe_DESY.txt                  MAD-8 version and provenance
+
+The config lives beside the release rather than with the component-list one
+because it is transcribed from *this* release's `makelist_release.m`: the naming
+rules, the drift reclassification table and the kicker families are all facts
+about how DESY renders these particular tapes.  `longlists/conversion-config.yaml`
+drives the opposite and lossier direction and shares none of it.
 
 The MAD-8 binaries are deliberately absent: they are platform-specific and
 2.5 MB each.  `ReadMe_DESY.txt` records the version (8.51.18, Mar-31-2009).
@@ -24,6 +31,9 @@ Tapes are read with `euxfel.pand8`, which decompresses `.gz` transparently.
 """
 
 from pathlib import Path
+from typing import Any
+
+import yaml
 
 MAD8_DIR = Path(__file__).parent
 
@@ -35,6 +45,22 @@ USED_MAD8_RELEASE = MAD8_DIR / "2026.01.22"
 # One tape pair exists per dump path.  The T6-T10 and T20 branches were also
 # run but are not archived until the LONGLIST sheet needs them.
 TAPE_TARGETS = ("G1D", "I1D", "B1D", "B2D", "TLD", "T4D", "T5D")
+
+
+def config_path(release: Path = USED_MAD8_RELEASE) -> Path:
+    """Path to the MAD-8 -> Ocelot conversion config for a release."""
+    return release / "mad8-config.yaml"
+
+
+def load_config(path: Path | str | None = None) -> dict[str, Any]:
+    """Read the MAD-8 conversion config, defaulting to the release in use.
+
+    Distinct from `euxfel.conversion.load_conversion_config`, which reads the
+    component-list config.  Keeping one file per pathway means a rule can only
+    ever describe the direction it actually governs.
+    """
+    with open(path or config_path(), "rb") as stream:
+        return yaml.safe_load(stream)
 
 
 def survey_tape(target: str, release: Path = USED_MAD8_RELEASE) -> Path:

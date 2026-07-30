@@ -1,0 +1,230 @@
+# Conversion config for going from MAD-8 to OCELOT.
+#
+# The MAD-8 SURVEY tapes archived beside this file are the upstream authority for
+# the machine's geometry and optics.  Everything here is a rule for reading them
+# that MAD-8 itself does not state -- how a component's control-system name is
+# built, which drifts are really components, which kickers are which.  All of it
+# is transcribed from `makelist_release.m` in the same directory, the DESY script
+# that renders these tapes into the component list, and every entry cites the
+# line it came from.
+#
+# Kept separate from `longlists/conversion-config.yaml`, which drives the
+# opposite and lossier direction (component list -> OCELOT).  The two pathways
+# share no rules: this one reads a full-precision tape, that one reads a
+# spreadsheet that has already been through the transformations described here.
+
+# How a MAD-8 element's control-system name (the component list's NAME1) is
+# built.  Transcribed from makelist_release.m; every entry cites its line.
+#
+# MAD-8 names are not usable as identities on their own: they repeat heavily
+# (`D0100` occurs 256 times in T5D) and carry no position.  makelist synthesises
+# NAME1 as TYPE.<position>.SECTION, and that synthesised name is what the control
+# system, `sections.py` and the s2e scripts all use.  So we generate it the same
+# way rather than copying it out of the spreadsheet -- which is what makes the
+# spreadsheet an output of this repository instead of an input to it.
+#
+# IMPORTANT: everything under `position_corrections` moves the *name* only.  In
+# the spreadsheet makelist really does move the element, because a component list
+# records where hardware stands; in the model the element stays where MAD-8 puts
+# it, because that is where the beam meets it.  The two only need to agree on
+# what the thing is called.
+naming:
+  # TYPE is the MAD-8 name up to its first dot, SECTION the text after its last
+  # (makelist:437-442).  There is no `section_overrides` here on purpose: the two
+  # CBB correctors that are booked to the section next door (:815-821) have their
+  # SECTION *column* changed after NAME1 is built, so `CBB.5.I1D` keeps the name
+  # CBB.62.I1D while reporting SECTION = I1.  That is a metadata rule, not a
+  # naming one.
+
+  # NAME1 = TYPE.floor(Z).SECTION, where Z is the *centre* of the element in
+  # global survey coordinates (:399-426 shifts every element with a length back
+  # by L/2 along the local axis; for a bend :243-259 uses the midpoint of the
+  # entry and exit faces instead).  Rounded rather than floored for the SASE
+  # air-coil correctors (:540).
+  round_instead_of_floor: # :540
+    type_prefix: CA
+    section_prefix: SA
+
+  # Offsets applied to the naming position, in metres along the local axis.
+  # Keyed on a substring of the MAD-8 name (:363-386 uses `contains`/`strfind`).
+  position_corrections:
+    CUX: +2.5 # :364-365
+    CUS: +1.3 # :366-367
+    CMVQA: -0.05685 # :368-369, written -0.1137/2
+    MVUE90: -0.99 # :370-371, written -1.98/2
+    CAX: +0.0125 # :372-373  the CAX/CAY pair straddles one position
+    CAY: -0.0125 # :374-375
+    CBX: +0.0125 # :376-377
+    CBY: -0.0125 # :378-379
+
+  # Module markers name themselves after a point inside the cryomodule rather
+  # than their own position (:344-359).
+  marker_shifts: # applied to names beginning MIAC
+    prefix: MIAC
+    default: +0.59142 # standard XFEL module
+    "AH1": -0.35500 # 3.9 GHz module: middle of the 2nd cavity
+
+  # Cavities break the positional rule entirely (:545-557): they are numbered
+  # within their RF station, which is read off the preceding STAC marker, and the
+  # counter wraps every 8.  NAME1 = TYPE.<station>.<n>.SECTION, e.g. C.A1.1.I1.
+  cavity:
+    types: [C, C3]
+    counter_wraps_at: 8
+    station_marker: STAC
+
+  # A few elements take their number from a neighbour rather than themselves,
+  # because they are halves of one physical device and must share a name stem.
+  number_from_neighbour: # :1288-1295
+    BPMF: MIDBPMF
+    BPMI: MIDBPMI
+    KSPOS: KS
+    KSNEG: KS
+
+  # Duplicate names are disambiguated with Roman numerals in order of appearance
+  # (:694-717).  Rows that are genuinely the same element seen twice -- same
+  # NAME2, same class, within 1 mm -- are left alone.
+  duplicate_suffixes: [I, II, III, IV, V, VI]
+
+  # One-off renames, applied last, in this order.  These are hand corrections in
+  # makelist with no rule behind them: mostly magnets whose floor(Z) lands one
+  # metre off what the control system already called them.
+  renames: # :775-801, :1131-1223
+    KAX.54.I1: KAX.55.I1
+    KJX.53.I1: KJX.54.I1
+    KJY.58.I1: KJY.57.I1
+    KAX.54I.I1: KAX.54.I1
+    KAX.54II.I1: KAX.55.I1
+    KAX.225I.B1: KAX.225.B1
+    KAX.225II.B1: KAX.226.B1
+    KDY.445I.B2: KDY.445.B2
+    KDY.445II.B2: KDY.446.B2
+    BPMC.38.I1: BPMC.38I.I1
+    BPMR.38.I1: BPMR.38II.I1
+    CHX.1964.TL: CHX.1965.TL
+    BAM.1931I.TL: BAM.1931.TL
+    BAM.1931II.TL: BAM.1932.TL
+    SA.1690.CL: SA.1691.CL
+    SA.1699.CL: SA.1700.CL
+    SA.1735.CL: SA.1736.CL
+    SA.1807.CL: SA.1808.CL
+    SA.1843.CL: SA.1844.CL
+    SA.2015.TLD: SA.2016.TLD
+
+  # Renames that apply only when the element falls in a given subsection --
+  # the gun diagnostics, which exist in two variants (:876-919).
+  renames_in_subsection: # subsection -> {from: to}
+    G1D:
+      FCUP.24II.I1: FCUP.25II.I1
+      FCUP.25.I1: FCUP.25III.I1
+      BPMG.25.I1: BPMG.25II.I1
+      SCRN.24II.I1: SCRN.25II.I1
+    G1:
+      FCUP.24I.I1: FCUP.24.I1
+      SCRN.24I.I1: SCRN.24.I1
+    I1M:
+      FCUP.25.I1: FCUP.25I.I1
+      SCRN.25.I1: SCRN.25I.I1
+      BPMG.25.I1: BPMG.25I.I1
+
+  # The undulator-chicane magnets are named from a transversely displaced point,
+  # with a handful of results nudged by one metre (:944-1090).  The displacement
+  # is in the local x direction, so it only reaches Z through the beamline angle.
+  #
+  # A list rather than a mapping because the corrector coils and the dipoles they
+  # sit on are shifted alike but *fixed up* differently -- in SA3 the CBSL/MCBSL
+  # pair is pulled back a metre and the BSL is not.  Collapsing the two would
+  # collide BSL.2878 onto BSL.2877.
+  chicane_offsets:
+    - { sections: [SA2], types: [CBS, MCBS, BPMH], dx: -0.0075, fixups: { 2250: 2249 } } # :944-963
+    - { sections: [SA2], types: [BS], dx: -0.0075, renames_position: false } # :966-980
+    - { sections: [SA1], types: [CBS, MCBS], dx: +0.0075, fixups: { 2433: 2432, 2436: 2435 } } # :983-1002
+    - { sections: [SA1], types: [BS], dx: +0.0075, renames_position: false } # :1004-1017
+    - { sections: [SA3], types: [CBSL, MCBSL], dx: +0.025, fixups: { 2878: 2877, 2879: 2878 } } # :1020-1039
+    - { sections: [SA3], types: [BSL], dx: +0.025, fixups: {} } # :1041-1057
+    - { sections: [T2, T4], types: [CBT, MCBT], dx: +0.025, fixups: { 2879: 2878 } } # :1060-1079
+    - { sections: [T2, T4], types: [BT], dx: +0.025, fixups: { 2875: 2876 } } # :1081-1096
+
+  # A corrector wound onto a BPM body takes the BPM's name with a C in front,
+  # rather than its own position (:762-772).  `find(...,1)` in the source means
+  # only the first of each is considered.
+  name_from_partner: # :762-772
+    - { type: CBP, partner: BP, prefix: C, within_m: 0.3, first_only: true }
+
+  # NOT here, though makelist has them: `UNDU.49.I1 -> TYPE U74` (:758-760) and
+  # `KFB0 -> TYPE DRIFT` (:869-875).  Both rewrite TYPE *after* NAME1 is built,
+  # so the name keeps the original stem -- the spreadsheet says KFB0.1880.TL in
+  # NAME1 and DRIFT in the TYPE column.  They are metadata rules, not naming ones.
+
+  # Two subsection-start markers are suffixed so the gun and the injector-main
+  # branches can both carry an STSUB at the same metre (:919-926).
+  suffix_by_mad_name: # :919-926
+    STSUB.G1D.I1: II
+    STSUB.I1M.I1: I
+
+# Which MAD-8 `DRIF` and `MARK` records are really components.
+#
+# MAD-8 has no element type for a vacuum chamber, a cryo feedbox or an undulator,
+# so they are all written as drifts and markers and told apart by name
+# (makelist_release.m:86-160).  `makelist` reclassifies them *before* it deletes
+# the drifts, which is why `CTBI.26.I1`, `U74.49.I1` and `VCBSHUT.65.I1` have rows
+# in the spreadsheet while `D0100` does not.
+#
+# Matching is by substring unless the entry ends in `*`, which anchors it to the
+# start of the name -- `strfind` versus `strncmp` in the source.  First match
+# wins, top to bottom, reproducing the if/elseif chain.
+#
+# `from:` matters as much as the pattern.  `SCU` marks a superconducting
+# undulator only on a drift; the same three letters occur inside the marker
+# `STSUB.SCU.SA2`, which is a subsection boundary and nothing to do with
+# undulators.  Order and keyword together are what keep the two apart.
+drift_reclassification:
+  - { from: DRIF, to: DUMP, patterns: ["DU*"] } # :87-88
+  - { from: MARK, to: DUMP, patterns: ["DU*"] } # :89-90
+  - { from: MARK, to: UNDULATOR, patterns: [U40S, U68S] } # :91-94
+  - { from: DRIF, to: UNDULATOR, patterns: [U40, U68, UE90, U74, SCU] } # :95-102
+  - { from: MARK, to: UNDPLACEH, patterns: [U00] } # :103-104
+  - { from: DRIF, to: PHASESHIFTER, patterns: [BPS] } # :105-106
+  - { from: DRIF, to: ABSORBER, patterns: [ABSP, ABSP4] } # :107-110
+  - { from: DRIF, to: CRYO, patterns: [CFBI, CTBI, CTB, CFB, CSC] } # :122-127
+  - { from: DRIF, to: VAC, patterns: ["V*"] } # :128-129
+  - { from: MARK, to: VAC, patterns: [VCCHIRP, VV0] } # :130-132
+  - { from: MARK, to: VACSTEP, patterns: ["VCST*"] } # :133-134
+  - {
+      from: MARK,
+      to: INSTR,
+      patterns: [BAM, DCM, OTR, SCRN, SRM, CHR, PYR, EOD, CRD, WIR, FCUP, SCRW, BHM, BCM, SPEC],
+    } # :135-143
+  - { from: MARK, to: CM, patterns: [TOR] } # :144-146
+  - { from: MARK, to: PHOTON, patterns: [MONO, RRM, PDIO, MIRR, ODL] } # :147-152
+  - { from: KICK, to: SWEEPER, patterns: [SWEEP] } # :156-157
+  - { from: DRIF, to: BSEC, patterns: [BSEC] } # :158-159
+
+# Magnets MAD-8 splits into two halves so a marker can sit at the centre
+# (makelist:172-190).  The two rows are merged into one of twice the length and
+# twice the angle, and the `H.` is dropped from the name.  The listed stems are
+# the false positives -- names that contain `H.` without being half magnets.
+half_magnets:
+  marker: "H."
+  exclude: ["QH.", "MATCH.", "BPMH.", "KIH."]
+
+# Which MAD-8 name stems are kickers, and which family each belongs to.
+#
+# Needed only by the MAD-8 route: a tape record `HKICKER, L=0.1` named KIX.I1 is
+# indistinguishable from one named CIX.I1, which is an ordinary steerer.  Only
+# the name stem separates them, which is exactly how makelist_release.m:447-478
+# does it.  The longlist route does not need this -- GROUP already says -- so the
+# two are cross-checked against each other in tests/test_kickers.py.
+#
+# The plane is not here: it comes from the MAD-8 keyword (HKICKER/VKICKER) or,
+# for the RBEND-modelled ones, from the tilt.
+kicker_classes:
+  FastKicker: [KAX, KAY, KDY, KL, KSPOS, KSNEG]
+  RampKicker: [KIX, KIY, KJX, KJY, KMX, KNY]
+  FeedbackKicker: [KFBX, KFBY]
+  # By NAME1, mirroring the name overrides at makelist_release.m:803-812.  The
+  # same block also names KL.1938.TL and KL.1965.TL, but those magnets no longer
+  # exist -- their slots now hold KMX/KNY pairs, which the type rule above
+  # already sends to RampKicker.  Only this one still does anything.
+  overrides:
+    KL.2005.TL: RampKicker
+
