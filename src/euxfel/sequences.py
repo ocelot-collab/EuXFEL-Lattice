@@ -2,8 +2,13 @@ from ocelot.cpbd.magnetic_lattice import flatten
 
 from . import subsequences
 
-TARGET_NAMES = ["I1D", "B1D", "B2D", "TLD", "T4D", "T5D"]
+TARGET_NAMES = ["G1D", "I1D", "B1D", "B2D", "TLD", "T4D", "T5D"]
 
+# G1D is the gun diagnostic dump.  It branches off inside section I1, at the
+# subsection boundary ENSUB.24.I1, so it cannot reuse `i1` -- that module runs
+# past the branch into the I1D line.  `g1` is the gun alone, and duplicates the
+# head of `i1`, exactly as every I1toXXX sheet repeats the injector.
+G1D_SUBSEQUENCES = ["g1", "g1d"]
 I1D_SUBSEQUENCES = ["i1", "i1d"]
 B1D_SUBSEQUENCES = ["i1", "l1", "b1d"]
 B2D_SUBSEQUENCES = ["i1", "l1", "l2", "b2d"]
@@ -43,6 +48,7 @@ def _init_module_level_cells(module_names):
 
 try:
     CATHODE_TWISS0 = subsequences.i1.twiss0
+    cathode_to_g1d = _init_module_level_cells(G1D_SUBSEQUENCES)
     cathode_to_i1d = _init_module_level_cells(I1D_SUBSEQUENCES)
     cathode_to_b1d = _init_module_level_cells(B1D_SUBSEQUENCES)
     cathode_to_b2d = _init_module_level_cells(B2D_SUBSEQUENCES)

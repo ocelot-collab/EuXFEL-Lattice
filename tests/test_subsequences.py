@@ -2,27 +2,16 @@ import ast
 from importlib.resources import files
 
 import pytest
-from euxfel.sequences import (
-    I1D_SUBSEQUENCES,
-    B1D_SUBSEQUENCES,
-    B2D_SUBSEQUENCES,
-    TLD_SUBSEQUENCES,
-    T4D_SUBSEQUENCES,
-    T5D_SUBSEQUENCES,
-    TARGET_NAMES,
-)
-from euxfel import subsequences
+from euxfel import sequences, subsequences
+from euxfel.sequences import TARGET_NAMES
 from ocelot.cpbd.optics import twiss as calc_twiss
 from ocelot.cpbd.magnetic_lattice import MagneticLattice
 from euxfel.writer import PythonSubsequenceWriter
 
+# Derived from TARGET_NAMES rather than listed again, so adding a target cannot
+# leave it silently untested.
 ALL_TARGETS_SUBSEQUENCES = [
-    I1D_SUBSEQUENCES,
-    B1D_SUBSEQUENCES,
-    B2D_SUBSEQUENCES,
-    TLD_SUBSEQUENCES,
-    T4D_SUBSEQUENCES,
-    T5D_SUBSEQUENCES,
+    getattr(sequences, f"{name}_SUBSEQUENCES") for name in TARGET_NAMES
 ]
 
 SUBSEQUENCE_MODULE_PATHS = sorted(
@@ -61,7 +50,9 @@ def test_subsequences_linear_optics(target_subsequences: list[str]) -> None:
         # absolute tolerance.  I only need to do this forthe
         # dispersions, though, as they're the only parameters here
         # that can be 0 or close to 0.
-        atol_dispersion = 10 * PythonSubsequenceWriter.ABS_TOL_FOR_DEFAULT_BEAM_PARAMETERS
+        atol_dispersion = (
+            10 * PythonSubsequenceWriter.ABS_TOL_FOR_DEFAULT_BEAM_PARAMETERS
+        )
         atol = 1e-10
 
         assert twiss_end.E == twiss_next.E

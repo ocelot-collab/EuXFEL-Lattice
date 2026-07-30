@@ -90,14 +90,14 @@ def _at_common_arc_lengths(ours: pl.DataFrame, tape: pl.DataFrame) -> pl.DataFra
 
 
 @pytest.fixture(scope="module")
-def surveys() -> dict[str, pl.DataFrame]:
-    """One joined survey per target, ours against MAD-8's."""
-    joined = {}
+def surveys() -> dict[str, tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]]:
+    """Per target: (joined at common arc lengths, ours, MAD-8's)."""
+    result = {}
     for target in COMPARED_TARGETS:
         tape = pand8.read_survey(survey_tape(target))
         ours = _ocelot_survey(target, tape.row(0, named=True))
-        joined[target] = _at_common_arc_lengths(ours, tape)
-    return joined
+        result[target] = (_at_common_arc_lengths(ours, tape), ours, tape)
+    return result
 
 
 def _worst(joined: pl.DataFrame, columns: tuple[str, ...]) -> float:
@@ -125,12 +125,19 @@ def test_total_length_matches_mad8(target: str) -> None:
 
 @pytest.mark.parametrize("target", COMPARED_TARGETS)
 def test_survey_matches_mad8(target: str, surveys) -> None:
-    """Position and orientation must match MAD-8 wherever the arcs coincide."""
-    joined = surveys[target]
+    """Position and orientation must match MAD-8 wherever the arcs coincide.
 
-    assert joined.height > 50, (
-        f"{target}: only {joined.height} common arc lengths, too few to be a "
-        f"meaningful comparison -- has the element ordering changed?"
+    Only points whose arc length is identical to the nanometre are compared.
+    Our drift lengths come from differencing the spreadsheet's rounded `S`, so
+    cumulative arc length wanders from MAD-8's by up to ~0.5 um over a full
+    path and the two stop landing on the same value partway down the longer
+    lines.  `test_end_of_line_matches_mad8` is what covers the far end.
+    """
+    joined, _, _ = surveys[target]
+
+    assert joined.height >= 10, (
+        f"{target}: only {joined.height} common arc lengths -- has the element "
+        f"ordering changed?"
     )
 
     worst_position = _worst(joined, ("X", "Y", "Z"))
@@ -142,6 +149,28 @@ def test_survey_matches_mad8(target: str, surveys) -> None:
     assert worst_angle < ANGLE_TOLERANCE_RAD, (
         f"{target}: worst angle disagreement with MAD-8 is {worst_angle:.3e} rad"
     )
+
+
+@pytest.mark.parametrize("target", COMPARED_TARGETS)
+def test_end_of_line_matches_mad8(target: str, surveys) -> None:
+    """Each dump must sit where MAD-8 puts it.
+
+    The arc-length join thins out towards the end of the longer paths, so state
+    this separately: whatever happens in between, the final position and
+    orientation have to agree.  This is the number that matters operationally
+    and the one that was 2.3 mm out for T5D.
+    """
+    _, ours, tape = surveys[target]
+    last_ours, last_tape = ours.row(-1, named=True), tape.row(-1, named=True)
+
+    for name in ("X", "Y", "Z"):
+        assert last_ours[name] == pytest.approx(last_tape[name], abs=1e-6), (
+            f"{target}: dump {name} is {last_ours[name]}, MAD-8 says {last_tape[name]}"
+        )
+    for name in ("THETA", "PHI", "PSI"):
+        assert last_ours[name] == pytest.approx(last_tape[name], abs=1e-9), (
+            f"{target}: dump {name} is {last_ours[name]}, MAD-8 says {last_tape[name]}"
+        )
 
 
 def test_sase2_branch_carries_the_mad8_rotations() -> None:

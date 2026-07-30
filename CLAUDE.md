@@ -35,7 +35,7 @@ euxfel subsequence --list         # show subsequence names per target
 cd docs-site && mkdocs serve      # docs (dependency-group `docs`)
 ```
 
-Targets are `I1D B1D B2D TLD T4D T5D`. Python >= 3.12 (`.python-version` pins
+Targets are `G1D I1D B1D B2D TLD T4D T5D`. Python >= 3.12 (`.python-version` pins
 3.14). Ocelot is pinned to an exact git rev in `[tool.uv.sources]` — lattice
 generation is sensitive to Ocelot's element `__init__` signatures, so bumping
 that rev can silently change generated output.

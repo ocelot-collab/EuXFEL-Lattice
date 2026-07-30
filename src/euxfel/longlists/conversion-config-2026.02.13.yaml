@@ -32,6 +32,7 @@ rows:
     GROUP: {}
 
 targets: # Each subsequence corresponds to the name of a section below (case insensitive)
+  g1d: ["g1", "g1d"]
   i1d: ["i1", "i1d"]
   b1d: ["i1", "l1", "b1d"]
   b2d: ["i1", "l1", "l2", "b2d"]
@@ -74,6 +75,25 @@ sections:
     sheet: I1toI1D
     start_marker_name1: STSEC.62.I1D
     stop_marker_name1: ENSEC.66.I1D
+
+  # The G1D diagnostic dump branches off inside section I1, at subsection
+  # boundary ENSUB.24.I1 (s = 1.398782) -- long before I1 ends.  So the gun is
+  # split out into its own module here rather than reusing the head of `i1`,
+  # which continues past the branch into the I1D line.
+  #
+  # G1 therefore duplicates the first 17 rows of `i1`.  That mirrors the source:
+  # every I1toXXX sheet repeats the injector in full.  Splitting `i1` itself
+  # would be the alternative, but it would re-point CATHODE_TWISS0 and every
+  # other target's subsequence list for no benefit to them.
+  G1:
+    sheet: I1toG1D
+    start_marker_name1: STSEC.23.I1
+    stop_marker_name1: ENSUB.24.I1
+
+  G1D:
+    sheet: I1toG1D
+    start_marker_name1: STSUB.24II.I1
+    stop_marker_name1: ENSUB.25.I1
 
   L1:
     sheet: I1toB1D
