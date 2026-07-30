@@ -689,4 +689,5 @@ ks_1962_tl.metadata = {'section': 'TL', 'subsection': 'TL2', 'cad_room': 'XTL_03
 vcst30t40_1963_tl.metadata = {'section': 'TL', 'subsection': 'TL2', 'cad_room': 'XTL_037', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST30T40', 'xaper': 0.04, 'yaper': 0.04}
 vcst40t98_1969_tl.metadata = {'section': 'TL', 'subsection': 'TL2', 'cad_room': 'XTL_037', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST40T98', 'xaper': 0.098, 'yaper': 0.098}
 otre_1978_tl.metadata = {'section': 'TL', 'subsection': 'TL2', 'cad_room': 'XTL_037', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRE', 'xaper': 0.098, 'yaper': 0.098}
+ensub_1980_tl.metadata = {'section': 'TL', 'subsection': 'TL2', 'cad_room': 'XTL_037', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.098, 'yaper': 0.098}
 # fmt: on

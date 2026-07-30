@@ -47,6 +47,7 @@ cly_23_i1 = Vcor(eid="CLY.23.I1")
 cky_24_i1 = Vcor(l=0.025, eid="CKY.24.I1")
 
 # Solenoids:
+sola_23_i1 = Solenoid(eid="SOLA.23.I1")
 solb_23_i1 = Solenoid(eid="SOLB.23.I1")
 
 # Monitors:
@@ -66,6 +67,7 @@ cell = (
     stsec_23_i1,
     stsub_23_i1,
     gun_23_i1,
+    sola_23_i1,
     d_0,
     solb_23_i1,
     d_1,
@@ -89,6 +91,10 @@ cell = (
 )
 
 # Power Supply IDs:
+# Quadrupole power supplies:
+qln_23_i1.ps_id = "GunC1-C4"
+qls_23_i1.ps_id = "GunC8&GunC6&GunC7&GunC5"
+
 # RBend power supplies:
 kix_24_i1.ps_id = "KIX.24.I1"
 kiy_24_i1.ps_id = "KIY.24.I1"
@@ -102,6 +108,7 @@ cly_23_i1.ps_id = "GunC8&GunC6"
 cky_24_i1.ps_id = "CKY.2.I1"
 
 # Solenoid power supplies:
+sola_23_i1.ps_id = "SOLA.1.I1"
 solb_23_i1.ps_id = "SOLB.1.I1"
 
 # Monitor power supplies:
@@ -134,6 +141,7 @@ cly_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000
 cky_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'VKIC', 'type': 'CKY', 'xaper': 0.035, 'yaper': 0.035}
 
 # Solenoid metadata:
+sola_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SOLE', 'type': 'SOLA', 'xaper': 0.035, 'yaper': 0.035}
 solb_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SOLE', 'type': 'SOLB', 'xaper': 0.035, 'yaper': 0.035}
 
 # Monitor metadata:
@@ -145,4 +153,5 @@ stsub_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_0
 gun_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'GUN', 'xaper': 0.035, 'yaper': 0.035}
 scrn_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'SCRN', 'xaper': 0.035, 'yaper': 0.035}
 fcup_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'FCUP', 'xaper': 0.035, 'yaper': 0.035}
+ensub_24_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.035, 'yaper': 0.035}
 # fmt: on

@@ -3025,4 +3025,5 @@ stucell_2449_sa1.metadata = {'section': 'SA1', 'subsection': 'SA1', 'cad_room': 
 enucell_2455_sa1.metadata = {'section': 'SA1', 'subsection': 'SA1', 'cad_room': 'XTD2_006', 'group': 'MARK', 'class': 'MARK', 'type': 'ENUCELL', 'xaper': 0.015, 'yaper': 0.0088}
 stucell_2455_sa1.metadata = {'section': 'SA1', 'subsection': 'SA1', 'cad_room': 'XTD2_006', 'group': 'MARK', 'class': 'MARK', 'type': 'STUCELL', 'xaper': 0.015, 'yaper': 0.0088}
 enucell_2461_sa1.metadata = {'section': 'SA1', 'subsection': 'SA1', 'cad_room': 'XTD2_006', 'group': 'MARK', 'class': 'MARK', 'type': 'ENUCELL', 'xaper': 0.015, 'yaper': 0.0088}
+ensec_2461_sa1.metadata = {'section': 'SA1', 'subsection': 'SA1', 'cad_room': 'XTD2_006', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.015, 'yaper': 0.0088}
 # fmt: on

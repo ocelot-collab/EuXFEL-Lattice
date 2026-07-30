@@ -722,4 +722,5 @@ ensub_2978_t5.metadata = {'section': 'T5', 'subsection': 'T5T', 'cad_room': 'XTD
 ensec_2978_t5.metadata = {'section': 'T5', 'subsection': 'T5', 'cad_room': 'XTD5_001', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.04, 'yaper': 0.04}
 stsec_2978_un2.metadata = {'section': 'UN2', 'subsection': 'UN2', 'cad_room': 'XTD5_001', 'group': 'MARK', 'class': 'MARK', 'type': 'STSEC', 'xaper': 0.04, 'yaper': 0.04}
 otrdp4_2987_un2.metadata = {'section': 'UN2', 'subsection': 'UN2', 'cad_room': 'XTD5_001', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRDP4', 'xaper': 0.04, 'yaper': 0.04}
+ensec_3039_un2.metadata = {'section': 'UN2', 'subsection': 'UN2', 'cad_room': 'XTD5_002', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.04, 'yaper': 0.04}
 # fmt: on

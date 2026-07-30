@@ -143,4 +143,5 @@ duflange_65_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': '
 duconcrete_65_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUCONCRETE', 'xaper': 0.098, 'yaper': 0.098}
 bhm_66_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'BHM', 'xaper': 0.098, 'yaper': 0.098}
 duabsorb_66_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUABSORB', 'xaper': 0.098, 'yaper': 0.098}
+ensec_66_i1d.metadata = {'section': 'I1D', 'subsection': 'I1D', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.098, 'yaper': 0.098}
 # fmt: on

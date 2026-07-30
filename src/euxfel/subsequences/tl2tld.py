@@ -1485,4 +1485,5 @@ duflange_2127_tld.metadata = {'section': 'TLD', 'subsection': 'TLD', 'cad_room':
 duconcrete_2128_tld.metadata = {'section': 'TLD', 'subsection': 'TLD', 'cad_room': 'XS1_000', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUCONCRETE', 'xaper': 0.2, 'yaper': 0.2}
 dustart_2130_tld.metadata = {'section': 'TLD', 'subsection': 'TLD', 'cad_room': 'XS1_000', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUSTART', 'xaper': 0.2, 'yaper': 0.2}
 duabsorb_2130_tld.metadata = {'section': 'TLD', 'subsection': 'TLD', 'cad_room': 'XS1_000', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUABSORB', 'xaper': 0.2, 'yaper': 0.2}
+ensec_2130_tld.metadata = {'section': 'TLD', 'subsection': 'TLD', 'cad_room': 'XS1_000', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.2, 'yaper': 0.2}
 # fmt: on

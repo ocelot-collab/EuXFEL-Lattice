@@ -152,6 +152,26 @@ class SubsequenceModule:
     matching: MatchingRequest | None = None
 
 
+#: Elements the component list records away from where the lattice puts them,
+#: and by how much: `written S = lattice s + offset`.
+#:
+#: `SOLA.23.I1` is the gun solenoid.  It is a genuine MAD-8 element sitting at
+#: the cathode -- `XFEL_I1.txm:138` declares it and `:193` places it immediately
+#: after `GUN.I1`, and `SURVEY_G1D` record 4 has it at `SUML = 0`, `Z = 23.2`.
+#: `makelist_release.m:392-397` then subtracts 102 mm on the way into the
+#: spreadsheet, to record where the solenoid physically stands rather than where
+#: the beam meets it:
+#:
+#:     sola = find(strncmp('SOLA',{list.NAME2},4));
+#:     list(sola).Z = list(sola).Z-0.102;
+#:     list(sola).S = list(sola).S-0.102;
+#:
+#: So the negative `S` is a bookkeeping displacement, not a real position.  Undo
+#: it on the way in, so the solenoid is modelled where it acts; reapply it on the
+#: way out, in `longlist_writer`.
+WRITTEN_S_OFFSETS: dict[str, float] = {"SOLA.23.I1": -0.102}
+
+
 class ComponentListToOcelotConversionError(Exception):
     pass
 
@@ -553,6 +573,17 @@ class LongListConverter:
             A filtered DataFrame with problematic rows removed and overlapping
             correctors shifted as required.
         """
+        # Put displaced elements back where they act before anything reads S.
+        # Without this the gun solenoid is at a negative S and gets dropped
+        # below, silently losing a real magnet from the model.
+        for name1, offset in WRITTEN_S_OFFSETS.items():
+            df = df.with_columns(
+                pl.when(pl.col("NAME1") == name1)
+                .then(pl.col("S") - offset)
+                .otherwise(pl.col("S"))
+                .alias("S")
+            )
+
         neg_s = df.filter(pl.col("S") < 0)
 
         for name1, s in neg_s.select("NAME1", "S").iter_rows():
@@ -757,7 +788,9 @@ class LongListConverter:
 
         # # Now we attach the final element, which we have checked
         # # above is indeed a marker.
-        sequence.append(self.convert_mark(row_there))
+        # Through dispatch rather than convert_mark directly, so the stop marker
+        # gets its component-list metadata like every other element.
+        sequence.append(self.dispatch(row_there))
 
         if pysec.matching:
             marker_name = pysec.matching.marker_name
@@ -1139,8 +1172,15 @@ class LongListConverter:
 
         if row["CLASS"] == "QUAD":
             if row["LENGTH"] == 0 and row["STRENGTH"] == 0:
-                return elements.Quadrupole(**common_kw)
-            ele = elements.Quadrupole(k1=row["STRENGTH"] / row["LENGTH"], **common_kw)
+                # A zero-length, zero-strength quadrupole -- the gun's QLN/QLS
+                # correction circuits.  Fall through rather than returning here,
+                # or it misses the `ps_id` assignment at the end of the method
+                # and loses its NAME2.
+                ele = elements.Quadrupole(**common_kw)
+            else:
+                ele = elements.Quadrupole(
+                    k1=row["STRENGTH"] / row["LENGTH"], **common_kw
+                )
         elif row["CLASS"] == "HKIC":
             ele = elements.Hcor(angle=row["STRENGTH"], **common_kw)
         elif row["CLASS"] == "VKIC":

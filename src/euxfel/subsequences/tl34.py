@@ -243,4 +243,5 @@ stsub_1997_tl.metadata = {'section': 'TL', 'subsection': 'TL4', 'cad_room': 'XTL
 tora_2011_tl.metadata = {'section': 'TL', 'subsection': 'TL4', 'cad_room': 'XTL_038', 'group': 'DIAG', 'class': 'CM', 'type': 'TORA', 'xaper': 0.04, 'yaper': 0.04}
 vcst40t98_2014_tl.metadata = {'section': 'TL', 'subsection': 'TL4', 'cad_room': 'XTL_038', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST40T98', 'xaper': 0.098, 'yaper': 0.098}
 otre_2023_tl.metadata = {'section': 'TL', 'subsection': 'TL4', 'cad_room': 'XTL_038', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRE', 'xaper': 0.098, 'yaper': 0.098}
+ensub_2025_tl.metadata = {'section': 'TL', 'subsection': 'TL4', 'cad_room': 'XTL_038', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.098, 'yaper': 0.098}
 # fmt: on

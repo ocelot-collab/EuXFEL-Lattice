@@ -6425,4 +6425,5 @@ otrbw_1523_l3.metadata = {'section': 'L3', 'subsection': 'L3T', 'cad_room': 'XTL
 otrbw_1597_l3.metadata = {'section': 'L3', 'subsection': 'L3T', 'cad_room': 'XTL_029', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRBW', 'xaper': 0.04, 'yaper': 0.04}
 otrbw_1635_l3.metadata = {'section': 'L3', 'subsection': 'L3T', 'cad_room': 'XTL_030', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRBW', 'xaper': 0.04, 'yaper': 0.04}
 ensub_1652_l3.metadata = {'section': 'L3', 'subsection': 'L3T', 'cad_room': 'XTL_031', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.04, 'yaper': 0.04}
+ensec_1652_l3.metadata = {'section': 'L3', 'subsection': 'L3', 'cad_room': 'XTL_031', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.04, 'yaper': 0.04}
 # fmt: on

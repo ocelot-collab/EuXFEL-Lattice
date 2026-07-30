@@ -804,4 +804,5 @@ ks_2787_t4.metadata = {'section': 'T4', 'subsection': 'T4T', 'cad_room': 'XTD4_0
 tora_2793_t4.metadata = {'section': 'T4', 'subsection': 'T4T', 'cad_room': 'XTD4_001', 'group': 'DIAG', 'class': 'CM', 'type': 'TORA', 'xaper': 0.04, 'yaper': 0.04}
 vcst40t10_2793_t4.metadata = {'section': 'T4', 'subsection': 'T4T', 'cad_room': 'XTD4_001', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST40T10', 'xaper': 0.015, 'yaper': 0.0088}
 ensub_2800_t4.metadata = {'section': 'T4', 'subsection': 'T4T', 'cad_room': 'XTD4_001', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.015, 'yaper': 0.0088}
+ensec_2800_t4.metadata = {'section': 'T4', 'subsection': 'T4', 'cad_room': 'XTD4_001', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.015, 'yaper': 0.0088}
 # fmt: on

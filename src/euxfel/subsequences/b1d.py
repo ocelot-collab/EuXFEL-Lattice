@@ -151,4 +151,5 @@ tora_236_b1d.metadata = {'section': 'B1D', 'subsection': 'B1D', 'cad_room': 'XTL
 vcst40t60_237_b1d.metadata = {'section': 'B1D', 'subsection': 'B1D', 'cad_room': 'XTL_003', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST40T60', 'xaper': 0.06, 'yaper': 0.06}
 duflange_237_b1d.metadata = {'section': 'B1D', 'subsection': 'B1D', 'cad_room': 'XTL_003', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUFLANGE', 'xaper': 0.06, 'yaper': 0.06}
 duabsorb_237_b1d.metadata = {'section': 'B1D', 'subsection': 'B1D', 'cad_room': 'XTL_003', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUABSORB', 'xaper': 0.06, 'yaper': 0.06}
+ensec_237_b1d.metadata = {'section': 'B1D', 'subsection': 'B1D', 'cad_room': 'XTL_003', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.06, 'yaper': 0.06}
 # fmt: on

@@ -217,4 +217,5 @@ torc_479_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL
 vcst98t60_479_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST98T60', 'xaper': 0.098, 'yaper': 0.098}
 duflange_479_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUFLANGE', 'xaper': 0.098, 'yaper': 0.098}
 duabsorb_480_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUABSORB', 'xaper': 0.098, 'yaper': 0.098}
+ensec_480_b2d.metadata = {'section': 'B2D', 'subsection': 'B2D', 'cad_room': 'XTL_008', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.098, 'yaper': 0.098}
 # fmt: on

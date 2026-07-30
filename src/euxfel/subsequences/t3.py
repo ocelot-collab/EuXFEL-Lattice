@@ -642,4 +642,5 @@ tora_2682_t3.metadata = {'section': 'T3', 'subsection': 'T3T', 'cad_room': 'XTD3
 ensub_2682_t3.metadata = {'section': 'T3', 'subsection': 'T3T', 'cad_room': 'XTD3_001', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.04, 'yaper': 0.04}
 ensec_2682_t3.metadata = {'section': 'T3', 'subsection': 'T3', 'cad_room': 'XTD3_001', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.04, 'yaper': 0.04}
 stsec_2682_un1.metadata = {'section': 'UN1', 'subsection': 'UN1', 'cad_room': 'XTD3_001', 'group': 'MARK', 'class': 'MARK', 'type': 'STSEC', 'xaper': 0.04, 'yaper': 0.04}
+ensec_2743_un1.metadata = {'section': 'UN1', 'subsection': 'UN1', 'cad_room': 'XTD3_002', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.04, 'yaper': 0.04}
 # fmt: on

@@ -2207,4 +2207,5 @@ stgrd_224_b1.metadata = {'section': 'B1', 'subsection': 'B1M', 'cad_room': 'XTL_
 otrb_224_b1.metadata = {'section': 'B1', 'subsection': 'B1M', 'cad_room': 'XTL_003', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRB', 'xaper': 0.04, 'yaper': 0.04}
 engrd_228_b1.metadata = {'section': 'B1', 'subsection': 'B1M', 'cad_room': 'XTL_003', 'group': 'MARK', 'class': 'MARK', 'type': 'ENGRD', 'xaper': 0.04, 'yaper': 0.04}
 enlat_229_b1.metadata = {'section': 'B1', 'subsection': 'B1M', 'cad_room': 'XTL_003', 'group': 'MARK', 'class': 'MARK', 'type': 'ENLAT', 'xaper': 0.04, 'yaper': 0.04}
+ensub_229_b1.metadata = {'section': 'B1', 'subsection': 'B1M', 'cad_room': 'XTL_003', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.04, 'yaper': 0.04}
 # fmt: on

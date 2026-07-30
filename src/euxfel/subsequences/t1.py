@@ -729,4 +729,5 @@ otrbw_2174_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD
 tora_2190_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'DIAG', 'class': 'CM', 'type': 'TORA', 'xaper': 0.04, 'yaper': 0.04}
 vcst40t10_2190_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'VACUUM', 'class': 'VACSTEP', 'type': 'VCST40T10', 'xaper': 0.015, 'yaper': 0.0088}
 ensub_2197_t1.metadata = {'section': 'T1', 'subsection': 'T1D', 'cad_room': 'XTD1_001', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.015, 'yaper': 0.0088}
+ensec_2197_t1.metadata = {'section': 'T1', 'subsection': 'T1', 'cad_room': 'XTD1_001', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.015, 'yaper': 0.0088}
 # fmt: on

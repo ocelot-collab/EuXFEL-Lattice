@@ -586,4 +586,5 @@ duflange_3103_t4d.metadata = {'section': 'T4D', 'subsection': 'T4DT', 'cad_room'
 duconcrete_3104_t4d.metadata = {'section': 'T4D', 'subsection': 'T4DT', 'cad_room': 'XSDU2_000', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUCONCRETE', 'xaper': 0.2, 'yaper': 0.2}
 duabsorb_3106_t4d.metadata = {'section': 'T4D', 'subsection': 'T4DT', 'cad_room': 'XSDU2_000', 'group': 'DUMP', 'class': 'DUMP', 'type': 'DUABSORB', 'xaper': 0.2, 'yaper': 0.2}
 ensub_3106_t4d.metadata = {'section': 'T4D', 'subsection': 'T4DT', 'cad_room': 'XSDU2_000', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.2, 'yaper': 0.2}
+ensec_3106_t4d.metadata = {'section': 'T4D', 'subsection': 'T4D', 'cad_room': 'XSDU2_000', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.2, 'yaper': 0.2}
 # fmt: on

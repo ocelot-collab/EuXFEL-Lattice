@@ -81,4 +81,5 @@ mbk_24d_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_0
 fcup_25ii_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'FCUP', 'xaper': 0.035, 'yaper': 0.035}
 scrn_25ii_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'SCRN', 'xaper': 0.035, 'yaper': 0.035}
 fcup_25iii_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'FCUP', 'xaper': 0.035, 'yaper': 0.035}
+ensub_25_i1.metadata = {'section': 'I1', 'subsection': 'G1D', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.035, 'yaper': 0.035}
 # fmt: on

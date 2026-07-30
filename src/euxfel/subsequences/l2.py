@@ -1912,4 +1912,5 @@ otrb_461_b2.metadata = {'section': 'B2', 'subsection': 'B2M', 'cad_room': 'XTL_0
 crd_463_b2.metadata = {'section': 'B2', 'subsection': 'B2M', 'cad_room': 'XTL_008', 'group': 'DIAG', 'class': 'INSTR', 'type': 'CRD', 'xaper': 0.04, 'yaper': 0.04}
 engrd_466_b2.metadata = {'section': 'B2', 'subsection': 'B2M', 'cad_room': 'XTL_008', 'group': 'MARK', 'class': 'MARK', 'type': 'ENGRD', 'xaper': 0.04, 'yaper': 0.04}
 enlat_466_b2.metadata = {'section': 'B2', 'subsection': 'B2M', 'cad_room': 'XTL_008', 'group': 'MARK', 'class': 'MARK', 'type': 'ENLAT', 'xaper': 0.04, 'yaper': 0.04}
+ensub_466_b2.metadata = {'section': 'B2', 'subsection': 'B2M', 'cad_room': 'XTL_008', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.04, 'yaper': 0.04}
 # fmt: on

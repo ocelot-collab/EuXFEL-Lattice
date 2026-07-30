@@ -1121,4 +1121,5 @@ mbl_1839a_cl.metadata = {'section': 'CL', 'subsection': 'CL', 'cad_room': 'XTL_0
 mbl_1839d_cl.metadata = {'section': 'CL', 'subsection': 'CL', 'cad_room': 'XTL_034', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
 mbe_1849a_cl.metadata = {'section': 'CL', 'subsection': 'CL', 'cad_room': 'XTL_034', 'group': 'MARK', 'class': 'BENDIN', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
 mbe_1849d_cl.metadata = {'section': 'CL', 'subsection': 'CL', 'cad_room': 'XTL_035', 'group': 'MARK', 'class': 'BENDOUT', 'type': 'BENDMARK', 'xaper': 0.04, 'yaper': 0.04}
+ensec_1854_cl.metadata = {'section': 'CL', 'subsection': 'CL', 'cad_room': 'XTL_035', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSEC', 'xaper': 0.04, 'yaper': 0.04}
 # fmt: on

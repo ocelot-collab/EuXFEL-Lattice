@@ -200,6 +200,7 @@ c3_ah1_1_8_i1 = Cavity(l=0.346, v=0.0025, phi=180.0, freq=3900000000.0, eid="C3.
 tdsa_52_i1 = TDCavity(l=0.7, freq=2800000000.0, tilt=1.570796327, eid="TDSA.52.I1")
 
 # Solenoids:
+sola_23_i1 = Solenoid(eid="SOLA.23.I1")
 solb_23_i1 = Solenoid(eid="SOLB.23.I1")
 
 # Monitors:
@@ -287,6 +288,7 @@ cell = (
     stsec_23_i1,
     stsub_23_i1,
     gun_23_i1,
+    sola_23_i1,
     d_0,
     solb_23_i1,
     d_1,
@@ -523,6 +525,8 @@ cell = (
 cfbi_44_i1.ps_id = "CFBI.I1"
 
 # Quadrupole power supplies:
+qln_23_i1.ps_id = "GunC1-C4"
+qls_23_i1.ps_id = "GunC8&GunC6&GunC7&GunC5"
 q_37_i1.ps_id = "Q.A1.1.I1"
 q_38_i1.ps_id = "Q.AH1.1.I1"
 qi_46_i1.ps_id = "QI.1.I1"
@@ -599,6 +603,7 @@ c3_ah1_1_8_i1.ps_id = "C3.AH1.I1"
 tdsa_52_i1.ps_id = "TDSA.I1"
 
 # Solenoid power supplies:
+sola_23_i1.ps_id = "SOLA.1.I1"
 solb_23_i1.ps_id = "SOLB.1.I1"
 
 # Monitor power supplies:
@@ -754,6 +759,7 @@ c3_ah1_1_8_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTI
 tdsa_52_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'CAVITY', 'class': 'LCAV', 'type': 'TDSA', 'xaper': 0.04, 'yaper': 0.04}
 
 # Solenoid metadata:
+sola_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SOLE', 'type': 'SOLA', 'xaper': 0.035, 'yaper': 0.035}
 solb_23_i1.metadata = {'section': 'I1', 'subsection': 'G1', 'cad_room': 'XTIN_000', 'group': 'MAGNET', 'class': 'SOLE', 'type': 'SOLB', 'xaper': 0.035, 'yaper': 0.035}
 
 # Monitor metadata:
@@ -823,4 +829,5 @@ otrc_58_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_0
 otrc_59_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'INSTR', 'type': 'OTRC', 'xaper': 0.04, 'yaper': 0.04}
 tora_60_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'DIAG', 'class': 'CM', 'type': 'TORA', 'xaper': 0.04, 'yaper': 0.04}
 bpmatest_61_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'BPMATEST', 'xaper': 0.04, 'yaper': 0.04}
+ensub_62_i1.metadata = {'section': 'I1', 'subsection': 'I1M', 'cad_room': 'XTIN_000', 'group': 'MARK', 'class': 'MARK', 'type': 'ENSUB', 'xaper': 0.04, 'yaper': 0.04}
 # fmt: on
