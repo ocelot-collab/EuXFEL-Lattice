@@ -26,8 +26,11 @@ Where the two disagree and why:
 import polars as pl
 import pytest
 
+from ocelot.cpbd.magnetic_lattice import MagneticLattice
+
 from euxfel import sequences
 from euxfel.complist import ComponentList
+from euxfel.conversion import written_s_offsets
 from euxfel.longlist_writer import (
     COLUMNS,
     ROWS_ABSENT_FROM_OCELOT,
@@ -116,6 +119,45 @@ def test_geometry_matches_to_written_precision(column: str, sheets) -> None:
 @pytest.mark.parametrize("column", OPTICS_COLUMNS)
 def test_optics_match_to_written_precision(column: str, sheets) -> None:
     _assert_close(column, sheets, OPTICS_TOLERANCE)
+
+
+def test_displaced_elements_are_modelled_where_they_act(sheets) -> None:
+    """The gun solenoid sits at the cathode in the model, at -0.102 in the sheet.
+
+    `SOLA.23.I1` is a real MAD-8 element at s = 0 (`XFEL_I1.txm:138,193`, and
+    `SURVEY_G1D` record 4 at `SUML = 0`).  `makelist_release.m:392-397` writes it
+    102 mm earlier, to record where the solenoid stands rather than where the
+    beam meets it.  The conversion config's `written_s_offsets` block declares
+    that displacement once; the forward conversion subtracts it and this writer
+    adds it back.
+
+    Both halves are asserted here, because either alone would look fine: drop
+    the subtraction and the row has a negative `S` and is silently discarded;
+    drop the addition and the regenerated sheet quietly disagrees.
+    """
+    original, regenerated = sheets
+
+    assert written_s_offsets().get("SOLA.23.I1") == -0.102, (
+        "the gun solenoid's displacement is no longer declared in the "
+        "conversion config's written_s_offsets block"
+    )
+
+    # Modelled at the cathode, alongside GUN.
+    lattice = MagneticLattice(sequences.cathode_to_g1d)
+    arc = 0.0
+    for element in lattice.sequence:
+        if element.id == "SOLA.23.I1":
+            break
+        arc += getattr(element, "l", 0.0)
+    else:
+        raise AssertionError("SOLA.23.I1 is not in the lattice at all")
+    assert arc == pytest.approx(0.0, abs=1e-12)
+
+    # Written back displaced, matching the sheet.
+    row = regenerated.filter(pl.col("NAME1") == "SOLA.23.I1").row(0, named=True)
+    want = original.filter(pl.col("NAME1") == "SOLA.23.I1").row(0, named=True)
+    assert row["S"] == want["S"] == -0.102
+    assert row["Z"] == pytest.approx(want["Z"], abs=1e-9)
 
 
 def _assert_close(column: str, sheets, tolerance: float) -> None:

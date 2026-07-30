@@ -33,7 +33,7 @@ from ocelot.cpbd.magnetic_lattice import MagneticLattice
 from ocelot.cpbd.optics import twiss as calc_twiss
 
 from euxfel import metadata
-from euxfel.conversion import WRITTEN_S_OFFSETS
+from euxfel.conversion import written_s_offsets
 
 #: Column order of an `I1toXXX` sheet, which is the header of the
 #: `LONGLIST_<PATH>.dat` file it is an external-data query over.
@@ -158,12 +158,16 @@ class ComponentListWriter:
         survey_seed: dict[str, float] | None = None,
         reinsert: list[dict[str, str]] | None = None,
         previous: pl.DataFrame | None = None,
+        s_offsets: dict[str, float] | None = None,
     ):
         self.sequence = list(sequence)
         self.twiss0 = twiss0
         self.survey_seed = survey_seed or dict(self.DEFAULT_SURVEY_SEED)
         self.reinsert = reinsert or []
         self.previous = previous
+        # Declared once in the conversion config and read by both directions, so
+        # the shift taken out on the way in is the one put back on the way out.
+        self.s_offsets = written_s_offsets() if s_offsets is None else s_offsets
 
         lattice = MagneticLattice(self.sequence)
         self._mid, self._end = lattice.survey_longlist(**self.survey_seed)
@@ -421,10 +425,10 @@ class ComponentListWriter:
         row.update(self._survey_columns(survey))
         row.update(self._optics_columns(optics))
 
-        # Reapply the displacement makelist_release.m:392-397 puts on the gun
-        # solenoid, which conversion.py takes back out so the element can be
-        # modelled where it acts.
-        offset = WRITTEN_S_OFFSETS.get(element.id)
+        # Reapply the displacement the component list records this element with,
+        # which the forward conversion took out so it could be modelled where it
+        # acts.  See the `written_s_offsets` block in the conversion config.
+        offset = self.s_offsets.get(element.id)
         if offset is not None:
             row["S"] += offset
             row["ST"] += offset

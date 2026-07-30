@@ -34,6 +34,23 @@ rows:
     CLASS: {}
     GROUP: {}
 
+# Elements the component list records away from where they actually act, and by
+# how much: written S = lattice s + offset.
+#
+# Unlike `rows.edit` these are *reversible*: subtracted on the way in so the
+# element is modelled where the beam meets it, and re-added on the way out so
+# the regenerated sheet matches the original.
+#
+# SOLA.23.I1 is the gun solenoid.  It is a real MAD-8 element sitting at the
+# cathode -- XFEL_I1.txm:138 declares it, :193 places it immediately after
+# GUN.I1, and SURVEY_G1D record 4 has it at SUML = 0, Z = 23.2.  makelist_
+# release.m:392-397 then subtracts 102 mm on the way into the spreadsheet, to
+# record where the solenoid physically stands rather than where the beam meets
+# it.  Without undoing that the row has a negative S and gets dropped, silently
+# losing a real magnet from the model.
+written_s_offsets:
+  SOLA.23.I1: -0.102
+
 targets: # Each subsequence corresponds to the name of a section below (case insensitive)
   g1d: ["g1", "g1d"]
   i1d: ["i1", "i1d"]

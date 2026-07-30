@@ -34,6 +34,26 @@ LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.INFO)
 
 
+def load_conversion_config(path: str | None = None) -> dict[str, Any]:
+    """Read the conversion config, defaulting to the one in use."""
+    with open(path or DEFAULT_CONVERSION_CONFIG_PATH, "rb") as f:
+        return yaml.safe_load(f)
+
+
+def written_s_offsets(config: dict[str, Any] | None = None) -> dict[str, float]:
+    """Elements the component list records away from where they act.
+
+    `written S = lattice s + offset`.  Subtracted on the way in so the element
+    sits where the beam meets it, re-added on the way out by
+    `longlist_writer.ComponentListWriter` so the regenerated sheet matches.
+    Both directions read this one declaration; see the `written_s_offsets`
+    block in the conversion config for what is in it and why.
+    """
+    if config is None:
+        config = load_conversion_config()
+    return config.get("written_s_offsets") or {}
+
+
 @dataclass
 class RowFilter:
     """Specify row-level exclusions for converting from the Component List Excel spreadsheet.
@@ -150,26 +170,6 @@ class SubsequenceModule:
     extras: dict[str, dict[str, float | str]] = field(default_factory=dict)
     new_elements: dict[str, Placement] = field(default_factory=dict)
     matching: MatchingRequest | None = None
-
-
-#: Elements the component list records away from where the lattice puts them,
-#: and by how much: `written S = lattice s + offset`.
-#:
-#: `SOLA.23.I1` is the gun solenoid.  It is a genuine MAD-8 element sitting at
-#: the cathode -- `XFEL_I1.txm:138` declares it and `:193` places it immediately
-#: after `GUN.I1`, and `SURVEY_G1D` record 4 has it at `SUML = 0`, `Z = 23.2`.
-#: `makelist_release.m:392-397` then subtracts 102 mm on the way into the
-#: spreadsheet, to record where the solenoid physically stands rather than where
-#: the beam meets it:
-#:
-#:     sola = find(strncmp('SOLA',{list.NAME2},4));
-#:     list(sola).Z = list(sola).Z-0.102;
-#:     list(sola).S = list(sola).S-0.102;
-#:
-#: So the negative `S` is a bookkeeping displacement, not a real position.  Undo
-#: it on the way in, so the solenoid is modelled where it acts; reapply it on the
-#: way out, in `longlist_writer`.
-WRITTEN_S_OFFSETS: dict[str, float] = {"SOLA.23.I1": -0.102}
 
 
 class ComponentListToOcelotConversionError(Exception):
@@ -360,6 +360,7 @@ class LongListConverter:
         rowskips: RowFilter | None = None,
         rowedits: RowEdits | None = None,
         targets: dict[str, list[str]] | None = None,
+        written_s_offsets: dict[str, float] | None = None,
     ):
         self.clist = clist
         self.extra_properties = extra_properties if extra_properties else {}
@@ -367,6 +368,7 @@ class LongListConverter:
         self.rowskips: RowFilter = rowskips or RowFilter()
         self.rowedits: RowEdits = rowedits or RowEdits()
         self.targets = targets or {}
+        self.written_s_offsets = written_s_offsets or {}
         self.drift_counter = 0
         # NAME1 -> (entry S, exit S), rebuilt per section by convert_section.
         self.bend_extents: dict[str, tuple[float, float]] = {}
@@ -576,7 +578,7 @@ class LongListConverter:
         # Put displaced elements back where they act before anything reads S.
         # Without this the gun solenoid is at a negative S and gets dropped
         # below, silently losing a real magnet from the model.
-        for name1, offset in WRITTEN_S_OFFSETS.items():
+        for name1, offset in self.written_s_offsets.items():
             df = df.with_columns(
                 pl.when(pl.col("NAME1") == name1)
                 .then(pl.col("S") - offset)
@@ -1478,7 +1480,11 @@ def longlist_to_ocelot(
     targets = config.get("targets", {})
 
     llcv = LongListConverter(
-        ComponentList(fpath), rowskips=rowskips, rowedits=rowedits, targets=targets
+        ComponentList(fpath),
+        rowskips=rowskips,
+        rowedits=rowedits,
+        targets=targets,
+        written_s_offsets=written_s_offsets(config),
     )
 
     sequences = llcv.convert_sections(sections)
