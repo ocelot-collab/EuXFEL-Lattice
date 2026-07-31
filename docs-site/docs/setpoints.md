@@ -125,6 +125,7 @@ named attributes — so editors can complete them and `setpoints.bc2.chrip` is a
 | `injector` | `E1`, `chirp`, `curvature`, `skewness` | A1 (1.3 GHz) + AH1 (3.9 GHz), solved together |
 | `bc0`, `bc1`, `bc2` | exactly one of `r56`, `angle`, `rho` | The four-dipole bunch compressors |
 | `l1`, `l2`, `l3` | `sum_voltage`, `chirp` | A2 / A3–A5 / A6–A25 |
+| `tds_i1`, `tds_b1`, `tds_b2` | `voltage`, `phase` | The transverse deflecting structures; `tds_b2` drives both B2 structures |
 
 Assigning one chicane parameter clears the others, so the last thing you set is
 what is used. `report()` gives all three at once for display.
@@ -175,38 +176,47 @@ the geometry.
 
 ## Start-to-end tracking
 
-`SectionLattice` handles per-magnet setpoints and section knobs through different
-channels, so an optics reaches a tracking run two ways:
-
-| What | Channel |
-|---|---|
-| Quadrupoles, sextupoles, individual bends | Applied to the sequence **before** `SectionLattice` is built |
-| Chicane `rho`, cavity `v`/`phi` | Emitted into the per-section `config` dict |
+`MachineSetpoints` owns the lattice. `SectionTrack` attaches physics processes
+and tracks; it does not write magnet or RF values any more.
 
 ```python
-optics = load_setpoints("sase1_14gev.yaml")
-cell = setpoints.build(sequences.cathode_to_t4d)
-section_lat = SectionLattice(sequence=cell, tws0=tws0, data_dir=data_dir)
+setpoints = load_setpoints("sase2_14gev.yaml")
+setpoints.apply_in_place(full_machine_cell())
 
-config = setpoints.section_config({
+section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
+
+config = {                                   # physics processes only
     A1:  {"SC": SC_exec, "smooth": True, "wake": wake_exec},
     BC0: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec},
     ...
-})
+}
 ```
 
-`section_config` fills in `rho`, `v` and `phi` and leaves the physics-process
-toggles exactly as given — they describe the tracking model, not the optics.
+`apply_in_place` mutates the module-level cells, which is process-global and
+irreversible. It has to: `SectionLattice` takes a list of section *classes*, and
+each `SectionTrack` builds its own `MagneticLattice` from `i1.cell` / `t5.cell`
+inside `__init__`, so there is nowhere to hand a freshly built sequence. That is
+fine for a script that runs once and exits. Everywhere else — plots, exports,
+knob scans — use `build(cell)`, which returns a private copy.
 
-!!! warning "This corrects the hardcoded chicane radii"
+It must run **before** `SectionLattice` is constructed, since each section
+calculates its design twiss as it is built.
 
-    The s2e scripts compute `r1 = 0.5 / 0.1366592804`, but
-    `update_bunch_compressor` inverts its argument as `arcsin(yoke / rho)`. The
-    missing sine makes BC0 bend about **0.31 %** harder than the control-room
-    file asks for (0.047 % for BC1, 0.028 % for BC2). `section_config` emits
-    `yoke / sin(angle)`, so the angle that reaches the tracking is the one the
-    file actually specifies. Every RF value it produces is bit-identical to the
-    scripts.
+!!! warning "`rho`, `v` and `phi` in a config dict now raise"
+
+    They used to be applied by `update_bunch_compressor` and `update_cavity`
+    during tracking. Silently ignoring them would let a run finish with its
+    compression quietly at the design value, so they raise instead, pointing at
+    the knob that replaces them. Every s2e script written before this change
+    needs migrating.
+
+!!! note "The chicane angle is now exact"
+
+    Previously a requested angle was converted to a radius, put in the config
+    dict, and converted back by `arcsin(dipole_len / rho)` using a `dipole_len`
+    hardcoded in `sections.py` — a constant that existed twice and could
+    disagree with the lattice. It did, by ~1e-6. Now the angle is written
+    straight onto the dipoles and nothing re-derives it.
 
 ## Layering
 

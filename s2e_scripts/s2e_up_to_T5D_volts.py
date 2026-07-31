@@ -55,7 +55,23 @@ CSR_exec = True
 coupler_kick_exec = False
 
 all_sections = [
-    A1, AH1, LH, DL, BC0, L1, BC1, L2, BC2, L3, CL1, CL2, CL3, T1, SASE2, T3, T5,
+    A1,
+    AH1,
+    LH,
+    DL,
+    BC0,
+    L1,
+    BC1,
+    L2,
+    BC2,
+    L3,
+    CL1,
+    CL2,
+    CL3,
+    T1,
+    SASE2,
+    T3,
+    T5,
 ]
 
 tws0 = Twiss()
@@ -104,52 +120,46 @@ setpoints.bc2.r56 = -0.0305
 #     setpoints["QI.63.I1D"] = {"k1": -2.9974}      # explicit OCELOT attributes
 
 # ------------------------------------------------------------------ #
-# Channel 1: per-magnet setpoints.
+# Apply the setpoints to the lattice.
 #
-# This has to mutate the module-level cells in place.  SectionLattice takes a
-# list of section *classes*, and each SectionTrack builds its own
-# MagneticLattice from i1.cell / t5.cell inside __init__, so there is nowhere
-# to hand a freshly built sequence.  The change is process-global and there is
-# no way back to the design without re-importing -- which is fine in a script
-# that does one run and exits, but is why `setpoints.build(cell)` (a private copy)
-# is the right call everywhere else.
+# This mutates the module-level cells in place, which is process-global and
+# irreversible.  It has to: SectionLattice takes a list of section *classes*,
+# and each SectionTrack builds its own MagneticLattice from i1.cell / t5.cell
+# inside __init__, so there is nowhere to hand a freshly built sequence.  Fine
+# in a script that runs once and exits; everywhere else setpoints.build(cell)
+# returns a private copy and leaves the design alone.
+#
+# It must happen *before* SectionLattice is constructed, because each section
+# calculates its design twiss as it is built.
 # ------------------------------------------------------------------ #
 setpoints.apply_in_place(full_machine_cell(), verbose=True)
 
-section_lat = SectionLattice(
-    sequence=all_sections, tws0=tws0, data_dir=data_dir
-)
+section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
 
 # ------------------------------------------------------------------ #
-# Channel 2: chicane rho and cavity v/phi.
-#
-# These must go through the config dict: update_sections calls update_cavity
-# and update_bunch_compressor, which would overwrite anything set on the
-# elements directly.  section_config fills in rho/v/phi and leaves every
-# physics-process toggle below exactly as written.
+# Physics processes only.  Magnets and RF are not here: the lattice is owned
+# by the setpoints above, and passing "rho", "v" or "phi" now raises rather
+# than quietly overwriting what was applied.
 # ------------------------------------------------------------------ #
-config = setpoints.section_config(
-    {
-        A1: {"SC": SC_exec, "smooth": True, "wake": wake_exec},
-        AH1: {"match": False, "SC": SC_exec, "wake": wake_exec},
-        LH: {"SC": SC_exec, "CSR": False, "wake": wake_exec, "match": match_exec},
-        DL: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-        BC0: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-        L1: {"match": match_exec, "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
-        BC1: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-        L2: {"match": match_exec, "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
-        BC2: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-        L3: {"match": match_exec, "SC": SC_exec, "wake": wake_exec},
-        CL1: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-        CL2: {"match": match_exec},
-        CL3: {"SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
-        T1: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
-        SASE2: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
-        T3: {"match": match_exec, "SC": False, "wake": wake_exec},
-        T5: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
-    },
-    full_machine_cell(),
-)
+config = {
+    A1: {"SC": SC_exec, "smooth": True, "wake": wake_exec},
+    AH1: {"match": False, "SC": SC_exec, "wake": wake_exec},
+    LH: {"SC": SC_exec, "CSR": False, "wake": wake_exec, "match": match_exec},
+    DL: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
+    BC0: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
+    L1: {"match": match_exec, "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
+    BC1: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
+    L2: {"match": match_exec, "SC": SC_exec, "wake": wake_exec, "smooth": smooth_exec},
+    BC2: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
+    L3: {"match": match_exec, "SC": SC_exec, "wake": wake_exec},
+    CL1: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
+    CL2: {"match": match_exec},
+    CL3: {"SC": SC_exec, "CSR": CSR_exec, "wake": wake_exec},
+    T1: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
+    SASE2: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
+    T3: {"match": match_exec, "SC": False, "wake": wake_exec},
+    T5: {"match": match_exec, "SC": False, "CSR": CSR_exec, "wake": wake_exec},
+}
 
 # What the setpoints actually resolved to, worth having in the log next to the run.
 for name, knob in setpoints.knobs.set_items():

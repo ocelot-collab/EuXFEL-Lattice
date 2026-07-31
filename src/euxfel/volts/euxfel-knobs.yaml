@@ -75,3 +75,21 @@ linacs:
       - C.A25.L3
     init_energy: 2.4
     description: L3 (A6-A25), 640 cavities.
+
+# Transverse deflecting structures, used to measure the longitudinal profile.
+# Off in the design lattice (v = 0), so setting one is always a deliberate act.
+# TDSB.B2 drives both B2 structures from one supply, which is why the knob is
+# keyed on the supply rather than on the two element ids.
+tds:
+  tds_i1:
+    supply: TDSA.I1
+    frequency: 2.8e+09     # Hz
+    description: TDSA in the injector, vertical (tilt = pi/2).
+  tds_b1:
+    supply: TDSB.B1
+    frequency: 2.8e+09
+    description: TDSB after BC1.
+  tds_b2:
+    supply: TDSB.B2
+    frequency: 2.8e+09
+    description: TDSB after BC2, two structures on one supply.

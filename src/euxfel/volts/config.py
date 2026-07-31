@@ -45,7 +45,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from . import library
 from .index import LatticeIndex
 from .kicks import is_sascha_representable
-from .knobs import ChicaneKnob, InjectorRFKnob, LinacKnob
+from .knobs import ChicaneKnob, InjectorRFKnob, LinacKnob, TDSKnob
 from .sascha import dumps_sascha, read_sascha, sascha_sign, write_sascha
 
 __all__ = ["ConflictError", "Knobs", "MachineSetpoints"]
@@ -74,11 +74,14 @@ class Knobs(BaseModel):
     model_config = ConfigDict(extra="forbid", validate_assignment=True)
 
     injector: InjectorRFKnob = Field(default_factory=InjectorRFKnob)
+    tds_i1: TDSKnob = Field(default_factory=TDSKnob)
     bc0: ChicaneKnob = Field(default_factory=ChicaneKnob)
     l1: LinacKnob = Field(default_factory=LinacKnob)
     bc1: ChicaneKnob = Field(default_factory=ChicaneKnob)
+    tds_b1: TDSKnob = Field(default_factory=TDSKnob)
     l2: LinacKnob = Field(default_factory=LinacKnob)
     bc2: ChicaneKnob = Field(default_factory=ChicaneKnob)
+    tds_b2: TDSKnob = Field(default_factory=TDSKnob)
     l3: LinacKnob = Field(default_factory=LinacKnob)
 
     def items(self):
@@ -140,6 +143,18 @@ class MachineSetpoints(BaseModel):
     @property
     def l3(self) -> LinacKnob:
         return self.knobs.l3
+
+    @property
+    def tds_i1(self) -> TDSKnob:
+        return self.knobs.tds_i1
+
+    @property
+    def tds_b1(self) -> TDSKnob:
+        return self.knobs.tds_b1
+
+    @property
+    def tds_b2(self) -> TDSKnob:
+        return self.knobs.tds_b2
 
     def __getitem__(self, key: str) -> float | dict[str, float]:
         return self.elements[key]
@@ -429,22 +444,6 @@ class MachineSetpoints(BaseModel):
         index = LatticeIndex.from_cell(cell)
         self.apply(index, verbose=verbose)
         return index.cell
-
-    def section_config(self, toggles: dict, cell=None) -> dict:
-        """Merge these setpoints into an s2e script's per-section config dict.
-
-        Fills in ``rho``, ``v`` and ``phi`` from the knobs and leaves the
-        physics-process toggles (``SC``, ``CSR``, ``wake``, ``smooth``,
-        ``match``) exactly as given.  See :mod:`euxfel.volts.s2e`.
-        """
-        from .s2e import section_config
-
-        # A copy, because solving a chicane for an R56 moves its geometry and
-        # must not disturb the sequence actually being tracked.
-        index = LatticeIndex.from_cell(
-            cell.cell if isinstance(cell, LatticeIndex) else _index_for(cell).cell
-        )
-        return section_config(self, toggles, index)
 
     def _check_resolved(self, index: LatticeIndex) -> None:
         """Warn if the recorded snapshot disagrees with what we just applied."""

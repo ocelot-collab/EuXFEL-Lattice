@@ -505,83 +505,124 @@ def test_reading_an_optics_back_off_a_lattice(cell):
 
 
 # --------------------------------------------------------------------------- #
-# The bridge to start-to-end tracking
+# Start-to-end tracking: the lattice is owned by the setpoints
 # --------------------------------------------------------------------------- #
 
 
-def test_section_config_reproduces_the_s2e_scripts_rf_exactly(cell):
-    """The numbers s2e_up_to_SA1.py hardcodes, to the last bit."""
-    from ocelot.utils.acc_utils import beam2rf, beam2rf_xfel_linac
+def build_section_lattice(section_names, tmp_path):
+    """A SectionLattice over the given sections, reading the module-level cells."""
+    from euxfel import sections
+    from euxfel.section_track import SectionLattice
 
+    from ocelot.cpbd.beam import Twiss
+
+    tws0 = Twiss()
+    tws0.E = 0.005
+    tws0.beta_x = tws0.beta_y = 0.2865426867699372
+    tws0.alpha_x = tws0.alpha_y = -0.8390696483216487
+    classes = [getattr(sections, name) for name in section_names]
+    return SectionLattice(sequence=classes, tws0=tws0, data_dir=str(tmp_path))
+
+
+def test_a_config_that_still_sets_the_machine_is_rejected(tmp_path):
+    """Silently ignoring 'rho' would let a run finish at design compression."""
     from euxfel import sections
 
-    v11, phi11, v13, phi13 = beam2rf(
-        E1=0.130,
-        chirp=-8.92,
-        curvature=180.5,
-        skewness=20332,
-        n=3,
-        freq=1.3e9,
-        E0=0.00675,
+    section_lat = build_section_lattice(["A1"], tmp_path)
+    with pytest.raises(ValueError, match="no longer belong in the section config"):
+        section_lat.update_sections([sections.A1], config={sections.A1: {"rho": 3.6}})
+    with pytest.raises(ValueError, match="MachineSetpoints"):
+        section_lat.update_sections(
+            [sections.A1], config={sections.A1: {"v": 0.018, "phi": 12.0}}
+        )
+
+
+def test_rf_matches_what_update_cavity_used_to_produce(index):
+    """Moving RF out of section_track must not change a single cavity."""
+    from ocelot.utils.acc_utils import beam2rf_xfel_linac
+
+    spec = LINACS["l1"]
+    LinacKnob(sum_voltage=0.57872, chirp=-9.1).apply(index, spec)
+
+    total, phase = beam2rf_xfel_linac(
+        sum_voltage=0.57872, chirp=-9.1, init_energy=spec.init_energy
     )
-    v21, phi21 = beam2rf_xfel_linac(sum_voltage=0.57872, chirp=-9.1, init_energy=0.13)
-    v31, phi31 = beam2rf_xfel_linac(sum_voltage=1.7349, chirp=-9.3, init_energy=0.7)
-
-    setpoints = MachineSetpoints()
-    setpoints.injector.E1 = 0.130
-    setpoints.injector.chirp = -8.92
-    setpoints.injector.curvature = 180.5
-    setpoints.injector.skewness = 20332
-    setpoints.l1.sum_voltage, setpoints.l1.chirp = 0.57872, -9.1
-    setpoints.l2.sum_voltage, setpoints.l2.chirp = 1.7349, -9.3
-
-    names = ("A1", "AH1", "L1", "L2")
-    config = setpoints.section_config({getattr(sections, n): {} for n in names}, cell)
-
-    expected = {
-        "A1": (phi11, v11 / 8),
-        "AH1": (phi13, v13 / 8),
-        "L1": (phi21, v21 / 32),
-        "L2": (phi31, v31 / 96),
-    }
-    for name, (phi, v) in expected.items():
-        entry = config[getattr(sections, name)]
-        assert entry["phi"] == phi
-        assert entry["v"] == v
+    cavities = index.group("C.A2.L1").elements
+    for cavity in cavities:
+        assert cavity.v == total / len(cavities)  # what update_cavity did
+        assert cavity.phi == phase
 
 
-def test_section_config_leaves_physics_toggles_alone(cell):
+def test_the_chicane_angle_survives_a_section_lattice(tmp_path, cell):
+    """Nothing re-derives the angle from a radius any more, so it is exact."""
     from euxfel import sections
 
-    setpoints = MachineSetpoints(knobs={"bc0": {"r56": -0.03}})
-    toggles = {sections.BC0: {"match": True, "SC": False, "CSR": True}}
-    config = setpoints.section_config(toggles, cell)
+    setpoints = MachineSetpoints(knobs={"bc0": {"r56": -0.045}})
+    setpoints.apply_in_place(cell)
 
-    assert config[sections.BC0]["match"] is True
-    assert config[sections.BC0]["SC"] is False
-    assert config[sections.BC0]["CSR"] is True
-    assert "rho" in config[sections.BC0]
-    assert toggles[sections.BC0] == {"match": True, "SC": False, "CSR": True}
+    wanted = abs(next(e for e in cell if e.id == "BB.96.I1").angle)
+    section_lat = build_section_lattice(["BC0"], tmp_path)
+    section_lat.update_sections([sections.BC0], config={sections.BC0: {"SC": False}})
+
+    dipoles = [
+        e
+        for e in section_lat.dict_sections[sections.BC0].lattice.sequence
+        if e.id.startswith("BB.")
+    ]
+    assert dipoles
+    for dipole in dipoles:
+        assert abs(dipole.angle) == pytest.approx(wanted, abs=1e-12)
 
 
-def test_section_config_rho_inverts_update_bunch_compressor(cell, index):
-    """OCELOT takes arcsin(yoke/rho), so rho must be yoke/sin(angle).
+def test_a_chicane_still_closes_after_a_section_lattice(tmp_path, cell):
+    """Dropping change_bc_shoulders must not lose the drift rescaling."""
 
-    The s2e scripts hardcode ``0.5 / angle`` instead, which makes BC0 bend about
-    0.3% harder than the control-room file asks for.
-    """
-    from euxfel import sections
+    before = LatticeIndex.from_cell(cell)
+    dipoles_before, _ = chicane_dipoles(before, CHICANES["bc0"])
+    reference = survey_end(before, dipoles_before)
 
-    angle = 0.1366592804
-    setpoints = MachineSetpoints(knobs={"bc0": {"angle": angle}})
-    config = setpoints.section_config({sections.BC0: {}}, cell)
+    setpoints = MachineSetpoints(knobs={"bc0": {"r56": -0.045}})
+    setpoints.apply_in_place(cell)
+    build_section_lattice(["BC0"], tmp_path)
 
-    dipoles, _ = chicane_dipoles(index, CHICANES["bc0"])
-    yoke = yoke_length(dipoles[0])
-    rho = config[sections.BC0]["rho"]
+    after = LatticeIndex.from_cell(cell)
+    dipoles_after, _ = chicane_dipoles(after, CHICANES["bc0"])
+    moved = survey_end(after, dipoles_after)
+    for axis in ("X", "Y", "Z", "THETA"):
+        assert moved[axis] == pytest.approx(reference[axis], abs=1e-7)
 
-    assert math.asin(yoke / rho) == pytest.approx(angle, rel=1e-12)
-    assert rho != pytest.approx(yoke / angle, rel=1e-6)
+
+# --------------------------------------------------------------------------- #
+# Transverse deflecting structures
+# --------------------------------------------------------------------------- #
+
+
+def test_tds_knob_round_trips(index):
+    from euxfel.volts.knobs import TDSKnob
+    from euxfel.volts.library import TDS
+
+    knob = TDSKnob(voltage=0.004, phase=90.0)
+    knob.apply(index, TDS["tds_b1"])
+    back = knob.read(index, TDS["tds_b1"])
+    assert back.voltage == pytest.approx(0.004)
+    assert back.phase == pytest.approx(90.0)
+
+
+def test_one_supply_drives_both_b2_structures(index):
+    """TDSB.B2 feeds TDSB.428.B2 and TDSB.430.B2, so both must move."""
+    from euxfel.volts.knobs import TDSKnob
+    from euxfel.volts.library import TDS
+
+    group = index.resolve("TDSB.B2", namespace="ps")
+    assert set(group.ids) == {"TDSB.428.B2", "TDSB.430.B2"}
+
+    TDSKnob(voltage=0.006, phase=0.0).apply(index, TDS["tds_b2"])
+    assert [s.v for s in group.elements] == [0.003, 0.003]
+
+
+def test_the_tds_are_off_in_the_design_lattice(index):
+    for supply in ("TDSA.I1", "TDSB.B1", "TDSB.B2"):
+        assert all(s.v == 0.0 for s in index.resolve(supply).elements)
 
 
 def test_the_shipped_example_optics_matches_its_source(cell):

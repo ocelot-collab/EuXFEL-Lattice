@@ -307,9 +307,6 @@ class BC0(SectionTrack):
         match_bc0 = st4_stop
         self.add_physics_process(sc, start=match_bc0, stop=bc0_stop)
         self.add_physics_process(csr, start=match_bc0, stop=bc0_stop)
-        self.dipoles = [l1.bb_96_i1, l1.bb_98_i1, l1.bb_100_i1, l1.bb_101_i1]
-        self.dipole_len = 0.5
-        self.bc_gap = 1.0
 
 
 class L1(SectionTrack):
@@ -398,9 +395,6 @@ class BC1(SectionTrack):
         match_bc1 = acc2_stop
         self.add_physics_process(csr, start=match_bc1, stop=bc1_stop)
         self.add_physics_process(sc, start=match_bc1, stop=bc1_stop)
-        self.dipoles = [l1.bb_182_b1, l1.bb_191_b1, l1.bb_193_b1, l1.bb_202_b1]
-        self.dipole_len = 0.5
-        self.bc_gap = 8.5
 
 
 class L2(SectionTrack):
@@ -462,9 +456,6 @@ class BC2(SectionTrack):
 
         # setting parameters
         self.lattice_name = "BC2"
-        self.dipoles = [l2.bb_393_b2, l2.bb_402_b2, l2.bb_404_b2, l2.bb_413_b2]
-        self.dipole_len = 0.5
-        self.bc_gap = 8.5
 
         self.unit_step = 0.02
         suffix = kwargs.get("suffix", "")

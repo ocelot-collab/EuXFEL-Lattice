@@ -43,7 +43,7 @@ from ocelot.utils.acc_utils import (
 from pydantic import BaseModel, ConfigDict, model_validator
 from scipy.optimize import brentq
 
-from .library import ChicaneSpec, InjectorSpec, LinacSpec
+from .library import ChicaneSpec, InjectorSpec, LinacSpec, TDSSpec
 
 __all__ = [
     "ChicaneError",
@@ -51,6 +51,7 @@ __all__ = [
     "InjectorRFKnob",
     "Knob",
     "LinacKnob",
+    "TDSKnob",
 ]
 
 #: Largest dipole angle the chicane solver will consider, in radians.  Well
@@ -582,4 +583,47 @@ class InjectorRFKnob(Knob):
         cavities = _cavities(index, [spec.fundamental, spec.harmonic])
         return {
             (cavity.id, attribute) for cavity in cavities for attribute in ("v", "phi")
+        }
+
+
+class TDSKnob(Knob):
+    """A transverse deflecting structure.
+
+    Simpler than the accelerating knobs: there is no beam-parameter inversion
+    to do, so ``voltage`` [GV] and ``phase`` [deg] are written straight onto the
+    structures.  Both must be given together, since a voltage without a phase
+    does not describe a setting.
+
+    Where a supply drives two structures -- ``TDSB.B2`` does -- the voltage is
+    divided between them, matching how the accelerating cavities are handled.
+    """
+
+    _REQUIRED: ClassVar[tuple[str, ...]] = ("voltage", "phase")
+
+    voltage: float | None = None
+    phase: float | None = None
+
+    def is_set(self) -> bool:
+        return all(getattr(self, name) is not None for name in self._REQUIRED)
+
+    def missing(self) -> tuple[str, ...]:
+        given = [name for name in self._REQUIRED if getattr(self, name) is not None]
+        if not given or len(given) == len(self._REQUIRED):
+            return ()
+        return tuple(name for name in self._REQUIRED if getattr(self, name) is None)
+
+    def apply(self, index, spec: TDSSpec) -> None:
+        if not self.is_set():
+            return
+        _write_rf(_cavities(index, [spec.supply]), self.voltage, self.phase)
+
+    def read(self, index, spec: TDSSpec) -> TDSKnob:
+        voltage, phase = _read_rf(_cavities(index, [spec.supply]), spec.name)
+        return TDSKnob(voltage=voltage, phase=phase)
+
+    def owns(self, index, spec: TDSSpec) -> set[tuple[str, str]]:
+        return {
+            (structure.id, attribute)
+            for structure in _cavities(index, [spec.supply])
+            for attribute in ("v", "phi")
         }

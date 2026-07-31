@@ -15,7 +15,7 @@ import os
 import numpy as np
 from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.csr import CSR
-from ocelot.cpbd.elements import Cavity, TDCavity
+from ocelot.cpbd.elements import Cavity
 from ocelot.cpbd.io import load_particle_array, save_particle_array
 from ocelot.cpbd.magnetic_lattice import MagneticLattice
 from ocelot.cpbd.navi import Navigator
@@ -27,12 +27,49 @@ from ocelot.cpbd.wake3D import Wake, WakeKick
 
 __all__ = ["SectionLattice", "SectionTrack"]
 
+#: Config keys that used to set magnets and RF from inside tracking.  They are
+#: now owned by euxfel.volts.MachineSetpoints, which writes them onto the
+#: lattice before a SectionLattice is built.
+_MOVED_TO_SETPOINTS = {
+    "rho": "a bunch compressor",
+    "v": "cavity voltage",
+    "phi": "cavity phase",
+    "tds.v": "TDS voltage",
+    "tds.phi": "TDS phase",
+}
+
+
+def _reject_setpoints(section, conf):
+    """Refuse a config that still tries to set the machine during tracking.
+
+    Silently ignoring these would be the worst outcome: a script would run to
+    completion with its compression or RF quietly at the design values.
+    """
+    present = sorted(key for key in _MOVED_TO_SETPOINTS if key in conf)
+    if not present:
+        return
+    raise ValueError(
+        f"{type(section).__name__}: "
+        f"{', '.join(repr(key) for key in present)} "
+        f"({', '.join(_MOVED_TO_SETPOINTS[key] for key in present)}) "
+        f"no longer belong in the section config -- the lattice is owned by "
+        f"euxfel.volts.MachineSetpoints. Set them there and apply the "
+        f"setpoints before building the SectionLattice:\n"
+        f"    setpoints.bc2.r56 = ...       # or .l1.chirp, .tds_b2.voltage\n"
+        f"    setpoints.apply_in_place(full_machine_cell())\n"
+        f"The config dict now carries physics processes only "
+        f"(SC, CSR, wake, smooth, match)."
+    )
+
 
 class SectionLattice:
     """
     High level class to work with SectionTrack()
     """
-    def __init__(self, sequence, tws0=None, data_dir=".", main_config=None, *args, **kwargs): # Added main_config
+
+    def __init__(
+        self, sequence, tws0=None, data_dir=".", main_config=None, *args, **kwargs
+    ):  # Added main_config
         """
         :param sequence: list of SectionTrack()
         :param main_config: The main configuration dictionary from the script
@@ -47,12 +84,14 @@ class SectionLattice:
         # Pass *args and **kwargs (like coupler_kick) to initialize
         self.initialize(*args, **kwargs)
 
-    def initialize(self, *args, **kwargs): # Accepts *args, **kwargs from __init__
+    def initialize(self, *args, **kwargs):  # Accepts *args, **kwargs from __init__
         # Pass main_config and other args/kwargs to init_sections
         self.init_sections(self.main_config, *args, **kwargs)
         self.tws = self.calculate_twiss(self.tws0)
 
-    def init_sections(self, main_config=None, *args, **kwargs_from_sl_init): # Accepts main_config and *args,**kwargs
+    def init_sections(
+        self, main_config=None, *args, **kwargs_from_sl_init
+    ):  # Accepts main_config and *args,**kwargs
         """
         Method initiates section and return dictionary with initialized sections
         :param main_config: The main configuration dictionary
@@ -76,7 +115,10 @@ class SectionLattice:
 
             # Existing coupler_kick logic (example, adapt if it was different)
             # This relies on 'coupler_kick' being in kwargs_from_sl_init
-            if "coupler_kick" in kwargs_from_sl_init and kwargs_from_sl_init["coupler_kick"] is False:
+            if (
+                "coupler_kick" in kwargs_from_sl_init
+                and kwargs_from_sl_init["coupler_kick"] is False
+            ):
                 s.remove_coupler_kicks()
 
             self.dict_sections[sec_class] = s
@@ -108,17 +150,14 @@ class SectionLattice:
         tws_whole = []
         seq_current = []
         for sec in sections:
-            #np.random.seed(10)
+            # np.random.seed(10)
             sec = self.dict_sections[sec]
             if not coupler_kick:
                 sec.remove_coupler_kicks()
 
             if config is not None and sec.__class__ in config.keys():
                 conf = config[sec.__class__]
-                if "rho" in conf.keys():
-                    sec.update_bunch_compressor(rho=conf["rho"])
-                if "phi" in conf.keys() and "v" in conf.keys():
-                    sec.update_cavity(phi=conf["phi"], v=conf["v"])
+                _reject_setpoints(sec, conf)
                 if "match" in conf.keys() and conf["match"] is True:
                     bounds = [-5, 5]
                     remove_offsets = True
@@ -138,8 +177,6 @@ class SectionLattice:
                 if "IBS" in conf.keys():
                     sec.ibs_flag = conf["IBS"]
 
-                if "tds.phi" in conf.keys() and "tds.v" in conf.keys():
-                    sec.update_tds(phi=conf["tds.phi"], v=conf["tds.v"])
                 if "save_output_files" in conf.keys():
                     sec.save_output_files = conf["save_output_files"]
 
@@ -151,20 +188,32 @@ class SectionLattice:
                 tws0 = tws[-1]
                 tws_whole = np.append(tws_whole, tws)
         self.tws_current = tws_whole
-        self.lat_current = MagneticLattice(copy.deepcopy(seq_current), method={'global': SecondTM})
+        self.lat_current = MagneticLattice(
+            copy.deepcopy(seq_current), method={"global": SecondTM}
+        )
         return new_sections
 
-    def track_sections(self, sections, p_array, config=None, force_ext_p_array=False, coupler_kick=False, verbose=True,
-                       twiss_disp_correction=False):
+    def track_sections(
+        self,
+        sections,
+        p_array,
+        config=None,
+        force_ext_p_array=False,
+        coupler_kick=False,
+        verbose=True,
+        twiss_disp_correction=False,
+    ):
         self.tws_track = []
-        L = 0.
+        L = 0.0
         self.update_sections(sections, config=config, coupler_kick=coupler_kick)
         for i, sec in enumerate(sections):
             sec = self.dict_sections[sec]
             if i == 0 and sec.__class__ != self.sec_seq[0] and not force_ext_p_array:
                 p_array = None
             sec.print_progress = verbose
-            p_array = sec.tracking(particles=p_array, twiss_disp_correction=twiss_disp_correction)
+            p_array = sec.tracking(
+                particles=p_array, twiss_disp_correction=twiss_disp_correction
+            )
             tws_track = copy.deepcopy(sec.tws_track)
             for tws in tws_track:
                 tws.s += L
@@ -194,15 +243,11 @@ class SectionTrack:
         # Store all kwargs passed during instantiation.
         # These will include both parameters from SectionLattice's direct pass-through
         # and specific init_params for this section.
-        self.init_parameters = kwargs # Store kwargs
+        self.init_parameters = kwargs  # Store kwargs
 
         self.lattice_name = ""
         self.lattice = None
-        self.dipoles = None
         self.tws0 = None
-        self.dipole_len = None
-        self.bc_gap = None
-        self.cav_name_pref = None
 
         self.unit_step = 1.0
 
@@ -210,12 +255,12 @@ class SectionTrack:
         self.output_beam_file = None
         self.tws_file = None
 
-        #self.data_dir = "."
+        # self.data_dir = "."
         self.particle_dir = data_dir + "/particles/"
         self.tws_dir = data_dir + "/tws/"
 
         self.physics_processes_array = []  # list of physics process
-        self.method = {'global': SecondTM}
+        self.method = {"global": SecondTM}
         self.sc_flag = True
         self.csr_flag = True
         self.wake_flag = True
@@ -254,117 +299,6 @@ class SectionTrack:
         bt = BeamTransform(tws=self.tws0, remove_offsets=remove_offsets, bounds=bounds)
         self.add_physics_process(bt, self.lattice.sequence[0], self.lattice.sequence[0])
 
-    def bc_analysis(self):
-        # find positions
-        L = 0.
-        for elem in self.lattice.sequence:
-
-            if elem in self.dipoles:
-                elem.s_pos = L
-            L += elem.l
-        self.dipoles = np.array(self.dipoles)
-        # sorting - put dipoles in right order
-        sort_index = np.argsort(np.array([d.s_pos for d in self.dipoles]))
-        #print(sort_index)
-        self.dipoles = self.dipoles[sort_index]
-
-        #self.bc_gap = self.dipoles[2].s_pos - self.dipoles[1].s_pos - self.dipoles[1].l
-        #print("bc_gap", self.bc_gap)
-        self.get_bc_shoulders()
-
-    def get_bc_shoulders(self):
-        self.left_shoulder = []
-        self.right_shoulder = []
-        left_flag = False
-        right_flag = False
-        for i, elem in enumerate(self.lattice.sequence):
-            if elem == self.dipoles[0]:
-                left_flag = True
-            elif elem == self.dipoles[1]:
-                left_flag = False
-
-            if elem == self.dipoles[2]:
-                right_flag = True
-            elif elem == self.dipoles[3]:
-                right_flag = False
-
-            if left_flag and elem != self.dipoles[0]:
-                self.lattice.sequence[i] = copy.deepcopy(elem)
-                self.left_shoulder.append(self.lattice.sequence[i])
-            if right_flag and elem != self.dipoles[2]:
-                self.lattice.sequence[i] = copy.deepcopy(elem)
-                self.right_shoulder.append(self.lattice.sequence[i])
-
-        self.bc_gap_left = np.sum([d.l for d in self.left_shoulder])
-        right_len = np.sum([d.l for d in self.right_shoulder])
-
-        for d in self.left_shoulder:
-            d.len_coef = d.l / self.bc_gap_left
-        for d in self.right_shoulder:
-            d.len_coef = d.l / right_len
-
-    def change_bc_shoulders(self, drift):
-        for d in self.left_shoulder:
-            d.l = drift * d.len_coef
-
-        for d in self.right_shoulder:
-            d.l = drift * d.len_coef
-
-    def update_bunch_compressor(self, rho):
-        if self.dipoles is None:
-            print(self.__class__.__name__ + " No BC")
-            return
-
-        self.bc_analysis()
-
-        if self.dipole_len is None:
-            self.dipole_len = copy.copy(self.dipoles[0].l)
-
-        if rho == 0:
-            angle = 0
-            ds = self.dipole_len
-        else:
-            angle = np.arcsin(self.dipole_len / rho)
-            ds = angle * rho
-
-        if self.bc_gap is None:
-            self.bc_gap = self.bc_gap_left*np.cos(self.dipoles[0].angle)
-
-        drift = self.bc_gap / np.cos(angle)
-        self.change_bc_shoulders(drift)
-        # d.l=drift
-        for i, dip in enumerate(self.dipoles):
-            dip.angle = angle * np.sign(dip.angle)
-            dip.l = ds
-            if i in [0, 2]:
-                dip.e2 = angle * np.sign(dip.angle)
-            else:
-                dip.e1 = angle * np.sign(dip.angle)
-
-    def update_cavity(self, phi, v):
-        for elem in self.lattice.sequence:
-
-            if elem.__class__ == Cavity:
-                if self.cav_name_pref is None:
-                    elem.v = v
-                    elem.phi = phi
-                else:
-                    if self.cav_name_pref in elem.id:
-                        elem.v = v
-                        elem.phi = phi
-
-    def update_tds(self, phi, v):
-        for elem in self.lattice.sequence:
-
-            if elem.__class__ == TDCavity:
-                if self.cav_name_pref is None:
-                    elem.v = v
-                    elem.phi = phi
-                else:
-                    if self.cav_name_pref in elem.id:
-                        elem.v = v
-                        elem.phi = phi
-
     def init_navigator(self):
 
         # init navigator
@@ -373,26 +307,55 @@ class SectionTrack:
 
         # init physics processes
         for physics_process in self.physics_processes_array:
-            if (physics_process[0].__class__ == SpaceCharge or physics_process[0].__class__ == LSC) and self.sc_flag:
-                self.navigator.add_physics_proc(physics_process[0], physics_process[1], physics_process[2])
+            if (
+                physics_process[0].__class__ == SpaceCharge
+                or physics_process[0].__class__ == LSC
+            ) and self.sc_flag:
+                self.navigator.add_physics_proc(
+                    physics_process[0], physics_process[1], physics_process[2]
+                )
 
             if physics_process[0].__class__ == CSR and self.csr_flag:
-                self.navigator.add_physics_proc(physics_process[0], physics_process[1], physics_process[2])
+                self.navigator.add_physics_proc(
+                    physics_process[0], physics_process[1], physics_process[2]
+                )
 
             if physics_process[0].__class__ == IBS and self.ibs_flag:
-                self.navigator.add_physics_proc(physics_process[0], physics_process[1], physics_process[2])
+                self.navigator.add_physics_proc(
+                    physics_process[0], physics_process[1], physics_process[2]
+                )
 
-            if (physics_process[0].__class__ == Wake or physics_process[0].__class__ == WakeKick) and self.wake_flag:
-                self.navigator.add_physics_proc(physics_process[0], physics_process[1], physics_process[2])
+            if (
+                physics_process[0].__class__ == Wake
+                or physics_process[0].__class__ == WakeKick
+            ) and self.wake_flag:
+                self.navigator.add_physics_proc(
+                    physics_process[0], physics_process[1], physics_process[2]
+                )
 
             if physics_process[0].__class__ == BeamTransform and self.bt_flag:
-                self.navigator.add_physics_proc(physics_process[0], physics_process[1], physics_process[2])
+                self.navigator.add_physics_proc(
+                    physics_process[0], physics_process[1], physics_process[2]
+                )
 
             if physics_process[0].__class__ == SmoothBeam and self.smooth_flag:
-                self.navigator.add_physics_proc(physics_process[0], physics_process[1], physics_process[2])
+                self.navigator.add_physics_proc(
+                    physics_process[0], physics_process[1], physics_process[2]
+                )
 
-            if physics_process[0].__class__ not in [SpaceCharge, CSR, Wake, WakeKick, BeamTransform, SmoothBeam, LSC, IBS]:
-                self.navigator.add_physics_proc(physics_process[0], physics_process[1], physics_process[2])
+            if physics_process[0].__class__ not in [
+                SpaceCharge,
+                CSR,
+                Wake,
+                WakeKick,
+                BeamTransform,
+                SmoothBeam,
+                LSC,
+                IBS,
+            ]:
+                self.navigator.add_physics_proc(
+                    physics_process[0], physics_process[1], physics_process[2]
+                )
 
     def add_physics_process(self, physics_process, start, stop):
 
@@ -404,9 +367,13 @@ class SectionTrack:
 
         try:
             particles = load_particle_array(self.input_beam_file)
-        
+
         except:  # noqa: E722  (inherited from upstream; narrow it separately)
-            print(self.lattice_name + ' - #### ERROR #### - NO START PARTICLES FILE: ' + self.input_beam_file)
+            print(
+                self.lattice_name
+                + " - #### ERROR #### - NO START PARTICLES FILE: "
+                + self.input_beam_file
+            )
 
         return particles
 
@@ -440,8 +407,17 @@ class SectionTrack:
         emit_x = np.array([tw.emit_x for tw in twiss_list])
         emit_y = np.array([tw.emit_y for tw in twiss_list])
 
-        np.savez_compressed(tws_file_name, beta_x=bx, beta_y=by, alpha_x=ax, alpha_y=ay, E=E, s=s,
-                            emit_x=emit_x, emit_y=emit_y)
+        np.savez_compressed(
+            tws_file_name,
+            beta_x=bx,
+            beta_y=by,
+            alpha_x=ax,
+            alpha_y=ay,
+            E=E,
+            s=s,
+            emit_x=emit_x,
+            emit_y=emit_y,
+        )
 
     def load_twiss_file(self):
         return np.load(self.tws_file)
@@ -476,18 +452,24 @@ class SectionTrack:
 
         # tracking
         print()
-        print(self.lattice_name + ' TRACKING')
+        print(self.lattice_name + " TRACKING")
         # print("std1 = ", np.std(particles.tau()))
-        tws_track, particles = track(self.lattice, particles, self.navigator,
-                                     print_progress=self.print_progress, calc_tws=self.calc_tws,
-                                     twiss_disp_correction=twiss_disp_correction)
+        tws_track, particles = track(
+            self.lattice,
+            particles,
+            self.navigator,
+            print_progress=self.print_progress,
+            calc_tws=self.calc_tws,
+            twiss_disp_correction=twiss_disp_correction,
+        )
         self.tws_track = tws_track
         # save tracking results
-        if self.output_beam_file is not None and self.save_output_files and not self.kill_track:
+        if (
+            self.output_beam_file is not None
+            and self.save_output_files
+            and not self.kill_track
+        ):
             self.save_beam_file(particles)
             self.save_twiss_file(tws_track)
 
         return particles
-
- 
-

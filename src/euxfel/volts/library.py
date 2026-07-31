@@ -21,9 +21,11 @@ __all__ = [
     "INJECTOR",
     "KNOB_NAMES",
     "LINACS",
+    "TDS",
     "ChicaneSpec",
     "InjectorSpec",
     "LinacSpec",
+    "TDSSpec",
     "spec_for",
 ]
 
@@ -66,6 +68,15 @@ class LinacSpec(Spec):
     description: str = ""
 
 
+class TDSSpec(Spec):
+    """A transverse deflecting structure, or a pair sharing one supply."""
+
+    name: str
+    supply: str
+    frequency: float = 2.8e9
+    description: str = ""
+
+
 class InjectorSpec(Spec):
     """The A1 + AH1 pair, solved together.
 
@@ -83,7 +94,7 @@ class InjectorSpec(Spec):
     description: str = ""
 
 
-def _load(path=KNOBS_PATH) -> tuple[dict, dict, InjectorSpec, int]:
+def _load(path=KNOBS_PATH) -> tuple[dict, dict, dict, InjectorSpec, int]:
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
 
     chicanes = {
@@ -98,31 +109,37 @@ def _load(path=KNOBS_PATH) -> tuple[dict, dict, InjectorSpec, int]:
             name=name, supplies=tuple(entry.pop("supplies")), **entry
         )
 
+    tds = {
+        name: TDSSpec(name=name, **entry) for name, entry in raw.get("tds", {}).items()
+    }
+
     injector = InjectorSpec(name="injector", **raw["injector"])
 
-    return chicanes, linacs, injector, raw.get("version", 1)
+    return chicanes, linacs, tds, injector, raw.get("version", 1)
 
 
-CHICANES, LINACS, INJECTOR, LIBRARY_VERSION = _load()
+CHICANES, LINACS, TDS, INJECTOR, LIBRARY_VERSION = _load()
 
 #: Every knob name, in beamline order.
 KNOB_NAMES: tuple[str, ...] = (
     "injector",
+    "tds_i1",
     "bc0",
     "l1",
     "bc1",
+    "tds_b1",
     "l2",
     "bc2",
+    "tds_b2",
     "l3",
 )
 
 
-def spec_for(name: str) -> ChicaneSpec | LinacSpec | InjectorSpec:
+def spec_for(name: str) -> ChicaneSpec | LinacSpec | TDSSpec | InjectorSpec:
     """The specification for a knob name."""
-    if name in CHICANES:
-        return CHICANES[name]
-    if name in LINACS:
-        return LINACS[name]
+    for table in (CHICANES, LINACS, TDS):
+        if name in table:
+            return table[name]
     if name == INJECTOR.name:
         return INJECTOR
     raise KeyError(
