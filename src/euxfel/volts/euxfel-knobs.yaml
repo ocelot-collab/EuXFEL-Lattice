@@ -1,0 +1,77 @@
+# The European XFEL's high-level knobs.
+#
+# This is a machine description, not an optics: it says what hardware exists and
+# how it is grouped, and is versioned alongside the component list.  Setpoints
+# live in optics files, which refer to these knobs by name.
+#
+# Chicane geometry is deliberately *not* recorded here.  The yoke length and the
+# projected gap between dipoles are properties of the tunnel and are derived from
+# the design lattice at run time (see knobs.ChicaneKnob), which keeps them from
+# drifting out of step with the component list the way the hardcoded
+# `dipole_len`/`bc_gap` constants in sections.py can.
+
+version: 1
+
+chicanes:
+  bc0:
+    supply: BB.1.I1
+    # Reference energy for computing R56 from the transfer matrix.  A chicane's
+    # R56 is geometric, so this only matters at the 1/gamma^2 level, but it
+    # should still match where the section actually sits in the machine.
+    energy: 0.13         # GeV, after A1 + AH1
+    description: First bunch compressor, in the injector.
+  bc1:
+    supply: BB.1.B1
+    energy: 0.7          # GeV, after L1
+    description: Second bunch compressor, after L1.
+  bc2:
+    supply: BB.1.B2
+    energy: 2.4          # GeV, after L2
+    description: Third bunch compressor, after L2.
+
+# The A1 + AH1 pair is treated as one knob because the 3.9 GHz third-harmonic
+# module exists precisely to linearise the 1.3 GHz section: their voltages and
+# phases are solved together from the beam parameters (ocelot beam2rf).
+injector:
+  fundamental: C.A1.I1     # 8 cavities, 1.3 GHz
+  harmonic: C3.AH1.I1      # 8 cavities, 3.9 GHz
+  harmonic_number: 3
+  frequency: 1.3e9         # Hz
+  gun_energy: 0.00675      # GeV, beam energy out of the gun
+  description: A1 (1.3 GHz) and AH1 (3.9 GHz linearizer), solved together.
+
+# The main linacs, each solved as a single-harmonic system from sum voltage and
+# chirp (ocelot beam2rf_xfel_linac).
+linacs:
+  l1:
+    supplies: [C.A2.L1]
+    init_energy: 0.13      # GeV, energy entering the linac
+    description: L1 (A2), 32 cavities.
+  l2:
+    supplies: [C.A3.L2, C.A4.L2, C.A5.L2]
+    init_energy: 0.7
+    description: L2 (A3-A5), 96 cavities.
+  l3:
+    supplies:
+      - C.A6.L3
+      - C.A7.L3
+      - C.A8.L3
+      - C.A9.L3
+      - C.A10.L3
+      - C.A11.L3
+      - C.A12.L3
+      - C.A13.L3
+      - C.A14.L3
+      - C.A15.L3
+      - C.A16.L3
+      - C.A17.L3
+      - C.A18.L3
+      - C.A19.L3
+      - C.A20.L3
+      - C.A21.L3
+      - C.A22.L3
+      - C.A23.L3
+      - C.A24.L3
+      - C.A25.L3
+    init_energy: 2.4
+    description: L3 (A6-A25), 640 cavities.

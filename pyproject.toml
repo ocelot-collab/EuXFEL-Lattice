@@ -17,6 +17,7 @@ dependencies = [
     "numpy>=2",
     "polars>=1.36.1",
     "pyarrow>=22.0.0",
+    "pydantic>=2.9",
     "pyyaml>=6.0.3",
     "xlrd>=2.0.2",
     "ocelot-collab",

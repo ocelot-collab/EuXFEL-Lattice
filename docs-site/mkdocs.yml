@@ -5,6 +5,7 @@ nav:
   - Home: index.md
   - Start to End Simulations: s2e.md
   - Optics: optics.md
+  - Optics Configurations: optics-config.md
   - Conversion: conversion.md
   - API: api.md
 
