@@ -257,7 +257,7 @@ title, "XFEL G1 to T5D: November 2022"
 beam, energy=0.005
 use, I1TT5D
 print, #s/#e
-twiss, beta0=B0_I1.G1, save, couple, tape=twiss_T5D
+twiss, beta0=B0_I1.G1, save, tape=twiss_T5D
 plot,table=twiss,haxis=s, vaxis1=betx,bety, spline,colour=100, &
      vmin=0,vmax=500, vaxis2=dx,dy
 plot,table=twiss, haxis=s, vaxis=betx,bety, spline,colour=100, &
