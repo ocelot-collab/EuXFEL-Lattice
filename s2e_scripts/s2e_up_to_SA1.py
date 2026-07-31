@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 from euxfel.sections import *
-from ocelot.utils.section_track import *
+from euxfel.section_track import SectionLattice, SectionTrack
 from ocelot.gui.accelerator import *
 import time
 from ocelot.common.globals import *

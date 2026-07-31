@@ -17,7 +17,7 @@ from ocelot import (
     WakeTableDechirperOffAxis,
 )
 from ocelot.cpbd.elements import Octupole
-from ocelot.utils.section_track import SectionTrack
+from euxfel.section_track import SectionTrack
 
 from euxfel.subsequences import (
     b1d,  # noqa: F401

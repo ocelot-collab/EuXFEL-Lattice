@@ -16,7 +16,7 @@ import time
 
 import matplotlib.pyplot as plt
 from ocelot.gui.accelerator import show_e_beam
-from ocelot.utils.section_track import SectionLattice
+from euxfel.section_track import SectionLattice
 
 from euxfel.sections import (
     A1,
