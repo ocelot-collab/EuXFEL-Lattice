@@ -1,0 +1,191 @@
+# How the "real" model differs from the design model.
+#
+# The design model is MAD-8, converted and nothing more: `euxfel convert-mad8`
+# reproduces the tapes to 3e-6 m in geometry and ~1e-4 in beta, and that is the
+# whole of its job.  It is what the component list is generated from, and what
+# tests/test_mad8_optics.py holds to MAD-8.
+#
+# This file describes the second stage -- `euxfel convert-real` -- which turns
+# that into a model of the machine as it actually runs.  Everything here is a
+# deliberate divergence from MAD-8, not a correction to the conversion:
+#
+#   new_markers   points s2e sections are sliced at.  MAD-8 has no reason to
+#                 carry `ocelot_start` or `lh_start`; we do.  Geometry-neutral.
+#   extras        attributes MAD-8 cannot express -- the laser-heater undulator's
+#                 Kx, the rotated TDS.  These change the optics on purpose.
+#   matching      quadrupole strengths re-matched at a marker, with the corrected
+#                 twiss0 written out.  This is where we assert our model is more
+#                 realistic than MAD-8's rather than merely different.
+#   new_elements  elements absent from MAD-8 entirely, e.g. the XY quadrupoles.
+#
+# Keyed by section, matching the module names `convert-mad8` writes.
+#
+# Moved here from longlists/conversion-config.yaml, which drives the component
+# list route.  These blocks never belonged to that pathway: they are properties
+# of our model, and both pathways would otherwise have to declare them twice.
+
+sections:
+  I1:
+    new_markers:
+      astra_stop:
+        delta_s: 3.2
+      ocelot_start:
+        delta_s: 3.2
+      a1_sim_stop:
+        reference: C.A1.1.8.I1
+        adjacent: after
+      ah1_sim_start:
+        reference: C.A1.1.8.I1
+        adjacent: after
+      a1_1_stop:
+        reference: C.A1.1.1.I1
+        adjacent: after
+      lh_start:
+        reference: U74.49.I1
+        adjacent: before
+      lh_stop:
+        reference: U74.49.I1
+        adjacent: after
+      i1_tds_start:
+        reference: TDSA.52.I1
+        adjacent: before
+      i1_tds_stop:
+        reference: TDSA.52.I1
+        adjacent: after
+      DUMP.CSR.START:
+        delta_s: 38.789005
+    extras:
+      TDSA.52.I1:
+        tilt: 1.570796327
+      U74.49.I1:
+        Kx: 1.294
+        Ky: 0
+    matching:
+      marker: MATCH.52.I1
+      quadrupoles:
+      - Q.37.I1
+      - Q.38.I1
+      - QI.46.I1
+      - QI.47.I1
+      - QI.50.I1
+  L1:
+    new_markers:
+      dogleg_start:
+        reference: CIX.65.I1
+        adjacent: before
+      dogleg_stop_bc0_start:
+        reference: STLAT.96.I1
+        adjacent: before
+      bc0_stop_l1_start:
+        reference: QI.103.I1
+        adjacent: before
+      l1_stop_bc1_start:
+        reference: STLAT.182.B1
+        adjacent: before
+      bc1_stop_l2_start:
+        reference: TORA.203.B1
+        adjacent: after
+  L2:
+    new_markers:
+      l2_stop_bc2_start:
+        reference: STLAT.393.B2
+        adjacent: before
+      bc2_stop_b2d_start:
+        reference: TORA.415.B2
+        adjacent: after
+  L3:
+    new_markers:
+      stop_l3:
+        reference: CFY.1651.L3
+        adjacent: before
+  TL2TLD:
+    extras:
+      QF.1952.TL:
+        k1: 0.17919084758504
+      QF.1967.TL:
+        k1: -0.17919084758504
+    new_elements:
+      QK.1982.TL:
+        position:
+          reference: MBZ.1980d.TLD
+          delta_s: 0.4724
+        type: SlicedElement
+        expression: (19 * [xslice1982] + [yslice1982]) * 10
+        elements:
+          xslice1982:
+            type: RBend
+            l: 0.005276
+            angle: 1.180477777265855e-05
+            k1: 0.090359600075815
+          yslice1982:
+            type: RBend
+            l: 0.005276
+            angle: -7.780804909999998e-05
+            k1: -0.090359600075815
+            tilt: 1.570796327
+  TL34_SA2:
+    extras:
+      QF.2012.TL:
+        k1: -0.1791908476
+  T1:
+    new_elements:
+      QK.2027.TL:
+        position:
+          reference: MBZ.2025d.T1
+          delta_s: 0.472401
+        type: SlicedElement
+        expression: (19 * [yslice2027] + [xslice2027]) * 10
+        elements:
+          xslice2027:
+            type: RBend
+            l: 0.005276
+            angle: -7.791933105545399e-05
+            k1: -0.090359600075815
+          yslice2027:
+            type: RBend
+            l: 0.005276
+            angle: 1.181521439452105e-05
+            k1: 0.090359600075815
+            tilt: 1.570796327
+      ROT.Z1.T1:
+        position:
+          reference: MBZ.2030a.T1
+          adjacent: before
+        type: SRot
+        angle: -0.00440392786446921
+      ROT.Y.T1:
+        position:
+          reference: MBZ.2030a.T1
+          adjacent: before
+        type: YRot
+        angle: 9.27121409529346e-08
+      ROT.Z2.T1:
+        position:
+          reference: MBZ.2030a.T1
+          adjacent: before
+        type: SRot
+        angle: 0.00441369699554469
+  SASE2:
+    new_elements:
+      ROT.Y.SA2:
+        position:
+          reference: STSEC.2197.SA2
+          adjacent: after
+        type: YRot
+        angle: -2.365095999996847e-06
+  T3:
+    new_markers:
+      t3_csr_start:
+        reference: QH.2544.T3
+        adjacent: after
+      t3_csr_stop:
+        reference: QH.2569.T3
+        adjacent: before
+  T4:
+    new_markers:
+      t4_csr_start:
+        reference: QH.2582.T4
+        adjacent: after
+      t4_csr_stop:
+        reference: BPMA.2606.T4
+        adjacent: after
