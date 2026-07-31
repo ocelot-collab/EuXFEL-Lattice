@@ -142,9 +142,9 @@ def _lengths_from_survey(tape: pl.DataFrame) -> pl.DataFrame:
         BL.1.1.I1: Sbend, L = arc_lh, ANGLE = ang_lh
 
     so the arc length is derived from a round *projected* length and comes out at
-    0.200331389 m, which the tape truncates to `0.200330`.  That 1.4e-6 relative
+    0.2003302835 m, which the tape truncates to `0.200330`.  That 1.4e-6 relative
     error puts the magnet's exit 283 nm short, and every element downstream
-    inherits it.
+    inherits it.  Recovery reproduces `arc_lh` to 1e-9.
 
     The chord between the entry and exit points fixes the geometry exactly:
 

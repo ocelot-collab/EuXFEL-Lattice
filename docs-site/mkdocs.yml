@@ -6,6 +6,7 @@ nav:
   - Start to End Simulations: s2e.md
   - Optics: optics.md
   - Conversion: conversion.md
+  - Ocelot against MAD-8: mad8-comparison.md
   - The T1 survey rotations: t1-survey-rotations.md
   - API: api.md
 

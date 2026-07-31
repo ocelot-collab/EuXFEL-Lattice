@@ -228,3 +228,110 @@ kicker_classes:
   overrides:
     KL.2005.TL: RampKicker
 
+# Where each subsequence module begins and ends.
+#
+# The boundaries are ours, not MAD-8's: they are the module split this
+# repository chooses, expressed as the generated NAME1 of the marker at each
+# end.  `targets` lists, per dump path, the modules that make it up in order.
+targets:
+  g1d: ["g1", "g1d"]
+  i1d: ["i1", "i1d"]
+  b1d: ["i1", "l1", "b1d"]
+  b2d: ["i1", "l1", "l2", "b2d"]
+  tld: ["i1", "l1", "l2", "l3", "cl", "tl2tld"]
+  t4d: ["i1", "l1", "l2", "l3", "cl", "tl2", "tl34", "sase1", "t4", "sase3", "t4d"]
+  t5d: ["i1", "l1", "l2", "l3", "cl", "tl2", "tl34_sa2", "t1", "sase2", "t3", "t5", "t5d"]
+
+sections:
+  I1:
+    target: I1D
+    start: STSEC.23.I1
+    stop: ENSUB.62.I1
+  I1D:
+    target: I1D
+    start: STSEC.62.I1D
+    stop: ENSEC.66.I1D
+  G1:
+    target: G1D
+    start: STSEC.23.I1
+    stop: ENSUB.24.I1
+  G1D:
+    target: G1D
+    start: STSUB.24II.I1
+    stop: ENSUB.25.I1
+  L1:
+    target: B1D
+    start: STSUB.62.I1
+    stop: ENSUB.229.B1
+  B1D:
+    target: B1D
+    start: STSEC.229.B1D
+    stop: ENSEC.237.B1D
+  L2:
+    target: B2D
+    start: STSUB.229.B1
+    stop: ENSUB.466.B2
+  B2D:
+    target: B2D
+    start: STSEC.466.B2D
+    stop: ENSEC.480.B2D
+  L3:
+    target: TLD
+    start: STSUB.466.B2
+    stop: ENSEC.1652.L3
+  CL:
+    target: TLD
+    start: STSEC.1652.CL
+    stop: ENSEC.1854.CL
+  TL2TLD:
+    target: TLD
+    start: STSEC.1854.TL
+    stop: ENSEC.2130.TLD
+  TL2:
+    target: T5D
+    start: STSEC.1854.TL
+    stop: ENSUB.1980.TL
+  TL34_SA2:
+    target: T5D
+    start: STSUB.1980.TL
+    stop: ENSUB.2025.TL
+  T1:
+    target: T5D
+    start: STSEC.2025.T1
+    stop: ENSEC.2197.T1
+  SASE2:
+    target: T5D
+    start: STSEC.2197.SA2
+    stop: ENSEC.2473.SA2
+  T3:
+    target: T5D
+    start: STSEC.2473.T3
+    stop: ENSEC.2743.UN1
+  T5:
+    target: T5D
+    start: STSEC.2743.T5
+    stop: ENSEC.3039.UN2
+  T5D:
+    target: T5D
+    start: STSEC.3039.T5D
+    stop: ENSEC.3189.T5D
+  TL34:
+    target: T4D
+    start: STSUB.1980.TL
+    stop: ENSUB.2025.TL
+  SASE1:
+    target: T4D
+    start: STSUB.2025.TL
+    stop: ENSEC.2461.SA1
+  T4:
+    target: T4D
+    start: STSEC.2461.T4
+    stop: ENSEC.2800.T4
+  SASE3:
+    target: T4D
+    start: STSEC.2800.SA3
+    stop: ENSEC.2955.SA3
+  T4D:
+    target: T4D
+    start: STSEC.2955.T4D
+    stop: ENSEC.3106.T4D
