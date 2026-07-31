@@ -5,7 +5,11 @@ component_list: component_list_2026.02.13.xls
 
 
 writer:
-  write_types_power_supplies: ["Quadrupole", "Sextupole", "Octupole", "Cavity", "RBend", "SBend"]
+  # TDCavity is here so the transverse deflecting structures can be addressed by
+  # power supply like everything else.  The component list already gives them a
+  # NAME2 -- TDSA.I1, TDSB.B1, and TDSB.B2 feeding both B2 structures -- and
+  # conversion.py assigns it; without this line the writer simply dropped it.
+  write_types_power_supplies: ["Quadrupole", "Sextupole", "Octupole", "Cavity", "TDCavity", "RBend", "SBend"]
 
 rows:
   skip:

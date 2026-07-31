@@ -17,9 +17,9 @@ from ocelot.cpbd.elements import (
 
 twiss0 = Twiss()
 twiss0.E = 0.12999999999999998
-twiss0.alpha_x = 0.23964062933824398
+twiss0.alpha_x = 0.23964062933823327
 twiss0.alpha_y = -2.1841640590702722
-twiss0.beta_x = 3.020592602704924
+twiss0.beta_x = 3.0205926027049035
 twiss0.beta_y = 7.034982640199846
 twiss0.s = 38.889005
 
@@ -1540,3 +1540,6 @@ c_a2_4_5_l1.ps_id = "C.A2.L1"
 c_a2_4_6_l1.ps_id = "C.A2.L1"
 c_a2_4_7_l1.ps_id = "C.A2.L1"
 c_a2_4_8_l1.ps_id = "C.A2.L1"
+
+# TDCavity power supplies:
+tdsb_208_b1.ps_id = "TDSB.B1"

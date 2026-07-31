@@ -567,3 +567,6 @@ c3_ah1_1_5_i1.ps_id = "C3.AH1.I1"
 c3_ah1_1_6_i1.ps_id = "C3.AH1.I1"
 c3_ah1_1_7_i1.ps_id = "C3.AH1.I1"
 c3_ah1_1_8_i1.ps_id = "C3.AH1.I1"
+
+# TDCavity power supplies:
+tdsa_52_i1.ps_id = "TDSA.I1"
