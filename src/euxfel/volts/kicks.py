@@ -1,6 +1,6 @@
 """Generalised kicks: the energy-independent quantity a power supply sets.
 
-The DESY control room stores an optics as one number per power supply.  That
+The DESY control room stores a machine's settings as one number per supply.  That
 number is a *generalised kick*: a purely geometric quantity in rad/m^n.  This is
 what makes it storable as a file at all -- it does not depend on the beam
 energy, so the same numbers describe the same optics at 8 GeV and at 17.5 GeV.

@@ -100,8 +100,8 @@ def subsequence(names: list[str], list_):
     plt.show()
 
 
-@main.group(help="Read, write and apply optics configurations")
-def optics():
+@main.group(help="Read, write and apply machine setpoints")
+def setpoints():
     pass
 
 
@@ -119,20 +119,20 @@ def _cell_for(target: str):
     return getattr(sequences, f"cathode_to_{target.lower()}")
 
 
-@optics.command("apply", help="Apply an optics file and show the resulting optics")
+@setpoints.command("apply", help="Apply a setpoints file and show the resulting optics")
 @argument("config", type=click.Path(exists=True, dir_okay=False))
 @option("--target", default="T4D", help="Which cathode-to-dump sequence to apply to")
 @option("--marker", multiple=True, help="Extra markers to report optics at")
-def optics_apply(config, target, marker):
+def setpoints_apply(config, target, marker):
     from ocelot.cpbd.magnetic_lattice import MagneticLattice
     from ocelot.cpbd.track import twiss
 
-    from euxfel.volts import Optics
+    from euxfel.volts import MachineSetpoints
 
     import polars as pl
 
     echo(f"Applying {config} to cathode_to_{target.lower()}")
-    cell = Optics.from_yaml(config).build(_cell_for(target), verbose=True)
+    cell = MachineSetpoints.from_yaml(config).build(_cell_for(target), verbose=True)
     optics_df = twiss(
         MagneticLattice(cell), tws0=sequences.CATHODE_TWISS0, return_df=True
     )
@@ -140,7 +140,9 @@ def optics_apply(config, target, marker):
     print_optics_at_points(pl.from_pandas(optics_df), markers=list(marker))
 
 
-@optics.command("dump", help="Read an optics off the lattice and write it as YAML")
+@setpoints.command(
+    "dump", help="Read the setpoints off the lattice and write them as YAML"
+)
 @option(
     "--target", default="full", help="Sequence to read; 'full' is the whole machine"
 )
@@ -151,21 +153,23 @@ def optics_apply(config, target, marker):
     help="Apply this control-room file first",
 )
 @option("-o", "--output", type=click.Path(dir_okay=False), help="Write here")
-def optics_dump(target, from_sascha, output):
-    from euxfel.volts import Optics
+def setpoints_dump(target, from_sascha, output):
+    from euxfel.volts import MachineSetpoints
 
     cell = _cell_for(target)
     if from_sascha:
-        cell = Optics.from_sascha(from_sascha, cell).build(cell)
+        cell = MachineSetpoints.from_sascha(from_sascha, cell).build(cell)
 
-    text = Optics.from_lattice(cell, name=from_sascha or f"{target} as built").to_yaml(
-        output
-    )
+    text = MachineSetpoints.from_lattice(
+        cell, name=from_sascha or f"{target} as built"
+    ).to_yaml(output)
     if not output:
         echo(text)
 
 
-@optics.command("to-sascha", help="Export an optics file to the control-room format")
+@setpoints.command(
+    "to-sascha", help="Export a setpoints file to the control-room format"
+)
 @argument("config", type=click.Path(exists=True, dir_okay=False))
 @option("--target", default="full", help="Sequence to use; 'full' is the whole machine")
 @option(
@@ -174,31 +178,33 @@ def optics_dump(target, from_sascha, output):
     help="Use this file's key set and order",
 )
 @option("-o", "--output", type=click.Path(dir_okay=False), help="Write here")
-def optics_to_sascha(config, target, like, output):
-    from euxfel.volts import Optics, read_sascha
+def setpoints_to_sascha(config, target, like, output):
+    from euxfel.volts import MachineSetpoints, read_sascha
 
     keys = list(read_sascha(like)) if like else None
-    text = Optics.from_yaml(config).to_sascha(_cell_for(target), output, keys=keys)
+    text = MachineSetpoints.from_yaml(config).to_sascha(
+        _cell_for(target), output, keys=keys
+    )
     if not output:
         echo(text)
 
 
-@optics.command("diff", help="Compare two optics, in either format")
+@setpoints.command("diff", help="Compare two sets of setpoints, in either format")
 @argument("first", type=click.Path(exists=True, dir_okay=False))
 @argument("second", type=click.Path(exists=True, dir_okay=False))
 @option("--target", default="full", help="Sequence to use; 'full' is the whole machine")
 @option(
     "--rtol", default=1e-9, help="Relative tolerance before a value counts as changed"
 )
-def optics_diff(first, second, target, rtol):
-    from euxfel.volts import Optics
+def setpoints_diff(first, second, target, rtol):
+    from euxfel.volts import MachineSetpoints
 
     cell = _cell_for(target)
 
     def load(path):
         if str(path).endswith((".yaml", ".yml")):
-            return Optics.from_yaml(path)
-        return Optics.from_sascha(path, cell)
+            return MachineSetpoints.from_yaml(path)
+        return MachineSetpoints.from_sascha(path, cell)
 
     left, right = load(first), load(second)
     before, after = left.resolve(cell), right.resolve(cell)

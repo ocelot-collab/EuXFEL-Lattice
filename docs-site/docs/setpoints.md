@@ -1,8 +1,13 @@
-# Optics configurations
+# Machine setpoints
 
-An **optics** is a set of setpoints: high-level knobs such as an R56 or a chirp,
-plus individual magnet strengths. It can be applied to a lattice, read back off
-one, and round-tripped to and from the control room's file format.
+A **setpoints** file records what the machine is asked to do: high-level knobs
+such as an R56 or a chirp, plus individual magnet strengths. It can be applied to
+a lattice, read back off one, and round-tripped to and from the control room's
+file format.
+
+Not "optics", because it carries RF voltage, phase and chirp as well as magnet
+strengths, and only the latter are optics in the usual sense. "Setpoint" is the
+control-system word for a demanded value, which is what all of it is.
 
 Before this existed, machine settings lived in three disconnected places: design
 values baked into the generated `subsequences/*.py`, operational values in
@@ -15,15 +20,15 @@ transcribed by hand out of a file the code could not open.
 
 ```python
 from euxfel import sequences
-from euxfel.volts import Optics
+from euxfel.volts import MachineSetpoints
 
-optics = Optics.design()
-optics.bc2.r56 = -0.0432          # metres; drifts follow automatically
-optics.l1.sum_voltage = 0.57872   # GV
-optics.l1.chirp = -9.1
-optics["QI.1.I1"] = -0.05343      # by power supply, or by element id
+setpoints = MachineSetpoints.design()
+setpoints.bc2.r56 = -0.0432          # metres; drifts follow automatically
+setpoints.l1.sum_voltage = 0.57872   # GV
+setpoints.l1.chirp = -9.1
+setpoints["QI.1.I1"] = -0.05343      # by power supply, or by element id
 
-cell = optics.build(sequences.cathode_to_t4d)
+cell = setpoints.build(sequences.cathode_to_t4d)
 ```
 
 `build` returns a **new** sequence. It never touches the one you passed: the
@@ -52,7 +57,7 @@ elements:
   QI.63.I1D: {k1: -2.9974}    # explicit OCELOT attributes
 ```
 
-Load with `Optics.from_yaml(path)` or `euxfel.volts.load_optics(path)`.
+Load with `MachineSetpoints.from_yaml(path)` or `euxfel.volts.load_setpoints(path)`.
 
 Unknown keys are errors rather than silent no-ops, attribute names are checked
 against the element's `__init__` signature, and `extra="forbid"` catches a
@@ -112,7 +117,7 @@ and applying a supply's design value is an exact no-op.
 ## Knobs
 
 The knobs are fixed hardware, declared once in `euxfel-knobs.yaml` and exposed as
-named attributes — so editors can complete them and `optics.bc2.chrip` is an
+named attributes — so editors can complete them and `setpoints.bc2.chrip` is an
 `AttributeError` rather than a silently ignored key.
 
 | Knob | Parameters | Hardware |
@@ -147,8 +152,8 @@ energy-independent, which is what makes the file meaningful on its own:
 | `SBend` / `RBend` | `angle` [rad] | `angle` |
 
 ```bash
-euxfel optics diff special-optics-files/BC2_TDS.txt special-optics-files/BEAM_B2D.txt
-euxfel optics to-sascha my_optics.yaml --like special-optics-files/BC2_TDS.txt
+euxfel setpoints diff special-optics-files/BC2_TDS.txt special-optics-files/BEAM_B2D.txt
+euxfel setpoints to-sascha my_optics.yaml --like special-optics-files/BC2_TDS.txt
 ```
 
 Two conventions are handled automatically, both of which are silent when wrong:
@@ -179,11 +184,11 @@ channels, so an optics reaches a tracking run two ways:
 | Chicane `rho`, cavity `v`/`phi` | Emitted into the per-section `config` dict |
 
 ```python
-optics = load_optics("sase1_14gev.yaml")
-cell = optics.build(sequences.cathode_to_t4d)
+optics = load_setpoints("sase1_14gev.yaml")
+cell = setpoints.build(sequences.cathode_to_t4d)
 section_lat = SectionLattice(sequence=cell, tws0=tws0, data_dir=data_dir)
 
-config = optics.section_config({
+config = setpoints.section_config({
     A1:  {"SC": SC_exec, "smooth": True, "wake": wake_exec},
     BC0: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec},
     ...
@@ -230,10 +235,10 @@ alone cannot catch.
 ## Command line
 
 ```
-euxfel optics apply CONFIG [--target T4D]     # apply and show the optics
-euxfel optics dump [--from-sascha FILE]       # lattice state -> YAML
-euxfel optics to-sascha CONFIG [--like FILE]  # YAML -> control-room format
-euxfel optics diff A B                        # compare two optics, either format
+euxfel setpoints apply CONFIG [--target T4D]     # apply and show the optics
+euxfel setpoints dump [--from-sascha FILE]       # lattice state -> YAML
+euxfel setpoints to-sascha CONFIG [--like FILE]  # YAML -> control-room format
+euxfel setpoints diff A B                        # compare two optics, either format
 ```
 
 `--target full` gives every element of the machine once. The EuXFEL branches, so

@@ -1,7 +1,7 @@
-"""Bridge from an optics to the start-to-end tracking model.
+"""Bridge from an setpoints to the start-to-end tracking model.
 
 ``SectionLattice`` handles per-magnet setpoints and section-level knobs through
-two different channels, so an optics reaches a tracking run two ways:
+two different channels, so an setpoints reaches a tracking run two ways:
 
 Per-magnet setpoints (quadrupoles, sextupoles, individual bends)
     Written onto the module-level cells *in place*, before ``SectionLattice`` is
@@ -11,7 +11,7 @@ Per-magnet setpoints (quadrupoles, sextupoles, individual bends)
     ``i1.cell``, ``t5.cell`` and so on inside its ``__init__``.  So there is
     nowhere to hand a freshly built sequence: the elements the sections are
     about to pick up have to be changed where they sit.  That is process-global
-    and irreversible; see :meth:`~euxfel.volts.config.Optics.apply_in_place`.
+    and irreversible; see :meth:`~euxfel.volts.config.MachineSetpoints.apply_in_place`.
 
 Chicane rho and cavity voltage/phase
     Emitted into the per-section ``config`` dict.  ``update_sections`` calls
@@ -20,13 +20,13 @@ Chicane rho and cavity voltage/phase
 
 So an s2e script becomes::
 
-    optics = load_optics("sase2_14gev.yaml")
-    optics.apply_in_place(full_machine_cell())      # quadrupoles, sextupoles
+    setpoints = load_setpoints("sase2_14gev.yaml")
+    setpoints.apply_in_place(full_machine_cell())      # quadrupoles, sextupoles
 
     section_lat = SectionLattice(sequence=all_sections, tws0=tws0,
                                  data_dir=data_dir)
 
-    config = optics.section_config({                # rho / v / phi merged in
+    config = setpoints.section_config({                # rho / v / phi merged in
         A1:  {"SC": SC_exec, "smooth": True, "wake": wake_exec},
         BC0: {"match": match_exec, "SC": SC_exec, "CSR": CSR_exec},
         ...
@@ -34,7 +34,7 @@ So an s2e script becomes::
 
 The toggles the script already has -- ``SC``, ``CSR``, ``wake``, ``smooth``,
 ``match``, ``bounds`` -- are left exactly as given.  They describe the tracking
-model rather than the optics and have no business in an optics file.
+model rather than the setpoints and have no business in an setpoints file.
 """
 
 from __future__ import annotations
@@ -43,7 +43,7 @@ import math
 import warnings
 
 from . import library
-from .knobs import ChicaneKnob, InjectorRfKnob, LinacKnob, chicane_dipoles, yoke_length
+from .knobs import ChicaneKnob, InjectorRFKnob, LinacKnob, chicane_dipoles, yoke_length
 
 __all__ = ["SECTION_FOR_KNOB", "section_config"]
 
@@ -89,13 +89,13 @@ def _cavity_count(index, supplies) -> int:
     return sum(len(index.group(supply).elements) for supply in supplies)
 
 
-def section_config(optics, toggles: dict, index) -> dict:
-    """Merge an optics' knob settings into a per-section tracking config.
+def section_config(setpoints, toggles: dict, index) -> dict:
+    """Merge an setpoints' knob settings into a per-section tracking config.
 
     Parameters
     ----------
-    optics
-        The :class:`~euxfel.volts.config.Optics` to take settings from.
+    setpoints
+        The :class:`~euxfel.volts.config.MachineSetpoints` to take settings from.
     toggles
         The script's existing ``{SectionClass: {physics process toggles}}``.
         Returned unchanged apart from the added ``rho``/``v``/``phi`` keys.
@@ -112,7 +112,7 @@ def section_config(optics, toggles: dict, index) -> dict:
     classes = _section_classes()
     by_class = {section: name for name, section in classes.items()}
 
-    for name, knob in optics.knobs.set_items():
+    for name, knob in setpoints.knobs.set_items():
         spec = library.spec_for(name)
         settings: dict[str, dict[str, float]] = {}
 
@@ -127,7 +127,7 @@ def section_config(optics, toggles: dict, index) -> dict:
                 "phi": phase,
             }
 
-        elif isinstance(knob, InjectorRfKnob):
+        elif isinstance(knob, InjectorRFKnob):
             v1, phi1, vh, phih = knob.rf(spec)
             settings["A1"] = {
                 "v": v1 / _cavity_count(index, [spec.fundamental]),
@@ -149,7 +149,7 @@ def section_config(optics, toggles: dict, index) -> dict:
                 continue
             config[section].update(values)
 
-    # Anything the script still sets by hand that an optics now owns is a
+    # Anything the script still sets by hand that an setpoints now owns is a
     # duplicate waiting to disagree; say so rather than silently overriding.
     for section, entry in toggles.items():
         name = by_class.get(section)
@@ -160,11 +160,11 @@ def section_config(optics, toggles: dict, index) -> dict:
         )
         if overridden and any(
             SECTION_FOR_KNOB.get(knob_name, ()) and name in SECTION_FOR_KNOB[knob_name]
-            for knob_name, _ in optics.knobs.set_items()
+            for knob_name, _ in setpoints.knobs.set_items()
         ):
             warnings.warn(
                 f"{name}: {', '.join(sorted(overridden))} was given in the "
-                f"config dict and is also set by the optics; the optics wins.",
+                f"config dict and is also set by the setpoints; the setpoints wins.",
                 stacklevel=2,
             )
 

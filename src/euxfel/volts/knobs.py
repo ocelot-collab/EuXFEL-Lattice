@@ -48,7 +48,7 @@ from .library import ChicaneSpec, InjectorSpec, LinacSpec
 __all__ = [
     "ChicaneError",
     "ChicaneKnob",
-    "InjectorRfKnob",
+    "InjectorRFKnob",
     "Knob",
     "LinacKnob",
 ]
@@ -508,7 +508,7 @@ class LinacKnob(Knob):
         }
 
 
-class InjectorRfKnob(Knob):
+class InjectorRFKnob(Knob):
     """A1 and AH1 together, set by the beam parameters they produce.
 
     The 3.9 GHz module exists to linearise the 1.3 GHz section, so the two are
@@ -558,7 +558,7 @@ class InjectorRfKnob(Knob):
         _write_rf(_cavities(index, [spec.fundamental]), v1, phi1)
         _write_rf(_cavities(index, [spec.harmonic]), vh, phih)
 
-    def read(self, index, spec: InjectorSpec) -> InjectorRfKnob:
+    def read(self, index, spec: InjectorSpec) -> InjectorRFKnob:
         v1, phi1 = _read_rf(_cavities(index, [spec.fundamental]), spec.fundamental)
         vh, phih = _read_rf(_cavities(index, [spec.harmonic]), spec.harmonic)
         E1, chirp, curvature, skewness = rf2beam(
@@ -570,7 +570,7 @@ class InjectorRfKnob(Knob):
             freq=spec.frequency,
             E0=self._gun_energy(spec),
         )
-        return InjectorRfKnob(
+        return InjectorRFKnob(
             E1=float(E1),
             chirp=float(chirp),
             curvature=float(curvature),

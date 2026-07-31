@@ -1,8 +1,8 @@
-"""The optics file format, and the :class:`Optics` object behind it.
+"""The setpoints file format, and the :class:`MachineSetpoints` object behind it.
 
-An optics is a set of setpoints: high-level knobs (an R56, a chirp) plus
-individual magnet strengths.  It can be applied to a lattice, read back off one,
-and round-tripped to and from the control room's Sascha format.
+A set of setpoints is what the machine is asked to do: high-level knobs (an R56,
+a chirp) plus individual magnet strengths.  It can be applied to a lattice, read
+back off one, and round-tripped to and from the control room's Sascha format.
 
 The Python object is primary and YAML is a thin layer over it -- nothing in the
 knob, index or kick layers knows that files exist.  A file looks like::
@@ -45,10 +45,10 @@ from pydantic import BaseModel, ConfigDict, Field
 from . import library
 from .index import LatticeIndex
 from .kicks import is_sascha_representable
-from .knobs import ChicaneKnob, InjectorRfKnob, LinacKnob
+from .knobs import ChicaneKnob, InjectorRFKnob, LinacKnob
 from .sascha import dumps_sascha, read_sascha, sascha_sign, write_sascha
 
-__all__ = ["ConflictError", "Knobs", "Optics"]
+__all__ = ["ConflictError", "Knobs", "MachineSetpoints"]
 
 
 class ConflictError(Exception):
@@ -73,7 +73,7 @@ class Knobs(BaseModel):
 
     model_config = ConfigDict(extra="forbid", validate_assignment=True)
 
-    injector: InjectorRfKnob = Field(default_factory=InjectorRfKnob)
+    injector: InjectorRFKnob = Field(default_factory=InjectorRFKnob)
     bc0: ChicaneKnob = Field(default_factory=ChicaneKnob)
     l1: LinacKnob = Field(default_factory=LinacKnob)
     bc1: ChicaneKnob = Field(default_factory=ChicaneKnob)
@@ -90,8 +90,8 @@ class Knobs(BaseModel):
         return [(name, knob) for name, knob in self.items() if knob.is_set()]
 
 
-class Optics(BaseModel):
-    """A machine optics: knob settings plus individual magnet setpoints."""
+class MachineSetpoints(BaseModel):
+    """What the machine is asked to do: knob settings plus magnet setpoints."""
 
     model_config = ConfigDict(extra="forbid", validate_assignment=True)
 
@@ -110,11 +110,11 @@ class Optics(BaseModel):
     resolved: dict[str, float] | None = None
 
     # ------------------------------------------------------------------ #
-    # Convenience access, so `optics.bc2.r56 = ...` works
+    # Convenience access, so `setpoints.bc2.r56 = ...` works
     # ------------------------------------------------------------------ #
 
     @property
-    def injector(self) -> InjectorRfKnob:
+    def injector(self) -> InjectorRFKnob:
         return self.knobs.injector
 
     @property
@@ -152,23 +152,23 @@ class Optics(BaseModel):
     # ------------------------------------------------------------------ #
 
     @classmethod
-    def design(cls) -> Optics:
-        """An empty optics: apply it and the lattice keeps its design values."""
+    def design(cls) -> MachineSetpoints:
+        """Empty setpoints: apply them and the lattice keeps its design values."""
         from euxfel.subsequences import USED_COMPONENT_LIST
 
         return cls(lattice=Path(str(USED_COMPONENT_LIST)).stem, name="design")
 
     @classmethod
-    def from_yaml(cls, path: str | os.PathLike) -> Optics:
-        """Load an optics file, resolving a single level of ``extends``."""
+    def from_yaml(cls, path: str | os.PathLike) -> MachineSetpoints:
+        """Load a setpoints file, resolving a single level of ``extends``."""
         path = Path(path)
         raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
 
         parent_name = raw.pop("extends", None)
-        optics = cls.model_validate(raw)
+        setpoints = cls.model_validate(raw)
 
         if parent_name is None:
-            return optics
+            return setpoints
 
         parent_path = Path(parent_name)
         if not parent_path.is_absolute():
@@ -181,10 +181,12 @@ class Optics(BaseModel):
                 f"{parent_path} also extends {parent_raw['extends']!r}."
             )
 
-        return cls.model_validate(parent_raw).merged_with(optics)
+        return cls.model_validate(parent_raw).merged_with(setpoints)
 
     @classmethod
-    def from_sascha(cls, path: str | os.PathLike, cell=None, **fields) -> Optics:
+    def from_sascha(
+        cls, path: str | os.PathLike, cell=None, **fields
+    ) -> MachineSetpoints:
         """Import a control-room Sascha file.
 
         Bend signs are converted (see :func:`~euxfel.volts.sascha.sascha_sign`)
@@ -194,21 +196,21 @@ class Optics(BaseModel):
         index = _index_for(cell)
         values = read_sascha(path)
 
-        optics = cls(name=Path(path).stem, **fields)
+        setpoints = cls(name=Path(path).stem, **fields)
         for key, value in values.items():
             group = index.resolve(key, namespace="ps")
-            optics.elements[key] = value * sascha_sign(group.elements[0])
-        return optics
+            setpoints.elements[key] = value * sascha_sign(group.elements[0])
+        return setpoints
 
     @classmethod
-    def from_lattice(cls, cell, **fields) -> Optics:
+    def from_lattice(cls, cell, **fields) -> MachineSetpoints:
         """Read every knob and setpoint off a lattice."""
         index = _index_for(cell)
-        optics = cls(**fields)
+        setpoints = cls(**fields)
 
-        for name, knob in optics.knobs.items():
+        for name, knob in setpoints.knobs.items():
             try:
-                setattr(optics.knobs, name, knob.read(index, library.spec_for(name)))
+                setattr(setpoints.knobs, name, knob.read(index, library.spec_for(name)))
             except Exception as error:  # a section absent from this sequence
                 warnings.warn(
                     f"Could not read knob {name!r} from this lattice: {error}",
@@ -222,12 +224,12 @@ class Optics(BaseModel):
             group = index.group(supply)
             if not all(is_sascha_representable(e) for e in group.elements):
                 continue
-            optics.elements[supply] = group.read()
+            setpoints.elements[supply] = group.read()
 
-        return optics
+        return setpoints
 
-    def merged_with(self, child: Optics) -> Optics:
-        """This optics overridden by ``child``.
+    def merged_with(self, child: MachineSetpoints) -> MachineSetpoints:
+        """These setpoints overridden by ``child``.
 
         Knobs are replaced whole rather than field-wise, because a chicane's
         ``r56``/``angle``/``rho`` are three ways of saying one thing and mixing
@@ -319,7 +321,7 @@ class Optics(BaseModel):
         return knobs, plain, routed
 
     def apply(self, index: LatticeIndex, *, verbose: bool = False) -> LatticeIndex:
-        """Apply this optics to an existing index, in place."""
+        """Apply these setpoints to an existing index, in place."""
         # Knobs tolerate partial states so they can be filled in field by field;
         # this is where a half-specified one has to be caught, since it would
         # otherwise be silently skipped.
@@ -396,7 +398,7 @@ class Optics(BaseModel):
         return index
 
     def apply_in_place(self, cell, *, verbose: bool = False) -> list:
-        """Apply this optics to ``cell`` itself, mutating the caller's elements.
+        """Apply these setpoints to ``cell`` itself, mutating the caller's elements.
 
         **This changes process-global state.** The generated cells are shared by
         every ``SectionTrack``, by ``sequences.cathode_to_*`` and by ``euxfel
@@ -418,7 +420,7 @@ class Optics(BaseModel):
         return index.cell
 
     def build(self, cell, *, verbose: bool = False) -> list:
-        """Apply this optics to a copy of ``cell`` and return the new sequence.
+        """Apply these setpoints to a copy of ``cell`` and return the new sequence.
 
         The caller's elements are never touched: the generated cells are shared
         by every section and by ``sequences.cathode_to_*``, so mutating them
@@ -429,7 +431,7 @@ class Optics(BaseModel):
         return index.cell
 
     def section_config(self, toggles: dict, cell=None) -> dict:
-        """Merge this optics into an s2e script's per-section config dict.
+        """Merge these setpoints into an s2e script's per-section config dict.
 
         Fills in ``rho``, ``v`` and ``phi`` from the knobs and leaves the
         physics-process toggles (``SC``, ``CSR``, ``wake``, ``smooth``,
@@ -458,8 +460,9 @@ class Optics(BaseModel):
                 drifted.append(f"{key}: recorded {expected:.9g}, got {actual:.9g}")
         if drifted:
             warnings.warn(
-                "This optics no longer resolves to the setpoints recorded when "
-                "it was written, so the lattice has changed underneath it:\n  "
+                "These setpoints no longer resolve to the values recorded when "
+                "they were written, so the lattice has changed underneath "
+                "them:\n  "
                 + "\n  ".join(drifted[:10])
                 + (
                     f"\n  ... and {len(drifted) - 10} more" if len(drifted) > 10 else ""
@@ -472,7 +475,7 @@ class Optics(BaseModel):
     # ------------------------------------------------------------------ #
 
     def resolve(self, cell) -> dict[str, float]:
-        """Every supply setpoint this optics produces, as a flat mapping."""
+        """Every supply setpoint these produce, as a flat mapping."""
         index = LatticeIndex.from_cell(cell)
         self.apply(index)
         return {
@@ -503,10 +506,10 @@ class Optics(BaseModel):
         return text
 
     def sascha_values(self, cell, *, keys=None) -> dict[str, float]:
-        """This optics as ``{supply: Sascha value}``, signs converted."""
+        """These setpoints as ``{supply: Sascha value}``, signs converted."""
         index = LatticeIndex.from_cell(cell)
 
-        # Check before applying: an optics that cannot be exported should say so
+        # Check before applying: setpoints that cannot be exported should say so
         # rather than first doing all the work of building the lattice.
         split = []
         for raw_key in self.elements:
@@ -518,7 +521,7 @@ class Optics(BaseModel):
                 split.append(raw_key)
         if split:
             raise ValueError(
-                f"This optics sets {', '.join(split)} apart from the rest of "
+                f"These setpoints set {', '.join(split)} apart from the rest of "
                 f"its power supply, which the Sascha format cannot represent -- "
                 f"it stores one value per supply. Remove the 'id:' entries to "
                 f"export."

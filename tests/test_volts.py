@@ -1,4 +1,4 @@
-"""Tests for the optics configuration format.
+"""Tests for the setpoints configuration format.
 
 The load-bearing ones are the round trips: a control-room file that survives
 import, application and export byte for byte, and a design setpoint that applies
@@ -19,10 +19,10 @@ from euxfel.volts import (
     ChicaneKnob,
     ConflictError,
     GangedMagnetError,
-    InjectorRfKnob,
+    InjectorRFKnob,
     LatticeIndex,
     LinacKnob,
-    Optics,
+    MachineSetpoints,
     UnknownKeyError,
     full_machine_cell,
 )
@@ -80,8 +80,8 @@ def _resolves(index, key):
 @pytest.mark.parametrize("path", SASCHA_FILES, ids=lambda p: p.name)
 def test_sascha_survives_import_apply_and_export(path, cell):
     """The whole pipeline, including routing chicanes through their knobs."""
-    optics = Optics.from_sascha(path, cell)
-    exported = optics.to_sascha(cell, keys=list(read_sascha(path)))
+    setpoints = MachineSetpoints.from_sascha(path, cell)
+    exported = setpoints.to_sascha(cell, keys=list(read_sascha(path)))
     assert exported == path.read_text()
 
 
@@ -168,9 +168,9 @@ def test_the_explicit_id_form_splits_a_shared_supply(index):
 
 
 def test_a_split_supply_cannot_be_exported_to_sascha(cell):
-    optics = Optics(elements={"id:BB.96.I1": 0.12})
+    setpoints = MachineSetpoints(elements={"id:BB.96.I1": 0.12})
     with pytest.raises(ValueError, match="one value per supply"):
-        optics.to_sascha(cell)
+        setpoints.to_sascha(cell)
 
 
 # --------------------------------------------------------------------------- #
@@ -295,8 +295,8 @@ def test_setting_a_chicane_dipole_directly_still_rescales_the_drifts(cell):
     """A plain BB.1.I1 entry is what a control-room file contains."""
     spec = CHICANES["bc0"]
 
-    by_element = Optics(elements={"BB.1.I1": 0.1366592804})
-    by_knob = Optics(knobs={"bc0": {"angle": 0.1366592804}})
+    by_element = MachineSetpoints(elements={"BB.1.I1": 0.1366592804})
+    by_knob = MachineSetpoints(knobs={"bc0": {"angle": 0.1366592804}})
 
     from_element = LatticeIndex.from_cell(cell)
     by_element.apply(from_element)
@@ -313,16 +313,18 @@ def test_setting_a_chicane_dipole_directly_still_rescales_the_drifts(cell):
 
 
 def test_setting_a_chicane_twice_over_is_rejected(cell, index):
-    optics = Optics(knobs={"bc0": {"r56": -0.03}}, elements={"BB.1.I1": 0.1366592804})
+    setpoints = MachineSetpoints(
+        knobs={"bc0": {"r56": -0.03}}, elements={"BB.1.I1": 0.1366592804}
+    )
     with pytest.raises(ConflictError, match="both set the same hardware"):
-        optics.apply(index)
+        setpoints.apply(index)
 
 
 def test_a_bend_outside_any_knob_warns_that_the_survey_moves(index):
     """BL.6.I1 is part of the I1 dogleg, not a chicane."""
-    optics = Optics(elements={"BL.6.I1": -0.111})
+    setpoints = MachineSetpoints(elements={"BL.6.I1": -0.111})
     with pytest.warns(UserWarning, match="survey downstream"):
-        optics.apply(index)
+        setpoints.apply(index)
 
 
 # --------------------------------------------------------------------------- #
@@ -340,7 +342,7 @@ def test_linac_knob_round_trips(index):
 
 
 def test_injector_knob_round_trips(index):
-    knob = InjectorRfKnob(E1=0.130, chirp=-8.92, curvature=180.5, skewness=20332)
+    knob = InjectorRFKnob(E1=0.130, chirp=-8.92, curvature=180.5, skewness=20332)
     knob.apply(index, INJECTOR)
     back = knob.read(index, INJECTOR)
     assert back.E1 == pytest.approx(0.130, rel=1e-12)
@@ -385,20 +387,20 @@ def test_exponent_notation_yaml_survives_as_a_number(tmp_path):
     """PyYAML reads 1e-3 as a string; pydantic coercion has to absorb that."""
     path = tmp_path / "exponents.yaml"
     path.write_text("knobs:\n  bc2: {r56: -3e-2}\n")
-    assert Optics.from_yaml(path).bc2.r56 == pytest.approx(-0.03)
+    assert MachineSetpoints.from_yaml(path).bc2.r56 == pytest.approx(-0.03)
 
 
 def test_a_half_specified_knob_is_not_silently_ignored(index):
-    optics = Optics()
-    optics.l1.chirp = -9.1
+    setpoints = MachineSetpoints()
+    setpoints.l1.chirp = -9.1
     with pytest.raises(ConflictError, match="missing sum_voltage"):
-        optics.apply(index)
+        setpoints.apply(index)
 
 
 def test_an_unknown_element_attribute_is_rejected(index):
-    optics = Optics(elements={"QI.63.I1D": {"kl": -2.9}})
+    setpoints = MachineSetpoints(elements={"QI.63.I1D": {"kl": -2.9}})
     with pytest.raises(AttributeError, match="no 'kl' parameter"):
-        optics.apply(index)
+        setpoints.apply(index)
 
 
 def test_valid_attributes_come_from_the_element_signature():
@@ -418,19 +420,21 @@ def test_building_never_touches_the_callers_elements(cell):
     quadrupole = next(e for e in cell if e.id == "QI.46.I1")
     before = (dipole.angle, dipole.l, quadrupole.k1)
 
-    Optics(knobs={"bc0": {"r56": -0.02}}, elements={"QI.1.I1": -0.9}).build(cell)
+    MachineSetpoints(knobs={"bc0": {"r56": -0.02}}, elements={"QI.1.I1": -0.9}).build(
+        cell
+    )
 
     assert (dipole.angle, dipole.l, quadrupole.k1) == before
 
 
 def test_the_python_object_and_the_yaml_agree(cell, tmp_path):
-    built_in_python = Optics()
+    built_in_python = MachineSetpoints()
     built_in_python.bc2.r56 = -0.0432
     built_in_python.l1.sum_voltage = 0.57872
     built_in_python.l1.chirp = -9.1
     built_in_python["QI.1.I1"] = -0.05343
 
-    path = tmp_path / "optics.yaml"
+    path = tmp_path / "setpoints.yaml"
     path.write_text(
         "knobs:\n"
         "  bc2: {r56: -0.0432}\n"
@@ -438,18 +442,18 @@ def test_the_python_object_and_the_yaml_agree(cell, tmp_path):
         "elements:\n"
         "  QI.1.I1: -0.05343\n"
     )
-    from_file = Optics.from_yaml(path)
+    from_file = MachineSetpoints.from_yaml(path)
 
     assert built_in_python.resolve(cell) == from_file.resolve(cell)
 
 
 def test_a_knob_scan_does_not_accumulate(cell):
-    optics = Optics()
+    setpoints = MachineSetpoints()
     results = []
     for r56 in (-0.020, -0.025, -0.030):
-        optics.bc2.r56 = r56
+        setpoints.bc2.r56 = r56
         index = LatticeIndex.from_cell(cell)
-        optics.apply(index)
+        setpoints.apply(index)
         dipoles, _ = chicane_dipoles(index, CHICANES["bc2"])
         results.append(measure_r56(index, dipoles, CHICANES["bc2"].energy))
 
@@ -470,11 +474,11 @@ def test_extends_overrides_only_what_the_child_names(tmp_path, cell):
         "extends: base.yaml\nknobs:\n  bc2: {r56: -0.015}\nelements:\n  QI.1.I1: -0.07\n"
     )
 
-    optics = Optics.from_yaml(child)
-    assert optics.bc2.r56 == pytest.approx(-0.015)
-    assert optics.l1.sum_voltage == pytest.approx(0.5)
-    assert optics.elements["QI.1.I1"] == pytest.approx(-0.07)
-    assert optics.elements["QI.2.I1"] == pytest.approx(0.16)
+    setpoints = MachineSetpoints.from_yaml(child)
+    assert setpoints.bc2.r56 == pytest.approx(-0.015)
+    assert setpoints.l1.sum_voltage == pytest.approx(0.5)
+    assert setpoints.elements["QI.1.I1"] == pytest.approx(-0.07)
+    assert setpoints.elements["QI.2.I1"] == pytest.approx(0.16)
 
 
 def test_extends_is_single_level(tmp_path):
@@ -482,21 +486,21 @@ def test_extends_is_single_level(tmp_path):
     (tmp_path / "b.yaml").write_text("extends: a.yaml\nname: b\n")
     (tmp_path / "c.yaml").write_text("extends: b.yaml\nname: c\n")
     with pytest.raises(ValueError, match="single level"):
-        Optics.from_yaml(tmp_path / "c.yaml")
+        MachineSetpoints.from_yaml(tmp_path / "c.yaml")
 
 
 def test_a_stale_resolved_block_warns(cell, index):
-    optics = Optics(
+    setpoints = MachineSetpoints(
         elements={"QI.1.I1": -0.05343},
         resolved={"QI.1.I1": -0.9},
     )
-    with pytest.warns(UserWarning, match="no longer resolves"):
-        optics.apply(index)
+    with pytest.warns(UserWarning, match="no longer resolve"):
+        setpoints.apply(index)
 
 
 def test_reading_an_optics_back_off_a_lattice(cell):
-    written = Optics(knobs={"bc2": {"r56": -0.0255}})
-    rebuilt = Optics.from_lattice(written.build(cell))
+    written = MachineSetpoints(knobs={"bc2": {"r56": -0.0255}})
+    rebuilt = MachineSetpoints.from_lattice(written.build(cell))
     assert rebuilt.bc2.r56 == pytest.approx(-0.0255, abs=1e-9)
 
 
@@ -523,16 +527,16 @@ def test_section_config_reproduces_the_s2e_scripts_rf_exactly(cell):
     v21, phi21 = beam2rf_xfel_linac(sum_voltage=0.57872, chirp=-9.1, init_energy=0.13)
     v31, phi31 = beam2rf_xfel_linac(sum_voltage=1.7349, chirp=-9.3, init_energy=0.7)
 
-    optics = Optics()
-    optics.injector.E1 = 0.130
-    optics.injector.chirp = -8.92
-    optics.injector.curvature = 180.5
-    optics.injector.skewness = 20332
-    optics.l1.sum_voltage, optics.l1.chirp = 0.57872, -9.1
-    optics.l2.sum_voltage, optics.l2.chirp = 1.7349, -9.3
+    setpoints = MachineSetpoints()
+    setpoints.injector.E1 = 0.130
+    setpoints.injector.chirp = -8.92
+    setpoints.injector.curvature = 180.5
+    setpoints.injector.skewness = 20332
+    setpoints.l1.sum_voltage, setpoints.l1.chirp = 0.57872, -9.1
+    setpoints.l2.sum_voltage, setpoints.l2.chirp = 1.7349, -9.3
 
     names = ("A1", "AH1", "L1", "L2")
-    config = optics.section_config({getattr(sections, n): {} for n in names}, cell)
+    config = setpoints.section_config({getattr(sections, n): {} for n in names}, cell)
 
     expected = {
         "A1": (phi11, v11 / 8),
@@ -549,9 +553,9 @@ def test_section_config_reproduces_the_s2e_scripts_rf_exactly(cell):
 def test_section_config_leaves_physics_toggles_alone(cell):
     from euxfel import sections
 
-    optics = Optics(knobs={"bc0": {"r56": -0.03}})
+    setpoints = MachineSetpoints(knobs={"bc0": {"r56": -0.03}})
     toggles = {sections.BC0: {"match": True, "SC": False, "CSR": True}}
-    config = optics.section_config(toggles, cell)
+    config = setpoints.section_config(toggles, cell)
 
     assert config[sections.BC0]["match"] is True
     assert config[sections.BC0]["SC"] is False
@@ -569,8 +573,8 @@ def test_section_config_rho_inverts_update_bunch_compressor(cell, index):
     from euxfel import sections
 
     angle = 0.1366592804
-    optics = Optics(knobs={"bc0": {"angle": angle}})
-    config = optics.section_config({sections.BC0: {}}, cell)
+    setpoints = MachineSetpoints(knobs={"bc0": {"angle": angle}})
+    config = setpoints.section_config({sections.BC0: {}}, cell)
 
     dipoles, _ = chicane_dipoles(index, CHICANES["bc0"])
     yoke = yoke_length(dipoles[0])
@@ -582,6 +586,6 @@ def test_section_config_rho_inverts_update_bunch_compressor(cell, index):
 
 def test_the_shipped_example_optics_matches_its_source(cell):
     """special-optics-files/bc2_tds.yaml is BC2_TDS.txt in the new format."""
-    from_yaml = Optics.from_yaml(SASCHA_DIR / "bc2_tds.yaml")
-    from_txt = Optics.from_sascha(SASCHA_DIR / "BC2_TDS.txt", cell)
+    from_yaml = MachineSetpoints.from_yaml(SASCHA_DIR / "bc2_tds.yaml")
+    from_txt = MachineSetpoints.from_sascha(SASCHA_DIR / "BC2_TDS.txt", cell)
     assert from_yaml.resolve(cell) == from_txt.resolve(cell)

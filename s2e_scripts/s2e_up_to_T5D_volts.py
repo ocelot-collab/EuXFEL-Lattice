@@ -1,15 +1,15 @@
-"""Cathode to T5D, driven by an optics file rather than hardcoded constants.
+"""Cathode to T5D, driven by an setpoints file rather than hardcoded constants.
 
 The same run as ``s2e_up_to_SA2.py``, continued through T3 and T5 to the T5D
-dump, with the ~60 line RF preamble replaced by a single optics file.
+dump, with the ~60 line RF preamble replaced by a single setpoints file.
 
 Run it from inside ``s2e_scripts/`` -- ``data_dir`` is relative::
 
     cd s2e_scripts && python s2e_up_to_T5D_volts.py
 
 This is a full tracking run: long, and it writes intermediate .npz beams back
-into ../beam_files/.  To check an optics *without* tracking, use
-``euxfel optics apply <file> --target T5D`` instead.
+into ../beam_files/.  To check an setpoints *without* tracking, use
+``euxfel setpoints apply <file> --target T5D`` instead.
 """
 
 import time
@@ -37,15 +37,15 @@ from euxfel.sections import (
     T3,
     T5,
 )
-from euxfel.volts import Optics, full_machine_cell
+from euxfel.volts import MachineSetpoints, full_machine_cell
 from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.io import load_particle_array
 
 data_dir = "../beam_files/"
 
 # ------------------------------------------------------------------ #
-# Physics processes.  These describe the tracking model, not the optics,
-# so they stay here and the optics file never mentions them.
+# Physics processes.  These describe the tracking model, not the setpoints,
+# so they stay here and the setpoints file never mentions them.
 # ------------------------------------------------------------------ #
 match_exec = True
 smooth_exec = True
@@ -68,40 +68,40 @@ tws0.alpha_y = -0.8390696483216522
 start = time.time()
 
 # ------------------------------------------------------------------ #
-# The optics.  Everything that used to be beam2rf calls and hand-copied
+# The setpoints.  Everything that used to be beam2rf calls and hand-copied
 # constants now lives in one object, which can equally be loaded from a
-# file with Optics.from_yaml("t5d_14gev.yaml") or imported from the
-# control room with Optics.from_sascha("BEAM_T5D.txt", cell).
+# file with MachineSetpoints.from_yaml("t5d_14gev.yaml") or imported from the
+# control room with MachineSetpoints.from_sascha("BEAM_T5D.txt", cell).
 # ------------------------------------------------------------------ #
 p_array_init = load_particle_array(data_dir + "gun/rf_gun_new.npz", print_params=True)
 
-optics = Optics.design()
-optics.name = "T5D 14 GeV"
+setpoints = MachineSetpoints.design()
+setpoints.name = "T5D 14 GeV"
 
 # A1 + AH1 are solved together: the 3.9 GHz module linearises the 1.3 GHz one.
 # The gun energy has to be the beam's, and has to be set before anything is
 # applied, or the two channels below would solve against different energies.
-optics.injector.gun_energy = p_array_init.E
-optics.injector.E1 = 0.130
-optics.injector.chirp = -8.92
-optics.injector.curvature = 180.5
-optics.injector.skewness = 20332
+setpoints.injector.gun_energy = p_array_init.E
+setpoints.injector.E1 = 0.130
+setpoints.injector.chirp = -8.92
+setpoints.injector.curvature = 180.5
+setpoints.injector.skewness = 20332
 
-optics.l1.sum_voltage, optics.l1.chirp = 0.57872, -9.1
-optics.l2.sum_voltage, optics.l2.chirp = 1.7349, -9.3
+setpoints.l1.sum_voltage, setpoints.l1.chirp = 0.57872, -9.1
+setpoints.l2.sum_voltage, setpoints.l2.chirp = 1.7349, -9.3
 # L3 on crest to the final energy: 14 GeV total, 2.4 GeV already delivered.
-optics.l3.sum_voltage, optics.l3.chirp = 14.000 - 2.400, 0.0
+setpoints.l3.sum_voltage, setpoints.l3.chirp = 14.000 - 2.400, 0.0
 
 # Compression.  R56 is solved against the real transfer matrix, and the drifts
 # between the dipoles rescale with the angle so the chicane still closes.
 # `angle` or `rho` work just as well -- setting one clears the others.
-optics.bc0.r56 = -0.0555
-optics.bc1.r56 = -0.0507
-optics.bc2.r56 = -0.0305
+setpoints.bc0.r56 = -0.0555
+setpoints.bc1.r56 = -0.0507
+setpoints.bc2.r56 = -0.0305
 
 # Individual magnets, by power supply or by element id:
-#     optics["QI.1.I1"] = -0.05343
-#     optics["QI.63.I1D"] = {"k1": -2.9974}      # explicit OCELOT attributes
+#     setpoints["QI.1.I1"] = -0.05343
+#     setpoints["QI.63.I1D"] = {"k1": -2.9974}      # explicit OCELOT attributes
 
 # ------------------------------------------------------------------ #
 # Channel 1: per-magnet setpoints.
@@ -111,10 +111,10 @@ optics.bc2.r56 = -0.0305
 # MagneticLattice from i1.cell / t5.cell inside __init__, so there is nowhere
 # to hand a freshly built sequence.  The change is process-global and there is
 # no way back to the design without re-importing -- which is fine in a script
-# that does one run and exits, but is why `optics.build(cell)` (a private copy)
+# that does one run and exits, but is why `setpoints.build(cell)` (a private copy)
 # is the right call everywhere else.
 # ------------------------------------------------------------------ #
-optics.apply_in_place(full_machine_cell(), verbose=True)
+setpoints.apply_in_place(full_machine_cell(), verbose=True)
 
 section_lat = SectionLattice(
     sequence=all_sections, tws0=tws0, data_dir=data_dir
@@ -128,7 +128,7 @@ section_lat = SectionLattice(
 # elements directly.  section_config fills in rho/v/phi and leaves every
 # physics-process toggle below exactly as written.
 # ------------------------------------------------------------------ #
-config = optics.section_config(
+config = setpoints.section_config(
     {
         A1: {"SC": SC_exec, "smooth": True, "wake": wake_exec},
         AH1: {"match": False, "SC": SC_exec, "wake": wake_exec},
@@ -151,8 +151,8 @@ config = optics.section_config(
     full_machine_cell(),
 )
 
-# What the optics actually resolved to, worth having in the log next to the run.
-for name, knob in optics.knobs.set_items():
+# What the setpoints actually resolved to, worth having in the log next to the run.
+for name, knob in setpoints.knobs.set_items():
     print(f"{name:9s} {knob}")
 
 show_e_beam(p_array_init)
@@ -171,5 +171,5 @@ show_e_beam(p_array)
 plt.show()
 
 # Save what was run, so the next person can reproduce it exactly:
-#     optics.to_yaml("t5d_14gev.yaml")
-#     optics.to_sascha(full_machine_cell(), "T5D_14GEV.txt")
+#     setpoints.to_yaml("t5d_14gev.yaml")
+#     setpoints.to_sascha(full_machine_cell(), "T5D_14GEV.txt")

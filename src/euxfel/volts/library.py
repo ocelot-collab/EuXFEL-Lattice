@@ -1,7 +1,7 @@
 """What hardware the machine has, and how it is grouped into knobs.
 
 This is a *machine description*, not an optics.  It is versioned alongside the
-component list and is loaded from ``euxfel-knobs.yaml``.  Optics files refer to
+component list and is loaded from ``euxfel-knobs.yaml``.  Setpoints files refer to
 these knobs by name and never spell out dipole or cavity names themselves.
 
 There are exactly three bunch compressors and five RF systems, and that will not
