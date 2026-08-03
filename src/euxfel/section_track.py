@@ -368,7 +368,10 @@ class SectionTrack:
         try:
             particles = load_particle_array(self.input_beam_file)
 
-        except:  # noqa: E722  (inherited from upstream; narrow it separately)
+        # Was a bare `except:`, which also caught KeyboardInterrupt -- so a
+        # Ctrl-C while the beam file loaded was reported as a missing file and
+        # the run carried on regardless.
+        except OSError:
             print(
                 self.lattice_name
                 + " - #### ERROR #### - NO START PARTICLES FILE: "
