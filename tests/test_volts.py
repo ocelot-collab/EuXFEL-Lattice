@@ -53,6 +53,37 @@ def index(cell):
     return LatticeIndex.from_cell(cell)
 
 
+#: Everything a setpoint can write.  Used to put the shared lattice back.
+_MUTABLE = ("k1", "k2", "k3", "angle", "l", "e1", "e2", "v", "phi")
+
+
+@pytest.fixture
+def restores_the_lattice(cell):
+    """Undo whatever the test does to the module-level cells.
+
+    `apply_in_place` mutates the generated elements, which are shared by every
+    section and every `cathode_to_*`, so without this a test leaks into the ones
+    after it.  A copy is not an option here: `SectionLattice` builds its sections
+    from those cells whatever sequence you hand it, so the globals genuinely have
+    to change.
+    """
+    saved = [
+        (
+            element,
+            {
+                name: getattr(element, name)
+                for name in _MUTABLE
+                if hasattr(element, name)
+            },
+        )
+        for element in cell
+    ]
+    yield
+    for element, attributes in saved:
+        for name, value in attributes.items():
+            setattr(element, name, value)
+
+
 # --------------------------------------------------------------------------- #
 # The Sascha format
 # --------------------------------------------------------------------------- #
@@ -553,7 +584,9 @@ def test_rf_matches_what_update_cavity_used_to_produce(index):
         assert cavity.phi == phase
 
 
-def test_the_chicane_angle_survives_a_section_lattice(tmp_path, cell):
+def test_the_chicane_angle_survives_a_section_lattice(
+    tmp_path, cell, restores_the_lattice
+):
     """Nothing re-derives the angle from a radius any more, so it is exact."""
     from euxfel import sections
 
@@ -574,7 +607,9 @@ def test_the_chicane_angle_survives_a_section_lattice(tmp_path, cell):
         assert abs(dipole.angle) == pytest.approx(wanted, abs=1e-12)
 
 
-def test_a_chicane_still_closes_after_a_section_lattice(tmp_path, cell):
+def test_a_chicane_still_closes_after_a_section_lattice(
+    tmp_path, cell, restores_the_lattice
+):
     """Dropping change_bc_shoulders must not lose the drift rescaling."""
 
     before = LatticeIndex.from_cell(cell)
@@ -630,3 +665,44 @@ def test_the_shipped_example_optics_matches_its_source(cell):
     from_yaml = MachineSetpoints.from_yaml(SASCHA_DIR / "bc2_tds.yaml")
     from_txt = MachineSetpoints.from_sascha(SASCHA_DIR / "BC2_TDS.txt", cell)
     assert from_yaml.resolve(cell) == from_txt.resolve(cell)
+
+
+def test_design_ratios_survive_a_supply_passing_through_zero(cell):
+    """apply_in_place overwrites the data the ratios are derived from.
+
+    Once QE.1.L3's three magnets are all at zero, nothing in the lattice says it
+    is wired [+, -, +] any more, so the ratios have to be remembered rather than
+    re-read.
+    """
+    index = LatticeIndex.from_cell(cell)
+    group = index.resolve("QE.1.L3")
+    assert group.factors == (1.0, -1.0, 1.0)
+
+    group.write(0.0)
+    assert [read_kick(e) for e in group.elements] == [0.0, -0.0, 0.0]
+
+    # A fresh index over the zeroed lattice: nothing left to infer from.
+    zeroed = LatticeIndex.from_cell(index.cell, copy_elements=False)
+    again = zeroed.resolve("QE.1.L3")
+    assert again.factors == (1.0, -1.0, 1.0)
+
+    again.write(0.2)
+    assert [round(read_kick(e), 9) for e in again.elements] == [0.2, -0.2, 0.2]
+
+
+def test_clearing_the_cache_makes_the_ratios_be_re_read(cell):
+    from euxfel.volts import clear_design_factors
+
+    index = LatticeIndex.from_cell(cell)
+    group = index.resolve("QE.1.L3")
+    group.write(0.0)
+
+    clear_design_factors()
+    try:
+        stale = LatticeIndex.from_cell(index.cell, copy_elements=False)
+        # Re-read from an all-zero group, the ratios are genuinely unrecoverable.
+        assert stale.resolve("QE.1.L3").factors == (1.0, 1.0, 1.0)
+    finally:
+        # Leave the cache populated from a pristine lattice for later tests.
+        clear_design_factors()
+        LatticeIndex.from_cell(full_machine_cell())

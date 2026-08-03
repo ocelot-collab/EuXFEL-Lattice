@@ -18,6 +18,7 @@ from .index import (
     Group,
     LatticeIndex,
     UnknownKeyError,
+    clear_design_factors,
     full_machine_cell,
 )
 from .kicks import KickError, read_kick, write_kick
@@ -44,6 +45,7 @@ __all__ = [
     "LinacKnob",
     "MachineSetpoints",
     "UnknownKeyError",
+    "clear_design_factors",
     "full_machine_cell",
     "load_setpoints",
     "read_kick",

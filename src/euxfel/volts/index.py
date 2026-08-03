@@ -45,6 +45,7 @@ __all__ = [
     "GangedMagnetError",
     "LatticeIndex",
     "UnknownKeyError",
+    "clear_design_factors",
     "full_machine_cell",
 ]
 
@@ -74,6 +75,42 @@ def full_machine_cell() -> list:
             seen.add(id(element))
             cell.append(element)
     return cell
+
+
+#: Per-supply design ratios, remembered for the life of the process.
+#:
+#: They have to be remembered rather than re-read, because they describe the
+#: *design* lattice and `MachineSetpoints.apply_in_place` overwrites the very
+#: elements they are derived from.  A supply taken through zero would otherwise
+#: lose its wiring for good: QE.1.L3 is [+, -, +] by design, but once its
+#: magnets are all at zero there is nothing left to say so, and the next
+#: setpoint would come out [+, +, +].
+#:
+#: This is sound because the only way this package writes to the lattice is
+#: through a LatticeIndex, so the first index built in a process necessarily
+#: sees pristine elements.  Mutating a generated element by hand before any
+#: index exists would defeat it.
+_DESIGN_FACTORS: dict[str, tuple[float, ...]] = {}
+
+
+def _remembered_factors(supply: str, elements) -> tuple[float, ...]:
+    """The design ratios for ``supply``, computing them only the first time."""
+    cached = _DESIGN_FACTORS.get(supply)
+    # The element count guards against a differently sized group -- a supply
+    # that gained or lost a magnet is a different supply, not a cache hit.
+    if cached is not None and len(cached) == len(elements):
+        return cached
+    factors = design_factors(elements)
+    _DESIGN_FACTORS[supply] = factors
+    return factors
+
+
+def clear_design_factors() -> None:
+    """Forget the remembered ratios, so the next index re-reads them.
+
+    For tests, and after regenerating the lattice within a live process.
+    """
+    _DESIGN_FACTORS.clear()
 
 
 class UnknownKeyError(KeyError):
@@ -159,7 +196,7 @@ class LatticeIndex:
         for supply, elements in self._by_supply.items():
             if not all(is_kickable(element) for element in elements):
                 continue
-            self._factors[supply] = design_factors(elements)
+            self._factors[supply] = _remembered_factors(supply, elements)
             if partially_zero(elements):
                 unpowered.append(supply)
 
