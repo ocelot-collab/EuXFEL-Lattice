@@ -14,6 +14,24 @@ findable in a tape-built sequence at all.
 already computed the optics at every element, and the TWISS tape is the SURVEY
 tape minus the coordinate rotations, name for name, so the optics at a section
 boundary can be read straight off.
+
+**The conversion is literal, and stays that way.**  One element per tape record,
+in tape order, with the tape's numbers.  Nothing is inserted, nothing is dropped,
+nothing is adjusted.  The only choice this module makes is where to cut the
+sequence into modules.
+
+That is a rule, not an accident.  Everything the model needs beyond MAD-8 -- the
+markers `sections.py` slices physics processes at, the laser-heater undulator's
+`Kx`, the re-matched injector quadrupoles, the working point -- is real, and
+belongs *downstream* of this file.  Folding any of it in here would mean the
+tape-built model could no longer be held to MAD-8 without first subtracting our
+own changes, and `tests/test_mad8_optics.py` would have to carry tolerances loose
+enough to hide them.  Keeping the conversion literal is what lets those tests sit
+at the measurement floor and stay there.
+
+`tests/test_mad8_convert.py` pins it: a converted sequence has exactly one
+element per tape record.  If that count ever stops matching, something has been
+injected here that should not have been.
 """
 
 from __future__ import annotations

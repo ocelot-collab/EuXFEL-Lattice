@@ -82,3 +82,65 @@ def test_modules_write_and_import(tmp_path):
         spec.loader.exec_module(module)
         assert module.cell, f"{name} has an empty cell"
         assert module.twiss0.beta_x > 0
+
+
+def test_modules_contain_only_tape_elements(subsequences):
+    """No element in any written module is absent from the tape.
+
+    Compared by name, which is deterministic across builds -- `build_sequence`
+    constructs fresh objects each call, so identity cannot be used here.  Every
+    element either carries a generated NAME1 or, where the component list has no
+    row for it, its MAD-8 name; an injected `ocelot_start` or a split `D0100A`
+    would match neither.
+
+    The guard is against drift rather than a specific bug.  Marker insertion,
+    drift splitting and a setpoint layer were all at various points planned into
+    this converter, and every one of them would have been invisible to the survey
+    and optics tests -- injected markers are physically inert, which is precisely
+    what makes them easy to add without noticing.  Names are what notice.
+    """
+    from euxfel.mad8_import import build_sequence
+
+    declared = load_config()["sections"]
+    universe: dict[str, set[str]] = {}
+
+    for name, (_, elements) in subsequences.items():
+        target = declared[name]["target"]
+        if target not in universe:
+            universe[target] = {e.id for e in build_sequence(target)}
+        foreign = sorted({e.id for e in elements} - universe[target])
+        assert not foreign, (
+            f"{name}: {len(foreign)} element name(s) the {target} tape does not "
+            f"produce, e.g. {foreign[:3]} -- the conversion should be literal"
+        )
+
+
+def test_module_lengths_sum_to_the_tape(subsequences):
+    """Each target's modules tile its tape without inventing or losing length.
+
+    A module chain covers its path exactly once, so the arc lengths add up to the
+    tape's total.  Catches a split or a dropped element that happened to keep the
+    element *names* valid.
+    """
+    from euxfel.mad8_import import read_tape
+
+    chains = load_config()["targets"]
+
+    for target, chain in chains.items():
+        modules = [subsequences[n.upper()] for n in chain if n.upper() in subsequences]
+        if len(modules) != len(chain):
+            continue
+        total = sum(
+            sum(getattr(e, "l", 0.0) or 0.0 for e in elements)
+            for _, elements in modules
+        )
+        # The chain's own dump target, not its first section's source: a chain
+        # draws its modules from several tapes (I1 from I1D, L1 from B1D, ...)
+        # but tiles exactly one path.
+        tape_total = (
+            read_tape(target.upper()).select("L").to_series().fill_null(0.0).sum()
+        )
+        assert abs(total - tape_total) < 1e-6, (
+            f"{target}: modules total {total:.6f} m against the tape's "
+            f"{tape_total:.6f} m"
+        )
