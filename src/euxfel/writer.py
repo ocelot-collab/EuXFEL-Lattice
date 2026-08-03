@@ -1,7 +1,7 @@
 import inspect
 import subprocess
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from math import isclose
 from numbers import Number
 from typing import Any
@@ -189,22 +189,41 @@ class PythonSubsequenceWriter:
         return f"# Sequence:\ncell = ({',\n        '.join(ordered_var_names)})"
 
     def make_var_names(self, elements: list[OpticElement]) -> dict[OpticElement, str]:
-        # Remove duplicate elements in the sequence (i.e. literal
-        # shared memory addresses) to avoid
-        elements = set(elements)
-        variable_names = {}
+        """A unique Python variable name for each distinct element object.
+
+        Keyed by object identity, not by `id`: two elements may legitimately
+        share a name.  MAD-8 reuses names heavily -- `D0100` occurs hundreds of
+        times in a single path -- and Ocelot requires the *objects* to be
+        distinct, because `navi._find_unique_index` matches physics-process
+        anchors with `is` and raises on a repeat.  So one object per placement,
+        each needing its own variable.
+
+        Iteration follows the sequence rather than a `set`, so the suffixes a
+        repeated name picks up are stable between runs; a set's ordering is not,
+        and the generated modules are committed and diffed.
+        """
+        variable_names: dict[int, str] = {}
+        by_identity: dict[int, OpticElement] = {}
+        used: Counter[str] = Counter()
         ttable = str.maketrans(self.NAMES_TO_VARIABLES_MAP)
+
         for element in elements:
+            key = id(element)
+            if key in variable_names:
+                continue
+            by_identity[key] = element
+
             name = element.id
             if not (name[0].isalpha() or name[0] == "_"):
                 name = f"{type(element).__name__[0]}{name}"
             name = name.lower().translate(ttable)
-            if name in variable_names:
-                iduplicate = variable_names.count(name)
-                name = f"{name}_{iduplicate}"
 
-            variable_names[element] = name
-        return variable_names
+            used[name] += 1
+            if used[name] > 1:
+                name = f"{name}_{used[name] - 1}"
+            variable_names[key] = name
+
+        return {by_identity[key]: name for key, name in variable_names.items()}
 
     def power_supplies_to_string(
         self,

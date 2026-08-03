@@ -91,25 +91,73 @@ def test_every_tape_record_becomes_an_element(target):
     assert len(build_sequence(target)) == read_tape(target).height
 
 
-def test_repeated_drifts_share_one_object():
-    """A MAD-8 drift name fixes its length, so its placements share an object.
+def test_repeated_drift_names_are_distinct_objects():
+    """Names repeat as MAD-8 has them; the objects behind them do not.
 
     `D0100: DRIFT, L = 0.100` is a literal in the MAD-8 source and occurs
-    hundreds of times.  Emitting one `Drift` per placement would bloat the
-    generated subsequences for no gain; this is what a hand-written Ocelot
-    lattice would do instead.
+    hundreds of times, so the *name* recurs and should -- that is what the
+    lattice actually says.  Sharing one object between those placements is a
+    different thing, and Ocelot forbids it: `navi._find_unique_index` matches
+    physics-process anchors with `is` and raises when an object appears twice,
+    so a shared drift could never be a slice point.
+
+    Reusing the name never required reusing the object.  This test pins the
+    distinction, because it is invisible until someone tries to anchor on a
+    drift and gets a ValueError a long way from the cause.
     """
     from ocelot.cpbd.elements import Drift
 
     sequence = build_sequence("T4D")
     drifts = [element for element in sequence if isinstance(element, Drift)]
-    by_name = {}
-    for drift in drifts:
-        by_name.setdefault(drift.id, set()).add(id(drift))
 
-    repeated = {name: ids for name, ids in by_name.items() if len(ids) > 1}
-    assert not repeated, f"same drift name built more than once: {sorted(repeated)}"
-    assert len(drifts) > 3 * len(by_name), "expected substantial drift reuse"
+    objects = {id(drift) for drift in drifts}
+    assert len(objects) == len(drifts), (
+        f"{len(drifts) - len(objects)} drift placements share an object; "
+        "each placement needs its own instance to be anchorable"
+    )
+
+    names = {drift.id for drift in drifts}
+    assert len(names) < len(drifts) / 3, (
+        "expected MAD-8's drift names to repeat heavily; if they no longer do, "
+        "the tape's naming has changed"
+    )
+
+
+def test_every_element_is_a_distinct_object():
+    """No object appears twice anywhere in a built sequence.
+
+    The general form of the rule above: any repeat makes that element unusable
+    as a physics-process anchor, whatever its type.
+    """
+    sequence = build_sequence("T4D")
+    seen = {}
+    for element in sequence:
+        seen.setdefault(id(element), []).append(element)
+    repeated = {k: v for k, v in seen.items() if len(v) > 1}
+    assert not repeated, (
+        f"{len(repeated)} objects appear more than once, e.g. "
+        f"{next(iter(repeated.values()))[0].id}"
+    )
+
+
+def test_generated_variable_names_are_unique():
+    """Distinct objects sharing a name still get distinct Python variables.
+
+    Without this the generated module would define `d0100` hundreds of times and
+    every reference would resolve to the last one, silently collapsing the
+    lattice.
+    """
+    from collections import Counter
+
+    from ocelot.cpbd.beam import Twiss
+
+    from euxfel.writer import PythonSubsequenceWriter
+
+    sequence = build_sequence("B1D")
+    names = PythonSubsequenceWriter(sequence, Twiss()).make_var_names(sequence)
+    assert len(names) == len(sequence)
+    collisions = [n for n, count in Counter(names.values()).items() if count > 1]
+    assert not collisions, f"variable names reused: {collisions[:5]}"
 
 
 #: The tape prints coordinates as `E16.9`, ten significant figures, so at

@@ -25,10 +25,12 @@ and `euxfel.mad8_names` reproduces that synthesis rule for rule, so the
 spreadsheet becomes an output of this repository rather than an input to it.
 Elements the spreadsheet has no row for keep their MAD-8 name.
 
-**Repeated drifts share one object.**  A MAD-8 drift name fixes its length
-uniquely -- 5800 drift placements in T4D are only 522 distinct lengths -- so one
-`Drift` instance is created per name and referenced wherever it occurs, exactly
-as a hand-written Ocelot lattice would.
+**Repeated drift names, distinct objects.**  A MAD-8 drift name fixes its length
+uniquely -- T4D's 5739 drift placements carry only 522 distinct names -- so the
+names repeat, exactly as the MAD-8 source does.  The *objects* do not: Ocelot's
+`navi._find_unique_index` matches physics-process anchors with `is` and raises if
+one object appears twice, so a shared instance could never be used as a slice
+point.  Reusing the name never required reusing the object.
 """
 
 from __future__ import annotations
@@ -416,18 +418,11 @@ def build_sequence(target: str) -> list[OpticElement]:
     names = iter(named)
 
     sequence: list[OpticElement] = []
-    drifts: dict[str, Drift] = {}
     for row, keyword in zip(rows, keywords):
         if not _is_named(row, keyword):
-            # No spreadsheet row, so no generated name: keep MAD-8's own.  A
-            # plain drift is shared between all its placements, since its name
-            # fixes its length.
-            if row["KEYWORD"] == "DRIF":
-                drift = drifts.get(row["NAME"])
-                if drift is None:
-                    drift = drifts[row["NAME"]] = Drift(l=row["L"], eid=row["NAME"])
-                sequence.append(drift)
-                continue
+            # No spreadsheet row, so no generated name: keep MAD-8's own.  One
+            # object per placement even where the name repeats -- see the module
+            # docstring for why sharing would make drifts unusable as anchors.
             sequence.append(_element_from(row, row["NAME"], keyword))
             continue
 
