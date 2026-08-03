@@ -273,6 +273,21 @@ class I1D(SectionTrack):
         sc = SpaceCharge(step=25, random_mesh=bool_sc_rand_mesh)
         sc.nmesh_xyz = self.init_parameters.get("SC_mesh", SCmesh)
         self.add_physics_process(sc, start=st2_stop, stop=dogleg_stop)
+        # The CSR above was configured and then never applied, so the injector
+        # dump dipole BB.62.I1D has been tracked without CSR entirely.
+        #
+        # The range is the whole section rather than the dipole alone: bracketing
+        # a bend by its own two faces neglects the transients, and there is
+        # 966 mm of drift past the exit face before QI.63.I1D to let the exit
+        # transient develop.
+        #
+        # The entry side cannot be given the same room here.  BB.62.I1D starts at
+        # s = 38.8890, which is exactly this section's first element -- st2_stop
+        # is ENSUB.62.I1 at the same position -- so nothing upstream of the
+        # entry face lies inside the section.  Giving the entrance a lead-in
+        # means moving the LH/I1D boundary upstream, which changes where
+        # section_LH.npz is handed over, and is deliberately not done here.
+        self.add_physics_process(csr, start=st2_stop, stop=dogleg_stop)
 
 
 class BC0(SectionTrack):

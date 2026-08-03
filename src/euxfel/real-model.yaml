@@ -52,8 +52,6 @@ sections:
       i1_tds_stop:
         reference: TDSA.52.I1
         adjacent: after
-      DUMP.CSR.START:
-        delta_s: 38.789005
     extras:
       TDSA.52.I1:
         tilt: 1.570796327
