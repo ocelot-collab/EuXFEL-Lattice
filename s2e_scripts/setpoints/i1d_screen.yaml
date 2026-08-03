@@ -1,0 +1,30 @@
+# The injector working point used by s2e_up_to_I1D_screen: a stronger
+# linearisation than the nominal one, and less voltage in L1/L2.  Tracking stops
+# at the I1 dump, so L3 is not set.
+#
+# The DX12 quadrupole settings that go with this live in
+# ../special-optics-files/DX12_I1D.txt, which the script loads on top.
+version: 1
+lattice: component_list_2026.02.13
+name: I1D screen
+description: >
+  Injector optics for the I1D screen measurement.  Previously the beam2rf
+  arguments in s2e_up_to_I1D_screen.py.
+
+knobs:
+  # Was: chirp = -9.11, curvature = 222, skewness = 28000, E0 = 0.0065.
+  # gun_energy is pinned here rather than taken from the beam, because that
+  # script hardcoded E0 rather than reading p_array_init.E.
+  injector:
+    E1: 0.130
+    chirp: -9.11
+    curvature: 222
+    skewness: 28000
+    gun_energy: 0.0065
+
+  l1: {sum_voltage: 0.570, chirp: -5.4}
+  l2: {sum_voltage: 1.7, chirp: -9.4}
+
+  bc0: {angle: 0.1366592804}
+  bc1: {angle: 0.0532325422}
+  bc2: {angle: 0.0411897704}

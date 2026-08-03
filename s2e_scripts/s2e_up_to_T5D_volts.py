@@ -1,14 +1,14 @@
-"""Cathode to T5D, driven by an setpoints file rather than hardcoded constants.
+"""Cathode to T5D, driven by setpoints rather than hardcoded constants.
 
 The same run as ``s2e_up_to_SA2.py``, continued through T3 and T5 to the T5D
-dump, with the ~60 line RF preamble replaced by a single setpoints file.
+dump, with the ~60 line RF preamble replaced by a handful of knob settings.
 
 Run it from inside ``s2e_scripts/`` -- ``data_dir`` is relative::
 
     cd s2e_scripts && python s2e_up_to_T5D_volts.py
 
 This is a full tracking run: long, and it writes intermediate .npz beams back
-into ../beam_files/.  To check an setpoints *without* tracking, use
+into ../beam_files/.  To check the setpoints *without* tracking, use
 ``euxfel setpoints apply <file> --target T5D`` instead.
 """
 
@@ -85,8 +85,8 @@ start = time.time()
 
 # ------------------------------------------------------------------ #
 # The setpoints.  Everything that used to be beam2rf calls and hand-copied
-# constants now lives in one object, which can equally be loaded from a
-# file with MachineSetpoints.from_yaml("t5d_14gev.yaml") or imported from the
+# constants now lives in one object, which can equally be loaded from a file
+# with load_setpoints("setpoints/nominal_14gev.yaml") or imported from the
 # control room with MachineSetpoints.from_sascha("BEAM_T5D.txt", cell).
 # ------------------------------------------------------------------ #
 p_array_init = load_particle_array(data_dir + "gun/rf_gun_new.npz", print_params=True)
@@ -95,8 +95,8 @@ setpoints = MachineSetpoints.design()
 setpoints.name = "T5D 14 GeV"
 
 # A1 + AH1 are solved together: the 3.9 GHz module linearises the 1.3 GHz one.
-# The gun energy has to be the beam's, and has to be set before anything is
-# applied, or the two channels below would solve against different energies.
+# The gun energy has to be the beam's, and has to be set before the setpoints
+# are applied, since the injector RF is solved against it.
 setpoints.injector.gun_energy = p_array_init.E
 setpoints.injector.E1 = 0.130
 setpoints.injector.chirp = -8.92

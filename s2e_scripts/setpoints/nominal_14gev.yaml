@@ -1,0 +1,37 @@
+# The nominal 14 GeV working point, as carried by s2e_up_to_SA1/SA2/SA3/B2D/
+# switchyard.  Every number here was already in those scripts; this file just
+# stops it being copied five times.
+#
+# gun_energy is deliberately absent: it is the energy of whatever beam file the
+# script loads, so each script sets it from p_array_init.E after loading.
+version: 1
+lattice: component_list_2026.02.13
+name: nominal 14 GeV
+description: >
+  A1+AH1 to 130 MeV, L1/L2/L3 to 14 GeV, compressors at the angles read from
+  BKR.  Previously the beam2rf arguments and the r1/r2/r3 constants in each
+  s2e script.
+
+knobs:
+  # Was: beam2rf(E1=E1, chirp=-8.92, curvature=180.5, skewness=20332, n=3, ...)
+  injector:
+    E1: 0.130
+    chirp: -8.92
+    curvature: 180.5
+    skewness: 20332
+
+  # Was: beam2rf_xfel_linac(sum_voltage=578.72e-3, chirp=-9.1, init_energy=0.13)
+  # sum_voltage is the energy *gain*: L1 adds 0.57872 GeV on top of 0.13.
+  l1: {sum_voltage: 0.57872, chirp: -9.1}
+  l2: {sum_voltage: 1.7349, chirp: -9.3}
+  # Was: v41 = E40 - 2400 = 11600 MeV, on crest.
+  l3: {sum_voltage: 11.6, chirp: 0.0}
+
+  # Was: r1 = 0.5 / 0.1366592804, and the same for r2 and r3.  The comment above
+  # them read "BC magnet radius read from BKR", so these angles are the BKR
+  # numbers themselves -- BB.1.I1 in a control-room file is 0.136659.  Writing
+  # the angle directly also drops the 0.31% error the radius round trip carried
+  # at BC0 (0.047% at BC1, 0.028% at BC2).
+  bc0: {angle: 0.1366592804}
+  bc1: {angle: 0.0532325422}
+  bc2: {angle: 0.0411897704}

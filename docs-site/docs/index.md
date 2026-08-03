@@ -47,34 +47,17 @@ useful to inspect the optics in different parts of the machine.  See
 
 ## Start to End Simulations
 
-The top-level directory containing all the scripts for running the
-start to end simulations is `s2e_scripts`:
+The scripts for running start-to-end simulations live in `s2e_scripts`. Each
+one tracks a distribution from s = 3.2 m after the cathode to a specific point
+downstream, at compression settings giving a final peak current of 5-6 kA.
 
 ```bash
-$ cd s2e_scripts
-$ ls -1
-inj_hires_optics_track.py
-injector_hires_optics.py
-s2e_up_to_B2D.py
-s2e_up_to_I1D_screen.py
-s2e_up_to_SA1.py
-s2e_up_to_SA2.py
-s2e_up_to_SA3.py
-s2e_up_to_switchyard_op_values_SASE1_rf_par.py
-s2e_up_to_switchyard_op_values_SASE2_rf_par.py
-s2e_up_to_switchyard_operational_values.py
-s2e_up_to_switchyard.py
+cd s2e_scripts && python s2e_up_to_SA1_volts.py
 ```
 
-Each one of these corresponds to a simulation from s = 3.2m after the
-cathode to a specific point downstream.  The compression settings used
-are standard ones corresponding to a final peak current of (5-6)kA.
-
-Run one of the simulations with
-
-```bash
-python s2e_up_to_SA1.py
-```
+Which script goes where, how the setpoints reach the lattice, and how to migrate
+an older script are covered in
+[Start to end simulations](s2e.md).
 
 
 ## Optics
@@ -88,7 +71,5 @@ python s2e_up_to_SA1.py
 
 ## Project layout
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+How the machine is divided into targets, subsequences and sections, and where
+each part of the package lives, is described in [Layout](layout.md).

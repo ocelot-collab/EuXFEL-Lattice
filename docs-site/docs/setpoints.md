@@ -140,6 +140,25 @@ absorb the change; a BPM between the dipoles has a fixed physical length.
 The RF knobs wrap OCELOT's `beam2rf`/`rf2beam` and their linac wrappers, which
 are exact inverses, so a chirp survives a round trip to machine precision.
 
+### What the linac parameters mean
+
+Worth stating because OCELOT's own docstring says "chirp: in control system
+[GeV]", which is wrong.
+
+`sum_voltage` is the **energy gain**, in GV — not the final energy. Setting
+`l1.sum_voltage = 0.57872` adds 0.57872 GeV to the 0.13 GeV entering L1, giving
+0.70872 GeV out. The knob solves it into a cavity voltage and phase, so the
+voltage that actually appears on a cavity is larger: 0.625258 GV total here,
+because the section runs off crest.
+
+`chirp` is `−k·v·sin(φ) / E₁` in **1/m**, where `k = 2πf/c ≈ 27.246 1/m` and E₁
+is that section's *final* energy. It is the relative energy chirp per metre:
+`chirp = -9.1` means dδ/dz of −9.1 m⁻¹, so about −0.9 % of relative energy spread
+across a 1 mm bunch.
+
+`init_energy` is not a knob parameter at all — it is a property of the section,
+recorded once in `euxfel-knobs.yaml` (0.13, 0.7 and 2.4 GeV for L1, L2 and L3).
+
 ## The control-room (Sascha) format
 
 `special-optics-files/*.txt` are the live DESY format: one `NAME VALUE` pair per

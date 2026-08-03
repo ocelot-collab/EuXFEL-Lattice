@@ -1,3 +1,7 @@
+"""(Superseded by s2e_up_to_B2D_volts.py, which drives the same run from setpoints.
+This version still puts rho/v/phi in the section config, which now raises.)
+"""
+
 import matplotlib.pyplot as plt
 
 from euxfel.sections import *

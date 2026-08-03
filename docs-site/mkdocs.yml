@@ -1,11 +1,18 @@
 site_name: EuXFEL Lattice OCELOT Model
 theme:
   name: material
+markdown_extensions:
+  # setpoints.md and s2e.md use `!!! warning` blocks; without this they render
+  # as literal text.
+  - admonition
 nav:
   - Home: index.md
+  - Layout: layout.md
   - Start to End Simulations: s2e.md
-  - Optics: optics.md
   - Machine Setpoints: setpoints.md
+  - Optics: optics.md
   - Conversion: conversion.md
+  - Model Details: model-details.md
   - API: api.md
+  - Authors: AUTHORS.md
 

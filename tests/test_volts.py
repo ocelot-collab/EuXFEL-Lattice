@@ -33,7 +33,15 @@ from euxfel.volts.library import CHICANES, INJECTOR, LINACS
 from euxfel.volts.sascha import dumps_sascha, read_sascha, sascha_sign
 
 SASCHA_DIR = Path(__file__).parent.parent / "special-optics-files"
-SASCHA_FILES = sorted(SASCHA_DIR.glob("*.txt"))
+
+#: The files the control room emitted, as opposed to the ones we wrote.  Only
+#: these are expected to round trip byte for byte -- a hand-written file may
+#: carry comments, which the writer does not reproduce.
+SASCHA_FILES = sorted(
+    path
+    for path in SASCHA_DIR.glob("*.txt")
+    if not path.read_text().lstrip().startswith("#")
+)
 
 # Building an index reports supplies whose magnets sit at zero by design.  True
 # and worth saying once in anger, but not what these tests are about.
@@ -706,3 +714,105 @@ def test_clearing_the_cache_makes_the_ratios_be_re_read(cell):
         # Leave the cache populated from a pristine lattice for later tests.
         clear_design_factors()
         LatticeIndex.from_cell(full_machine_cell())
+
+
+# --------------------------------------------------------------------------- #
+# The migrated s2e scripts
+# --------------------------------------------------------------------------- #
+
+SETPOINT_FILES = Path(__file__).parent.parent / "s2e_scripts" / "setpoints"
+
+
+def test_the_nominal_setpoints_reproduce_the_scripts_rf_exactly(cell):
+    """The whole point of the migration: not one cavity moves.
+
+    Every number in nominal_14gev.yaml was a beam2rf argument in the original
+    scripts, so the per-cavity voltage and phase must come out bit-identical.
+    """
+    from ocelot.utils.acc_utils import beam2rf, beam2rf_xfel_linac
+
+    from euxfel.volts import load_setpoints
+
+    gun = 0.0065
+    setpoints = load_setpoints(SETPOINT_FILES / "nominal_14gev.yaml")
+    setpoints.injector.gun_energy = gun
+    index = LatticeIndex.from_cell(cell)
+    setpoints.apply(index)
+
+    v11, phi11, v13, phi13 = beam2rf(
+        E1=0.130,
+        chirp=-8.92,
+        curvature=180.5,
+        skewness=20332,
+        n=3,
+        freq=1.3e9,
+        E0=gun,
+    )
+    v21, phi21 = beam2rf_xfel_linac(sum_voltage=0.57872, chirp=-9.1, init_energy=0.13)
+    v31, phi31 = beam2rf_xfel_linac(sum_voltage=1.7349, chirp=-9.3, init_energy=0.7)
+
+    expected = {
+        "C.A1.I1": (v11 / 8, phi11),  # was v11 / 8 in the script
+        "C3.AH1.I1": (v13 / 8, phi13),
+        "C.A2.L1": (v21 / 32, phi21),
+        "C.A3.L2": (v31 / 96, phi31),
+        "C.A6.L3": (11.6 / 640, 0.0),  # was v41 * 1e-3 / 640
+    }
+    for supply, (voltage, phase) in expected.items():
+        for cavity in index.resolve(supply, namespace="ps").elements:
+            assert cavity.v == voltage
+            assert cavity.phi == phase
+
+
+def test_the_nominal_setpoints_use_the_bkr_chicane_angles(cell):
+    """Where the originals were 0.31 % / 0.047 % / 0.028 % off."""
+    from euxfel.volts import load_setpoints
+
+    index = LatticeIndex.from_cell(cell)
+    load_setpoints(SETPOINT_FILES / "nominal_14gev.yaml").apply(index)
+
+    for supply, bkr in (
+        ("BB.1.I1", 0.1366592804),
+        ("BB.1.B1", 0.0532325422),
+        ("BB.1.B2", 0.0411897704),
+    ):
+        for dipole in index.resolve(supply, namespace="ps").elements:
+            assert abs(dipole.angle) == pytest.approx(bkr, abs=1e-12)
+
+
+def test_the_dx12_file_reproduces_the_old_quadrupole_loop(cell):
+    """DX12_I1D.txt replaces a loop that assigned k1 directly.
+
+    Two conversions happen at once -- k1 to a generalised kick, and element id
+    to power supply -- so this pins both.  The tolerance is the Sascha format's
+    six decimal places, which quantises k1 by at most 2.6e-7 relative here.
+    """
+    original = {
+        "QI.55.I1": -2.9974,
+        "QI.57.I1": 2.9974,
+        "QI.59.I1": -2.9974,
+        "QI.61.I1": -2.14371,
+        "QI.63.I1D": -1.05,
+        "QI.64.I1D": 3.5,
+    }
+    index = LatticeIndex.from_cell(cell)
+    values = read_sascha(SASCHA_DIR / "DX12_I1D.txt")
+
+    for supply, kick in values.items():
+        if supply == "QI.62.I1":
+            continue  # deliberately unresolvable; see the test below
+        index.resolve(supply, namespace="ps").write(kick)
+
+    for name, k1 in original.items():
+        assert index.resolve(name, namespace="id").elements[0].k1 == pytest.approx(
+            k1, rel=1e-6
+        )
+
+
+def test_the_dx12_file_still_names_a_magnet_that_does_not_exist(cell):
+    """QI.62.I1 was silently skipped by the old loop; now it fails loudly."""
+    from euxfel.volts import MachineSetpoints
+
+    assert "QI.62.I1" in read_sascha(SASCHA_DIR / "DX12_I1D.txt")
+    with pytest.raises(UnknownKeyError, match="QI.62.I1"):
+        MachineSetpoints.from_sascha(SASCHA_DIR / "DX12_I1D.txt", cell)

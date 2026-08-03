@@ -1,3 +1,7 @@
+"""(Superseded by s2e_up_to_I1D_screen_volts.py, which drives the same run from setpoints.
+This version still puts rho/v/phi in the section config, which now raises.)
+"""
+
 from euxfel.sections import *
 from euxfel.section_track import SectionLattice, SectionTrack
 from ocelot.gui.accelerator import *
