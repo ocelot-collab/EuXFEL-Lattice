@@ -125,14 +125,14 @@ CHICANES, LINACS, TDS, INJECTOR, LIBRARY_VERSION = _load()
 #: Every knob name, in beamline order.
 KNOB_NAMES: tuple[str, ...] = (
     "i1",
-    "tds_i1",
+    "i1_tds",
     "bc0",
     "l1",
     "bc1",
-    "tds_b1",
+    "b1_tds",
     "l2",
     "bc2",
-    "tds_b2",
+    "b2_tds",
     "l3",
 )
 

@@ -645,8 +645,8 @@ def test_tds_knob_round_trips(index):
     from euxfel.volts.library import TDS
 
     knob = TDSKnob(voltage=0.004, phase=90.0)
-    knob.apply(index, TDS["tds_b1"])
-    back = knob.read(index, TDS["tds_b1"])
+    knob.apply(index, TDS["b1_tds"])
+    back = knob.read(index, TDS["b1_tds"])
     assert back.voltage == pytest.approx(0.004)
     assert back.phase == pytest.approx(90.0)
 
@@ -659,7 +659,7 @@ def test_one_supply_drives_both_b2_structures(index):
     group = index.resolve("TDSB.B2", namespace="ps")
     assert set(group.ids) == {"TDSB.428.B2", "TDSB.430.B2"}
 
-    TDSKnob(voltage=0.006, phase=0.0).apply(index, TDS["tds_b2"])
+    TDSKnob(voltage=0.006, phase=0.0).apply(index, TDS["b2_tds"])
     assert [s.v for s in group.elements] == [0.003, 0.003]
 
 

@@ -74,14 +74,14 @@ class Knobs(BaseModel):
     model_config = ConfigDict(extra="forbid", validate_assignment=True)
 
     i1: InjectorRFKnob = Field(default_factory=InjectorRFKnob)
-    tds_i1: TDSKnob = Field(default_factory=TDSKnob)
+    i1_tds: TDSKnob = Field(default_factory=TDSKnob)
     bc0: ChicaneKnob = Field(default_factory=ChicaneKnob)
     l1: LinacKnob = Field(default_factory=LinacKnob)
     bc1: ChicaneKnob = Field(default_factory=ChicaneKnob)
-    tds_b1: TDSKnob = Field(default_factory=TDSKnob)
+    b1_tds: TDSKnob = Field(default_factory=TDSKnob)
     l2: LinacKnob = Field(default_factory=LinacKnob)
     bc2: ChicaneKnob = Field(default_factory=ChicaneKnob)
-    tds_b2: TDSKnob = Field(default_factory=TDSKnob)
+    b2_tds: TDSKnob = Field(default_factory=TDSKnob)
     l3: LinacKnob = Field(default_factory=LinacKnob)
 
     def items(self):
@@ -145,16 +145,16 @@ class MachineSetpoints(BaseModel):
         return self.knobs.l3
 
     @property
-    def tds_i1(self) -> TDSKnob:
-        return self.knobs.tds_i1
+    def i1_tds(self) -> TDSKnob:
+        return self.knobs.i1_tds
 
     @property
-    def tds_b1(self) -> TDSKnob:
-        return self.knobs.tds_b1
+    def b1_tds(self) -> TDSKnob:
+        return self.knobs.b1_tds
 
     @property
-    def tds_b2(self) -> TDSKnob:
-        return self.knobs.tds_b2
+    def b2_tds(self) -> TDSKnob:
+        return self.knobs.b2_tds
 
     def __getitem__(self, key: str) -> float | dict[str, float]:
         return self.elements[key]

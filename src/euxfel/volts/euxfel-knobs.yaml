@@ -81,15 +81,15 @@ linacs:
 # TDSB.B2 drives both B2 structures from one supply, which is why the knob is
 # keyed on the supply rather than on the two element ids.
 tds:
-  tds_i1:
+  i1_tds:
     supply: TDSA.I1
     frequency: 2.8e+09     # Hz
     description: TDSA in the injector, vertical (tilt = pi/2).
-  tds_b1:
+  b1_tds:
     supply: TDSB.B1
     frequency: 2.8e+09
     description: TDSB after BC1.
-  tds_b2:
+  b2_tds:
     supply: TDSB.B2
     frequency: 2.8e+09
     description: TDSB after BC2, two structures on one supply.

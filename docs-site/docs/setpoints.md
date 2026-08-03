@@ -125,7 +125,7 @@ named attributes — so editors can complete them and `setpoints.bc2.chrip` is a
 | `i1` | `E1`, `chirp`, `curvature`, `skewness` | A1 (1.3 GHz) + AH1 (3.9 GHz), solved together |
 | `bc0`, `bc1`, `bc2` | exactly one of `r56`, `angle`, `rho` | The four-dipole bunch compressors |
 | `l1`, `l2`, `l3` | `sum_voltage`, `chirp` | A2 / A3–A5 / A6–A25 |
-| `tds_i1`, `tds_b1`, `tds_b2` | `voltage`, `phase` | The transverse deflecting structures; `tds_b2` drives both B2 structures |
+| `i1_tds`, `b1_tds`, `b2_tds` | `voltage`, `phase` | The transverse deflecting structures; `b2_tds` drives both B2 structures |
 
 Assigning one chicane parameter clears the others, so the last thing you set is
 what is used. `report()` gives all three at once for display.

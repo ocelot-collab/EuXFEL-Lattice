@@ -55,7 +55,7 @@ def _reject_setpoints(section, conf):
         f"no longer belong in the section config -- the lattice is owned by "
         f"euxfel.volts.MachineSetpoints. Set them there and apply the "
         f"setpoints before building the SectionLattice:\n"
-        f"    setpoints.bc2.r56 = ...       # or .l1.chirp, .tds_b2.voltage\n"
+        f"    setpoints.bc2.r56 = ...       # or .l1.chirp, .b2_tds.voltage\n"
         f"    setpoints.apply_in_place(full_machine_cell())\n"
         f"The config dict now carries physics processes only "
         f"(SC, CSR, wake, smooth, match)."
