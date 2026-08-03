@@ -90,7 +90,7 @@ class Knob(BaseModel):
 
         Empty when the knob is either fully set or entirely unset.  Knobs allow
         partial states so that they can be filled in field by field
-        (``optics.injector.chirp = -8.92``); completeness is checked when the
+        (``setpoints.i1.chirp = -8.92``); completeness is checked when the
         optics is applied, where a half-specified knob would otherwise be
         silently ignored.
         """

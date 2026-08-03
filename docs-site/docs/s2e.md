@@ -40,7 +40,7 @@ p_array_init = load_particle_array(data_dir + "gun/rf_gun_new.npz")
 
 # 2. The setpoints: what the machine is asked to do.
 setpoints = load_setpoints("setpoints/nominal_14gev.yaml")
-setpoints.injector.gun_energy = p_array_init.E
+setpoints.i1.gun_energy = p_array_init.E
 
 # 3. Apply them to the lattice, before the sections are built.
 setpoints.apply_in_place(full_machine_cell(), verbose=True)
@@ -162,8 +162,8 @@ v21, phi21 = beam2rf_xfel_linac(sum_voltage=578.72e-3, chirp=-9.1, init_energy=0
 r1 = 0.5 / 0.1366592804          # "BC magnet radius read from BKR"
 
 # becomes
-setpoints.injector.E1, setpoints.injector.chirp = 0.130, -8.92
-setpoints.injector.curvature, setpoints.injector.skewness = 180.5, 20332
+setpoints.i1.E1, setpoints.i1.chirp = 0.130, -8.92
+setpoints.i1.curvature, setpoints.i1.skewness = 180.5, 20332
 setpoints.l1.sum_voltage, setpoints.l1.chirp = 0.57872, -9.1
 setpoints.bc0.angle = 0.1366592804
 ```

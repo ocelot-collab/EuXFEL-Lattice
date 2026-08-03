@@ -86,7 +86,7 @@ p_array_init = load_particle_array(data_dir + "gun/rf_gun_new.npz", print_params
 
 setpoints = load_setpoints("setpoints/nominal_14gev.yaml")
 # The gun energy the injector RF is solved against is the beam's own.
-setpoints.injector.gun_energy = p_array_init.E
+setpoints.i1.gun_energy = p_array_init.E
 
 # Apply before SectionLattice is built: each section calculates its design twiss
 # as it is constructed, and apply_matching later transforms the beam onto that.

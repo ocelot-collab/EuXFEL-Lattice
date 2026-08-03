@@ -14,7 +14,7 @@ description: >
 
 knobs:
   # Was: beam2rf(E1=E1, chirp=-8.92, curvature=180.5, skewness=20332, n=3, ...)
-  injector:
+  i1:
     E1: 0.130
     chirp: -8.92
     curvature: 180.5

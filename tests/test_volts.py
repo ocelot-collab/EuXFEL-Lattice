@@ -735,7 +735,7 @@ def test_the_nominal_setpoints_reproduce_the_scripts_rf_exactly(cell):
 
     gun = 0.0065
     setpoints = load_setpoints(SETPOINT_FILES / "nominal_14gev.yaml")
-    setpoints.injector.gun_energy = gun
+    setpoints.i1.gun_energy = gun
     index = LatticeIndex.from_cell(cell)
     setpoints.apply(index)
 

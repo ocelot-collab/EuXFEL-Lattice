@@ -97,11 +97,11 @@ setpoints.name = "T5D 14 GeV"
 # A1 + AH1 are solved together: the 3.9 GHz module linearises the 1.3 GHz one.
 # The gun energy has to be the beam's, and has to be set before the setpoints
 # are applied, since the injector RF is solved against it.
-setpoints.injector.gun_energy = p_array_init.E
-setpoints.injector.E1 = 0.130
-setpoints.injector.chirp = -8.92
-setpoints.injector.curvature = 180.5
-setpoints.injector.skewness = 20332
+setpoints.i1.gun_energy = p_array_init.E
+setpoints.i1.E1 = 0.130
+setpoints.i1.chirp = -8.92
+setpoints.i1.curvature = 180.5
+setpoints.i1.skewness = 20332
 
 setpoints.l1.sum_voltage, setpoints.l1.chirp = 0.57872, -9.1
 setpoints.l2.sum_voltage, setpoints.l2.chirp = 1.7349, -9.3

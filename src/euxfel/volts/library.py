@@ -113,7 +113,9 @@ def _load(path=KNOBS_PATH) -> tuple[dict, dict, dict, InjectorSpec, int]:
         name: TDSSpec(name=name, **entry) for name, entry in raw.get("tds", {}).items()
     }
 
-    injector = InjectorSpec(name="injector", **raw["injector"])
+    # A single spec rather than a dict, unlike the other categories: there is
+    # one injector RF system.  Named "i1" after the section it drives.
+    injector = InjectorSpec(name="i1", **raw["i1"])
 
     return chicanes, linacs, tds, injector, raw.get("version", 1)
 
@@ -122,7 +124,7 @@ CHICANES, LINACS, TDS, INJECTOR, LIBRARY_VERSION = _load()
 
 #: Every knob name, in beamline order.
 KNOB_NAMES: tuple[str, ...] = (
-    "injector",
+    "i1",
     "tds_i1",
     "bc0",
     "l1",

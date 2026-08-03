@@ -73,7 +73,7 @@ class Knobs(BaseModel):
 
     model_config = ConfigDict(extra="forbid", validate_assignment=True)
 
-    injector: InjectorRFKnob = Field(default_factory=InjectorRFKnob)
+    i1: InjectorRFKnob = Field(default_factory=InjectorRFKnob)
     tds_i1: TDSKnob = Field(default_factory=TDSKnob)
     bc0: ChicaneKnob = Field(default_factory=ChicaneKnob)
     l1: LinacKnob = Field(default_factory=LinacKnob)
@@ -117,8 +117,8 @@ class MachineSetpoints(BaseModel):
     # ------------------------------------------------------------------ #
 
     @property
-    def injector(self) -> InjectorRFKnob:
-        return self.knobs.injector
+    def i1(self) -> InjectorRFKnob:
+        return self.knobs.i1
 
     @property
     def bc0(self) -> ChicaneKnob:

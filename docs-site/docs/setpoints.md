@@ -48,7 +48,7 @@ extends: bc2_tds.yaml                # optional, single level
 knobs:
   bc2: {r56: -0.0432}
   l1:  {sum_voltage: 0.57872, chirp: -9.1}
-  injector: {E1: 0.130, chirp: -8.92, curvature: 180.5, skewness: 20332}
+  i1: {E1: 0.130, chirp: -8.92, curvature: 180.5, skewness: 20332}
 
 elements:
   QI.1.I1: -0.053430          # generalised kick; both namespaces searched
@@ -122,7 +122,7 @@ named attributes — so editors can complete them and `setpoints.bc2.chrip` is a
 
 | Knob | Parameters | Hardware |
 |---|---|---|
-| `injector` | `E1`, `chirp`, `curvature`, `skewness` | A1 (1.3 GHz) + AH1 (3.9 GHz), solved together |
+| `i1` | `E1`, `chirp`, `curvature`, `skewness` | A1 (1.3 GHz) + AH1 (3.9 GHz), solved together |
 | `bc0`, `bc1`, `bc2` | exactly one of `r56`, `angle`, `rho` | The four-dipole bunch compressors |
 | `l1`, `l2`, `l3` | `sum_voltage`, `chirp` | A2 / A3–A5 / A6–A25 |
 | `tds_i1`, `tds_b1`, `tds_b2` | `voltage`, `phase` | The transverse deflecting structures; `tds_b2` drives both B2 structures |

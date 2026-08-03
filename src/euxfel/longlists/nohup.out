@@ -1,0 +1,398 @@
+jdddEditor Version 23.40/18.7.176 T5.3.0 5757
+JAVA Version 23
+set Enshost from start parameter: ldap://xfelens2:ldap://xfelens1
+set Tine enshost from start parameter: 192.168.163.38
+set Epics address list from start parameter: 131.169.115.236;131.169.115.234
+set httprepository from start parameter: https://jddd-xfel.desy.de/jddd/;https://jddd-flash.desy.de/jddd/;https://jddd-petra.desy.de/jddd/;https://jddd-sinbad.desy.de/jddd/
+mqtt connection to tcp://jdddbroker.desy.de:1883 started
+Matching file found at /XFEL/MainTaskbar/XFELMainTaskbar.xml
+30.7.2026 17:08.15 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/XFELMainTaskbar.xml  null
+============================
+NAME SERVICES settings are :
+ENSHOST variable = ldap://xfelens2 ldap://xfelens1
+LDAP host used: ldap://xfelens2
+Connection to LDAP started. Using LDAP ENS service! 
+============================
+Getting USER UID and GID information from REGISTRY , calling readFromRegistry (stuartwalker) 
+Error in reading ENS authorization data or user not identified !!
+ENS: user=stuartwalker --> UID=-1, GID=-1; 
+All Groups: 
+mpymb66385-d.desy.de/131.169.235.209,java.base/java.lang.Thread.run(Unknown Source),-1,Mac OS X
+Matching file found at /user/meykopff/notifications-disabled.png
+Matching file found at /user/meykopff/notifications.png
+30.7.2026 17:08.16 usedMemory: 28 Mb
+Matching file found at /global/transmission.wav
+Matching file found at /global/MainTaskbar/images/telephone64.png
+Matching file found at /global/MainTaskbar/images/phoneIcon.png
+Matching file found at /global/MainTaskbar/images/SmallBeamDynamics.png
+Matching file found at /global/MainTaskbar/images/SmallControls.png
+Matching file found at /global/MainTaskbar/images/SmallOrbit.png
+Matching file found at /global/MainTaskbar/images/SmallMPS.png
+Matching file found at /global/MainTaskbar/images/SmallStatus.png
+Matching file found at /global/MainTaskbar/images/SmallInjector.png
+Matching file found at /global/MainTaskbar/images/SmallProcedures.png
+Matching file found at /global/MainTaskbar/images/SmallRF.png
+Matching file found at /global/MainTaskbar/images/SmallFeedback.png
+Matching file found at /global/MainTaskbar/images/SmallPhotons.png
+Matching file found at /global/MainTaskbar/images/SmallDiagnostics.png
+Matching file found at /global/MainTaskbar/images/SmallMagnets.png
+Matching file found at /global/MainTaskbar/images/SmallVacuum.png
+Matching file found at /global/MainTaskbar/images/SmallTools.png
+Matching file found at /user/mcarbo/MPS_v2/images/LargeProcedures.png
+Matching file found at /XFEL/pintlk/images/arrow_down.png
+Matching file found at /user/jaegju/mps/images/stop21x21.png
+Matching file found at /XFEL/Operation/XFEL_Cockpit_Main.xml
+30.7.2026 17:08.23 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Operation/XFEL_Cockpit_Main.xml  ///
+Matching file found at /global/images/XFELlogoMedium.png
+30.07.26 17:08:23.604 MESZ [initializer] Could not open configuration file : java.io.FileNotFoundException: ./cshosts.csv (No such file or directory)
+Matching file found at /XFEL/Status/images/CavEnergy.png
+Matching file found at /XFEL/pintlk/includes/DisplayDeviceState_20px.xml
+Matching file found at /XFEL/pintlk/images/DisplayDeviceState_3.svg
+Matching file found at /XFEL/pintlk/images/DisplayDeviceState_3.svg
+Matching file found at /XFEL/pintlk/images/DisplayDeviceState_3.svg
+Matching file found at /XFEL/pintlk/images/DisplayDeviceState_3.svg
+Matching file found at /XFEL/pintlk/images/DisplayDeviceState_3.svg
+Matching file found at /XFEL/pintlk/images/DisplayDeviceState_3.svg
+Matching file found at /XFEL/BeamLines/images/mpsShort.png
+Matching file found at /XFEL/BeamLines/images/mpsNone.png
+Matching file found at /XFEL/BeamLines/images/mpsSingle.png
+Matching file found at /XFEL/BeamLines/includes/icXFELInjectorBL.xml
+Matching file found at /XFEL/BeamLines/includes/icLaserControl.xml
+Matching file found at /XFEL/BeamLines/includes/icXFELMagIndicatorXY.xml
+Matching file found at /XFEL/BeamLines/includes/icTISAlarm.xml
+Matching file found at /XFEL/BeamLines/images/Collimator.png
+Matching file found at /XFEL/Status/includes/icRF_FSM.xml
+Matching file found at /XFEL/BeamLines/includes/icBPMNew.xml
+Matching file found at /XFEL/BeamLines/images/BPM.png
+Matching file found at /XFEL/BeamLines/includes/icXFELMagIndicator.xml
+Matching file found at /XFEL/BeamLines/includes/icXFELMagIndicator_H.xml
+Matching file found at /XFEL/BeamLines/includes/icBLMAlarm.xml
+Matching file found at /XFEL/BeamLines/images/StoppUhr.png
+Matching file found at /XFEL/BeamLines/images/f_cup.png
+30.7.2026 17:08.25 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/if_Mirror: XFEL.DIAG/MPS/DI30I1.0/BOARD.HW_INPUTS Error: (102) protocol or address not supported!!!!
+Matching file found at /XFEL/BeamLines/includes/icSecInjector.xml
+
+Null argument: cancel call!
+30.7.2026 17:08.25 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_CKXY23I1/lp_Mag2/sw_Mag2: XFEL.MAGNETS/MAGNET.ML/CKY.23.I1/DISPLAY_STATUS Error: (1000) illegal location
+30.7.2026 17:08.25 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_CKXY23I1/lp_Mag1/sw_Mag1: XFEL.MAGNETS/MAGNET.ML/CKX.23.I1/DISPLAY_STATUS Error: (1000) illegal location
+Matching file found at /global/pintlk/images/DisplayDeviceState_0_30px.png
+Matching file found at /XFEL/Status/images/WarnStatus.png
+Matching file found at /XFEL/BeamLines/images/ScreenIN.png
+Matching file found at /XFEL/BeamLines/images/TDSA.png
+Matching file found at /XFEL/BeamLines/images/mpsFull.png
+Matching file found at /XFEL/BeamLines/images/screen_in.png
+Matching file found at /XFEL/BeamLines/images/screen.png
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMG25III1/If1/available/Alive1: XFEL.DIAG/BPM/BPMG.25II.I1/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMA60I1/If1/available/Alive1: XFEL.DIAG/BPM/BPMA.60.I1/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMD64I1D/If1/available/Alive1: XFEL.DIAG/BPM/BPMD.64.I1D/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMA63I1/If1/available/Alive1: XFEL.DIAG/BPM/BPMA.63.I1/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMG25II1/If1/available/Alive1: XFEL.DIAG/BPM/BPMG.25I.I1/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMA63I1D/If1/available/Alive1: XFEL.DIAG/BPM/BPMA.63.I1D/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMG24I1/If1/available/Alive1: XFEL.DIAG/BPM/BPMG.24.I1/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMA59I1/If1/available/Alive1: XFEL.DIAG/BPM/BPMA.59.I1/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMA57I1/If1/available/Alive1: XFEL.DIAG/BPM/BPMA.57.I1/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMA55I1/If1/available/Alive1: XFEL.DIAG/BPM/BPMA.55.I1/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMF52I1/If1/available/Alive1: XFEL.DIAG/BPM/BPMF.52.I1/*: 0.0
+Matching file found at /XFEL/BeamLines/images/MagQMover.png
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMF48I1/If1/available/Alive1: XFEL.DIAG/BPM/BPMF.48.I1/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMF47II1/If1/available/Alive1: XFEL.DIAG/BPM/BPMF.47.I1/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMR38I1/If1/available/Alive1: XFEL.DIAG/BPM/BPMR.38II.I1/*: 0.0
+30.7.2026 17:08.26 XFEL_Cockpit_Main.xml: XFEL_Cockpit_Main/ic_Content/ic_BPMC38I1/If1/available/Alive1: XFEL.DIAG/BPM/BPMC.38I.I1/*: 0.0
+Matching file found at /XFEL/BeamLines/images/R.png
+Matching file found at /FLASH/MainTaskbar/images/LargeMagnets.png
+30.7.2026 17:08.53 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+Matching file found at /XFEL/pintlk/images/arrow_up.png
+Matching file found at /XFEL/Kicker/KickerOp_XFEL_I1_CompensationKicker.xml
+30.7.2026 17:09 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Kicker/KickerOp_XFEL_I1_CompensationKicker.xml  ///
+Matching file found at /XFEL/images/XFELlogoSmall.png
+30.7.2026 17:09.12 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:09.34 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:09.53 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:49.50 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:49.52 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:50.14 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:50.21 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:50.32 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:50.45 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:50.56 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:51.43 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+Matching file found at /user/meykopff/kicker_gun_user.xml
+30.7.2026 17:52.20 Open file: https://jddd-xfel.desy.de/jddd/user/meykopff/kicker_gun_user.xml  ///
+30.7.2026 17:52.20 kicker_gun_user.xml: EditorPanel/LayerY/LayerPulses/TextField1: XFEL.FEEDBACK/KICKERDC_BETA/BPMF.48.I1.Y/THRESHOLD: illegal location
+30.7.2026 17:52.20 kicker_gun_user.xml: EditorPanel/LayerY/LayerPulses/ColouredIndicator: XFEL.FEEDBACK/KICKERDC_BETA/BPMF.48.I1.Y/SUGGEST.ALL: illegal location
+30.7.2026 17:52.20 kicker_gun_user.xml: EditorPanel/LayerY/LayerAdapt/CheckIgnore: XFEL.FEEDBACK/KICKERDC_BETA/ADAPT.GUN.Y/KICK.IGNORE.ALL: illegal location
+30.7.2026 17:52.22 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+Matching file found at /XFEL/Kicker/KickerOp_XFEL_CompensationKicker.xml
+30.7.2026 17:52.26 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Kicker/KickerOp_XFEL_CompensationKicker.xml  ///
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_set_ovc_reset: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/SET.OVERCURRENT.RESET Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_remote: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/REMOTE.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/LayeredPane5/If1: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/GPIO_4.DIR Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/LayeredPane5/If_IND_fpga5v: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/GPIO_4 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/LayeredPane1/If1: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/GPIO_5.DIR Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/LayeredPane1/If_IND_luefter: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/GPIO_5 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_mains_ON_only_when_pulser_off: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/MAINS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_mains_ON_OFF: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/SET.MAINS.ON Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_cps_ON: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/CPS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_cps_ON_OFF: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/SET.CPS.ON Error: (102) protocol or address not supported!!!!
+KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/ToggleButton1: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/SET.OVERCURRENT.RESET: protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_trigger_is_ok: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/TRIGGER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If1: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/SET.SPARE0 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_set_ovc_reset: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/SET.OVERCURRENT.RESET Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_pw_fix: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/SET.SPARE0 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_remote: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/REMOTE.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_netz_ein: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/MAINS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_ladeng_ein: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/CPS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_kurzschliesser: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/CROWBAR.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_tuerschalter: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/COVER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_temperatur: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/COVER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_ovc: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/CURRENT.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_pi: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/PI.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_mi: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/MI.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_trigger: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/TRIGGER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1965_A_TL/If_IND_fpga_autoreset: XFEL.DIAG/KICKER.PULSER/KL.1965.A.TL/SPARE0.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_remote: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/REMOTE.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/LayeredPane5/If1: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/GPIO_4.DIR Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/LayeredPane5/If_IND_fpga5v: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/GPIO_4 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/LayeredPane1/If1: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/GPIO_5.DIR Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/LayeredPane1/If_IND_luefter: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/GPIO_5 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_mains_ON_only_when_pulser_off: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/MAINS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_cps_ON: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/CPS.ON.RBV Error: (102) protocol or address not supported!!!!
+KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/ToggleButton1: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/SET.OVERCURRENT.RESET: protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If2: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/TRIGGER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If1: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/SET.SPARE0 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_pw_fix: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/SET.SPARE0 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_remote: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/REMOTE.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_netz_ein: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/MAINS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_ladeng_ein: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/CPS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_kurzschliesser: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/CROWBAR.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_tuerschalter: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/COVER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_temperatur: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/COVER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_ovc: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/CURRENT.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_pi: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/PI.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_mi: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/MI.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_trigger: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/TRIGGER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_IND_fpga_autoreset: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/SPARE0.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_mains_ON_OFF: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/SET.MAINS.ON Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1965_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1965_B_TL/If_cps_ON_OFF: XFEL.DIAG/KICKER.PULSER/KL.1965.B.TL/SET.CPS.ON Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_set_ovc_reset: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/SET.OVERCURRENT.RESET Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_remote: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/REMOTE.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/LayeredPane5/If1: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/GPIO_4.DIR Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/LayeredPane5/If_IND_fpga5v: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/GPIO_4 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/LayeredPane1/If1: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/GPIO_5.DIR Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/LayeredPane1/If_IND_luefter: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/GPIO_5 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_mains_ON_only_when_pulser_off: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/MAINS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_mains_ON_OFF: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/SET.MAINS.ON Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_cps_ON: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/CPS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_cps_ON_OFF: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/SET.CPS.ON Error: (102) protocol or address not supported!!!!
+KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/ToggleButton1: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/SET.OVERCURRENT.RESET: protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_trigger_is_ok: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/TRIGGER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_set_ovc_reset: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/SET.OVERCURRENT.RESET Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If1: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/SET.SPARE0 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_pw_fix: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/SET.SPARE0 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_remote: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/REMOTE.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_netz_ein: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/MAINS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_ladeng_ein: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/CPS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_kurzschliesser: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/CROWBAR.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_tuerschalter: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/COVER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_temperatur: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/COVER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_ovc: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/CURRENT.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_pi: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/PI.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_mi: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/MI.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_trigger: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/TRIGGER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_KL_1938_A_TL/If_IND_fpga_autoreset: XFEL.DIAG/KICKER.PULSER/KL.1938.A.TL/SPARE0.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_remote: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/REMOTE.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/LayeredPane5/If1: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/GPIO_4.DIR Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/LayeredPane5/If_IND_fpga5v: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/GPIO_4 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/LayeredPane1/If1: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/GPIO_5.DIR Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/LayeredPane1/If_IND_luefter: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/GPIO_5 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_mains_ON_only_when_pulser_off: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/MAINS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_cps_ON: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/CPS.ON.RBV Error: (102) protocol or address not supported!!!!
+KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/ToggleButton1: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/SET.OVERCURRENT.RESET: protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If2: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/TRIGGER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If1: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/SET.SPARE0 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_pw_fix: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/SET.SPARE0 Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_remote: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/REMOTE.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_netz_ein: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/MAINS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_ladeng_ein: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/CPS.ON.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_kurzschliesser: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/CROWBAR.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_tuerschalter: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/COVER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_temperatur: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/COVER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_ovc: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/CURRENT.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_pi: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/PI.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_mi: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/MI.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_trigger: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/TRIGGER.OK.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_IND_fpga_autoreset: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/SPARE0.RBV Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_mains_ON_OFF: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/SET.MAINS.ON Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.27 KickerOp_XFEL_CompensationKicker.xml: EditorPanel/LayeredPane_Umschaltstatus_KL_1938_AB/If_DIO_sts_panel_enable/else/LayeredPane_disabled_KL_1938_B_TL/If_cps_ON_OFF: XFEL.DIAG/KICKER.PULSER/KL.1938.B.TL/SET.CPS.ON Error: (102) protocol or address not supported!!!!
+30.7.2026 17:52.38 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+Matching file found at /XFEL/Kicker/KickerOp_XFEL_Compensation_TL_KMX_Switchyard.xml
+30.7.2026 17:52.40 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Kicker/KickerOp_XFEL_Compensation_TL_KMX_Switchyard.xml  ///
+Matching file found at /user/meykopff/kicker_dogleg_user.xml
+30.7.2026 17:52.46 Open file: https://jddd-xfel.desy.de/jddd/user/meykopff/kicker_dogleg_user.xml  ///
+Matching file found at /XFEL/Kicker/KickerOp_XFEL_CompensationKicker_overview.xml
+30.7.2026 17:52.50 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Kicker/KickerOp_XFEL_CompensationKicker_overview.xml  ///
+30.7.2026 17:52.51 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Kicker/KickerOp_XFEL_CompensationKicker_overview.xml  ///
+30.7.2026 17:53.41 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:54.48 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:55.16 Open file: https://jddd-xfel.desy.de/jddd/user/meykopff/kicker_dogleg_user.xml  ///
+Null argument: cancel call!
+Exception in startMonitoring!!!!!!!!!!!!!!!!!  java.lang.NullPointerException: Cannot invoke "DOOCSPlot.DOOCSDataContainer.cancel()" because "this.this$0.dataContainer" is null Adr:XFEL.FEEDBACK/KICKERDC_BETA/BPMA.72.I1.X/PULSES.ALL
+Matching file found at /user/meykopff/kicker_extraction_user.xml
+30.7.2026 17:55.20 Open file: https://jddd-xfel.desy.de/jddd/user/meykopff/kicker_extraction_user.xml  XFEL.FEEDBACK/KICKERDC_BETA//
+Exception in startMonitoring!!!!!!!!!!!!!!!!!  java.lang.NullPointerException: Cannot invoke "DOOCSPlot.DOOCSDataContainer.cancel()" because "this.this$0.dataContainer" is null Adr:XFEL.FEEDBACK/KICKERDC_BETA/BPME.2203.SA2.Y/PULSES.SA4
+Exception in startMonitoring!!!!!!!!!!!!!!!!!  java.lang.NullPointerException: Cannot invoke "DOOCSPlot.DOOCSDataContainer.cancel()" because "this.this$0.dataContainer" is null Adr:XFEL.FEEDBACK/KICKERDC_BETA/BPME.2241.SA1.Y/PULSES.SA3
+Exception in startMonitoring!!!!!!!!!!!!!!!!!  java.lang.NullPointerException: Cannot invoke "DOOCSPlot.DOOCSDataContainer.cancel()" because "this.this$0.dataContainer" is null Adr:XFEL.FEEDBACK/KICKERDC_BETA/BPME.2241.SA1.Y/PULSES.SA1
+Exception in startMonitoring!!!!!!!!!!!!!!!!!  java.lang.NullPointerException: Cannot invoke "DOOCSPlot.DOOCSDataContainer.cancel()" because "this.this$0.dataContainer" is null Adr:XFEL.FEEDBACK/KICKERDC_BETA/BPME.2203.SA2.Y/PULSES.SA2
+Matching file found at /XFEL/Magnet/XFEL_QUAD_MON.xml
+30.7.2026 17:55.53 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Magnet/XFEL_QUAD_MON.xml  ///
+30.7.2026 17:55.58 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+Matching file found at /XFEL/Kicker/XFEL_TLD_Kicker_Op.xml
+30.7.2026 17:59.19 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Kicker/XFEL_TLD_Kicker_Op.xml  ///
+Matching file found at /global/includes/ic_facility_logo_80x50.xml
+Matching file found at /global/includes/ic_facility_title_bar.xml
+Matching file found at /global/includes/ic_print_to_facility_log.xml
+30.7.2026 17:59.24 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:59.26 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+30.7.2026 17:59.27 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Kicker/KickerOp_XFEL_I1_CompensationKicker.xml  ///
+30.7.2026 18:01.02 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+Matching file found at /XFEL/Kicker/KickerOp_XFEL_KL.xml
+30.7.2026 18:01.10 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Kicker/KickerOp_XFEL_KL.xml  ///
+30.7.2026 18:08.19 usedMemory: 193 Mb
+30.7.2026 18:13.20 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+Matching file found at /XFEL/Kicker/KickerOp_XFEL_T4.xml
+30.7.2026 18:13.23 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Kicker/KickerOp_XFEL_T4.xml  ///
+30.7.2026 18:13.32 Open file: https://jddd-xfel.desy.de/jddd/XFEL/MainTaskbar/expert/icKickerExpert.xml  ///
+Matching file found at /XFEL/Kicker/KickerOp_XFEL_KS.xml
+30.7.2026 18:13.35 Open file: https://jddd-xfel.desy.de/jddd/XFEL/Kicker/KickerOp_XFEL_KS.xml  ///
+30.7.2026 18:54 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG: Timeout
+30.7.2026 18:54 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG Error: (117) Timeout
+30.7.2026 19:08.22 usedMemory: 195 Mb
+30.7.2026 20:08.25 usedMemory: 197 Mb
+30.7.2026 21:08.28 usedMemory: 197 Mb
+30.7.2026 22:08.32 usedMemory: 196 Mb
+30.7.2026 23:08.35 usedMemory: 196 Mb
+30.7.2026 23:10.48 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG: Timeout
+30.7.2026 23:10.48 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG Error: (117) Timeout
+30.7.2026 23:56.17 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG: Timeout
+30.7.2026 23:56.17 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG Error: (117) Timeout
+30.7.2026 23:57.45 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG: Timeout
+30.7.2026 23:57.45 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG Error: (117) Timeout
+30.7.2026 23:58.06 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG: Timeout
+30.7.2026 23:58.06 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG Error: (117) Timeout
+31.7.2026  0:08.38 usedMemory: 196 Mb
+31.7.2026  1:08.41 usedMemory: 195 Mb
+31.7.2026  1:24.56 KickerOp_XFEL_KL.xml: EditorPanel/LayeredPane_KL_2000_TL/LayeredPane_bb_gpio/LayeredPane_bb_gpio1out_fpga_reset/If_IND_fpga5v: XFEL.DIAG/KICKER.PULSER/KL.2000.TL/GPIO_1.OUT Error: (124) 0
+31.7.2026  1:24.56 KickerOp_XFEL_KL.xml: EditorPanel/LayeredPane_KL_2000_TL/LayeredPane_bb_gpio/LayeredPane_bb_gpio_0_luefter/If1: XFEL.DIAG/KICKER.PULSER/KL.2000.TL/GPIO_0.OUT Error: (124) 0
+31.7.2026  1:24.56 KickerOp_XFEL_KL.xml: EditorPanel/LayeredPane_KL_2000_TL/LayeredPane_bb_gpio/LayeredPane_bb_gpio_0_luefter/If_IND_luefter: XFEL.DIAG/KICKER.PULSER/KL.2000.TL/GPIO_0 Error: (124) 0
+31.7.2026  2:08.44 usedMemory: 195 Mb
+31.7.2026  3:08.47 usedMemory: 197 Mb
+31.7.2026  4:08.50 usedMemory: 196 Mb
+31.7.2026  5:08.54 usedMemory: 196 Mb
+31.7.2026  6:08.57 usedMemory: 197 Mb
+31.7.2026  7:09 usedMemory: 196 Mb
+31.7.2026  8:09.03 usedMemory: 196 Mb
+31.7.2026  9:09.06 usedMemory: 196 Mb
+31.7.2026 10:09.09 usedMemory: 195 Mb
+31.7.2026 11:09.12 usedMemory: 195 Mb
+31.7.2026 12:09.15 usedMemory: 195 Mb
+31.7.2026 13:09.18 usedMemory: 194 Mb
+31.7.2026 13:22.44 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG: Timeout
+31.7.2026 13:22.44 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG Error: (117) Timeout
+31.7.2026 14:09.22 usedMemory: 195 Mb
+31.7.2026 14:26.15 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG: Timeout
+31.7.2026 14:26.15 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG Error: (117) Timeout
+31.7.2026 15:09.25 usedMemory: 193 Mb
+31.7.2026 15:32.53 XFELMainTaskbar.xml: EditorPanel/Action area/Synaptic/If_MPS_Freigabe_eStopXFEL: XFEL/PiConditions/eStopXFEL/displayState Error: (46) (local) remitted data lost
+31.7.2026 16:09.28 usedMemory: 196 Mb
+31.7.2026 16:13.18 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG: Timeout
+31.7.2026 16:13.18 XFELMainTaskbar.xml: EditorPanel/PaneAudioAlarm/If_Local_Audio_Alarm: XFEL.UTIL/AUDIO_ALARM/CONTROL/LOCAL.AUDIO.FLAG Error: (117) Timeout
+31.7.2026 17:09.31 usedMemory: 196 Mb
+31.7.2026 18:09.34 usedMemory: 198 Mb
+31.7.2026 19:09.37 usedMemory: 192 Mb
+Matching file found at /global/MainTaskbar/images/LargeStatus.png
+DOOCSIncludeComponent.setDOOCSParameter: wrong parameter purpose
+[Fatal Error] :1:6516: XML-Dokumentstrukturen müssen innerhalb derselben Entity beginnen und enden.
+Matching file found at /global/WatchdogOverview.xml
+31.7.2026 19:34.06 Open file: https://jddd-xfel.desy.de/jddd/global/WatchdogOverview.xml  XFEL.SYSTEM/XFELML1.WATCH//
+No permission to set XFEL.SYSTEM/XFELML3.WATCH/SVR.TDS_MASTER/SET.ONLINE with UID:-1 GID:-1 Groups:[]
+31.7.2026 19:35.44 Open file: https://jddd-xfel.desy.de/jddd/global/locationsTable.xml  FACILITY/DEVICE/XFELML3._SVR/
+31.7.2026 19:35.45 locationsTable.xml: EditorPanel/LayeredPane1/If1: ///SVR.ERROR_COUNT Error: (1007) ill. address
+Ldap failed to find matches for address FACILITY/DEVICE/*/, Exception: javax.naming.NameNotFoundException: [LDAP: error code 32 - No Such Object]; remaining name 'facility=FACILITY,dc=doocs,dc=de'
+locationsTable.xml: EditorPanel/DynamicList1: FACILITY/DEVICE/*/: null
+31.7.2026 20:09.41 usedMemory: 194 Mb
+31.7.2026 21:09.44 usedMemory: 196 Mb
+31.7.2026 21:27.13 XFELMainTaskbar.xml: EditorPanel/Action area/Query Textfield: doocszmq:XFEL.UTIL/TASKBAR_SEARCH/SEARCH/SEARCH_QUERY: 0 0.0 0.0 0 Server unavailable
+31.7.2026 22:09.47 usedMemory: 194 Mb
+31.7.2026 23:09.50 usedMemory: 190 Mb
+1.8.2026  0:09.53 usedMemory: 194 Mb
+1.8.2026  1:09.56 usedMemory: 193 Mb
+1.8.2026  2:09.59 usedMemory: 192 Mb
+1.8.2026  3:10.03 usedMemory: 191 Mb
+1.8.2026  4:10.06 usedMemory: 193 Mb
+1.8.2026  5:10.09 usedMemory: 193 Mb
+1.8.2026  6:10.12 usedMemory: 194 Mb
+1.8.2026  7:10.15 usedMemory: 195 Mb
+1.8.2026  8:10.18 usedMemory: 192 Mb
+1.8.2026  9:10.21 usedMemory: 193 Mb
+1.8.2026 10:10.24 usedMemory: 194 Mb
+1.8.2026 11:10.28 usedMemory: 193 Mb
+1.8.2026 12:10.31 usedMemory: 193 Mb
+1.8.2026 13:10.34 usedMemory: 194 Mb
+1.8.2026 14:06.10 KickerOp_XFEL_KL.xml: EditorPanel/LayeredPane_KL_2000_TL/LayeredPane_bb_gpio/LayeredPane_bb_gpio1out_fpga_reset/If_IND_fpga5v: XFEL.DIAG/KICKER.PULSER/KL.2000.TL/GPIO_1.OUT Error: (124) 0
+1.8.2026 14:06.10 KickerOp_XFEL_KL.xml: EditorPanel/LayeredPane_KL_2000_TL/LayeredPane_bb_gpio/LayeredPane_bb_gpio_0_luefter/If1: XFEL.DIAG/KICKER.PULSER/KL.2000.TL/GPIO_0.OUT Error: (124) 0
+1.8.2026 14:06.10 KickerOp_XFEL_KL.xml: EditorPanel/LayeredPane_KL_2000_TL/LayeredPane_bb_gpio/LayeredPane_bb_gpio_0_luefter/If_IND_luefter: XFEL.DIAG/KICKER.PULSER/KL.2000.TL/GPIO_0 Error: (124) 0
+1.8.2026 14:10.37 usedMemory: 192 Mb
+1.8.2026 15:10.40 usedMemory: 197 Mb
+1.8.2026 16:10.43 usedMemory: 192 Mb
+1.8.2026 17:10.46 usedMemory: 194 Mb
+1.8.2026 18:10.49 usedMemory: 194 Mb
+1.8.2026 19:10.53 usedMemory: 193 Mb
+1.8.2026 20:10.56 usedMemory: 193 Mb
+1.8.2026 21:10.59 usedMemory: 193 Mb
+1.8.2026 22:11.02 usedMemory: 193 Mb
+1.8.2026 23:11.05 usedMemory: 193 Mb
+2.8.2026  0:11.08 usedMemory: 192 Mb
+2.8.2026  1:11.11 usedMemory: 191 Mb
+2.8.2026  2:11.14 usedMemory: 192 Mb
+2.8.2026  3:11.17 usedMemory: 193 Mb
+2.8.2026  4:11.20 usedMemory: 194 Mb
+2.8.2026  5:11.24 usedMemory: 195 Mb
+2.8.2026  6:11.27 usedMemory: 191 Mb
+2.8.2026  7:11.30 usedMemory: 193 Mb
+2.8.2026  8:11.33 usedMemory: 194 Mb
+2.8.2026  9:11.36 usedMemory: 193 Mb
+2.8.2026 10:11.39 usedMemory: 196 Mb
+2.8.2026 11:11.42 usedMemory: 192 Mb
+2.8.2026 12:11.45 usedMemory: 192 Mb
+2.8.2026 13:11.48 usedMemory: 193 Mb
+2.8.2026 14:11.52 usedMemory: 195 Mb
+2.8.2026 15:11.55 usedMemory: 192 Mb
+2.8.2026 16:11.58 usedMemory: 193 Mb
+2.8.2026 17:12.01 usedMemory: 192 Mb
+2.8.2026 18:12.04 usedMemory: 194 Mb
+2.8.2026 19:12.07 usedMemory: 193 Mb
+2.8.2026 20:12.10 usedMemory: 192 Mb
+2.8.2026 21:12.13 usedMemory: 190 Mb
+2.8.2026 22:12.16 usedMemory: 193 Mb
+2.8.2026 23:12.20 usedMemory: 192 Mb
+3.8.2026  0:12.23 usedMemory: 192 Mb
+3.8.2026  1:12.26 usedMemory: 194 Mb
+3.8.2026  2:12.29 usedMemory: 192 Mb
+3.8.2026  3:12.32 usedMemory: 192 Mb
+3.8.2026  4:12.35 usedMemory: 195 Mb
+3.8.2026  5:12.38 usedMemory: 193 Mb
+3.8.2026  6:12.41 usedMemory: 193 Mb
+3.8.2026  7:12.44 usedMemory: 193 Mb
+3.8.2026  8:12.48 usedMemory: 193 Mb
+3.8.2026  9:12.51 usedMemory: 192 Mb
+3.8.2026  9:17.23 KickerOp_XFEL_KL.xml: EditorPanel/LayeredPane_KL_2001_TL/LayeredPane_bb_gpio/LayeredPane_bb_gpio_0_luefter/If_IND_luefter: XFEL.DIAG/KICKER.PULSER/KL.2001.TL/GPIO_0 Error: (124) 0
+3.8.2026  9:17.23 KickerOp_XFEL_KL.xml: EditorPanel/LayeredPane_KL_2001_TL/LayeredPane_bb_gpio/LayeredPane_bb_gpio_0_luefter/If1: XFEL.DIAG/KICKER.PULSER/KL.2001.TL/GPIO_0.OUT Error: (124) 0
+3.8.2026  9:17.24 KickerOp_XFEL_KL.xml: EditorPanel/LayeredPane_KL_2001_TL/LayeredPane_bb_gpio/LayeredPane_bb_gpio1out_fpga_reset/If_IND_fpga5v: XFEL.DIAG/KICKER.PULSER/KL.2001.TL/GPIO_1.OUT Error: (124) 0
+3.8.2026  9:17.49 KickerOp_XFEL_KL.xml: EditorPanel/LayeredPane_KL_2000_TL/LayeredPane_bb_gpio/LayeredPane_bb_gpio1out_fpga_reset/If_IND_fpga5v: XFEL.DIAG/KICKER.PULSER/KL.2000.TL/GPIO_1.OUT Error: (124) 0
+3.8.2026 10:12.54 usedMemory: 191 Mb
+3.8.2026 11:12.57 usedMemory: 193 Mb
+3.8.2026 12:13 usedMemory: 192 Mb
+3.8.2026 13:13.03 usedMemory: 194 Mb
+3.8.2026 14:13.06 usedMemory: 192 Mb
+3.8.2026 15:13.09 usedMemory: 189 Mb
+3.8.2026 16:13.12 usedMemory: 191 Mb

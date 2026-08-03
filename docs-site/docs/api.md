@@ -42,7 +42,7 @@ setpoints = MachineSetpoints.from_lattice(cell)        # read back off a lattice
 | `to_yaml(path)` / `to_sascha(cell, path)` | Write it out |
 
 Knobs are reached as attributes: `setpoints.bc2.r56`, `setpoints.l1.chirp`,
-`setpoints.injector.curvature`, `setpoints.tds_b2.voltage`. Individual magnets
+`setpoints.i1.curvature`, `setpoints.tds_b2.voltage`. Individual magnets
 by subscript: `setpoints["QI.1.I1"] = -0.05343`.
 
 ### Finding elements

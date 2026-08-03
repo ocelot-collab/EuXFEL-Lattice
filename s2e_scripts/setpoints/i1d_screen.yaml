@@ -15,7 +15,7 @@ knobs:
   # Was: chirp = -9.11, curvature = 222, skewness = 28000, E0 = 0.0065.
   # gun_energy is pinned here rather than taken from the beam, because that
   # script hardcoded E0 rather than reading p_array_init.E.
-  injector:
+  i1:
     E1: 0.130
     chirp: -9.11
     curvature: 222
