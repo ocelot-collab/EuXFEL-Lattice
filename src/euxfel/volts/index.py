@@ -36,6 +36,7 @@ from .kicks import (
     is_kickable,
     partially_zero,
     read_kick,
+    reference_kick,
     write_group,
 )
 
@@ -92,17 +93,27 @@ def full_machine_cell() -> list:
 #: index exists would defeat it.
 _DESIGN_FACTORS: dict[str, tuple[float, ...]] = {}
 
+#: The kick each supply's ratios are relative to, remembered for the same
+#: reason.  Ratios alone do not place a group against its neighbours: the laser
+#: heater chicane spans three supplies, and within each the ratios are (1, -1),
+#: (1,) and (1,), which says nothing about the [-, +, +, -] pattern the four
+#: dipoles form.  Multiplying by the reference recovers the design kicks, and
+#: those do.
+_DESIGN_REFERENCE: dict[str, float] = {}
 
-def _remembered_factors(supply: str, elements) -> tuple[float, ...]:
-    """The design ratios for ``supply``, computing them only the first time."""
+
+def _remembered(supply: str, elements) -> tuple[tuple[float, ...], float]:
+    """The design ratios and reference for ``supply``, computed once."""
     cached = _DESIGN_FACTORS.get(supply)
     # The element count guards against a differently sized group -- a supply
     # that gained or lost a magnet is a different supply, not a cache hit.
     if cached is not None and len(cached) == len(elements):
-        return cached
+        return cached, _DESIGN_REFERENCE[supply]
     factors = design_factors(elements)
+    reference = reference_kick(elements)
     _DESIGN_FACTORS[supply] = factors
-    return factors
+    _DESIGN_REFERENCE[supply] = reference
+    return factors, reference
 
 
 def clear_design_factors() -> None:
@@ -111,6 +122,7 @@ def clear_design_factors() -> None:
     For tests, and after regenerating the lattice within a live process.
     """
     _DESIGN_FACTORS.clear()
+    _DESIGN_REFERENCE.clear()
 
 
 class UnknownKeyError(KeyError):
@@ -191,12 +203,15 @@ class LatticeIndex:
         # Design ratios must come from the pristine lattice, before anything is
         # applied, or repeated application would compound them.
         self._factors: dict[str, tuple[float, ...]] = {}
+        self._references: dict[str, float] = {}
         self.partly_unpowered: tuple[str, ...] = ()
         unpowered = []
         for supply, elements in self._by_supply.items():
             if not all(is_kickable(element) for element in elements):
                 continue
-            self._factors[supply] = _remembered_factors(supply, elements)
+            self._factors[supply], self._references[supply] = _remembered(
+                supply, elements
+            )
             if partially_zero(elements):
                 unpowered.append(supply)
 
@@ -235,6 +250,16 @@ class LatticeIndex:
     def supply_of(self, element) -> str | None:
         """The power supply feeding ``element``, if it has one."""
         return getattr(element, "ps_id", None) or None
+
+    def design_kicks(self, supply: str) -> tuple[float, ...]:
+        """What each magnet on ``supply`` was set to in the design lattice.
+
+        Ratios are relative to their own supply, so they cannot be compared
+        across supplies; these can.  A chicane spread over several supplies
+        needs them to work out its polarity pattern.
+        """
+        reference = self._references[supply]
+        return tuple(factor * reference for factor in self._factors[supply])
 
     def position(self, element) -> int:
         """Index of ``element`` within the sequence.

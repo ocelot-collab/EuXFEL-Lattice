@@ -13,6 +13,16 @@
 version: 1
 
 chicanes:
+  # The only chicane not on a single power supply: its four dipoles are spread
+  # over three, so it takes `supplies:` where the compressors take `supply:`.
+  # In every control-room file shipped here the three do not agree -- BL.3.I1
+  # runs about 1.75% weak against the other two -- so a file's values are
+  # applied magnet by magnet rather than routed through this knob.  Setting
+  # `lh` yourself still drives all four as a proper chicane.
+  lh:
+    supplies: [BL.1.I1, BL.3.I1, BL.4.I1]
+    energy: 0.13         # GeV, after A1 + AH1, same as BC0
+    description: Laser heater chicane, with the LH undulator in its middle.
   bc0:
     supply: BB.1.I1
     # Reference energy for computing R56 from the transfer matrix.  A chicane's

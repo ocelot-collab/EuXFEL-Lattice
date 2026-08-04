@@ -120,14 +120,37 @@ def _ordered(index, group) -> tuple[list, list[float]]:
 
 
 def chicane_dipoles(index, spec: ChicaneSpec) -> tuple[list, list[float]]:
-    """The four dipoles of a chicane, in beamline order, and their polarities."""
-    group = index.resolve(spec.supply, namespace="ps")
-    dipoles, factors = _ordered(index, group)
+    """The four dipoles of a chicane, in beamline order, and their polarities.
+
+    A chicane is not always on one power supply.  The bunch compressors are --
+    all four of BC0's dipoles are on ``BB.1.I1`` -- but the laser heater chicane
+    is spread over three, so the dipoles are gathered from every supply the spec
+    names and then put in beamline order.
+    """
+    dipoles: list = []
+    factors: list[float] = []
+    for supply in spec.supplies:
+        group = index.resolve(supply, namespace="ps")
+        found, _ = _ordered(index, group)
+        dipoles.extend(found)
+        # Design *kicks*, not per-supply ratios.  The ratios within BL.1.I1,
+        # BL.3.I1 and BL.4.I1 are (1, -1), (1,) and (1,), which would make the
+        # laser heater chicane come out [+, -, +, +] instead of [-, +, +, -].
+        by_position = sorted(
+            zip(group.elements, index.design_kicks(supply)),
+            key=lambda pair: index.position(pair[0]),
+        )
+        factors.extend(kick for _, kick in by_position)
+
+    order = sorted(range(len(dipoles)), key=lambda i: index.position(dipoles[i]))
+    dipoles = [dipoles[i] for i in order]
+    factors = [factors[i] for i in order]
 
     if len(dipoles) != 4:
         raise ChicaneError(
-            f"Chicane {spec.name!r} expects 4 dipoles on supply {spec.supply!r}, "
-            f"found {len(dipoles)}: {', '.join(d.id for d in dipoles)}."
+            f"Chicane {spec.name!r} expects 4 dipoles on "
+            f"{', '.join(spec.supplies)}, found {len(dipoles)}: "
+            f"{', '.join(d.id for d in dipoles)}."
         )
     if not all(isinstance(dipole, SBend) for dipole in dipoles):
         raise ChicaneError(

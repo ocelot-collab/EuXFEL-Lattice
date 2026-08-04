@@ -75,6 +75,7 @@ class Knobs(BaseModel):
 
     i1: InjectorRFKnob = Field(default_factory=InjectorRFKnob)
     i1_tds: TDSKnob = Field(default_factory=TDSKnob)
+    lh: ChicaneKnob = Field(default_factory=ChicaneKnob)
     bc0: ChicaneKnob = Field(default_factory=ChicaneKnob)
     l1: LinacKnob = Field(default_factory=LinacKnob)
     bc1: ChicaneKnob = Field(default_factory=ChicaneKnob)
@@ -119,6 +120,10 @@ class MachineSetpoints(BaseModel):
     @property
     def i1(self) -> InjectorRFKnob:
         return self.knobs.i1
+
+    @property
+    def lh(self) -> ChicaneKnob:
+        return self.knobs.lh
 
     @property
     def bc0(self) -> ChicaneKnob:
@@ -272,9 +277,9 @@ class MachineSetpoints(BaseModel):
     @classmethod
     def _supply_owner(cls) -> dict[str, str]:
         if not cls._SUPPLY_OWNER:
-            owners: dict[str, str] = {
-                spec.supply: name for name, spec in library.CHICANES.items()
-            }
+            owners: dict[str, str] = {}
+            for name, spec in library.CHICANES.items():
+                owners.update({supply: name for supply in spec.supplies})
             for name, spec in library.LINACS.items():
                 owners.update({supply: name for supply in spec.supplies})
             owners[library.INJECTOR.name] = library.INJECTOR.name
@@ -282,6 +287,43 @@ class MachineSetpoints(BaseModel):
             owners[library.INJECTOR.harmonic] = library.INJECTOR.name
             cls._SUPPLY_OWNER = owners
         return cls._SUPPLY_OWNER
+
+    def _inconsistent_chicanes(self) -> set[str]:
+        """Multi-supply chicanes whose supplies this file sets to different
+        magnitudes, and which therefore cannot be routed through one angle.
+
+        The laser heater chicane is the live case: in every control-room file
+        shipped here, ``BL.3.I1`` runs about 1.75% weak against ``BL.1.I1`` and
+        ``BL.4.I1``.  Folding those into a single angle would quietly discard a
+        setting the machine is really running, so instead the magnets are set
+        individually and a warning names the disagreement.
+        """
+        found: set[str] = set()
+        for name, spec in library.CHICANES.items():
+            if len(spec.supplies) < 2:
+                continue
+            values = {
+                supply: self.elements[supply]
+                for supply in spec.supplies
+                if supply in self.elements
+                and isinstance(self.elements[supply], (int, float))
+            }
+            if len(values) < 2:
+                continue
+            magnitudes = {round(abs(float(v)), 9) for v in values.values()}
+            if len(magnitudes) > 1:
+                found.add(name)
+                warnings.warn(
+                    f"Chicane {name!r} spans {len(spec.supplies)} power "
+                    f"supplies and this file sets them to different "
+                    f"magnitudes ("
+                    + ", ".join(f"{s}={v:+g}" for s, v in sorted(values.items()))
+                    + f"), so it is not a symmetric chicane. The magnets are "
+                    f"being set individually and the {name!r} knob is left "
+                    f"out of it.",
+                    stacklevel=4,
+                )
+        return found
 
     def _route(self, index: LatticeIndex) -> tuple[Knobs, list[tuple], list[str]]:
         """Split ``elements`` into knob settings and plain setpoints.
@@ -294,6 +336,8 @@ class MachineSetpoints(BaseModel):
         plain: list[tuple] = []
         routed: list[str] = []
         owners = self._supply_owner()
+        inconsistent = self._inconsistent_chicanes()
+        routed_here: set[str] = set()
 
         for raw_key, value in self.elements.items():
             key, namespace = _split_namespace(raw_key)
@@ -301,6 +345,12 @@ class MachineSetpoints(BaseModel):
             # An explicit `id:` is a deliberate request for one magnet, so it
             # never routes and never merges with a supply-level setting.
             owner = owners.get(key) if namespace != "id" else None
+
+            # A chicane on several supplies can only be one angle, so it can
+            # only be routed if the supplies agree.  When they do not, the
+            # magnets are set individually and the asymmetry is preserved.
+            if owner in inconsistent:
+                owner = None
 
             if owner is None:
                 plain.append((key, namespace, value))
@@ -313,6 +363,10 @@ class MachineSetpoints(BaseModel):
                 )
 
             knob = getattr(knobs, owner)
+            if owner in routed_here:
+                # Another supply of the same multi-supply chicane. They were
+                # checked for agreement above, so this says nothing new.
+                continue
             if knob.is_set():
                 raise ConflictError(
                     f"{raw_key!r} and knob {owner!r} both set the same "
@@ -328,6 +382,7 @@ class MachineSetpoints(BaseModel):
 
             angle = abs(float(value))
             knob.angle = angle
+            routed_here.add(owner)
             routed.append(
                 f"{raw_key} -> knob {owner} (angle={angle:.9g} rad); "
                 f"drifts between the dipoles rescaled"

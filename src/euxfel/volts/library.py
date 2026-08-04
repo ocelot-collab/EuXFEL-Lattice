@@ -48,13 +48,17 @@ class Spec(BaseModel):
 class ChicaneSpec(Spec):
     """A four-dipole C-chicane.
 
-    Only the power supply and a reference energy are recorded.  The yoke length
-    and the projected gap between dipoles are read from the design lattice, so
-    they cannot fall out of step with the component list.
+    Only the power supplies and a reference energy are recorded.  The yoke
+    length and the projected gap between dipoles are read from the design
+    lattice, so they cannot fall out of step with the component list.
+
+    Several supplies, because a chicane is not always on one: the bunch
+    compressors each sit on a single supply, but the laser heater chicane is
+    spread over three.
     """
 
     name: str
-    supply: str
+    supplies: tuple[str, ...]
     energy: float
     description: str = ""
 
@@ -97,10 +101,12 @@ class InjectorSpec(Spec):
 def _load(path=KNOBS_PATH) -> tuple[dict, dict, dict, InjectorSpec, int]:
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
 
-    chicanes = {
-        name: ChicaneSpec(name=name, **entry)
-        for name, entry in raw.get("chicanes", {}).items()
-    }
+    chicanes = {}
+    for name, entry in raw.get("chicanes", {}).items():
+        entry = dict(entry)
+        # `supply:` for the common single-supply case, `supplies:` for a list.
+        supplies = entry.pop("supplies", None) or [entry.pop("supply")]
+        chicanes[name] = ChicaneSpec(name=name, supplies=tuple(supplies), **entry)
 
     linacs = {}
     for name, entry in raw.get("linacs", {}).items():
@@ -126,6 +132,7 @@ CHICANES, LINACS, TDS, INJECTOR, LIBRARY_VERSION = _load()
 KNOB_NAMES: tuple[str, ...] = (
     "i1",
     "i1_tds",
+    "lh",
     "bc0",
     "l1",
     "bc1",

@@ -816,3 +816,74 @@ def test_the_dx12_file_still_names_a_magnet_that_does_not_exist(cell):
     assert "QI.62.I1" in read_sascha(SASCHA_DIR / "DX12_I1D.txt")
     with pytest.raises(UnknownKeyError, match="QI.62.I1"):
         MachineSetpoints.from_sascha(SASCHA_DIR / "DX12_I1D.txt", cell)
+
+
+# --------------------------------------------------------------------------- #
+# The laser heater chicane, which spans three power supplies
+# --------------------------------------------------------------------------- #
+
+
+def test_a_chicane_can_span_several_supplies(index):
+    """LH's four dipoles sit on BL.1.I1 (two of them), BL.3.I1 and BL.4.I1."""
+    dipoles, _ = chicane_dipoles(index, CHICANES["lh"])
+    assert [d.id for d in dipoles] == [
+        "BL.48I.I1",
+        "BL.48II.I1",
+        "BL.50I.I1",
+        "BL.50II.I1",
+    ]
+    assert {d.ps_id for d in dipoles} == {"BL.1.I1", "BL.3.I1", "BL.4.I1"}
+
+
+def test_polarity_comes_from_design_kicks_not_per_supply_ratios(index):
+    """The ratios within each supply are (1, -1), (1,) and (1,).
+
+    Concatenating those would give [+, -, +, +]; the chicane is [-, +, +, -].
+    Only the design kicks place the supplies against each other.
+    """
+    _, factors = chicane_dipoles(index, CHICANES["lh"])
+    assert [f > 0 for f in factors] == [False, True, True, False]
+
+    ChicaneKnob(angle=0.05).apply(index, CHICANES["lh"])
+    dipoles, _ = chicane_dipoles(index, CHICANES["lh"])
+    assert [round(d.angle, 9) for d in dipoles] == [-0.05, 0.05, 0.05, -0.05]
+
+
+def test_the_lh_knob_reaches_a_requested_r56(index):
+    spec = CHICANES["lh"]
+    ChicaneKnob(r56=-0.002).apply(index, spec)
+    dipoles, _ = chicane_dipoles(index, spec)
+    assert measure_r56(index, dipoles, spec.energy) == pytest.approx(-0.002, abs=1e-12)
+
+
+@pytest.mark.parametrize("path", SASCHA_FILES, ids=lambda p: p.name)
+def test_an_asymmetric_lh_chicane_is_not_routed(path, cell):
+    """Every shipped file runs BL.3.I1 about 1.75 % weak against its partners.
+
+    Folding that into one angle would discard a setting the machine is really
+    running, so those magnets are set individually instead and the file still
+    round trips byte for byte.
+    """
+    values = read_sascha(path)
+    magnitudes = {round(abs(values[s]), 9) for s in ("BL.1.I1", "BL.3.I1", "BL.4.I1")}
+    assert len(magnitudes) > 1, "expected the shipped files to be asymmetric here"
+
+    with pytest.warns(UserWarning, match="spans 3 power supplies"):
+        setpoints = MachineSetpoints.from_sascha(path, cell)
+        exported = setpoints.to_sascha(cell, keys=list(values))
+    assert exported == path.read_text()
+
+
+def test_a_symmetric_multi_supply_chicane_does_route(cell):
+    """When the supplies agree, the knob takes it as one angle."""
+    setpoints = MachineSetpoints(
+        elements={"BL.1.I1": -0.08, "BL.3.I1": 0.08, "BL.4.I1": -0.08}
+    )
+    index = LatticeIndex.from_cell(cell)
+    setpoints.apply(index)
+
+    dipoles, _ = chicane_dipoles(index, CHICANES["lh"])
+    assert [round(abs(d.angle), 9) for d in dipoles] == [0.08] * 4
+    # Routed, so the drifts moved with it and the chicane still closes.
+    end = survey_end(index, dipoles)
+    assert end["X"] == pytest.approx(0.0, abs=1e-7)

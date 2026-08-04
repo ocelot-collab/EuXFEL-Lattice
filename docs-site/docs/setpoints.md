@@ -124,6 +124,7 @@ named attributes — so editors can complete them and `setpoints.bc2.chrip` is a
 |---|---|---|
 | `i1` | `E1`, `chirp`, `curvature`, `skewness` | A1 (1.3 GHz) + AH1 (3.9 GHz), solved together |
 | `bc0`, `bc1`, `bc2` | exactly one of `r56`, `angle`, `rho` | The four-dipole bunch compressors |
+| `lh` | exactly one of `r56`, `angle`, `rho` | The laser heater chicane, with the LH undulator in its middle |
 | `l1`, `l2`, `l3` | `sum_voltage`, `chirp` | A2 / A3–A5 / A6–A25 |
 | `i1_tds`, `b1_tds`, `b2_tds` | `voltage`, `phase` | The transverse deflecting structures; `b2_tds` drives both B2 structures |
 
@@ -139,6 +140,25 @@ absorb the change; a BPM between the dipoles has a fixed physical length.
 
 The RF knobs wrap OCELOT's `beam2rf`/`rf2beam` and their linac wrappers, which
 are exact inverses, so a chirp survives a round trip to machine precision.
+
+### A chicane need not be on one power supply
+
+The bunch compressors each sit on a single supply, so `BB.1.I1` names all four
+of BC0's dipoles. The laser heater is spread over three — `BL.1.I1` drives two
+magnets, `BL.3.I1` and `BL.4.I1` one each — which has two consequences.
+
+Polarity comes from the **design kicks**, not from the ratios within each
+supply. Those ratios are `(1, -1)`, `(1,)` and `(1,)`, which say nothing about
+how the supplies sit against one another; multiplying by each supply's design
+reference recovers `[−, +, +, −]`, which is the chicane.
+
+And a file can disagree with itself. In every control-room file shipped here,
+`BL.3.I1` runs about 1.75 % weak against its two partners, so those four magnets
+are **not** a symmetric chicane in practice. A single angle cannot express that,
+so when a file sets a multi-supply chicane's supplies to different magnitudes
+the magnets are applied individually, a warning names the disagreement, and the
+`lh` knob stays out of it — which is why those files still round trip byte for
+byte. Set `lh` yourself and it drives all four as a proper chicane.
 
 ### What the linac parameters mean
 
