@@ -127,6 +127,7 @@ named attributes — so editors can complete them and `setpoints.bc2.chrip` is a
 | `lh` | exactly one of `r56`, `angle`, `rho` | The laser heater chicane, with the LH undulator in its middle |
 | `l1`, `l2`, `l3` | `sum_voltage`, `chirp` | A2 / A3–A5 / A6–A25 |
 | `i1_tds`, `b1_tds`, `b2_tds` | `voltage`, `phase` | The transverse deflecting structures; `b2_tds` drives both B2 structures |
+| `modules["A7"]` | `voltage`, `phase` | One RF module on its own; see below |
 
 Assigning one chicane parameter clears the others, so the last thing you set is
 what is used. `report()` gives all three at once for display.
@@ -140,6 +141,33 @@ absorb the change; a BPM between the dipoles has a fixed physical length.
 
 The RF knobs wrap OCELOT's `beam2rf`/`rf2beam` and their linac wrappers, which
 are exact inverses, so a chirp survives a round trip to machine precision.
+
+### Setting a single RF module
+
+`l3` drives all twenty modules of L3 together, which is usually what you want.
+When one module has to differ — detuned, or off — set it on its own:
+
+```python
+from euxfel.volts.knobs import RFModuleKnob
+setpoints.modules["A7"] = RFModuleKnob(voltage=0.5, phase=10.0)
+```
+
+`voltage` is the module total in GV, divided across its cavities, and `phase` is
+in degrees. Unlike `l1`/`l2`/`l3` there is no beam-parameter inversion: this
+writes what you give it.
+
+The modules are `A1`, `AH1`, and `A2` through `A25`, derived from the linac and
+injector specs rather than listed separately so the two cannot drift apart.
+
+A module belongs to a linac, so setting both is refused:
+
+```
+Knobs 'l3' and 'modules.A7' both set C.A7.2.2.L3.phi. A module belongs to its
+linac, so set the linac for the section as a whole or the module on its own,
+not both.
+```
+
+Set the linac for the section, or the module alone — not both.
 
 ### A chicane need not be on one power supply
 

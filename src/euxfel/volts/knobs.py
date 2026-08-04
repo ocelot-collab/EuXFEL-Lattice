@@ -43,7 +43,13 @@ from ocelot.utils.acc_utils import (
 from pydantic import BaseModel, ConfigDict, model_validator
 from scipy.optimize import brentq
 
-from .library import ChicaneSpec, InjectorSpec, LinacSpec, TDSSpec
+from .library import (
+    ChicaneSpec,
+    InjectorSpec,
+    LinacSpec,
+    RFModuleSpec,
+    TDSSpec,
+)
 
 __all__ = [
     "ChicaneError",
@@ -51,6 +57,7 @@ __all__ = [
     "InjectorRFKnob",
     "Knob",
     "LinacKnob",
+    "RFModuleKnob",
     "TDSKnob",
 ]
 
@@ -648,5 +655,50 @@ class TDSKnob(Knob):
         return {
             (structure.id, attribute)
             for structure in _cavities(index, [spec.supply])
+            for attribute in ("v", "phi")
+        }
+
+
+class RFModuleKnob(Knob):
+    """One RF module, set directly rather than through its linac.
+
+    ``voltage`` is the module total in GV, divided across its cavities, and
+    ``phase`` is in degrees -- the same convention as :class:`LinacKnob` and
+    :class:`TDSKnob`.  Unlike ``LinacKnob`` there is no beam-parameter
+    inversion: this writes what you give it.
+
+    Every module already belongs to a linac (or, for A1 and AH1, to the
+    injector), so setting both is a conflict and is refused.  Use this when a
+    single module needs to differ -- one detuned, or one off -- and the linac
+    knob when the section moves as a whole.
+    """
+
+    _REQUIRED: ClassVar[tuple[str, ...]] = ("voltage", "phase")
+
+    voltage: float | None = None
+    phase: float | None = None
+
+    def is_set(self) -> bool:
+        return all(getattr(self, name) is not None for name in self._REQUIRED)
+
+    def missing(self) -> tuple[str, ...]:
+        given = [name for name in self._REQUIRED if getattr(self, name) is not None]
+        if not given or len(given) == len(self._REQUIRED):
+            return ()
+        return tuple(name for name in self._REQUIRED if getattr(self, name) is None)
+
+    def apply(self, index, spec: RFModuleSpec) -> None:
+        if not self.is_set():
+            return
+        _write_rf(_cavities(index, [spec.supply]), self.voltage, self.phase)
+
+    def read(self, index, spec: RFModuleSpec) -> RFModuleKnob:
+        voltage, phase = _read_rf(_cavities(index, [spec.supply]), spec.name)
+        return RFModuleKnob(voltage=voltage, phase=phase)
+
+    def owns(self, index, spec: RFModuleSpec) -> set[tuple[str, str]]:
+        return {
+            (cavity.id, attribute)
+            for cavity in _cavities(index, [spec.supply])
             for attribute in ("v", "phi")
         }

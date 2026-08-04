@@ -45,7 +45,13 @@ from pydantic import BaseModel, ConfigDict, Field
 from . import library
 from .index import LatticeIndex
 from .kicks import is_sascha_representable
-from .knobs import ChicaneKnob, InjectorRFKnob, LinacKnob, TDSKnob
+from .knobs import (
+    ChicaneKnob,
+    InjectorRFKnob,
+    LinacKnob,
+    RFModuleKnob,
+    TDSKnob,
+)
 from .sascha import dumps_sascha, read_sascha, sascha_sign, write_sascha
 
 __all__ = ["ConflictError", "Knobs", "MachineSetpoints"]
@@ -85,13 +91,40 @@ class Knobs(BaseModel):
     b2_tds: TDSKnob = Field(default_factory=TDSKnob)
     l3: LinacKnob = Field(default_factory=LinacKnob)
 
+    #: Individual RF modules, for when one has to differ from its linac.
+    #: Keyed by the control-room name -- A1, AH1, A2 ... A25.
+    modules: dict[str, RFModuleKnob] = Field(default_factory=dict)
+
     def items(self):
-        """``(name, knob)`` for every knob, in beamline order."""
-        return [(name, getattr(self, name)) for name in library.KNOB_NAMES]
+        """``(path, knob)`` for every knob, in beamline order.
+
+        Modules come last and are addressed by path -- ``modules.A7`` -- since
+        there are twenty-six of them and naming each as a field would swamp the
+        ten that describe the machine's sections.
+        """
+        named = [(name, getattr(self, name)) for name in library.KNOB_NAMES]
+        modules = [
+            (f"{library.MODULE_PREFIX}{name}", knob)
+            for name, knob in self.modules.items()
+        ]
+        return named + modules
 
     def set_items(self):
-        """``(name, knob)`` for the knobs that carry a setting."""
-        return [(name, knob) for name, knob in self.items() if knob.is_set()]
+        """``(path, knob)`` for the knobs that carry a setting."""
+        return [(path, knob) for path, knob in self.items() if knob.is_set()]
+
+    def get(self, path: str):
+        """A knob by path, so that ``modules.A7`` works as well as ``bc2``."""
+        if path.startswith(library.MODULE_PREFIX):
+            return self.modules[path[len(library.MODULE_PREFIX) :]]
+        return getattr(self, path)
+
+    def set(self, path: str, knob) -> None:
+        """Replace a knob by path."""
+        if path.startswith(library.MODULE_PREFIX):
+            self.modules[path[len(library.MODULE_PREFIX) :]] = knob
+        else:
+            setattr(self, path, knob)
 
 
 class MachineSetpoints(BaseModel):
@@ -160,6 +193,16 @@ class MachineSetpoints(BaseModel):
     @property
     def b2_tds(self) -> TDSKnob:
         return self.knobs.b2_tds
+
+    @property
+    def modules(self) -> dict[str, RFModuleKnob]:
+        """Individual RF modules, keyed A1, AH1, A2 ... A25.
+
+        Assign one to override a single module: ``setpoints.modules["A7"] =
+        RFModuleKnob(voltage=0.5, phase=0.0)``.  Its linac must then be left
+        unset, since the two would fight over the same cavities.
+        """
+        return self.knobs.modules
 
     def __getitem__(self, key: str) -> float | dict[str, float]:
         return self.elements[key]
@@ -230,7 +273,7 @@ class MachineSetpoints(BaseModel):
 
         for name, knob in setpoints.knobs.items():
             try:
-                setattr(setpoints.knobs, name, knob.read(index, library.spec_for(name)))
+                setpoints.knobs.set(name, knob.read(index, library.spec_for(name)))
             except Exception as error:  # a section absent from this sequence
                 warnings.warn(
                     f"Could not read knob {name!r} from this lattice: {error}",
@@ -259,7 +302,7 @@ class MachineSetpoints(BaseModel):
 
         for name, knob in child.knobs.items():
             if knob.is_set():
-                setattr(merged.knobs, name, knob.model_copy(deep=True))
+                merged.knobs.set(name, knob.model_copy(deep=True))
 
         merged.elements.update(child.elements)
 
@@ -420,6 +463,18 @@ class MachineSetpoints(BaseModel):
         for name, knob in knobs.set_items():
             spec = library.spec_for(name)
             for target in knob.owns(index, spec):
+                # Two knobs over the same magnet: `l3` drives A6 to A25 as one
+                # section while `modules.A7` drives A7 alone, so setting both
+                # leaves the result depending on which is applied last.
+                other = claimed.get(target)
+                if other is not None and other != name:
+                    element, attribute = target
+                    raise ConflictError(
+                        f"Knobs {other!r} and {name!r} both set "
+                        f"{element}.{attribute}. A module belongs to its linac, "
+                        f"so set the linac for the section as a whole or the "
+                        f"module on its own, not both."
+                    )
                 claimed[target] = name
 
         # Reject a plain setpoint that fights a knob before changing anything.
@@ -540,10 +595,14 @@ class MachineSetpoints(BaseModel):
 
     def to_dict(self, *, include_unset: bool = False) -> dict[str, Any]:
         data = self.model_dump(exclude_none=True, exclude_defaults=not include_unset)
-        knobs = {
-            name: knob.model_dump(exclude_none=True)
-            for name, knob in self.knobs.set_items()
-        }
+        knobs: dict[str, Any] = {}
+        for path, knob in self.knobs.set_items():
+            dumped = knob.model_dump(exclude_none=True)
+            if path.startswith(library.MODULE_PREFIX):
+                name = path[len(library.MODULE_PREFIX) :]
+                knobs.setdefault("modules", {})[name] = dumped
+            else:
+                knobs[path] = dumped
         if knobs:
             data["knobs"] = knobs
         else:

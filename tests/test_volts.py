@@ -887,3 +887,75 @@ def test_a_symmetric_multi_supply_chicane_does_route(cell):
     # Routed, so the drifts moved with it and the chicane still closes.
     end = survey_end(index, dipoles)
     assert end["X"] == pytest.approx(0.0, abs=1e-7)
+
+
+# --------------------------------------------------------------------------- #
+# Per-module RF
+# --------------------------------------------------------------------------- #
+
+
+def test_every_module_is_derived_from_a_linac_or_the_injector():
+    """The module list is derived, not listed, so it cannot drift."""
+    from euxfel.volts.library import INJECTOR, LINACS, MODULES
+
+    supplies = {spec.supply for spec in MODULES.values()}
+    expected = {s for linac in LINACS.values() for s in linac.supplies}
+    expected |= {INJECTOR.fundamental, INJECTOR.harmonic}
+    assert supplies == expected
+    assert MODULES["A7"].linac == "l3"
+    assert MODULES["AH1"].linac == "i1"
+
+
+def test_a_module_can_be_set_on_its_own(cell):
+    from euxfel.volts.knobs import RFModuleKnob
+
+    setpoints = MachineSetpoints()
+    setpoints.modules["A7"] = RFModuleKnob(voltage=0.5, phase=10.0)
+    index = LatticeIndex.from_cell(cell)
+    setpoints.apply(index)
+
+    a7 = index.resolve("C.A7.L3", namespace="ps").elements
+    assert len(a7) == 32
+    assert all(c.v == pytest.approx(0.5 / 32) for c in a7)
+    assert all(c.phi == 10.0 for c in a7)
+
+    # Its neighbours in the same linac are untouched.
+    a6 = index.resolve("C.A6.L3", namespace="ps").elements
+    assert all(c.v == pytest.approx(0.018125) for c in a6)
+
+
+def test_a_module_and_its_linac_cannot_both_be_set(cell, index):
+    """Otherwise the result depends on which is applied last."""
+    from euxfel.volts.knobs import RFModuleKnob
+
+    setpoints = MachineSetpoints()
+    setpoints.modules["A7"] = RFModuleKnob(voltage=0.5, phase=0.0)
+    setpoints.l3.sum_voltage, setpoints.l3.chirp = 11.6, 0.0
+
+    with pytest.raises(ConflictError, match="both set"):
+        setpoints.apply(index)
+
+
+def test_a_module_knob_round_trips(index):
+    from euxfel.volts.knobs import RFModuleKnob
+    from euxfel.volts.library import MODULES
+
+    knob = RFModuleKnob(voltage=0.42, phase=-15.0)
+    knob.apply(index, MODULES["A4"])
+    back = knob.read(index, MODULES["A4"])
+    assert back.voltage == pytest.approx(0.42)
+    assert back.phase == pytest.approx(-15.0)
+
+
+def test_modules_serialise_under_their_own_key(tmp_path, cell):
+    from euxfel.volts.knobs import RFModuleKnob
+
+    setpoints = MachineSetpoints()
+    setpoints.modules["A7"] = RFModuleKnob(voltage=0.5, phase=10.0)
+    path = tmp_path / "one_module.yaml"
+    setpoints.to_yaml(path)
+
+    assert "modules:" in path.read_text()
+    reloaded = MachineSetpoints.from_yaml(path)
+    assert reloaded.modules["A7"].voltage == pytest.approx(0.5)
+    assert reloaded.resolve(cell) == setpoints.resolve(cell)

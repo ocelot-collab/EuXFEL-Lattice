@@ -21,10 +21,13 @@ __all__ = [
     "INJECTOR",
     "KNOB_NAMES",
     "LINACS",
+    "MODULES",
+    "MODULE_PREFIX",
     "TDS",
     "ChicaneSpec",
     "InjectorSpec",
     "LinacSpec",
+    "RFModuleSpec",
     "TDSSpec",
     "spec_for",
 ]
@@ -81,6 +84,20 @@ class TDSSpec(Spec):
     description: str = ""
 
 
+class RFModuleSpec(Spec):
+    """A single RF module -- one cryomodule's worth of cavities on one supply.
+
+    Derived from the linac and injector specs rather than listed separately, so
+    the two cannot drift apart: every supply a linac names is one of its
+    modules.
+    """
+
+    name: str
+    supply: str
+    linac: str
+    description: str = ""
+
+
 class InjectorSpec(Spec):
     """The A1 + AH1 pair, solved together.
 
@@ -128,6 +145,30 @@ def _load(path=KNOBS_PATH) -> tuple[dict, dict, dict, InjectorSpec, int]:
 
 CHICANES, LINACS, TDS, INJECTOR, LIBRARY_VERSION = _load()
 
+
+def _module_name(supply: str) -> str:
+    """``C.A2.L1`` -> ``A2``, ``C3.AH1.I1`` -> ``AH1``."""
+    return supply.split(".")[1]
+
+
+def _modules() -> dict[str, RFModuleSpec]:
+    found: dict[str, RFModuleSpec] = {}
+    for linac in LINACS.values():
+        for supply in linac.supplies:
+            name = _module_name(supply)
+            found[name] = RFModuleSpec(name=name, supply=supply, linac=linac.name)
+    for supply in (INJECTOR.fundamental, INJECTOR.harmonic):
+        name = _module_name(supply)
+        found[name] = RFModuleSpec(name=name, supply=supply, linac=INJECTOR.name)
+    return found
+
+
+#: Every RF module, keyed by the name the control room uses: A1, AH1, A2 ... A25.
+MODULES: dict[str, RFModuleSpec] = _modules()
+
+#: How a module knob is addressed in a knob path, e.g. ``modules.A7``.
+MODULE_PREFIX = "modules."
+
 #: Every knob name, in beamline order.
 KNOB_NAMES: tuple[str, ...] = (
     "i1",
@@ -144,8 +185,19 @@ KNOB_NAMES: tuple[str, ...] = (
 )
 
 
-def spec_for(name: str) -> ChicaneSpec | LinacSpec | TDSSpec | InjectorSpec:
-    """The specification for a knob name."""
+def spec_for(
+    name: str,
+) -> ChicaneSpec | LinacSpec | TDSSpec | InjectorSpec | RFModuleSpec:
+    """The specification for a knob name or path."""
+    if name.startswith(MODULE_PREFIX):
+        module = name[len(MODULE_PREFIX) :]
+        try:
+            return MODULES[module]
+        except KeyError:
+            raise KeyError(
+                f"{module!r} is not a known RF module. Known modules: "
+                f"{', '.join(MODULES)}."
+            ) from None
     for table in (CHICANES, LINACS, TDS):
         if name in table:
             return table[name]
