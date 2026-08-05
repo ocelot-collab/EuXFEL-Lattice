@@ -119,8 +119,12 @@ class Knobs(BaseModel):
             return self.modules[path[len(library.MODULE_PREFIX) :]]
         return getattr(self, path)
 
-    def set(self, path: str, knob) -> None:
-        """Replace a knob by path."""
+    def replace(self, path: str, knob) -> None:
+        """Swap in a whole knob by path.
+
+        Named ``replace`` rather than ``set`` so it does not read like
+        :meth:`Knob.set`, which sets parameters *on* a knob.
+        """
         if path.startswith(library.MODULE_PREFIX):
             self.modules[path[len(library.MODULE_PREFIX) :]] = knob
         else:
@@ -273,7 +277,7 @@ class MachineSetpoints(BaseModel):
 
         for name, knob in setpoints.knobs.items():
             try:
-                setpoints.knobs.set(name, knob.read(index, library.spec_for(name)))
+                setpoints.knobs.replace(name, knob.read(index, library.spec_for(name)))
             except Exception as error:  # a section absent from this sequence
                 warnings.warn(
                     f"Could not read knob {name!r} from this lattice: {error}",
@@ -302,7 +306,7 @@ class MachineSetpoints(BaseModel):
 
         for name, knob in child.knobs.items():
             if knob.is_set():
-                merged.knobs.set(name, knob.model_copy(deep=True))
+                merged.knobs.replace(name, knob.model_copy(deep=True))
 
         merged.elements.update(child.elements)
 

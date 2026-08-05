@@ -959,3 +959,44 @@ def test_modules_serialise_under_their_own_key(tmp_path, cell):
     reloaded = MachineSetpoints.from_yaml(path)
     assert reloaded.modules["A7"].voltage == pytest.approx(0.5)
     assert reloaded.resolve(cell) == setpoints.resolve(cell)
+
+
+# --------------------------------------------------------------------------- #
+# The compact setter
+# --------------------------------------------------------------------------- #
+
+
+def test_set_takes_several_parameters_at_once():
+    setpoints = MachineSetpoints()
+    setpoints.b2_tds.set(voltage=0.005, phase=90.0)
+    assert setpoints.b2_tds.voltage == pytest.approx(0.005)
+    assert setpoints.b2_tds.phase == pytest.approx(90.0)
+
+
+def test_set_returns_the_knob_so_it_can_be_chained():
+    setpoints = MachineSetpoints()
+    assert setpoints.l1.set(sum_voltage=0.57872, chirp=-9.1) is setpoints.l1
+
+
+def test_set_still_clears_a_chicane_s_other_parameters():
+    """`.set(angle=...)` must behave like `.angle = ...`, not accumulate."""
+    setpoints = MachineSetpoints()
+    setpoints.bc2.set(r56=-0.03)
+    assert setpoints.bc2.r56 == pytest.approx(-0.03)
+
+    setpoints.bc2.set(angle=0.04)
+    assert setpoints.bc2.angle == pytest.approx(0.04)
+    assert setpoints.bc2.r56 is None
+
+
+def test_set_refuses_two_ways_of_saying_the_same_thing():
+    """Assigning both in turn would silently keep whichever came last."""
+    setpoints = MachineSetpoints()
+    with pytest.raises(ValueError, match="only one can be given"):
+        setpoints.bc0.set(r56=-0.03, angle=0.04)
+
+
+def test_set_names_the_valid_parameters_when_one_is_misspelt():
+    setpoints = MachineSetpoints()
+    with pytest.raises(ValueError, match="no parameter 'chrip'"):
+        setpoints.l2.set(sum_voltage=1.7, chrip=-9.3)

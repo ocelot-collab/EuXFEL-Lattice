@@ -103,6 +103,37 @@ class Knob(BaseModel):
         """
         return ()
 
+    def set(self, **values) -> Knob:
+        """Set several parameters at once, and return the knob.
+
+            setpoints.b2_tds.set(voltage=0.005, phase=90.0)
+
+        Equivalent to assigning each in turn, so a chicane still clears the
+        other two when given one of ``r56``/``angle``/``rho`` -- but passing
+        more than one of them is refused rather than silently keeping
+        whichever happened to be applied last.
+        """
+        fields = type(self).model_fields
+        unknown = [name for name in values if name not in fields]
+        if unknown:
+            raise ValueError(
+                f"{type(self).__name__} has no parameter "
+                f"{', '.join(repr(n) for n in sorted(unknown))}. "
+                f"It takes: {', '.join(sorted(fields))}."
+            )
+
+        exclusive = getattr(type(self), "_EXCLUSIVE", ())
+        clashing = sorted(name for name in values if name in exclusive)
+        if len(clashing) > 1:
+            raise ValueError(
+                f"{', '.join(clashing)} are three ways of saying the same "
+                f"thing, so only one can be given."
+            )
+
+        for name, value in values.items():
+            setattr(self, name, value)
+        return self
+
     def apply(self, index, spec) -> None:
         raise NotImplementedError
 

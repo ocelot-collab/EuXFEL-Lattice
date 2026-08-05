@@ -132,6 +132,18 @@ named attributes — so editors can complete them and `setpoints.bc2.chrip` is a
 Assigning one chicane parameter clears the others, so the last thing you set is
 what is used. `report()` gives all three at once for display.
 
+Every knob takes several parameters at once, which is usually shorter:
+
+```python
+setpoints.b2_tds.set(voltage=0.005, phase=90.0)
+setpoints.i1.set(E1=0.130, chirp=-8.92, curvature=180.5, skewness=20332)
+```
+
+`set` behaves exactly like assigning each in turn — so a chicane still clears
+its other two — and returns the knob. Passing more than one of `r56`, `angle`
+and `rho` is refused rather than quietly keeping the last, and a misspelt name
+raises listing the ones that exist.
+
 An R56 is solved numerically against the real transfer matrix, seeded from the
 small-angle closed form, and reaches the requested value to ~1e-12 m. The drifts
 between the dipoles rescale to hold the projected geometry fixed — the magnets
