@@ -79,10 +79,42 @@ Measured over the current lattice (8178 elements, 502 supplies):
 - Elements without a `ps_id` (markers, drifts, monitors) are reachable by `id`
   only.
 
-### Ganged magnets
+### Reading is free, writing is guarded
 
-A magnet whose supply feeds others **cannot** be set on its own in the real
-machine, so trying to raises:
+Every name in the machine resolves. Looking a magnet up tells you nothing you
+should not know, and 1287 element ids share a power supply, so refusing to name
+them would make the beamline useless for reading:
+
+```python
+group = beamline["BB.96.I1"]
+group.read()          # fine, always
+group.split_from      # 'BB.1.I1' -- it shares a supply
+group.owned_by        # 'bc0'     -- it is a chicane dipole
+```
+
+What is refused is **writing**, in the two cases where the kick that lands would
+not be a state the machine could hold.
+
+#### A knob owns the geometry
+
+A chicane's dipole angle cannot move on its own: the drifts between the dipoles
+must lengthen with it, or the chicane stops closing. Measured on BC0, writing
+`BB.1.I1` directly leaves the exit **5.9 mm** downstream of where it belongs and
+R56 **0.4 %** out. So `Group.write` refuses and names the knob that does it
+properly:
+
+```
+'BB.1.I1' feeds the 4 dipoles of chicane 'bc0', whose geometry cannot be set
+one magnet at a time: the drifts between the dipoles have to lengthen with the
+angle or the chicane stops closing -- the survey downstream moves and R56 comes
+out wrong. Set the chicane instead:
+    setpoints.bc0.r56 = <value>      # or .angle, or .rho
+```
+
+Only chicanes are guarded — a cavity voltage has no drifts to move, so
+`beamline["C.A2.L1"].write(0.1)` just works.
+
+#### The magnet shares a supply
 
 ```
 'BB.96.I1' shares power supply 'BB.1.I1' with BB.98.I1, BB.100.I1, BB.101.I1
@@ -96,7 +128,15 @@ or, to set this one magnet anyway (simulation only):
 The `id:` prefix is the deliberate opt-out, for gradient-error and single-magnet
 sensitivity studies. Such an optics cannot be exported to the Sascha format,
 which stores one value per supply, and `to_sascha` refuses rather than losing
-the split.
+the split. In Python the equivalent is `write(..., ignore_knob=True)`.
+
+!!! note "Why a file can still set a chicane dipole"
+    Applying a setpoints file uses that same escape hatch, because by then the
+    decision has been made: what could be routed to a knob already has been, and
+    what is left is reported. The laser heater is the case that needs it — every
+    shipped control-room file sets its three supplies to slightly different
+    magnitudes, which is not a symmetric chicane, so its magnets are written
+    individually and a warning says so.
 
 ### Design ratios are preserved
 

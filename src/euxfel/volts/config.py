@@ -485,9 +485,7 @@ class MachineSetpoints(BaseModel):
 
         # Reject a plain setpoint that fights a knob before changing anything.
         for key, namespace, value in plain:
-            group = beamline.resolve(
-                key, namespace=namespace, allow_split=namespace == "id"
-            )
+            group = beamline.resolve(key, namespace=namespace)
             attributes = (
                 set(value) if isinstance(value, dict) else _kick_attributes(group)
             )
@@ -505,15 +503,20 @@ class MachineSetpoints(BaseModel):
 
         moved_geometry = []
         for key, namespace, value in plain:
-            group = beamline.resolve(
-                key, namespace=namespace, allow_split=namespace == "id"
-            )
+            group = beamline.resolve(key, namespace=namespace)
             if _moves_geometry(group, value):
                 moved_geometry.append(key)
             if isinstance(value, dict):
                 _write_attributes(group, value, key)
             else:
-                group.write(float(value))
+                # `ignore_knob` because everything that reaches here has already
+                # been decided: `_route` sent what it could to the knobs, an
+                # `id:` prefix is an explicit request for the split, and the
+                # warning below reports whatever geometry this moves.  Without
+                # it the laser heater's three supplies -- which every shipped
+                # control-room file sets to different magnitudes, so they cannot
+                # be routed -- would refuse to load at all.
+                group.write(float(value), ignore_knob=True)
 
         if moved_geometry:
             warnings.warn(
@@ -643,8 +646,7 @@ class MachineSetpoints(BaseModel):
             key, namespace = _split_namespace(raw_key)
             if namespace != "id":
                 continue
-            group = beamline.resolve(key, namespace="id", allow_split=True)
-            if beamline.siblings(group.elements[0]):
+            if beamline.resolve(key, namespace="id").split_from:
                 split.append(raw_key)
         if split:
             raise ValueError(

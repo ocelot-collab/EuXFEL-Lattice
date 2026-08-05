@@ -16,11 +16,12 @@ from ocelot.cpbd.magnetic_lattice import MagneticLattice
 
 from euxfel.volts import (
     AmbiguousKeyError,
+    Beamline,
     ChicaneKnob,
     ConflictError,
     GangedMagnetError,
     InjectorRFKnob,
-    Beamline,
+    KnobOwnedError,
     LinacKnob,
     MachineSetpoints,
     UnknownKeyError,
@@ -194,9 +195,10 @@ def test_element_id_and_power_supply_reach_the_same_magnet(beamline):
 
 
 def test_supply_feeding_four_dipoles_sets_all_four(beamline):
+    """`ignore_knob` because this is about the polarity pattern, not the drifts."""
     group = beamline.resolve("BB.1.I1")
     assert len(group) == 4
-    group.write(0.1)
+    group.write(0.1, ignore_knob=True)
     assert [round(read_kick(e), 9) for e in group.elements] == [0.1, -0.1, -0.1, 0.1]
 
 
@@ -218,7 +220,7 @@ def test_a_name_in_both_namespaces_is_never_ambiguous(beamline):
 def _resolves_as_id(beamline, key):
     try:
         beamline.resolve(key, namespace="id")
-    except (UnknownKeyError, GangedMagnetError, AmbiguousKeyError):
+    except (UnknownKeyError, AmbiguousKeyError):
         # A handful of ids repeat across the branches (fast kickers), and a
         # repeated id cannot be addressed on its own.
         return False
@@ -226,22 +228,70 @@ def _resolves_as_id(beamline, key):
 
 
 # --------------------------------------------------------------------------- #
-# Ganged magnets
+# Reading is free, writing is guarded
 # --------------------------------------------------------------------------- #
 
 
-def test_setting_one_magnet_of_a_shared_supply_raises_and_names_its_siblings(beamline):
-    with pytest.raises(GangedMagnetError) as error:
-        beamline.resolve("BB.96.I1")
-    message = str(error.value)
-    assert "BB.1.I1" in message
-    for sibling in ("BB.98.I1", "BB.100.I1", "BB.101.I1"):
-        assert sibling in message
-
-
-def test_the_explicit_id_form_splits_a_shared_supply(beamline):
-    group = beamline.resolve("BB.96.I1", allow_split=True)
+def test_every_element_id_resolves_even_when_it_shares_a_supply(beamline):
+    """Looking a magnet up is harmless, so nothing about a name refuses it."""
+    group = beamline.resolve("BB.96.I1")
     assert group.ids == ("BB.96.I1",)
+    assert group.split_from == "BB.1.I1"
+    assert group.owned_by == "bc0"
+    assert group.read() != 0
+
+
+def test_setting_one_magnet_of_a_shared_supply_raises_and_names_its_siblings(beamline):
+    """QI.73.I1 and QI.78.I1 are both on QI.18.I1; neither moves alone."""
+    group = beamline.resolve("QI.73.I1")
+    assert group.split_from == "QI.18.I1"
+    assert group.owned_by is None, "wanted the ganged guard, not the geometry one"
+    with pytest.raises(GangedMagnetError) as error:
+        group.write(0.1)
+    message = str(error.value)
+    assert "QI.18.I1" in message
+    assert "QI.78.I1" in message
+
+
+def test_writing_a_chicane_supply_refuses_and_names_the_knob(beamline):
+    """The 5.9 mm survey error the guard exists to prevent."""
+    with pytest.raises(KnobOwnedError) as error:
+        beamline["BB.1.I1"].write(0.1366)
+    message = str(error.value)
+    assert "bc0" in message
+    assert "setpoints.bc0.r56" in message
+
+
+def test_writing_one_chicane_dipole_refuses_for_the_geometry_first(beamline):
+    """It is both ganged and knob-owned; the knob is the more useful answer."""
+    with pytest.raises(KnobOwnedError, match="bc0"):
+        beamline["BB.96.I1"].write(0.1366)
+
+
+def test_ignore_knob_writes_anyway(beamline):
+    """The escape hatch `apply` uses for the laser heater."""
+    group = beamline["BB.1.I1"]
+    group.write(0.1366, ignore_knob=True)
+    assert round(abs(group.read()), 6) == 0.1366
+
+
+@pytest.mark.parametrize("name", ["lh", "bc0", "bc1", "bc2"])
+def test_every_chicane_supply_is_owned(name, beamline):
+    """Including the laser heater's three, which is why apply must bypass."""
+    for supply in CHICANES[name].supplies:
+        assert beamline[supply].owned_by == name
+
+
+def test_cavity_supplies_are_not_owned(beamline):
+    """Only geometry is guarded -- a cavity voltage has no drifts to move."""
+    assert beamline["C.A2.L1"].owned_by is None
+    beamline["C.A2.L1"].write(0.1)
+
+
+def test_the_explicit_id_form_splits_a_shared_supply(cell):
+    """An `id:` key in a file is an explicit request, so it still goes through."""
+    beamline = MachineSetpoints(elements={"id:BB.96.I1": 0.12}).build(cell)
+    assert round(beamline.resolve("BB.96.I1").read(), 6) == 0.12
 
 
 def test_a_split_supply_cannot_be_exported_to_sascha(cell):
@@ -594,10 +644,10 @@ def test_reading_an_optics_back_off_a_lattice(cell):
 
 def build_section_lattice(section_names, tmp_path):
     """A SectionLattice over the given sections, reading the module-level cells."""
+    from ocelot.cpbd.beam import Twiss
+
     from euxfel import sections
     from euxfel.section_track import SectionLattice
-
-    from ocelot.cpbd.beam import Twiss
 
     tws0 = Twiss()
     tws0.E = 0.005

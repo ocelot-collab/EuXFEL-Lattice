@@ -39,6 +39,7 @@ from dataclasses import dataclass, field
 
 from ocelot.cpbd.magnetic_lattice import flatten
 
+from . import library
 from .kicks import (
     design_factors,
     is_kickable,
@@ -50,13 +51,25 @@ from .kicks import (
 
 __all__ = [
     "AmbiguousKeyError",
-    "Group",
-    "GangedMagnetError",
     "Beamline",
+    "GangedMagnetError",
+    "Group",
+    "KnobOwnedError",
     "UnknownKeyError",
     "clear_design_factors",
     "full_machine_cell",
 ]
+
+#: Power supply -> the knob whose *geometry* it is part of.
+#:
+#: Only chicanes appear here.  A chicane's dipole angle cannot be changed on its
+#: own: the drifts between the dipoles have to lengthen as ``1/cos(angle)`` to
+#: keep the projected gap fixed, and only the knob knows to do that.  Cavity
+#: supplies have no such coupling, so writing to one directly is fine and the
+#: linac knobs do not claim them.
+GEOMETRY_OWNERS: dict[str, str] = {
+    supply: spec.name for spec in library.CHICANES.values() for supply in spec.supplies
+}
 
 
 def full_machine_cell() -> list:
@@ -146,7 +159,11 @@ class AmbiguousKeyError(Exception):
 
 
 class GangedMagnetError(Exception):
-    """Raised when a magnet sharing a power supply is addressed on its own."""
+    """Raised when a magnet sharing a power supply is set on its own."""
+
+
+class KnobOwnedError(Exception):
+    """Raised when a magnet whose geometry a knob owns is set directly."""
 
 
 @dataclass(frozen=True)
@@ -156,12 +173,21 @@ class Group:
     ``factors`` are captured from the design lattice, so applying ``setpoint``
     gives element ``i`` a kick of ``setpoint * factors[i]``.  Opposite wiring is
     a factor of ``-1``; unequal magnets keep their design ratio.
+
+    Reading is always allowed.  Writing is not, in the two cases where the value
+    that lands would not be one the machine could hold: see :meth:`write`.
     """
 
     key: str
     elements: tuple = field(repr=False)
     factors: tuple[float, ...] = ()
     is_supply: bool = False
+    #: The knob that owns these elements' geometry, if any.
+    owned_by: str | None = None
+    #: The supply this single magnet was split out of, if it shares one.
+    split_from: str | None = None
+    #: The other magnets on that supply, for the error message.
+    siblings: tuple[str, ...] = ()
 
     def __len__(self) -> int:
         return len(self.elements)
@@ -174,9 +200,60 @@ class Group:
         """The current setpoint: the kick of largest magnitude in the group."""
         return max((read_kick(element) for element in self.elements), key=abs)
 
-    def write(self, setpoint: float) -> None:
-        """Apply ``setpoint`` across the group, preserving design ratios."""
+    def write(self, setpoint: float, *, ignore_knob: bool = False) -> None:
+        """Apply ``setpoint`` across the group, preserving design ratios.
+
+        Refused in two cases, because writing the kick is only half of what the
+        setting means:
+
+        A knob owns the geometry
+            A chicane dipole's angle cannot move on its own -- the drifts
+            between the dipoles have to lengthen with it, or the chicane stops
+            closing.  Measured on BC0, writing the supply directly leaves the
+            exit 5.9 mm downstream of where it should be and R56 0.4% out.  Use
+            the knob, which rescales the drifts.
+
+        The magnet shares a supply
+            One magnet of a ganged set cannot be moved alone on the real
+            machine, and the result cannot be written back to a Sascha file.
+
+        ``ignore_knob=True`` writes anyway.  It is for the caller that has
+        already decided -- a setpoints file that names a chicane supply its knob
+        could not take, or an ``id:``-prefixed key asking for the split on
+        purpose -- and has said so to the user.
+        """
+        if not ignore_knob:
+            if self.owned_by:
+                raise KnobOwnedError(self._owned_message())
+            if self.split_from:
+                raise GangedMagnetError(self._ganged_message())
         write_group(self.elements, self.factors, setpoint)
+
+    def _owned_message(self) -> str:
+        what = (
+            f"feeds the {len(self)} dipoles of chicane {self.owned_by!r}"
+            if self.is_supply
+            else f"is a dipole of chicane {self.owned_by!r}"
+        )
+        return (
+            f"{self.key!r} {what}, whose geometry cannot be set one magnet at a "
+            f"time: the drifts between the dipoles have to lengthen with the "
+            f"angle or the chicane stops closing -- the survey downstream moves "
+            f"and R56 comes out wrong. Set the chicane instead:\n"
+            f"    setpoints.{self.owned_by}.r56 = <value>      # or .angle, or .rho\n"
+            f"or, to write the kick alone and accept the open geometry, "
+            f"write(..., ignore_knob=True)."
+        )
+
+    def _ganged_message(self) -> str:
+        return (
+            f"{self.key!r} shares power supply {self.split_from!r} with "
+            f"{', '.join(self.siblings)} and cannot be set individually -- that "
+            f"is not realisable on the machine. Use the supply name:\n"
+            f"    {self.split_from}: <value>\n"
+            f"or, to set this one magnet anyway (simulation only):\n"
+            f"    {{id: {self.key}}}: <value>"
+        )
 
 
 class Beamline(Sequence):
@@ -342,16 +419,19 @@ class Beamline(Sequence):
             elements=tuple(elements),
             factors=self._factors.get(supply, (1.0,) * len(elements)),
             is_supply=True,
+            owned_by=GEOMETRY_OWNERS.get(supply),
         )
 
-    def resolve(
-        self,
-        key: str,
-        *,
-        namespace: str | None = None,
-        allow_split: bool = False,
-    ) -> Group:
+    def resolve(self, key: str, *, namespace: str | None = None) -> Group:
         """Resolve ``key`` to the elements it names.
+
+        A lookup, and nothing more: every name in the machine resolves, whether
+        or not it would be sensible to write to.  Looking a magnet up is
+        harmless, and 1287 element ids share a power supply -- refusing to name
+        them would make the beamline unusable for reading.
+
+        Whether the result may be *written* is decided by :meth:`Group.write`,
+        which knows both why it might not be allowed and how to say so.
 
         Parameters
         ----------
@@ -359,14 +439,10 @@ class Beamline(Sequence):
             An element id or a power supply id.
         namespace
             ``"id"`` or ``"ps"`` to force one namespace; ``None`` to search both.
-        allow_split
-            Permit addressing a single magnet that shares a power supply with
-            others.  Such a setting is not realisable on the machine and cannot
-            be written back to a Sascha file, so it is off by default.
 
         Raises
         ------
-        UnknownKeyError, AmbiguousKeyError, GangedMagnetError
+        UnknownKeyError, AmbiguousKeyError
         """
         if namespace not in (None, "id", "ps"):
             raise ValueError(f"namespace must be 'id', 'ps' or None, not {namespace!r}")
@@ -402,26 +478,22 @@ class Beamline(Sequence):
         element = matches[0]
 
         supply = self.supply_of(element)
-        if supply and len(self._by_supply[supply]) > 1 and not allow_split:
-            raise GangedMagnetError(self._ganged_message(element, supply))
-
-        factors = (1.0,)
-        return Group(key=key, elements=(element,), factors=factors, is_supply=False)
+        ganged = bool(supply) and len(self._by_supply[supply]) > 1
+        return Group(
+            key=key,
+            elements=(element,),
+            factors=(1.0,),
+            is_supply=False,
+            owned_by=GEOMETRY_OWNERS.get(supply) if supply else None,
+            split_from=supply if ganged else None,
+            siblings=tuple(other.id for other in self.siblings(element))
+            if ganged
+            else (),
+        )
 
     # ------------------------------------------------------------------ #
     # Error messages
     # ------------------------------------------------------------------ #
-
-    def _ganged_message(self, element, supply: str) -> str:
-        others = ", ".join(other.id for other in self.siblings(element))
-        return (
-            f"{element.id!r} shares power supply {supply!r} with {others} and "
-            f"cannot be set individually -- that is not realisable on the "
-            f"machine. Use the supply name:\n"
-            f"    {supply}: <value>\n"
-            f"or, to set this one magnet anyway (simulation only):\n"
-            f"    {{id: {element.id}}}: <value>"
-        )
 
     def _unknown_key_message(self, key: str, namespace: str | None) -> str:
         if namespace == "id":

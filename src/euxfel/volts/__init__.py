@@ -11,16 +11,17 @@ See :mod:`euxfel.volts.config` for the
 :class:`~euxfel.volts.config.MachineSetpoints` entry point.
 """
 
-from .config import ConflictError, Knobs, MachineSetpoints
 from .beamline import (
     AmbiguousKeyError,
+    Beamline,
     GangedMagnetError,
     Group,
-    Beamline,
+    KnobOwnedError,
     UnknownKeyError,
     clear_design_factors,
     full_machine_cell,
 )
+from .config import ConflictError, Knobs, MachineSetpoints
 from .kicks import KickError, read_kick, write_kick
 from .knobs import ChicaneError, ChicaneKnob, InjectorRFKnob, LinacKnob
 from .sascha import read_sascha, write_sascha
@@ -33,6 +34,7 @@ def load_setpoints(path):
 
 __all__ = [
     "AmbiguousKeyError",
+    "Beamline",
     "ChicaneError",
     "ChicaneKnob",
     "ConflictError",
@@ -40,8 +42,8 @@ __all__ = [
     "Group",
     "InjectorRFKnob",
     "KickError",
+    "KnobOwnedError",
     "Knobs",
-    "Beamline",
     "LinacKnob",
     "MachineSetpoints",
     "UnknownKeyError",

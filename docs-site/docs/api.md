@@ -56,6 +56,10 @@ group.read()                           # the current setpoint
 group.write(-0.053)                    # set it, preserving design ratios
 ```
 
+Any name resolves; `write` is what refuses, when a knob owns the geometry
+(`owned_by`) or the magnet shares a supply (`split_from`). See
+[reading is free, writing is guarded](setpoints.md#reading-is-free-writing-is-guarded).
+
 A `Beamline` is a sequence of elements you can also address by name — the
 name-to-element lookup OCELOT does not provide. Being a sequence, it goes
 straight into `MagneticLattice` where a list would:
@@ -80,7 +84,8 @@ to a whole power supply, and half a supply has none.
 | Raised when |  |
 |---|---|
 | `UnknownKeyError` | The name matches no element and no supply |
-| `GangedMagnetError` | A magnet sharing a supply was addressed alone |
+| `GangedMagnetError` | A magnet sharing a supply was *set* alone |
+| `KnobOwnedError` | A chicane dipole was set without its knob, so no drift moved |
 | `AmbiguousKeyError` | A name resolves two different ways |
 | `ConflictError` | Two settings claim the same attribute |
 | `ChicaneError` | A chicane cannot be configured as asked |
