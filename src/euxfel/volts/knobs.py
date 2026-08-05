@@ -134,13 +134,13 @@ class Knob(BaseModel):
             setattr(self, name, value)
         return self
 
-    def apply(self, index, spec) -> None:
+    def apply(self, beamline, spec) -> None:
         raise NotImplementedError
 
-    def read(self, index, spec) -> Knob:
+    def read(self, beamline, spec) -> Knob:
         raise NotImplementedError
 
-    def owns(self, index, spec) -> set[tuple[str, str]]:
+    def owns(self, beamline, spec) -> set[tuple[str, str]]:
         raise NotImplementedError
 
 
@@ -149,15 +149,15 @@ class Knob(BaseModel):
 # --------------------------------------------------------------------------- #
 
 
-def _ordered(index, group) -> tuple[list, list[float]]:
+def _ordered(beamline, group) -> tuple[list, list[float]]:
     """A supply's elements in beamline order, with their design factors."""
     pairs = sorted(
-        zip(group.elements, group.factors), key=lambda pair: index.position(pair[0])
+        zip(group.elements, group.factors), key=lambda pair: beamline.position(pair[0])
     )
     return [element for element, _ in pairs], [factor for _, factor in pairs]
 
 
-def chicane_dipoles(index, spec: ChicaneSpec) -> tuple[list, list[float]]:
+def chicane_dipoles(beamline, spec: ChicaneSpec) -> tuple[list, list[float]]:
     """The four dipoles of a chicane, in beamline order, and their polarities.
 
     A chicane is not always on one power supply.  The bunch compressors are --
@@ -168,19 +168,19 @@ def chicane_dipoles(index, spec: ChicaneSpec) -> tuple[list, list[float]]:
     dipoles: list = []
     factors: list[float] = []
     for supply in spec.supplies:
-        group = index.resolve(supply, namespace="ps")
-        found, _ = _ordered(index, group)
+        group = beamline.resolve(supply, namespace="ps")
+        found, _ = _ordered(beamline, group)
         dipoles.extend(found)
         # Design *kicks*, not per-supply ratios.  The ratios within BL.1.I1,
         # BL.3.I1 and BL.4.I1 are (1, -1), (1,) and (1,), which would make the
         # laser heater chicane come out [+, -, +, +] instead of [-, +, +, -].
         by_position = sorted(
-            zip(group.elements, index.design_kicks(supply)),
-            key=lambda pair: index.position(pair[0]),
+            zip(group.elements, beamline.design_kicks(supply)),
+            key=lambda pair: beamline.position(pair[0]),
         )
         factors.extend(kick for _, kick in by_position)
 
-    order = sorted(range(len(dipoles)), key=lambda i: index.position(dipoles[i]))
+    order = sorted(range(len(dipoles)), key=lambda i: beamline.position(dipoles[i]))
     dipoles = [dipoles[i] for i in order]
     factors = [factors[i] for i in order]
 
@@ -212,7 +212,7 @@ def yoke_length(dipole) -> float:
     return float(dipole.l) * math.sin(angle) / angle
 
 
-def projected_gaps(index, dipoles) -> tuple[float, float]:
+def projected_gaps(beamline, dipoles) -> tuple[float, float]:
     """Distance along the axis spanned by each shoulder of the chicane.
 
     The magnets are bolted to the floor, so these are invariant: bending harder
@@ -224,15 +224,15 @@ def projected_gaps(index, dipoles) -> tuple[float, float]:
     """
     angle = abs(dipoles[0].angle)
     return tuple(  # type: ignore[return-value]
-        sum(element.l for element in index.between(dipoles[first], dipoles[second]))
+        sum(element.l for element in beamline.between(dipoles[first], dipoles[second]))
         * math.cos(angle)
         for first, second in ((0, 1), (2, 3))
     )
 
 
-def projected_gap(index, dipoles) -> float:
+def projected_gap(beamline, dipoles) -> float:
     """Axial distance spanned by the first shoulder of the chicane."""
-    return projected_gaps(index, dipoles)[0]
+    return projected_gaps(beamline, dipoles)[0]
 
 
 def _rescale_shoulder(shoulder, new_path: float, name: str) -> None:
@@ -265,7 +265,7 @@ def _rescale_shoulder(shoulder, new_path: float, name: str) -> None:
         drift.l *= scale
 
 
-def set_chicane_angle(index, spec, dipoles, factors, angle: float) -> None:
+def set_chicane_angle(beamline, spec, dipoles, factors, angle: float) -> None:
     """Set the dipole angle, updating arc lengths and shoulder drifts with it.
 
     Each dipole keeps its own yoke length and each shoulder its own projected
@@ -279,11 +279,11 @@ def set_chicane_angle(index, spec, dipoles, factors, angle: float) -> None:
         raise ChicaneError(f"Chicane angle {angle} rad is not physical.")
 
     yokes = [yoke_length(dipole) for dipole in dipoles]
-    gaps = projected_gaps(index, dipoles)
+    gaps = projected_gaps(beamline, dipoles)
 
     for gap, (first, second) in zip(gaps, ((0, 1), (2, 3))):
         _rescale_shoulder(
-            index.between(dipoles[first], dipoles[second]),
+            beamline.between(dipoles[first], dipoles[second]),
             gap / math.cos(angle),
             spec.name,
         )
@@ -302,10 +302,10 @@ def set_chicane_angle(index, spec, dipoles, factors, angle: float) -> None:
             dipole.e2 = 0.0
 
 
-def measure_r56(index, dipoles, energy: float, lattice=None) -> float:
+def measure_r56(beamline, dipoles, energy: float, lattice=None) -> float:
     """R56 of the chicane, from the real transfer matrix."""
     if lattice is None:
-        lattice = MagneticLattice(index.cell, start=dipoles[0], stop=dipoles[3])
+        lattice = MagneticLattice(beamline, start=dipoles[0], stop=dipoles[3])
     else:
         lattice.update_transfer_maps()
     _, r_matrix, _ = lattice.transfer_maps(energy)
@@ -377,11 +377,11 @@ class ChicaneKnob(Knob):
     def is_set(self) -> bool:
         return any(getattr(self, name) is not None for name in self._EXCLUSIVE)
 
-    def target_angle(self, index, spec: ChicaneSpec) -> float:
+    def target_angle(self, beamline, spec: ChicaneSpec) -> float:
         """The dipole angle this knob asks for, solving for R56 if needed."""
-        dipoles, factors = chicane_dipoles(index, spec)
+        dipoles, factors = chicane_dipoles(beamline, spec)
         yoke = yoke_length(dipoles[0])
-        gap = projected_gap(index, dipoles)
+        gap = projected_gap(beamline, dipoles)
 
         if self.angle is not None:
             return abs(float(self.angle))
@@ -395,9 +395,9 @@ class ChicaneKnob(Knob):
                 )
             return math.asin(yoke / rho)
 
-        return self._solve_for_r56(index, spec, dipoles, factors, yoke, gap)
+        return self._solve_for_r56(beamline, spec, dipoles, factors, yoke, gap)
 
-    def _solve_for_r56(self, index, spec, dipoles, factors, yoke, gap) -> float:
+    def _solve_for_r56(self, beamline, spec, dipoles, factors, yoke, gap) -> float:
         target = float(self.r56)
         if target == 0.0:
             return 0.0
@@ -406,11 +406,11 @@ class ChicaneKnob(Knob):
                 f"Chicane {spec.name!r}: R56 of a C-chicane is negative, got {target}."
             )
 
-        lattice = MagneticLattice(index.cell, start=dipoles[0], stop=dipoles[3])
+        lattice = MagneticLattice(beamline, start=dipoles[0], stop=dipoles[3])
 
         def residual(angle: float) -> float:
-            set_chicane_angle(index, spec, dipoles, factors, angle)
-            return measure_r56(index, dipoles, spec.energy, lattice) - target
+            set_chicane_angle(beamline, spec, dipoles, factors, angle)
+            return measure_r56(beamline, dipoles, spec.energy, lattice) - target
 
         # Small-angle seed: r56 ~= -2 * theta^2 * (gap + 2*yoke/3).
         seed = math.sqrt(-target / (2.0 * (gap + 2.0 * yoke / 3.0)))
@@ -427,27 +427,27 @@ class ChicaneKnob(Knob):
                 )
 
         angle = brentq(residual, low, high, xtol=1e-14, rtol=1e-15)
-        set_chicane_angle(index, spec, dipoles, factors, angle)
+        set_chicane_angle(beamline, spec, dipoles, factors, angle)
         return angle
 
-    def apply(self, index, spec: ChicaneSpec) -> None:
+    def apply(self, beamline, spec: ChicaneSpec) -> None:
         if not self.is_set():
             return
-        dipoles, factors = chicane_dipoles(index, spec)
-        angle = self.target_angle(index, spec)
-        set_chicane_angle(index, spec, dipoles, factors, angle)
+        dipoles, factors = chicane_dipoles(beamline, spec)
+        angle = self.target_angle(beamline, spec)
+        set_chicane_angle(beamline, spec, dipoles, factors, angle)
 
-    def report(self, index, spec: ChicaneSpec) -> ChicaneReading:
+    def report(self, beamline, spec: ChicaneSpec) -> ChicaneReading:
         """All three equivalent parameters, for display and diagnostics."""
-        dipoles, _ = chicane_dipoles(index, spec)
+        dipoles, _ = chicane_dipoles(beamline, spec)
         angle = abs(float(dipoles[0].angle))
         return ChicaneReading(
-            r56=measure_r56(index, dipoles, spec.energy),
+            r56=measure_r56(beamline, dipoles, spec.energy),
             angle=angle,
             rho=yoke_length(dipoles[0]) / math.sin(angle) if angle else math.inf,
         )
 
-    def read(self, index, spec: ChicaneSpec) -> ChicaneKnob:
+    def read(self, beamline, spec: ChicaneSpec) -> ChicaneKnob:
         """The setting this chicane currently corresponds to.
 
         Reported as an R56, the one of the three parameters that says what the
@@ -455,17 +455,17 @@ class ChicaneKnob(Knob):
         setting is normally written in.  A knob carries exactly one of the
         three, so use :meth:`report` when all three are wanted.
         """
-        return ChicaneKnob(r56=self.report(index, spec).r56)
+        return ChicaneKnob(r56=self.report(beamline, spec).r56)
 
-    def owns(self, index, spec: ChicaneSpec) -> set[tuple[str, str]]:
-        dipoles, _ = chicane_dipoles(index, spec)
+    def owns(self, beamline, spec: ChicaneSpec) -> set[tuple[str, str]]:
+        dipoles, _ = chicane_dipoles(beamline, spec)
         owned = set()
         for dipole in dipoles:
             owned.update(
                 (dipole.id, attribute) for attribute in ("angle", "l", "e1", "e2")
             )
         for first, second in ((0, 1), (2, 3)):
-            for element in index.between(dipoles[first], dipoles[second]):
+            for element in beamline.between(dipoles[first], dipoles[second]):
                 if isinstance(element, Drift):
                     owned.add((element.id, "l"))
         return owned
@@ -476,11 +476,11 @@ class ChicaneKnob(Knob):
 # --------------------------------------------------------------------------- #
 
 
-def _cavities(index, supplies) -> list:
+def _cavities(beamline, supplies) -> list:
     cavities = []
     for supply in supplies:
-        group = index.resolve(supply, namespace="ps")
-        ordered, _ = _ordered(index, group)
+        group = beamline.resolve(supply, namespace="ps")
+        ordered, _ = _ordered(beamline, group)
         cavities.extend(ordered)
     if not cavities:
         raise ValueError(f"No cavities found on {', '.join(supplies)}.")
@@ -534,7 +534,7 @@ class LinacKnob(Knob):
             return ()
         return tuple(name for name in self._REQUIRED if getattr(self, name) is None)
 
-    def apply(self, index, spec: LinacSpec) -> None:
+    def apply(self, beamline, spec: LinacSpec) -> None:
         if not self.is_set():
             return
         voltage, phase = beam2rf_xfel_linac(
@@ -542,7 +542,7 @@ class LinacKnob(Knob):
             chirp=self.chirp,
             init_energy=spec.init_energy,
         )
-        _write_rf(_cavities(index, spec.supplies), voltage, phase)
+        _write_rf(_cavities(beamline, spec.supplies), voltage, phase)
 
     def rf(self, spec: LinacSpec) -> tuple[float, float]:
         """The total voltage [GV] and phase [deg] this knob asks for."""
@@ -554,18 +554,18 @@ class LinacKnob(Knob):
             init_energy=spec.init_energy,
         )
 
-    def read(self, index, spec: LinacSpec) -> LinacKnob:
-        cavities = _cavities(index, spec.supplies)
+    def read(self, beamline, spec: LinacSpec) -> LinacKnob:
+        cavities = _cavities(beamline, spec.supplies)
         total, phase = _read_rf(cavities, spec.name)
         sum_voltage, chirp = rf2beam_xfel_linac(
             total, phase, init_energy=spec.init_energy
         )
         return LinacKnob(sum_voltage=float(sum_voltage), chirp=float(chirp))
 
-    def owns(self, index, spec: LinacSpec) -> set[tuple[str, str]]:
+    def owns(self, beamline, spec: LinacSpec) -> set[tuple[str, str]]:
         return {
             (cavity.id, attribute)
-            for cavity in _cavities(index, spec.supplies)
+            for cavity in _cavities(beamline, spec.supplies)
             for attribute in ("v", "phi")
         }
 
@@ -613,16 +613,16 @@ class InjectorRFKnob(Knob):
             E0=self._gun_energy(spec),
         )
 
-    def apply(self, index, spec: InjectorSpec) -> None:
+    def apply(self, beamline, spec: InjectorSpec) -> None:
         if not self.is_set():
             return
         v1, phi1, vh, phih = self.rf(spec)
-        _write_rf(_cavities(index, [spec.fundamental]), v1, phi1)
-        _write_rf(_cavities(index, [spec.harmonic]), vh, phih)
+        _write_rf(_cavities(beamline, [spec.fundamental]), v1, phi1)
+        _write_rf(_cavities(beamline, [spec.harmonic]), vh, phih)
 
-    def read(self, index, spec: InjectorSpec) -> InjectorRFKnob:
-        v1, phi1 = _read_rf(_cavities(index, [spec.fundamental]), spec.fundamental)
-        vh, phih = _read_rf(_cavities(index, [spec.harmonic]), spec.harmonic)
+    def read(self, beamline, spec: InjectorSpec) -> InjectorRFKnob:
+        v1, phi1 = _read_rf(_cavities(beamline, [spec.fundamental]), spec.fundamental)
+        vh, phih = _read_rf(_cavities(beamline, [spec.harmonic]), spec.harmonic)
         E1, chirp, curvature, skewness = rf2beam(
             v1,
             phi1,
@@ -640,8 +640,8 @@ class InjectorRFKnob(Knob):
             gun_energy=self.gun_energy,
         )
 
-    def owns(self, index, spec: InjectorSpec) -> set[tuple[str, str]]:
-        cavities = _cavities(index, [spec.fundamental, spec.harmonic])
+    def owns(self, beamline, spec: InjectorSpec) -> set[tuple[str, str]]:
+        cavities = _cavities(beamline, [spec.fundamental, spec.harmonic])
         return {
             (cavity.id, attribute) for cavity in cavities for attribute in ("v", "phi")
         }
@@ -673,19 +673,19 @@ class TDSKnob(Knob):
             return ()
         return tuple(name for name in self._REQUIRED if getattr(self, name) is None)
 
-    def apply(self, index, spec: TDSSpec) -> None:
+    def apply(self, beamline, spec: TDSSpec) -> None:
         if not self.is_set():
             return
-        _write_rf(_cavities(index, [spec.supply]), self.voltage, self.phase)
+        _write_rf(_cavities(beamline, [spec.supply]), self.voltage, self.phase)
 
-    def read(self, index, spec: TDSSpec) -> TDSKnob:
-        voltage, phase = _read_rf(_cavities(index, [spec.supply]), spec.name)
+    def read(self, beamline, spec: TDSSpec) -> TDSKnob:
+        voltage, phase = _read_rf(_cavities(beamline, [spec.supply]), spec.name)
         return TDSKnob(voltage=voltage, phase=phase)
 
-    def owns(self, index, spec: TDSSpec) -> set[tuple[str, str]]:
+    def owns(self, beamline, spec: TDSSpec) -> set[tuple[str, str]]:
         return {
             (structure.id, attribute)
-            for structure in _cavities(index, [spec.supply])
+            for structure in _cavities(beamline, [spec.supply])
             for attribute in ("v", "phi")
         }
 
@@ -718,18 +718,18 @@ class RFModuleKnob(Knob):
             return ()
         return tuple(name for name in self._REQUIRED if getattr(self, name) is None)
 
-    def apply(self, index, spec: RFModuleSpec) -> None:
+    def apply(self, beamline, spec: RFModuleSpec) -> None:
         if not self.is_set():
             return
-        _write_rf(_cavities(index, [spec.supply]), self.voltage, self.phase)
+        _write_rf(_cavities(beamline, [spec.supply]), self.voltage, self.phase)
 
-    def read(self, index, spec: RFModuleSpec) -> RFModuleKnob:
-        voltage, phase = _read_rf(_cavities(index, [spec.supply]), spec.name)
+    def read(self, beamline, spec: RFModuleSpec) -> RFModuleKnob:
+        voltage, phase = _read_rf(_cavities(beamline, [spec.supply]), spec.name)
         return RFModuleKnob(voltage=voltage, phase=phase)
 
-    def owns(self, index, spec: RFModuleSpec) -> set[tuple[str, str]]:
+    def owns(self, beamline, spec: RFModuleSpec) -> set[tuple[str, str]]:
         return {
             (cavity.id, attribute)
-            for cavity in _cavities(index, [spec.supply])
+            for cavity in _cavities(beamline, [spec.supply])
             for attribute in ("v", "phi")
         }

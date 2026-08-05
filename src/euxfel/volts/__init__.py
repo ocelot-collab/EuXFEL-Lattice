@@ -12,11 +12,11 @@ See :mod:`euxfel.volts.config` for the
 """
 
 from .config import ConflictError, Knobs, MachineSetpoints
-from .index import (
+from .beamline import (
     AmbiguousKeyError,
     GangedMagnetError,
     Group,
-    LatticeIndex,
+    Beamline,
     UnknownKeyError,
     clear_design_factors,
     full_machine_cell,
@@ -41,7 +41,7 @@ __all__ = [
     "InjectorRFKnob",
     "KickError",
     "Knobs",
-    "LatticeIndex",
+    "Beamline",
     "LinacKnob",
     "MachineSetpoints",
     "UnknownKeyError",

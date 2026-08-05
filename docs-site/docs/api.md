@@ -48,16 +48,32 @@ by subscript: `setpoints["QI.1.I1"] = -0.05343`.
 ### Finding elements
 
 ```python
-from euxfel.volts import LatticeIndex
+from euxfel.volts import Beamline
 
-index = LatticeIndex.from_cell(cell)   # deep-copies by default
-group = index.resolve("QI.1.I1")       # by power supply or by element id
+beamline = Beamline.from_cell(cell)    # deep-copies by default
+group = beamline["QI.1.I1"]            # by power supply or by element id
 group.read()                           # the current setpoint
 group.write(-0.053)                    # set it, preserving design ratios
 ```
 
-`LatticeIndex` is the name-to-element lookup that OCELOT does not provide. It
-also offers `position`, `between`, `siblings` and `supply_of`.
+A `Beamline` is a sequence of elements you can also address by name — the
+name-to-element lookup OCELOT does not provide. Being a sequence, it goes
+straight into `MagneticLattice` where a list would:
+
+```python
+len(beamline); beamline[0]; list(beamline)     # an ordinary sequence
+MagneticLattice(beamline, start=..., stop=...) # no `.cell` needed
+"QI.1.I1" in beamline                          # membership by name
+beamline.cell                                  # a plain list, to concatenate
+```
+
+`build()` and `apply_in_place()` both return one, so the magnets stay reachable
+by name after a file is applied. It also offers `resolve` (the explicit spelling
+of the string subscript, and the one that takes `namespace=`), `position`,
+`between`, `siblings`, `supply_of` and `design_kicks`.
+
+Slicing gives a plain list rather than another `Beamline`: design ratios belong
+to a whole power supply, and half a supply has none.
 
 ### Exceptions
 

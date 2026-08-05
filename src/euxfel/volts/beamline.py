@@ -1,12 +1,18 @@
-"""Name to element lookup, which OCELOT and the rest of this package lack.
+"""A sequence of elements you can address by name.
 
-Elements are reached everywhere else in this repository by attribute access on
-the generated modules (``l1.bb_96_i1``).  There is no way to go from a name to
-an element, and no way at all to go from a *power supply* name to the magnets it
-feeds -- even though ``writer.py`` stamps a ``ps_id`` onto every powered element.
-:class:`LatticeIndex` builds both maps.
+:class:`Beamline` is an ordinary Python sequence -- ``len``, iteration,
+``beamline[0]``, slicing -- so it goes straight into ``MagneticLattice`` where a
+list would.  What it adds is the two things OCELOT and the rest of this package
+lack.
 
-Two namespaces, one flat lookup
+Names resolve to elements
+    Elements are reached everywhere else in this repository by attribute access
+    on the generated modules (``l1.bb_96_i1``).  There is no way to go from a
+    name to an element, and no way at all to go from a *power supply* name to
+    the magnets it feeds -- even though ``writer.py`` stamps a ``ps_id`` onto
+    every powered element.  A ``Beamline`` builds both maps, and
+    ``beamline["QI.1.I1"]`` searches them.
+
     Keys are resolved against element ids *and* power supply ids.  Measured over
     the current lattice, 59 strings appear in both namespaces and **none** is
     genuinely ambiguous: in every case the supply feeds exactly one magnet, and
@@ -14,12 +20,13 @@ Two namespaces, one flat lookup
     case, and a key that ever does resolve two ways raises rather than silently
     picking one.
 
-Copy on construction
+The elements are its own
     ``MagneticLattice`` does not copy its sequence, so ``i1.cell`` is the *same*
     objects seen by every section, by ``sequences.cathode_to_*`` and by ``euxfel
     plot``.  Mutating them would leak into every other consumer in the process
-    and make applying one optics after another cumulative.  :meth:`from_cell`
-    therefore deep-copies by default.
+    and make applying one setpoints file after another cumulative.
+    :meth:`from_cell` therefore deep-copies by default, which is what makes a
+    ``Beamline`` safe to write to.
 """
 
 from __future__ import annotations
@@ -27,6 +34,7 @@ from __future__ import annotations
 import copy
 import difflib
 import warnings
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 
 from ocelot.cpbd.magnetic_lattice import flatten
@@ -44,7 +52,7 @@ __all__ = [
     "AmbiguousKeyError",
     "Group",
     "GangedMagnetError",
-    "LatticeIndex",
+    "Beamline",
     "UnknownKeyError",
     "clear_design_factors",
     "full_machine_cell",
@@ -88,9 +96,9 @@ def full_machine_cell() -> list:
 #: setpoint would come out [+, +, +].
 #:
 #: This is sound because the only way this package writes to the lattice is
-#: through a LatticeIndex, so the first index built in a process necessarily
+#: through a Beamline, so the first beamline built in a process necessarily
 #: sees pristine elements.  Mutating a generated element by hand before any
-#: index exists would defeat it.
+#: beamline exists would defeat it.
 _DESIGN_FACTORS: dict[str, tuple[float, ...]] = {}
 
 #: The kick each supply's ratios are relative to, remembered for the same
@@ -117,7 +125,7 @@ def _remembered(supply: str, elements) -> tuple[tuple[float, ...], float]:
 
 
 def clear_design_factors() -> None:
-    """Forget the remembered ratios, so the next index re-reads them.
+    """Forget the remembered ratios, so the next beamline re-reads them.
 
     For tests, and after regenerating the lattice within a live process.
     """
@@ -171,26 +179,26 @@ class Group:
         write_group(self.elements, self.factors, setpoint)
 
 
-class LatticeIndex:
-    """Resolves names to elements for a single sequence."""
+class Beamline(Sequence):
+    """A sequence of elements, addressable by element or power supply name."""
 
     def __init__(self, cell):
         # Keep each element once.  The targets share a common prefix, so a
         # concatenation of several of them repeats the same objects, and a
         # repeated element would give `between` the wrong neighbours.
         seen_once: set[int] = set()
-        self.cell = []
+        self._cell: list = []
         for element in cell:
             if id(element) in seen_once:
                 continue
             seen_once.add(id(element))
-            self.cell.append(element)
+            self._cell.append(element)
 
         self._by_id: dict[str, list] = {}
         self._by_supply: dict[str, list] = {}
         self._positions: dict[int, int] = {}
         seen: set[int] = set()
-        for position, element in enumerate(self.cell):
+        for position, element in enumerate(self._cell):
             self._positions.setdefault(id(element), position)
             if id(element) in seen:
                 continue
@@ -227,8 +235,8 @@ class LatticeIndex:
             )
 
     @classmethod
-    def from_cell(cls, cell, *, copy_elements: bool = True) -> LatticeIndex:
-        """Build an index over ``cell``, deep-copying it by default.
+    def from_cell(cls, cell, *, copy_elements: bool = True) -> Beamline:
+        """Build a beamline over ``cell``, deep-copying it by default.
 
         Pass ``copy_elements=False`` only when you intend to mutate the caller's
         elements in place -- which, for the module-level generated cells, means
@@ -238,6 +246,46 @@ class LatticeIndex:
         if copy_elements:
             flat = copy.deepcopy(flat)
         return cls(flat)
+
+    # ------------------------------------------------------------------ #
+    # Sequence protocol
+    # ------------------------------------------------------------------ #
+
+    def __len__(self) -> int:
+        return len(self._cell)
+
+    def __iter__(self):
+        return iter(self._cell)
+
+    def __getitem__(self, key):
+        """``beamline[3]`` positionally, ``beamline["QI.1.I1"]`` by name.
+
+        A slice gives a plain list rather than another ``Beamline``: the design
+        ratios are a property of a whole power supply, and half a supply has
+        none, so a sliced beamline would be quietly wrong to write to.
+        """
+        if isinstance(key, str):
+            return self.resolve(key)
+        return self._cell[key]
+
+    def __contains__(self, key) -> bool:
+        """``"QI.1.I1" in beamline`` by name, ``element in beamline`` by identity.
+
+        Without this, `Sequence` would compare the string against each element
+        and answer False for every name in the machine.
+        """
+        if isinstance(key, str):
+            return key in self._by_id or key in self._by_supply
+        return any(element is key for element in self._cell)
+
+    @property
+    def cell(self) -> list:
+        """The elements as a plain list, for callers that need to concatenate.
+
+        A copy, so appending to it does not lengthen the beamline; the elements
+        in it are the beamline's own, so writing to them does.
+        """
+        return list(self._cell)
 
     # ------------------------------------------------------------------ #
     # Lookup
@@ -277,7 +325,7 @@ class LatticeIndex:
 
     def between(self, first, second) -> list:
         """The elements strictly between ``first`` and ``second``."""
-        return self.cell[self.position(first) + 1 : self.position(second)]
+        return self._cell[self.position(first) + 1 : self.position(second)]
 
     def siblings(self, element) -> tuple:
         """Other elements sharing ``element``'s power supply."""
@@ -391,6 +439,6 @@ class LatticeIndex:
 
     def __repr__(self) -> str:
         return (
-            f"<LatticeIndex {len(self.cell)} elements, "
+            f"<Beamline {len(self._cell)} elements, "
             f"{len(self._by_supply)} power supplies>"
         )

@@ -5,7 +5,7 @@ a chirp) plus individual magnet strengths.  It can be applied to a lattice, read
 back off one, and round-tripped to and from the control room's Sascha format.
 
 The Python object is primary and YAML is a thin layer over it -- nothing in the
-knob, index or kick layers knows that files exist.  A file looks like::
+knob, beamline or kick layers knows that files exist.  A file looks like::
 
     version: 1
     lattice: component_list_2026.02.13
@@ -43,7 +43,7 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
 from . import library
-from .index import LatticeIndex
+from .beamline import Beamline
 from .kicks import is_sascha_representable
 from .knobs import (
     ChicaneKnob,
@@ -260,24 +260,26 @@ class MachineSetpoints(BaseModel):
         and chicane supplies are routed to their knobs, so the drifts between
         the dipoles are rescaled rather than left inconsistent.
         """
-        index = _index_for(cell)
+        beamline = _beamline_for(cell)
         values = read_sascha(path)
 
         setpoints = cls(name=Path(path).stem, **fields)
         for key, value in values.items():
-            group = index.resolve(key, namespace="ps")
+            group = beamline.resolve(key, namespace="ps")
             setpoints.elements[key] = value * sascha_sign(group.elements[0])
         return setpoints
 
     @classmethod
     def from_lattice(cls, cell, **fields) -> MachineSetpoints:
         """Read every knob and setpoint off a lattice."""
-        index = _index_for(cell)
+        beamline = _beamline_for(cell)
         setpoints = cls(**fields)
 
         for name, knob in setpoints.knobs.items():
             try:
-                setpoints.knobs.replace(name, knob.read(index, library.spec_for(name)))
+                setpoints.knobs.replace(
+                    name, knob.read(beamline, library.spec_for(name))
+                )
             except Exception as error:  # a section absent from this sequence
                 warnings.warn(
                     f"Could not read knob {name!r} from this lattice: {error}",
@@ -285,10 +287,10 @@ class MachineSetpoints(BaseModel):
                 )
 
         owners = cls._supply_owner()
-        for supply in index.supplies:
+        for supply in beamline.supplies:
             if supply in owners:
                 continue
-            group = index.group(supply)
+            group = beamline.group(supply)
             if not all(is_sascha_representable(e) for e in group.elements):
                 continue
             setpoints.elements[supply] = group.read()
@@ -372,7 +374,7 @@ class MachineSetpoints(BaseModel):
                 )
         return found
 
-    def _route(self, index: LatticeIndex) -> tuple[Knobs, list[tuple], list[str]]:
+    def _route(self, beamline: Beamline) -> tuple[Knobs, list[tuple], list[str]]:
         """Split ``elements`` into knob settings and plain setpoints.
 
         Returns the knobs to apply (a copy, with routed entries folded in), the
@@ -437,8 +439,8 @@ class MachineSetpoints(BaseModel):
 
         return knobs, plain, routed
 
-    def apply(self, index: LatticeIndex, *, verbose: bool = False) -> LatticeIndex:
-        """Apply these setpoints to an existing index, in place."""
+    def apply(self, beamline: Beamline, *, verbose: bool = False) -> Beamline:
+        """Apply these setpoints to an existing beamline, in place."""
         # Knobs tolerate partial states so they can be filled in field by field;
         # this is where a half-specified one has to be caught, since it would
         # otherwise be silently skipped.
@@ -457,7 +459,7 @@ class MachineSetpoints(BaseModel):
                 + "."
             )
 
-        knobs, plain, routed = self._route(index)
+        knobs, plain, routed = self._route(beamline)
 
         if verbose:
             for line in routed:
@@ -466,7 +468,7 @@ class MachineSetpoints(BaseModel):
         claimed: dict[tuple[str, str], str] = {}
         for name, knob in knobs.set_items():
             spec = library.spec_for(name)
-            for target in knob.owns(index, spec):
+            for target in knob.owns(beamline, spec):
                 # Two knobs over the same magnet: `l3` drives A6 to A25 as one
                 # section while `modules.A7` drives A7 alone, so setting both
                 # leaves the result depending on which is applied last.
@@ -483,7 +485,7 @@ class MachineSetpoints(BaseModel):
 
         # Reject a plain setpoint that fights a knob before changing anything.
         for key, namespace, value in plain:
-            group = index.resolve(
+            group = beamline.resolve(
                 key, namespace=namespace, allow_split=namespace == "id"
             )
             attributes = (
@@ -499,11 +501,11 @@ class MachineSetpoints(BaseModel):
                         )
 
         for name, knob in knobs.set_items():
-            knob.apply(index, library.spec_for(name))
+            knob.apply(beamline, library.spec_for(name))
 
         moved_geometry = []
         for key, namespace, value in plain:
-            group = index.resolve(
+            group = beamline.resolve(
                 key, namespace=namespace, allow_split=namespace == "id"
             )
             if _moves_geometry(group, value):
@@ -523,10 +525,10 @@ class MachineSetpoints(BaseModel):
                 stacklevel=3,
             )
 
-        self._check_resolved(index)
-        return index
+        self._check_resolved(beamline)
+        return beamline
 
-    def apply_in_place(self, cell, *, verbose: bool = False) -> list:
+    def apply_in_place(self, cell, *, verbose: bool = False) -> Beamline:
         """Apply these setpoints to ``cell`` itself, mutating the caller's elements.
 
         **This changes process-global state.** The generated cells are shared by
@@ -543,30 +545,38 @@ class MachineSetpoints(BaseModel):
 
         Prefer :meth:`build` for everything else -- optics, plots, exports,
         parameter scans -- where a private copy is both safer and free.
-        """
-        index = LatticeIndex.from_cell(cell, copy_elements=False)
-        self.apply(index, verbose=verbose)
-        return index.cell
 
-    def build(self, cell, *, verbose: bool = False) -> list:
+        The returned :class:`Beamline` wraps the caller's own elements, so it is
+        a way to go on addressing them by name, not a copy to work in.
+        """
+        beamline = Beamline.from_cell(cell, copy_elements=False)
+        self.apply(beamline, verbose=verbose)
+        return beamline
+
+    def build(self, cell, *, verbose: bool = False) -> Beamline:
         """Apply these setpoints to a copy of ``cell`` and return the new sequence.
 
         The caller's elements are never touched: the generated cells are shared
         by every section and by ``sequences.cathode_to_*``, so mutating them
         would leak into the whole process.
-        """
-        index = LatticeIndex.from_cell(cell)
-        self.apply(index, verbose=verbose)
-        return index.cell
 
-    def _check_resolved(self, index: LatticeIndex) -> None:
+        The result is a :class:`Beamline`, which is a sequence -- hand it
+        straight to ``MagneticLattice`` -- and is also still addressable by
+        name, so the magnets can be read back or adjusted further.  Use
+        ``.cell`` for a plain list to concatenate.
+        """
+        beamline = Beamline.from_cell(cell)
+        self.apply(beamline, verbose=verbose)
+        return beamline
+
+    def _check_resolved(self, beamline: Beamline) -> None:
         """Warn if the recorded snapshot disagrees with what we just applied."""
         if not self.resolved:
             return
         drifted = []
         for key, expected in self.resolved.items():
             try:
-                actual = index.resolve(key).read()
+                actual = beamline.resolve(key).read()
             except Exception:
                 continue
             if abs(actual - expected) > 1e-9 * max(1.0, abs(expected)):
@@ -589,12 +599,12 @@ class MachineSetpoints(BaseModel):
 
     def resolve(self, cell) -> dict[str, float]:
         """Every supply setpoint these produce, as a flat mapping."""
-        index = LatticeIndex.from_cell(cell)
-        self.apply(index)
+        beamline = Beamline.from_cell(cell)
+        self.apply(beamline)
         return {
-            supply: index.group(supply).read()
-            for supply in index.supplies
-            if all(is_sascha_representable(e) for e in index.group(supply).elements)
+            supply: beamline.group(supply).read()
+            for supply in beamline.supplies
+            if all(is_sascha_representable(e) for e in beamline.group(supply).elements)
         }
 
     def to_dict(self, *, include_unset: bool = False) -> dict[str, Any]:
@@ -624,7 +634,7 @@ class MachineSetpoints(BaseModel):
 
     def sascha_values(self, cell, *, keys=None) -> dict[str, float]:
         """These setpoints as ``{supply: Sascha value}``, signs converted."""
-        index = LatticeIndex.from_cell(cell)
+        beamline = Beamline.from_cell(cell)
 
         # Check before applying: setpoints that cannot be exported should say so
         # rather than first doing all the work of building the lattice.
@@ -633,8 +643,8 @@ class MachineSetpoints(BaseModel):
             key, namespace = _split_namespace(raw_key)
             if namespace != "id":
                 continue
-            element = index.resolve(key, namespace="id", allow_split=True).elements[0]
-            if index.siblings(element):
+            group = beamline.resolve(key, namespace="id", allow_split=True)
+            if beamline.siblings(group.elements[0]):
                 split.append(raw_key)
         if split:
             raise ValueError(
@@ -644,21 +654,23 @@ class MachineSetpoints(BaseModel):
                 f"export."
             )
 
-        self.apply(index)
+        self.apply(beamline)
 
         wanted = (
             list(keys)
             if keys is not None
             else [
                 supply
-                for supply in index.supplies
-                if all(is_sascha_representable(e) for e in index.group(supply).elements)
+                for supply in beamline.supplies
+                if all(
+                    is_sascha_representable(e) for e in beamline.group(supply).elements
+                )
             ]
         )
 
         values = {}
         for supply in wanted:
-            group = index.group(supply)
+            group = beamline.group(supply)
             values[supply] = group.read() * sascha_sign(group.elements[0])
         return values
 
@@ -730,11 +742,11 @@ def _write_attributes(group, attributes: dict[str, float], key: str) -> None:
             setattr(element, attribute, value)
 
 
-def _index_for(cell) -> LatticeIndex:
-    from .index import full_machine_cell
+def _beamline_for(cell) -> Beamline:
+    from .beamline import full_machine_cell
 
-    if isinstance(cell, LatticeIndex):
+    if isinstance(cell, Beamline):
         return cell
     if cell is None:
         cell = full_machine_cell()
-    return LatticeIndex.from_cell(cell)
+    return Beamline.from_cell(cell)
