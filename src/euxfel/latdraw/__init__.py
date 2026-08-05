@@ -11,7 +11,7 @@ but both drawing modes -- curvilinear (`draw`) and survey/cartesian
 
 from .convert import from_ocelot
 from .draw import DEFAULT_COLOUR_MAP, MAGNET_WIDTH, draw, draw_line, draw_survey
-from .lattice import Beamline
+from .lattice import Lattice
 from .plot import (
     alpha_label,
     beta_label,
@@ -29,7 +29,7 @@ from .plot import (
 __all__ = [
     "DEFAULT_COLOUR_MAP",
     "MAGNET_WIDTH",
-    "Beamline",
+    "Lattice",
     "alpha_label",
     "beta_label",
     "dispersion_label",

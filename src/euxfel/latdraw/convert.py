@@ -1,4 +1,4 @@
-"""Conversion of Ocelot sequences into drawable :class:`~.lattice.Beamline`s."""
+"""Conversion of Ocelot sequences into drawable :class:`~.lattice.Lattice`s."""
 
 from collections.abc import Generator, Iterable
 from typing import Any
@@ -26,17 +26,17 @@ def _flatten(sequence: Iterable[Any]) -> Generator[Any, None, None]:
             yield item
 
 
-def from_ocelot(ocelot_lattice: Any) -> lattice.Beamline:
-    """Convert an Ocelot sequence or ``MagneticLattice`` into a ``Beamline``."""
+def from_ocelot(ocelot_lattice: Any) -> lattice.Lattice:
+    """Convert an Ocelot sequence or ``MagneticLattice`` into a ``Lattice``."""
     sequence = getattr(ocelot_lattice, "sequence", ocelot_lattice)
-    return lattice.Beamline(_loop_lattice_from_ocelot(sequence))
+    return lattice.Lattice(_loop_lattice_from_ocelot(sequence))
 
 
-def _coerce(some_beamline: Any) -> lattice.Beamline:
-    """Accept either an already-converted ``Beamline`` or an Ocelot sequence."""
-    if isinstance(some_beamline, lattice.Beamline):
-        return some_beamline
-    return from_ocelot(some_beamline)
+def _coerce(maybe_lattice: Any) -> lattice.Lattice:
+    """Accept either an already-converted ``Lattice`` or an Ocelot sequence."""
+    if isinstance(maybe_lattice, lattice.Lattice):
+        return maybe_lattice
+    return from_ocelot(maybe_lattice)
 
 
 def _loop_lattice_from_ocelot(

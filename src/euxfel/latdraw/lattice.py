@@ -10,7 +10,7 @@ from numpy.typing import NDArray
 from .elements import Element
 
 
-class Beamline(MutableSequence[Element]):
+class Lattice(MutableSequence[Element]):
     def __init__(self, items: Iterable[Element]):
         self._sequence: list[Element] = list(items)
 

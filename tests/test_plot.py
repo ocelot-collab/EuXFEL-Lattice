@@ -23,18 +23,18 @@ def test_plot_cathode_to_target_doesnt_crash_for_all_targets(target_name: str) -
 def test_subplots_with_lattices_matches_compare_layout() -> None:
     """The compare-only surface that test_plot_cathode_to_target misses.
 
-    `compare_cathode_to_target` asks for five axes with an empty `Beamline` in
+    `compare_cathode_to_target` asks for five axes with an empty `Lattice` in
     the first slot -- the strip that `complist_draw.draw_to_target` then fills
     from the component list.  Needs no spreadsheet, so it stays fast.
     """
     from euxfel.complist_draw import DEFAULT_COLOUR_MAP, MAGNET_WIDTH  # noqa: F401
     from euxfel.latdraw.convert import from_ocelot
-    from euxfel.latdraw.lattice import Beamline
+    from euxfel.latdraw.lattice import Lattice
     from euxfel.latdraw.plot import subplots_with_lattices
     from euxfel.sequences import cathode_to_i1d
 
     fig, axes = subplots_with_lattices(
-        [Beamline([]), from_ocelot(cathode_to_i1d), None, None, None]
+        [Lattice([]), from_ocelot(cathode_to_i1d), None, None, None]
     )
     assert len(axes) == 5
 

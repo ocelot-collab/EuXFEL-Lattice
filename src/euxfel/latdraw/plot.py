@@ -7,11 +7,11 @@ import numpy as np
 
 from .convert import _coerce
 from .draw import draw
-from .lattice import Beamline
+from .lattice import Lattice
 
 
 def subplots_with_lattice(
-    lattice: Beamline | Any | None,
+    lattice: Lattice | Any | None,
     s_offset: float = 0,
     nrows: int = 1,
     gridspec_kw=None,

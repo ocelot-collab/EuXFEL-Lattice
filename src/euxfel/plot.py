@@ -7,7 +7,7 @@ from euxfel import subsequences
 from euxfel.complist import ComponentList
 from euxfel.complist_draw import draw_to_target
 from euxfel.latdraw.convert import from_ocelot
-from euxfel.latdraw.lattice import Beamline
+from euxfel.latdraw.lattice import Lattice
 from euxfel.latdraw.plot import (
     beta_label,
     s_label,
@@ -68,7 +68,7 @@ def compare_cathode_to_target(
     optics_df = pl.from_pandas(optics_df)
 
     fig, (mx1, mx2, ax1, ax2, ax3) = subplots_with_lattices(
-        [Beamline([]), from_ocelot(sequence), None, None, None]
+        [Lattice([]), from_ocelot(sequence), None, None, None]
     )
     draw_to_target(mx1, complist, f"I1to{target}")
     mx1.spines["left"].set_visible(False)
