@@ -256,9 +256,10 @@ class MachineSetpoints(BaseModel):
     ) -> MachineSetpoints:
         """Import a control-room Sascha file.
 
-        Bend signs are converted (see :func:`~euxfel.volts.sascha.sascha_sign`)
-        and chicane supplies are routed to their knobs, so the drifts between
-        the dipoles are rescaled rather than left inconsistent.
+        Bend signs are converted (see :func:`~euxfel.volts.sascha.sascha_sign`).
+        Everything else is recorded verbatim, chicane supplies included, so the
+        result stays a faithful copy of the file; the routing to chicane knobs
+        that rescales the drifts happens later, in :meth:`apply`.
         """
         beamline = _beamline_for(cell)
         values = read_sascha(path)
