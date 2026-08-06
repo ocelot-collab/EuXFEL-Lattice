@@ -16,6 +16,14 @@ script. The constant `r1 = 0.5 / 0.1366592804`, copy-pasted across six scripts,
 is exactly the value of `BB.1.I1` in `BC2_TDS.txt` — a real BC0 bend angle,
 transcribed by hand out of a file the code could not open.
 
+!!! note "Where things live"
+    `euxfel.volts` names the **file format**, so it holds only what is about
+    files or about the knobs a file sets: `MachineSetpoints`, the knob classes,
+    and the Sascha reader. What a setpoint *means* is a property of the lattice
+    and sits above it — `euxfel.Beamline` (addressing elements by name),
+    `euxfel.kicks` (generalised kicks) and `euxfel.machine` (what hardware
+    exists). None of those knows that files exist.
+
 ## Quick start
 
 ```python
@@ -380,7 +388,7 @@ and tracks; it does not write magnet or RF values any more.
 
 ```python
 setpoints = load_setpoints("sase2_14gev.yaml")
-setpoints.apply_in_place(all_machine_elements())
+setpoints.apply_in_place()
 
 section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
 

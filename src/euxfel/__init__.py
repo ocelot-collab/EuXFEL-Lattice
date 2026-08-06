@@ -1,4 +1,35 @@
 from . import plot, subsequences
+from .beamline import (
+    AmbiguousKeyError,
+    Beamline,
+    GangedMagnetError,
+    Group,
+    KnobOwnedError,
+    UnknownKeyError,
+    all_machine_elements,
+    clear_design_factors,
+)
+from .kicks import KickError, read_kick, write_kick
+from .machine import MATCHED_SECTIONS
+
+# The lattice model, which is here whether or not the generated subsequences
+# imported: none of it depends on them, so it should not go missing with them.
+__all__ = [
+    "MATCHED_SECTIONS",
+    "AmbiguousKeyError",
+    "Beamline",
+    "GangedMagnetError",
+    "Group",
+    "KickError",
+    "KnobOwnedError",
+    "UnknownKeyError",
+    "all_machine_elements",
+    "clear_design_factors",
+    "plot",
+    "read_kick",
+    "subsequences",
+    "write_kick",
+]
 
 try:
     from .sequences import (
@@ -19,16 +50,13 @@ except Exception:
         "  Consider regenerating one or more of these files to correct this."
     )
     del warnings
-    __all__ = ["plot", "subsequences"]
 else:
-    __all__ = [
-        "cathode_to_i1d",
+    __all__ += [
+        "CATHODE_TWISS0",
         "cathode_to_b1d",
         "cathode_to_b2d",
-        "cathode_to_tld",
+        "cathode_to_i1d",
         "cathode_to_t4d",
         "cathode_to_t5d",
-        "CATHODE_TWISS0",
-        "plot",
-        "subsequences",
+        "cathode_to_tld",
     ]

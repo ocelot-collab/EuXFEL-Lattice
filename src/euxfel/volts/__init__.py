@@ -1,4 +1,4 @@
-"""Machine setpoints for the European XFEL, in the VOLTS format.
+"""Machine setpoints, and the file formats they are written in.
 
 A machine's settings as data: magnet strengths and RF setpoints that can be
 applied to a lattice, read back off one, and round-tripped to and from the DESY
@@ -7,23 +7,18 @@ control room's file format.
 "Setpoints" rather than "optics" because it carries RF voltage, phase and chirp
 as well as magnet strengths, and only the latter are optics in the usual sense.
 
-See :mod:`euxfel.volts.config` for the
-:class:`~euxfel.volts.config.MachineSetpoints` entry point.
+VOLTS names the format, not the model.  What a setpoint *means* -- how a name
+reaches a magnet, what a generalised kick is, what hardware exists -- belongs to
+the lattice and lives above this package, in :mod:`euxfel.beamline`,
+:mod:`euxfel.kicks` and :mod:`euxfel.machine`.  Nothing there knows that files
+exist.  What lives here is the object those things are configured *by*
+(:class:`~euxfel.volts.config.MachineSetpoints`), the physics of the high-level
+knobs it exposes, and the two serialisations.
+
+See :mod:`euxfel.volts.config` for the entry point.
 """
 
-from .beamline import (
-    AmbiguousKeyError,
-    Beamline,
-    GangedMagnetError,
-    Group,
-    KnobOwnedError,
-    UnknownKeyError,
-    clear_design_factors,
-    all_machine_elements,
-)
 from .config import ConflictError, Knobs, MachineSetpoints
-from .library import MATCHED_SECTIONS, MatchedSectionSpec
-from .kicks import KickError, read_kick, write_kick
 from .knobs import ChicaneError, ChicaneKnob, InjectorRFKnob, LinacKnob
 from .sascha import read_sascha, write_sascha
 
@@ -34,27 +29,14 @@ def load_setpoints(path):
 
 
 __all__ = [
-    "MATCHED_SECTIONS",
-    "AmbiguousKeyError",
-    "Beamline",
     "ChicaneError",
     "ChicaneKnob",
     "ConflictError",
-    "GangedMagnetError",
-    "Group",
     "InjectorRFKnob",
-    "KickError",
-    "KnobOwnedError",
     "Knobs",
     "LinacKnob",
     "MachineSetpoints",
-    "MatchedSectionSpec",
-    "UnknownKeyError",
-    "clear_design_factors",
-    "all_machine_elements",
     "load_setpoints",
-    "read_kick",
     "read_sascha",
-    "write_kick",
     "write_sascha",
 ]

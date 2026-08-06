@@ -43,7 +43,7 @@ from ocelot.utils.acc_utils import (
 from pydantic import BaseModel, ConfigDict, model_validator
 from scipy.optimize import brentq
 
-from .library import (
+from euxfel.machine import (
     ChicaneSpec,
     InjectorSpec,
     LinacSpec,

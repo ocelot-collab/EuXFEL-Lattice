@@ -34,7 +34,7 @@ __all__ = [
     "spec_for",
 ]
 
-KNOBS_PATH = files("euxfel.volts") / "euxfel-knobs.yaml"
+KNOBS_PATH = files("euxfel") / "euxfel-knobs.yaml"
 
 
 class Spec(BaseModel):
@@ -128,7 +128,7 @@ class MatchedSectionSpec(Spec):
 
     Note there is no ``supplies`` field.  The membership rule is *positional* --
     everything with a ``ps_id`` upstream of ``marker`` -- so the supplies are
-    derived from the lattice by :class:`~euxfel.volts.beamline.Beamline`, which
+    derived from the lattice by :class:`~euxfel.beamline.Beamline`, which
     has one, rather than listed here, where they could fall out of date.
     """
 

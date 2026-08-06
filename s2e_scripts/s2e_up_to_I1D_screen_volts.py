@@ -31,7 +31,7 @@ from ocelot.gui.accelerator import show_e_beam
 
 from euxfel.section_track import SectionLattice
 from euxfel.sections import A1, AH1, I1D, LH
-from euxfel.volts import full_machine_cell, load_setpoints, MachineSetpoints
+from euxfel.volts import MachineSetpoints, load_setpoints
 
 data_dir = "../beam_files/"
 
@@ -63,7 +63,7 @@ setpoints = load_setpoints("setpoints/i1d_screen.yaml")
 # SPECIAL_DX12_OPTICS_I1D, a dict applied by a hand-written loop.
 setpoints = setpoints.merged_with(
     MachineSetpoints.from_sascha(
-        "../special-optics-files/DX12_I1D.txt", full_machine_cell()
+        "../special-optics-files/DX12_I1D.txt"
     )
 )
 
@@ -72,7 +72,7 @@ setpoints = setpoints.merged_with(
 # This mutates the module-level cells, which is process-global and irreversible
 # -- fine for a script that runs once and exits, but it is why setpoints.build()
 # exists for everything else.
-setpoints.apply_in_place(full_machine_cell(), verbose=True)
+setpoints.apply_in_place(verbose=True)
 
 section_lat = SectionLattice(sequence=sections, tws0=tws0, data_dir=data_dir)
 

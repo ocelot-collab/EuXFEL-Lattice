@@ -11,8 +11,8 @@ to six decimal places, LF line endings and **no trailing newline**::
     QI.1.I1 -0.053430
     BL.1.I1 0.099484
 
-Names are power supplies (see :mod:`euxfel.volts.beamline`) and values are
-generalised kicks (see :mod:`euxfel.volts.kicks`) -- energy independent, which
+Names are power supplies (see :mod:`euxfel.beamline`) and values are
+generalised kicks (see :mod:`euxfel.kicks`) -- energy independent, which
 is exactly what makes the file meaningful on its own.
 
 The three files shipped in ``special-optics-files/`` all carry the same 111

@@ -34,8 +34,8 @@ Where you need every element exactly once — the control-room format spans the
 whole machine, and `BG.1.B2D` exists only in the B2D line — use:
 
 ```python
-from euxfel.volts import all_machine_elements
-cell = all_machine_elements()    # every element, once, in a sliceable order
+from euxfel import all_machine_elements
+cell = all_machine_elements()    # every element, once; a catalogue, not a path
 ```
 
 ## Subsequences
@@ -87,7 +87,9 @@ tracking model is what an s2e script runs.
 | `subsequences/` | Generated element definitions (21 modules) |
 | `sections.py` | The 25 section definitions and the global tracking constants |
 | `section_track.py` | `SectionLattice`/`SectionTrack`, vendored from OCELOT |
-| `volts/` | Machine setpoints — see [Machine setpoints](setpoints.md) |
+| `beamline.py`, `kicks.py` | Addressing elements by name, and generalised kicks |
+| `machine.py`, `euxfel-knobs.yaml` | What hardware exists and how it is grouped |
+| `volts/` | Machine setpoints and their file formats — see [Machine setpoints](setpoints.md) |
 | `conversion.py`, `writer.py` | Component list → Python, and the code generator |
 | `complist.py`, `complist_draw.py` | Reading and drawing the component list |
 | `optics.py` | Optics and survey comparison against the component list |

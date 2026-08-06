@@ -56,7 +56,7 @@ def _reject_setpoints(section, conf):
         f"euxfel.volts.MachineSetpoints. Set them there and apply the "
         f"setpoints before building the SectionLattice:\n"
         f"    setpoints.bc2.r56 = ...       # or .l1.chirp, .b2_tds.voltage\n"
-        f"    setpoints.apply_in_place(all_machine_elements())\n"
+        f"    setpoints.apply_in_place()\n"
         f"The config dict now carries physics processes only "
         f"(SC, CSR, wake, smooth, match)."
     )

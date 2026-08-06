@@ -37,7 +37,7 @@ from euxfel.sections import (
     T3,
     T5,
 )
-from euxfel.volts import MachineSetpoints, full_machine_cell
+from euxfel.volts import MachineSetpoints
 from ocelot.cpbd.beam import Twiss
 from ocelot.cpbd.io import load_particle_array
 
@@ -132,7 +132,7 @@ setpoints.bc2.r56 = -0.0305
 # It must happen *before* SectionLattice is constructed, because each section
 # calculates its design twiss as it is built.
 # ------------------------------------------------------------------ #
-setpoints.apply_in_place(full_machine_cell(), verbose=True)
+setpoints.apply_in_place(verbose=True)
 
 section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
 
@@ -182,4 +182,4 @@ plt.show()
 
 # Save what was run, so the next person can reproduce it exactly:
 #     setpoints.to_yaml("t5d_14gev.yaml")
-#     setpoints.to_sascha(full_machine_cell(), "T5D_14GEV.txt")
+#     setpoints.to_sascha(path="T5D_14GEV.txt")

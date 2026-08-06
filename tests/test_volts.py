@@ -14,24 +14,26 @@ import pytest
 from ocelot.cpbd.elements import Drift, Quadrupole, SBend
 from ocelot.cpbd.magnetic_lattice import MagneticLattice
 
-from euxfel.volts import (
+from euxfel import (
     MATCHED_SECTIONS,
     AmbiguousKeyError,
     Beamline,
-    ChicaneKnob,
-    ConflictError,
     GangedMagnetError,
-    InjectorRFKnob,
     KnobOwnedError,
-    LinacKnob,
-    MachineSetpoints,
     UnknownKeyError,
     all_machine_elements,
 )
+from euxfel.volts import (
+    ChicaneKnob,
+    ConflictError,
+    InjectorRFKnob,
+    LinacKnob,
+    MachineSetpoints,
+)
 from euxfel.volts.config import valid_attributes
-from euxfel.volts.kicks import read_kick
+from euxfel.kicks import read_kick
 from euxfel.volts.knobs import chicane_dipoles, measure_r56, yoke_length
-from euxfel.volts.library import CHICANES, INJECTOR, LINACS
+from euxfel.machine import CHICANES, INJECTOR, LINACS
 from euxfel.volts.sascha import dumps_sascha, read_sascha, sascha_sign
 
 SASCHA_DIR = Path(__file__).parent.parent / "special-optics-files"
@@ -737,7 +739,7 @@ def test_a_chicane_still_closes_after_a_section_lattice(
 
 def test_tds_knob_round_trips(beamline):
     from euxfel.volts.knobs import TDSKnob
-    from euxfel.volts.library import TDS
+    from euxfel.machine import TDS
 
     knob = TDSKnob(voltage=0.004, phase=90.0)
     knob.apply(beamline, TDS["b1_tds"])
@@ -749,7 +751,7 @@ def test_tds_knob_round_trips(beamline):
 def test_one_supply_drives_both_b2_structures(beamline):
     """TDSB.B2 feeds TDSB.428.B2 and TDSB.430.B2, so both must move."""
     from euxfel.volts.knobs import TDSKnob
-    from euxfel.volts.library import TDS
+    from euxfel.machine import TDS
 
     group = beamline.resolve("TDSB.B2", namespace="ps")
     assert set(group.ids) == {"TDSB.428.B2", "TDSB.430.B2"}
@@ -794,7 +796,7 @@ def test_design_ratios_survive_a_supply_passing_through_zero(cell):
 
 
 def test_clearing_the_cache_makes_the_ratios_be_re_read(cell):
-    from euxfel.volts import clear_design_factors
+    from euxfel import clear_design_factors
 
     beamline = Beamline.from_cell(cell)
     group = beamline.resolve("QE.1.L3")
@@ -993,7 +995,7 @@ def test_a_symmetric_multi_supply_chicane_does_route(cell):
 
 def test_every_module_is_derived_from_a_linac_or_the_injector():
     """The module list is derived, not listed, so it cannot drift."""
-    from euxfel.volts.library import INJECTOR, LINACS, MODULES
+    from euxfel.machine import INJECTOR, LINACS, MODULES
 
     supplies = {spec.supply for spec in MODULES.values()}
     expected = {s for linac in LINACS.values() for s in linac.supplies}
@@ -1035,7 +1037,7 @@ def test_a_module_and_its_linac_cannot_both_be_set(cell, beamline):
 
 def test_a_module_knob_round_trips(beamline):
     from euxfel.volts.knobs import RFModuleKnob
-    from euxfel.volts.library import MODULES
+    from euxfel.machine import MODULES
 
     knob = RFModuleKnob(voltage=0.42, phase=-15.0)
     knob.apply(beamline, MODULES["A4"])

@@ -39,7 +39,7 @@ from dataclasses import dataclass, field
 
 from ocelot.cpbd.magnetic_lattice import flatten
 
-from . import library
+from . import machine
 from .kicks import (
     design_factors,
     is_kickable,
@@ -68,7 +68,7 @@ __all__ = [
 #: supplies have no such coupling, so writing to one directly is fine and the
 #: linac knobs do not claim them.
 GEOMETRY_OWNERS: dict[str, str] = {
-    supply: spec.name for spec in library.CHICANES.values() for supply in spec.supplies
+    supply: spec.name for spec in machine.CHICANES.values() for supply in spec.supplies
 }
 
 
@@ -199,7 +199,7 @@ class Group:
     #: The matched section this sits in, if any -- informational, not a guard.
     #: A stretch of machine whose settings this model decides for itself, so
     #: setpoints swept in from a file hold it back.  Writing here is still free:
-    #: naming a magnet is choosing it.  See :data:`library.MATCHED_SECTIONS`.
+    #: naming a magnet is choosing it.  See :data:`euxfel.machine.MATCHED_SECTIONS`.
     matched_by: str | None = None
 
     def __len__(self) -> int:
@@ -337,7 +337,7 @@ class Beamline(Sequence):
         section, which is the right answer for it.
         """
         found: dict[str, str] = {}
-        for spec in library.MATCHED_SECTIONS.values():
+        for spec in machine.MATCHED_SECTIONS.values():
             end = next(
                 (i for i, e in enumerate(self._cell) if e.id == spec.marker), None
             )

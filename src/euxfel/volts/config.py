@@ -25,7 +25,7 @@ knob, beamline or kick layers knows that files exist.  A file looks like::
     matching:                        # held back, not applied -- see `matching`
       QI.1.I1: -0.053430
 
-Values under ``elements`` are generalised kicks (see :mod:`euxfel.volts.kicks`)
+Values under ``elements`` are generalised kicks (see :mod:`euxfel.kicks`)
 unless given as a mapping, in which case they are OCELOT attributes verbatim.
 
 Chicane dipoles route to their knob
@@ -52,9 +52,9 @@ from typing import Any, ClassVar
 import yaml
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import library
-from .beamline import Beamline
-from .kicks import is_sascha_representable
+from euxfel import machine
+from euxfel.beamline import Beamline
+from euxfel.kicks import is_sascha_representable
 from .knobs import (
     ChicaneKnob,
     InjectorRFKnob,
@@ -112,9 +112,9 @@ class Knobs(BaseModel):
         there are twenty-six of them and naming each as a field would swamp the
         ten that describe the machine's sections.
         """
-        named = [(name, getattr(self, name)) for name in library.KNOB_NAMES]
+        named = [(name, getattr(self, name)) for name in machine.KNOB_NAMES]
         modules = [
-            (f"{library.MODULE_PREFIX}{name}", knob)
+            (f"{machine.MODULE_PREFIX}{name}", knob)
             for name, knob in self.modules.items()
         ]
         return named + modules
@@ -125,8 +125,8 @@ class Knobs(BaseModel):
 
     def get(self, path: str):
         """A knob by path, so that ``modules.A7`` works as well as ``bc2``."""
-        if path.startswith(library.MODULE_PREFIX):
-            return self.modules[path[len(library.MODULE_PREFIX) :]]
+        if path.startswith(machine.MODULE_PREFIX):
+            return self.modules[path[len(machine.MODULE_PREFIX) :]]
         return getattr(self, path)
 
     def replace(self, path: str, knob) -> None:
@@ -135,8 +135,8 @@ class Knobs(BaseModel):
         Named ``replace`` rather than ``set`` so it does not read like
         :meth:`Knob.set`, which sets parameters *on* a knob.
         """
-        if path.startswith(library.MODULE_PREFIX):
-            self.modules[path[len(library.MODULE_PREFIX) :]] = knob
+        if path.startswith(machine.MODULE_PREFIX):
+            self.modules[path[len(machine.MODULE_PREFIX) :]] = knob
         else:
             setattr(self, path, knob)
 
@@ -159,7 +159,7 @@ class MachineSetpoints(BaseModel):
     #:
     #: The importers put a supply here instead of in ``elements`` when it sits
     #: in a matched section -- a stretch of machine this model decides for
-    #: itself, see :data:`euxfel.volts.library.MATCHED_SECTIONS`.  Nothing else
+    #: itself, see :data:`euxfel.machine.MATCHED_SECTIONS`.  Nothing else
     #: writes here: setting ``setpoints["QI.1.I1"]`` yourself goes to
     #: ``elements`` and is applied, because naming a magnet is choosing it.
     #:
@@ -315,7 +315,7 @@ class MachineSetpoints(BaseModel):
         for name, knob in setpoints.knobs.items():
             try:
                 setpoints.knobs.replace(
-                    name, knob.read(beamline, library.spec_for(name))
+                    name, knob.read(beamline, machine.spec_for(name))
                 )
             except Exception as error:  # a section absent from this sequence
                 warnings.warn(
@@ -367,13 +367,13 @@ class MachineSetpoints(BaseModel):
     def _supply_owner(cls) -> dict[str, str]:
         if not cls._SUPPLY_OWNER:
             owners: dict[str, str] = {}
-            for name, spec in library.CHICANES.items():
+            for name, spec in machine.CHICANES.items():
                 owners.update({supply: name for supply in spec.supplies})
-            for name, spec in library.LINACS.items():
+            for name, spec in machine.LINACS.items():
                 owners.update({supply: name for supply in spec.supplies})
-            owners[library.INJECTOR.name] = library.INJECTOR.name
-            owners[library.INJECTOR.fundamental] = library.INJECTOR.name
-            owners[library.INJECTOR.harmonic] = library.INJECTOR.name
+            owners[machine.INJECTOR.name] = machine.INJECTOR.name
+            owners[machine.INJECTOR.fundamental] = machine.INJECTOR.name
+            owners[machine.INJECTOR.harmonic] = machine.INJECTOR.name
             cls._SUPPLY_OWNER = owners
         return cls._SUPPLY_OWNER
 
@@ -405,7 +405,7 @@ class MachineSetpoints(BaseModel):
         individually and a warning names the disagreement.
         """
         found: set[str] = set()
-        for name, spec in library.CHICANES.items():
+        for name, spec in machine.CHICANES.items():
             if len(spec.supplies) < 2:
                 continue
             values = {
@@ -533,7 +533,7 @@ class MachineSetpoints(BaseModel):
 
         claimed: dict[tuple[str, str], str] = {}
         for name, knob in knobs.set_items():
-            spec = library.spec_for(name)
+            spec = machine.spec_for(name)
             for target in knob.owns(beamline, spec):
                 # Two knobs over the same magnet: `l3` drives A6 to A25 as one
                 # section while `modules.A7` drives A7 alone, so setting both
@@ -565,7 +565,7 @@ class MachineSetpoints(BaseModel):
                         )
 
         for name, knob in knobs.set_items():
-            knob.apply(beamline, library.spec_for(name))
+            knob.apply(beamline, machine.spec_for(name))
 
         moved_geometry = []
         for key, namespace, value in plain:
@@ -638,7 +638,7 @@ class MachineSetpoints(BaseModel):
         """Apply these setpoints to ``cell`` itself, mutating the caller's elements.
 
         ``cell`` defaults to the whole machine
-        (:func:`~euxfel.volts.beamline.all_machine_elements`), which is almost
+        (:func:`~euxfel.beamline.all_machine_elements`), which is almost
         always what is meant here: the point of this method is to reach every
         section, and a setpoints file is machine-wide.
 
@@ -679,7 +679,7 @@ class MachineSetpoints(BaseModel):
         ``.cell`` for a plain list to concatenate.
 
         ``cell`` defaults to the whole machine
-        (:func:`~euxfel.volts.beamline.all_machine_elements`), which is what you
+        (:func:`~euxfel.beamline.all_machine_elements`), which is what you
         want when you are going to read setpoints back or export them.  **Pass
         the ``cathode_to_*`` you mean if you are going to track**, because the
         default is a catalogue of every element and not a beam path.
@@ -743,8 +743,8 @@ class MachineSetpoints(BaseModel):
         knobs: dict[str, Any] = {}
         for path, knob in self.knobs.set_items():
             dumped = knob.model_dump(exclude_none=True)
-            if path.startswith(library.MODULE_PREFIX):
-                name = path[len(library.MODULE_PREFIX) :]
+            if path.startswith(machine.MODULE_PREFIX):
+                name = path[len(machine.MODULE_PREFIX) :]
                 knobs.setdefault("modules", {})[name] = dumped
             else:
                 knobs[path] = dumped
@@ -821,7 +821,7 @@ class MachineSetpoints(BaseModel):
 
 def _kick_attributes(group) -> set[str]:
     """The attributes a bare setpoint would write on a group."""
-    from .kicks import kick_attribute
+    from euxfel.kicks import kick_attribute
 
     return {kick_attribute(element)[0] for element in group.elements}
 
@@ -840,7 +840,7 @@ def _moves_geometry(group, value) -> bool:
     if isinstance(value, dict):
         return "angle" in value
     return abs(float(value) - group.read()) > 1e-12
-    from .kicks import kick_attribute
+    from euxfel.kicks import kick_attribute
 
     return {kick_attribute(element)[0] for element in group.elements}
 
@@ -881,12 +881,12 @@ def _beamline_for(cell, *, copy_elements: bool = True) -> Beamline:
     """The beamline a ``cell=`` argument means.
 
     ``None`` means the whole machine -- see
-    :func:`~euxfel.volts.beamline.all_machine_elements`.  That is the right
+    :func:`~euxfel.beamline.all_machine_elements`.  That is the right
     default because a setpoints file is machine-wide and no single
     ``cathode_to_*`` sequence is.  Pass the sequence you mean when you intend to
     track the result, because the catalogue is not a beam path.
     """
-    from .beamline import all_machine_elements
+    from euxfel.beamline import all_machine_elements
 
     if cell is None:
         cell = all_machine_elements()

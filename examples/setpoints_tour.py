@@ -21,18 +21,16 @@ import warnings
 from ocelot.cpbd.magnetic_lattice import MagneticLattice
 from ocelot.cpbd.track import twiss
 
-from euxfel import sequences
-from euxfel.volts import (
+from euxfel import (
     Beamline,
-    ChicaneKnob,
     GangedMagnetError,
     KnobOwnedError,
-    MachineSetpoints,
     all_machine_elements,
-    read_sascha,
+    sequences,
 )
+from euxfel.volts import ChicaneKnob, MachineSetpoints, read_sascha
 from euxfel.volts.knobs import RFModuleKnob, chicane_dipoles
-from euxfel.volts.library import CHICANES
+from euxfel.machine import CHICANES
 
 SASCHA = "special-optics-files/BC2_TDS.txt"
 

@@ -16,7 +16,7 @@ sequences.TARGET_NAMES         # ("I1D", "B1D", "B2D", "TLD", "T4D", "T5D")
 The six targets share element objects; see [Layout](layout.md).
 
 ```python
-from euxfel.volts import all_machine_elements
+from euxfel import all_machine_elements
 all_machine_elements()            # every element exactly once, across all branches
 ```
 
@@ -58,7 +58,7 @@ by subscript: `setpoints["QI.1.I1"] = -0.05343`.
 ### Finding elements
 
 ```python
-from euxfel.volts import Beamline
+from euxfel import Beamline
 
 beamline = Beamline.from_cell(cell)    # deep-copies by default
 group = beamline["QI.1.I1"]            # by power supply or by element id
@@ -128,7 +128,9 @@ from euxfel.plot import plot_cathode_to_target, compare_cathode_to_target
 ```
 
 Note the name collision: `euxfel.optics` is this comparison module. The
-setpoints class lives in `euxfel.volts`.
+setpoints class lives in `euxfel.volts`, which names the file format; the
+lattice model it configures is `euxfel.beamline`, `euxfel.kicks` and
+`euxfel.machine`.
 
 ## The component list
 

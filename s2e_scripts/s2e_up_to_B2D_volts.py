@@ -22,7 +22,7 @@ from ocelot.gui.accelerator import show_e_beam
 
 from euxfel.section_track import SectionLattice
 from euxfel.sections import A1, AH1, B2D, BC0, BC1, BC2, DL, L1, L2, LH
-from euxfel.volts import full_machine_cell, load_setpoints
+from euxfel.volts import load_setpoints
 
 data_dir = "../beam_files/"
 
@@ -57,7 +57,7 @@ setpoints.i1.gun_energy = p_array_init.E
 # This mutates the module-level cells, which is process-global and irreversible
 # -- fine for a script that runs once and exits, but it is why setpoints.build()
 # exists for everything else.
-setpoints.apply_in_place(full_machine_cell(), verbose=True)
+setpoints.apply_in_place(verbose=True)
 
 section_lat = SectionLattice(sequence=sections, tws0=tws0, data_dir=data_dir)
 
