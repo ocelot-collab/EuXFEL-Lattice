@@ -34,7 +34,12 @@ from euxfel.volts.config import valid_attributes
 from euxfel.kicks import read_kick
 from euxfel.volts.knobs import chicane_dipoles, measure_r56, yoke_length
 from euxfel.machine import CHICANES, INJECTOR, LINACS
-from euxfel.volts.sascha import dumps_sascha, read_sascha, sascha_sign
+from euxfel.volts.sascha import (
+    VALUE_FORMAT,
+    dumps_sascha,
+    read_sascha,
+    sascha_sign,
+)
 
 SASCHA_DIR = Path(__file__).parent.parent / "special-optics-files"
 
@@ -1433,3 +1438,127 @@ def test_set_design_optics_returns_the_previous_mapping(
     # value is for.
     set_design_optics(previous)
     assert design_optics() == bc2
+
+
+# --------------------------------------------------------------------------- #
+# Selecting what to write
+# --------------------------------------------------------------------------- #
+
+
+def test_a_range_and_the_matched_section_agree(pytestconfig):
+    """Two unrelated code paths over the same lattice fact.
+
+    `matched_supplies` walks to the marker collecting ps_ids; `select(within=)`
+    compares element positions. They must land on the same twelve supplies.
+    """
+    from euxfel import sequences
+
+    beamline = Beamline.from_cell(sequences.cathode_to_b1d)
+    # From the start of the sequence, not `ocelot_start` -- the two correctors
+    # KIX/KIY.24.I1 sit in the ASTRA region ahead of it.
+    selected = beamline.select(within=(beamline[0], "MATCH.52.I1"))
+    assert set(selected) == set(beamline.matched_supplies)
+    assert len(selected) == 12
+
+
+def test_between_and_within_differ_by_the_supplies_that_overhang(beamline):
+    """QA.1.SA1 feeds 19 quadrupoles across the whole SASE1 undulator."""
+    from euxfel import sequences
+
+    t4d = Beamline.from_cell(sequences.cathode_to_t4d)
+    span = ("MATCH.2248.SA1", "QA.2296.SA1")
+
+    with pytest.warns(UserWarning, match="included whole"):
+        touching = t4d.select(between=span)
+    with pytest.warns(UserWarning, match="dropped"):
+        enclosed = t4d.select(within=span)
+
+    assert set(touching) - set(enclosed) == {"QA.1.SA1", "QA.2.SA1"}
+    assert not set(enclosed) - set(touching)
+
+
+def test_a_range_is_inclusive_of_its_endpoints(beamline):
+    selected = beamline.select(between=("QI.46.I1", "QI.47.I1"))
+    assert "QI.1.I1" in selected  # feeds QI.46.I1
+    assert "QI.2.I1" in selected  # feeds QI.47.I1
+
+
+def test_names_takes_both_namespaces_and_brings_siblings(beamline):
+    assert beamline.select(names=["QI.1.I1"]) == ("QI.1.I1",)
+    assert beamline.select(names=["QI.46.I1"]) == ("QI.1.I1",)
+
+    with pytest.warns(UserWarning, match="siblings"):
+        selected = beamline.select(names=["BB.96.I1"])
+    assert selected == ("BB.1.I1",)
+
+
+def test_between_and_within_are_mutually_exclusive(beamline):
+    with pytest.raises(ValueError, match="not both"):
+        beamline.select(
+            between=("QI.46.I1", "QI.47.I1"), within=("QI.46.I1", "QI.47.I1")
+        )
+
+
+def test_changed_finds_what_a_control_room_file_actually_moves(cell):
+    setpoints = MachineSetpoints.from_sascha(SASCHA_DIR / "BC2_TDS.txt", cell)
+    beamline = setpoints.build(cell, matching=True)
+
+    changed = beamline.select(changed=True)
+    assert len(changed) == 108
+    for supply in changed:
+        design = beamline.design_reference(supply)
+        difference = abs(beamline.group(supply).read() - design)
+        assert difference > 1e-9 * max(1.0, abs(design))
+
+
+@pytest.mark.parametrize("path", SASCHA_FILES, ids=lambda p: p.name)
+def test_nothing_is_changed_against_the_optics_it_came_from(
+    path, cell, restores_the_design_optics
+):
+    """The sharpest check on the design optics: rebase to a file, and that file
+    differs from it in exactly nothing."""
+    from euxfel import set_design_optics
+
+    setpoints = MachineSetpoints.from_sascha(path, cell)
+    beamline = setpoints.build(cell, matching=True)
+
+    set_design_optics(path, cell)
+    assert beamline.select(changed=True) == ()
+
+
+def test_export_narrows_to_what_changed(cell):
+    setpoints = MachineSetpoints.from_sascha(SASCHA_DIR / "BC2_TDS.txt", cell)
+
+    full = setpoints.to_sascha(cell)
+    partial = setpoints.to_sascha(cell, changed=True)
+
+    assert len(full.splitlines()) == 476
+    # 108 supplies differ at all; 63 of them differ by less than the six decimal
+    # places the format records, and writing those would set what is already set.
+    assert len(partial.splitlines()) == 45
+
+    written = dict(line.split() for line in partial.splitlines())
+    beamline = setpoints.build(cell, matching=True)
+    assert set(written) <= set(beamline.select(changed=True))
+    for supply, text in written.items():
+        assert text != VALUE_FORMAT.format(
+            beamline.design_reference(supply)
+            * sascha_sign(beamline.group(supply).elements[0])
+        )
+
+
+def test_keys_and_a_selection_cannot_both_be_given(cell):
+    setpoints = MachineSetpoints(elements={"QI.4.I1": -0.08})
+    with pytest.raises(ValueError, match="not both"):
+        setpoints.to_sascha(cell, keys=["QI.4.I1"], changed=True)
+
+
+def test_naming_something_unwritable_is_an_error_but_sweeping_it_is_not(cell):
+    """Explicit beats incidental, the same rule as the `matching` hold."""
+    setpoints = MachineSetpoints(elements={"QI.4.I1": -0.08})
+
+    with pytest.raises(ValueError, match="not generalised kicks"):
+        setpoints.to_sascha(cell, names=["C.A2.L1"])
+
+    # ...whereas a range that happens to cover the cavities just skips them.
+    assert "C.A2.L1" not in setpoints.sascha_values(cell, changed=True)

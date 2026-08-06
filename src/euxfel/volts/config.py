@@ -62,7 +62,13 @@ from .knobs import (
     RFModuleKnob,
     TDSKnob,
 )
-from .sascha import dumps_sascha, read_sascha, sascha_sign, write_sascha
+from .sascha import (
+    VALUE_FORMAT,
+    dumps_sascha,
+    read_sascha,
+    sascha_sign,
+    write_sascha,
+)
 
 __all__ = ["ConflictError", "Knobs", "MachineSetpoints"]
 
@@ -763,13 +769,54 @@ class MachineSetpoints(BaseModel):
             Path(path).write_text(text, encoding="utf-8")
         return text
 
-    def sascha_values(self, cell=None, *, keys=None) -> dict[str, float]:
+    def sascha_values(
+        self,
+        cell=None,
+        *,
+        keys=None,
+        names=None,
+        between=None,
+        within=None,
+        changed: bool = False,
+    ) -> dict[str, float]:
         """These setpoints as ``{supply: Sascha value}``, signs converted.
 
         Held :attr:`matching` values are included, so a file imported and
         written back out is unchanged.  Holding is about what reaches a
         *lattice*, not about what these setpoints contain.
+
+        ``names``/``between``/``within``/``changed`` narrow what is written; see
+        :meth:`~euxfel.beamline.Beamline.select`, which does the work.  A file
+        naming every supply in the machine sets every supply in the machine when
+        the control room applies it, so exporting only what you mean to change
+        is the difference between a 108-line file and a 476-line one.
+
+        ``changed`` here means *differs in the file*: a supply whose value
+        rounds to the design value at six decimal places would be written as a
+        line setting what is already set, so it is left out.  That is a
+        narrower question than
+        :meth:`~euxfel.beamline.Beamline.select`'s, which asks whether the
+        numbers differ at all -- of the 108 supplies ``BC2_TDS.txt`` moves, only
+        45 move by more than the format can record.
+
+        ``keys`` is the other way of narrowing: exactly these, in this order.
+        It is what makes a round trip byte identical, and so cannot be combined
+        with a selection -- one says *which*, the other says *work it out*.
         """
+        selection = {
+            "names": names,
+            "between": between,
+            "within": within,
+            "changed": changed or None,
+        }
+        selection = {key: value for key, value in selection.items() if value}
+        if keys is not None and selection:
+            raise ValueError(
+                f"`keys` names the supplies to write, in order. A selection "
+                f"({', '.join(sorted(selection))}) works them out instead. "
+                f"Pass one or the other, not both."
+            )
+
         beamline = _beamline_for(cell)
 
         # Check before applying: setpoints that cannot be exported should say so
@@ -791,17 +838,52 @@ class MachineSetpoints(BaseModel):
 
         self.apply(beamline, matching=True)
 
-        wanted = (
-            list(keys)
-            if keys is not None
-            else [
+        def representable(supply):
+            return all(
+                is_sascha_representable(e) for e in beamline.group(supply).elements
+            )
+
+        def writes_the_same_value(supply):
+            """Whether this supply's line would be the design value anyway.
+
+            `changed` on a Beamline means "differs at all", which is the right
+            answer for a lattice.  A file is written to six decimal places, so
+            here it means "differs *in the file*" -- and of the 108 supplies
+            BC2_TDS.txt moves, 63 move by less than the format can record.
+            Writing those would be 63 lines setting what is already set, which
+            is exactly the clobbering a selection exists to avoid.
+            """
+            group = beamline.group(supply)
+            sign = sascha_sign(group.elements[0])
+            return VALUE_FORMAT.format(group.read() * sign) == VALUE_FORMAT.format(
+                beamline.design_reference(supply) * sign
+            )
+
+        if keys is not None:
+            wanted = list(keys)
+        elif selection:
+            wanted = list(beamline.select(**{**selection, "changed": bool(changed)}))
+            # A supply named outright but not writable is a mistake worth
+            # raising; one merely swept up by a range is filtered, as the
+            # unselected case has always done. Explicit beats incidental.
+            unwritable = [
                 supply
-                for supply in beamline.supplies
-                if all(
-                    is_sascha_representable(e) for e in beamline.group(supply).elements
-                )
+                for supply in beamline.select(names=names)
+                if not representable(supply)
             ]
-        )
+            if names and unwritable:
+                raise ValueError(
+                    f"{', '.join(unwritable)} cannot appear in a Sascha file -- "
+                    f"a cavity voltage and a TDS are not generalised kicks. "
+                    f"Remove them from `names`."
+                )
+            wanted = [supply for supply in wanted if representable(supply)]
+            if changed:
+                wanted = [
+                    supply for supply in wanted if not writes_the_same_value(supply)
+                ]
+        else:
+            wanted = [supply for supply in beamline.supplies if representable(supply)]
 
         values = {}
         for supply in wanted:
@@ -810,10 +892,29 @@ class MachineSetpoints(BaseModel):
         return values
 
     def to_sascha(
-        self, cell=None, path: str | os.PathLike | None = None, *, keys=None
+        self,
+        cell=None,
+        path: str | os.PathLike | None = None,
+        *,
+        keys=None,
+        names=None,
+        between=None,
+        within=None,
+        changed: bool = False,
     ) -> str:
-        """Export to the control-room format."""
-        values = self.sascha_values(cell, keys=keys)
+        """Export to the control-room format.
+
+        Narrow what is written with ``names``/``between``/``within``/``changed``
+        -- see :meth:`sascha_values`.
+        """
+        values = self.sascha_values(
+            cell,
+            keys=keys,
+            names=names,
+            between=between,
+            within=within,
+            changed=changed,
+        )
         if path is not None:
             write_sascha(values, path, keys=keys)
         return dumps_sascha(values, keys=keys)

@@ -185,12 +185,27 @@ def setpoints_dump(target, from_sascha, output):
     help="Use this file's key set and order",
 )
 @option("-o", "--output", type=click.Path(dir_okay=False), help="Write here")
-def setpoints_to_sascha(config, target, like, output):
+@option(
+    "--changed",
+    is_flag=True,
+    help="Write only the supplies that differ from the design optics",
+)
+@option(
+    "--within",
+    nargs=2,
+    metavar="START STOP",
+    help="Write only supplies lying entirely between these two markers",
+)
+def setpoints_to_sascha(config, target, like, output, changed, within):
     from euxfel.volts import MachineSetpoints, read_sascha
 
     keys = list(read_sascha(like)) if like else None
     text = MachineSetpoints.from_yaml(config).to_sascha(
-        _cell_for(target), output, keys=keys
+        _cell_for(target),
+        output,
+        keys=keys,
+        changed=changed,
+        within=within or None,
     )
     if not output:
         echo(text)

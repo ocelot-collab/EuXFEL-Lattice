@@ -27,6 +27,7 @@ from euxfel import (
     KnobOwnedError,
     all_machine_elements,
     sequences,
+    set_design_optics,
 )
 from euxfel.volts import ChicaneKnob, MachineSetpoints, read_sascha
 from euxfel.volts.knobs import RFModuleKnob, chicane_dipoles
@@ -306,6 +307,55 @@ def main() -> None:
     # because holding is about what reaches a lattice, not what a file contains.
     exported = from_control_room.to_sascha(cell, keys=list(read_sascha(SASCHA)))
     print(f"\nre-exported identical to the original: {exported == open(SASCHA).read()}")
+
+    # -------------------------------------------------------------- 11b
+    heading("11b", "Writing only part of a machine")
+
+    # Every line in a Sascha file moves a supply when the control room applies
+    # it, so writing all 476 to change 45 clobbers 431 settings nobody asked to
+    # touch.  `changed` is measured against the design optics -- which is what
+    # `subsequences/*.py` says, stamped onto each element at import.
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        everything = from_control_room.to_sascha(cell)
+        moved = from_control_room.to_sascha(cell, changed=True)
+    print(f"everything    {len(everything.splitlines()):3} lines")
+    print(f"changed=True  {len(moved.splitlines()):3} lines")
+
+    # The whole file differs from design in 108 supplies, but 63 of those differ
+    # by less than the format's six decimal places -- lines that would set what
+    # is already set.  A Beamline answers the wider question:
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        applied_file = from_control_room.build(cell, matching=True)
+    print(f"differ at all {len(applied_file.select(changed=True)):3} supplies")
+
+    # Ranges name supplies, not magnets, and there are two honest readings of a
+    # partial overlap.  QA.1.SA1 feeds 19 quadrupoles across all of SASE1.
+    t4d = Beamline.from_cell(sequences.cathode_to_t4d)
+    span = ("MATCH.2248.SA1", "QA.2296.SA1")
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        touching = t4d.select(between=span)
+        enclosed = t4d.select(within=span)
+    print(f"\nbetween {span[0]} .. {span[1]}: {touching}")
+    print(f"within  {span[0]} .. {span[1]}: {enclosed}")
+    for warning in caught:
+        print(f"  -> {warning.message}")
+
+    # And the baseline itself can be moved.  Rebased onto the file it came from,
+    # nothing has changed -- which is the sharpest check that it works.
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        previous = set_design_optics(SASCHA, cell)
+        print(
+            f"\nrebased onto {SASCHA}: {len(applied_file.select(changed=True))} changed"
+        )
+        set_design_optics(previous)
+
+    # The wiring is untouched by that: it is how the magnets are cabled, not
+    # something an optics can say.
+    print(f"QE.1.L3 factors, still: {beamline['QE.1.L3'].factors}")
 
     # --------------------------------------------------------------- 12
     heading(12, "Merging, and reading setpoints back off a lattice")

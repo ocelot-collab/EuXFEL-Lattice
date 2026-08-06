@@ -144,10 +144,15 @@ def set_design_optics(optics=None, cell=None) -> dict[str, float]:
         A Sascha file names 111 of 505 supplies.  Rebasing the rest to nothing
         would report every one of them as changed from nothing.
 
-    Ones it sets to zero
+    Chicane supplies it sets to zero
         :meth:`Beamline.design_kicks` is also what tells a chicane which way its
-        dipoles bend, and a zero has no sign.  Those keep their stamped value,
-        and a warning names them.
+        dipoles bend, and a zero has no sign -- ``set_chicane_angle`` would read
+        ``np.sign(0 or 1.0)`` and send all four the same way.  Those keep their
+        stamped value, and a warning names them.
+
+        Only chicane supplies: a corrector or a quadrupole sitting at zero is a
+        perfectly good thing to compare against, and refusing it would report
+        every such supply as differing from an optics it matches exactly.
     """
     global _DESIGN_OPTICS
     previous = dict(_DESIGN_OPTICS)
@@ -158,17 +163,18 @@ def set_design_optics(optics=None, cell=None) -> dict[str, float]:
 
     values = _resolve_optics(optics, cell)
 
-    zeroed = sorted(key for key, value in values.items() if value == 0.0)
+    zeroed = sorted(
+        key for key, value in values.items() if value == 0.0 and key in GEOMETRY_OWNERS
+    )
     if zeroed:
         warnings.warn(
-            f"{len(zeroed)} supplies are zero in this optics, which gives them "
-            f"no sign, and the design kicks are what tell a chicane which way "
-            f"its dipoles bend. They keep their generated values: "
-            f"{', '.join(zeroed[:5])}{', ...' if len(zeroed) > 5 else ''}.",
+            f"This optics sets {', '.join(zeroed)} to zero, and a zero has no "
+            f"sign to tell the chicane which way its dipoles bend. They keep "
+            f"their generated values; everything else is rebased.",
             stacklevel=2,
         )
 
-    _DESIGN_OPTICS = {key: value for key, value in values.items() if value != 0.0}
+    _DESIGN_OPTICS = {key: value for key, value in values.items() if key not in zeroed}
     return previous
 
 
@@ -490,6 +496,142 @@ class Beamline(Sequence):
         """
         reference = self.design_reference(supply)
         return tuple(factor * reference for factor in self._factors[supply])
+
+    def select(
+        self, *, names=None, between=None, within=None, changed: bool = False
+    ) -> tuple[str, ...]:
+        """The power supplies matching every criterion given, in beamline order.
+
+        Parameters
+        ----------
+        names
+            Element ids or power supply ids, mixed freely.
+        between
+            ``(start, stop)``, inclusive: supplies with **any** magnet in the
+            range.  Endpoints are marker/element names, or elements.
+        within
+            The same range, read the other way: supplies with **every** magnet
+            in it.  Mutually exclusive with ``between``.
+        changed
+            Supplies whose value differs from the design optics.
+
+        Ranges name supplies, not magnets
+            A Sascha line always sets a whole supply, so there is nothing to
+            refuse here -- including one whole is not wrong, and the value
+            written is that supply's value, correct for every magnet on it.
+            What a partial overlap costs is a *known footprint*, so the two
+            words are the two honest readings and both say what they did:
+            ``between`` warns about the supplies reaching past the range,
+            ``within`` warns about the ones it dropped for doing so.
+
+            "Widen the range until nothing straddles" is not a remedy:
+            ``QA.1.SA1`` feeds 19 quadrupoles across the whole SASE1 undulator,
+            so widening to take it in drags in every other supply there too.
+
+        ``all_machine_elements()`` is a poor thing to range over -- its branches
+        are stitched, so 53 supplies have magnets far apart in it and
+        ``QH.5.TL`` has one magnet in each of two branches.  Nothing raises, but
+        expect a lot of warnings; pass the ``cathode_to_*`` you mean.
+        """
+        if between is not None and within is not None:
+            raise ValueError(
+                "Give either `between` (supplies with any magnet in the range) "
+                "or `within` (supplies with all of them), not both."
+            )
+
+        selected = set(self._factors) | {
+            supply for supply in self._by_supply if supply not in self._factors
+        }
+
+        if names is not None:
+            selected &= self._supplies_named(names)
+        if between is not None:
+            selected &= self._supplies_in_range(between, whole=True)
+        if within is not None:
+            selected &= self._supplies_in_range(within, whole=False)
+        if changed:
+            selected &= {
+                supply for supply in self._factors if not self._at_design(supply)
+            }
+
+        return tuple(supply for supply in sorted(selected, key=self._first_position))
+
+    def _first_position(self, supply: str) -> int:
+        return min(self.position(element) for element in self._by_supply[supply])
+
+    def _at_design(self, supply: str) -> bool:
+        design = self.design_reference(supply)
+        return abs(self.group(supply).read() - design) <= 1e-9 * max(1.0, abs(design))
+
+    def _supplies_named(self, names) -> set[str]:
+        """The supplies ``names`` reaches, warning about the siblings it brings.
+
+        Naming a magnet names its supply, because that is the only thing a
+        setpoint can address.  Worth saying out loud when one name turns into
+        nineteen magnets.
+        """
+        found: set[str] = set()
+        dragged: list[str] = []
+        for name in names:
+            group = self.resolve(name)
+            supply = group.key if group.is_supply else self.supply_of(group.elements[0])
+            if supply is None:
+                raise UnknownKeyError(
+                    f"{name!r} has no power supply, so it cannot be selected: "
+                    f"a setpoint addresses a supply, not a bare element."
+                )
+            if not group.is_supply and len(self._by_supply[supply]) > 1:
+                dragged.append(f"{name} -> {supply} ({len(self._by_supply[supply])})")
+            found.add(supply)
+
+        if dragged:
+            warnings.warn(
+                f"Naming a magnet names its supply, so these bring their "
+                f"siblings with them: {'; '.join(dragged)}.",
+                stacklevel=3,
+            )
+        return found
+
+    def _supplies_in_range(self, endpoints, *, whole: bool) -> set[str]:
+        """Supplies touching (``whole``) or enclosed by (not ``whole``) a range."""
+        start, stop = (self._as_element(end) for end in endpoints)
+        first, last = sorted((self.position(start), self.position(stop)))
+
+        found: set[str] = set()
+        overhanging: list[str] = []
+        for supply, elements in self._by_supply.items():
+            positions = [self.position(element) for element in elements]
+            inside = [first <= position <= last for position in positions]
+            if not any(inside):
+                continue
+            if all(inside):
+                found.add(supply)
+                continue
+            outside = sum(1 for is_in in inside if not is_in)
+            overhanging.append(f"{supply} ({outside} of {len(positions)} outside)")
+            if whole:
+                found.add(supply)
+
+        if overhanging:
+            what = (
+                "reach past the range and are included whole, so the file "
+                "touches magnets outside it"
+                if whole
+                else "were dropped for reaching past the range"
+            )
+            warnings.warn(
+                f"{len(overhanging)} power supplies {what}: "
+                f"{', '.join(sorted(overhanging)[:5])}"
+                f"{', ...' if len(overhanging) > 5 else ''}.",
+                stacklevel=3,
+            )
+        return found
+
+    def _as_element(self, endpoint):
+        """A range endpoint, given as a name or as an element itself."""
+        if isinstance(endpoint, str):
+            return self.resolve(endpoint).elements[0]
+        return endpoint
 
     def position(self, element) -> int:
         """Index of ``element`` within the sequence.

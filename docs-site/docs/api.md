@@ -47,6 +47,17 @@ setpoints = MachineSetpoints.from_lattice(cell)        # read back off a lattice
 | `resolve(cell=None)` | Every supply setpoint as a flat mapping |
 | `to_yaml(path)` / `to_sascha(cell=None, path)` | Write it out |
 
+`to_sascha` also takes `names=`/`between=`/`within=`/`changed=` to write only
+part of a machine — see [Writing part of a
+machine](setpoints.md#writing-part-of-a-machine).
+
+```python
+from euxfel import design_optics, set_design_optics
+
+set_design_optics("BEAM_B2D.txt")   # what `changed` compares against
+set_design_optics(None)             # back to what subsequences/*.py says
+```
+
 `build` and `apply_in_place` take `matching=True` to write the
 [matched section](setpoints.md#the-matched-section) — held back by default when
 the setpoints were swept in from a file rather than named by hand.
@@ -64,6 +75,12 @@ beamline = Beamline.from_cell(cell)    # deep-copies by default
 group = beamline["QI.1.I1"]            # by power supply or by element id
 group.read()                           # the current setpoint
 group.write(-0.053)                    # set it, preserving design ratios
+```
+
+```python
+beamline.select(changed=True)                    # differs from the design optics
+beamline.select(within=(beamline[0], "MATCH.52.I1"))   # wholly inside a range
+beamline.select(between=("A", "B"), names=["QI.1.I1"]) # criteria combine with AND
 ```
 
 Any name resolves; `write` is what refuses, when a knob owns the geometry

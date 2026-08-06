@@ -381,6 +381,88 @@ dump line — are written directly with no drift compensation, and warn that the
 downstream survey moves. That is correct: changing a dogleg is *supposed* to move
 the geometry.
 
+### Writing part of a machine
+
+Every line in a Sascha file *moves a supply* when the control room applies it, so
+a file naming 476 supplies to change 45 of them clobbers 431 settings nobody
+asked to touch. Narrow it:
+
+```python
+setpoints.to_sascha(cell, path="changed.txt", changed=True)
+setpoints.to_sascha(cell, path="injector.txt", within=(cell[0], "MATCH.52.I1"))
+setpoints.to_sascha(cell, path="two.txt", names=["QI.1.I1", "BB.96.I1"])
+```
+
+```bash
+euxfel setpoints to-sascha my_optics.yaml --changed
+euxfel setpoints to-sascha my_optics.yaml --within ocelot_start MATCH.52.I1
+```
+
+The criteria combine with **and**, and the same question can be asked of a
+beamline directly with [`select`](api.md#finding-elements). `keys=` is the other
+way to narrow — *exactly these, in this order*, which is what makes a round trip
+byte identical — and cannot be combined with a selection.
+
+#### Two ranges, because a supply is not a magnet
+
+A Sascha line always sets a *whole* supply, so a range that only partly covers
+one is not an error — the value written is that supply's value, correct for every
+magnet on it. What it costs is a known footprint. Hence two words:
+
+| | Selects | Warns about |
+|---|---|---|
+| `between=(a, b)` | supplies with **any** magnet in the range, included whole | the ones reaching past it, and how far |
+| `within=(a, b)` | supplies with **every** magnet in the range | the ones it dropped for reaching past |
+
+"Widen the range until nothing straddles" is not a remedy: `QA.1.SA1` feeds 19
+quadrupoles across the whole SASE1 undulator, so widening to take it in drags in
+every other supply there too.
+
+`names=` follows the same rule — naming a magnet names its supply, with a warning
+about the siblings that come with it. Naming something a Sascha file cannot hold
+(a cavity supply, a TDS) is an error; a range that merely sweeps one up skips it
+silently. Explicit beats incidental, the same rule as the [matched
+section](#the-matched-section).
+
+!!! warning "Do not range over the catalogue"
+    `all_machine_elements()` stitches the branches together, so 53 supplies have
+    magnets far apart in it and `QH.5.TL` has one magnet in each of two branches.
+    Nothing raises, but expect a great many warnings. Pass the `cathode_to_*` you
+    mean.
+
+#### What "changed" compares against
+
+By default, the values in `subsequences/*.py` — stamped onto each element as
+`design_kick` when those modules import, so they are read rather than remembered
+and cannot be lost by writing to the lattice.
+
+Load a different baseline when you want to diff against a real machine setting:
+
+```python
+previous = set_design_optics("special-optics-files/BEAM_B2D.txt")
+setpoints.to_sascha(path="diff.txt", changed=True)   # what differs from BEAM_B2D
+set_design_optics(previous)                          # hand it back to restore
+```
+
+It takes a Sascha file, a YAML file, a `MachineSetpoints`, a `Beamline`, a plain
+mapping, or `None` for the generated values. It is process-wide and read at call
+time, so a beamline built earlier answers the new question — and `to_sascha`,
+which builds its own beamline internally, can see it.
+
+Only the **optics** moves. The **wiring** — `QE.1.L3` is `[+, −, +]` — is derived
+from the stamps and never moves, because that is how the magnets are cabled and
+not something an optics can say. Two supplies are left alone: ones the optics
+does not name (a Sascha file names 111 of 505, and the rest are not "changed from
+nothing") and chicane supplies it sets to zero (a zero has no sign, and the
+design kicks are what tell a chicane which way its dipoles bend).
+
+!!! note "`changed` means something narrower on export"
+    `beamline.select(changed=True)` asks whether the numbers differ at all.
+    `to_sascha(changed=True)` asks whether they differ *in the file*, at the six
+    decimal places the format records. Of the 108 supplies `BC2_TDS.txt` moves,
+    only **45** move by more than that — the other 63 would be lines setting what
+    is already set.
+
 ## Start-to-end tracking
 
 `MachineSetpoints` owns the lattice. `SectionTrack` attaches physics processes
