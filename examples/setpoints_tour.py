@@ -37,7 +37,7 @@ from euxfel.volts.library import CHICANES
 SASCHA = "special-optics-files/BC2_TDS.txt"
 
 
-def heading(number: int, title: str) -> None:
+def heading(number: int | str, title: str) -> None:
     print(f"\n\033[1m{number}. {title}\033[0m\n" + "-" * 72)
 
 
@@ -121,6 +121,23 @@ def main() -> None:
     # A cavity has no geometry to break, so nothing stands in the way.
     beamline["C.A2.L1"].write(0.1)
     print("\nC.A2.L1.write(0.1) -> fine, a voltage moves no drifts")
+
+    # ---------------------------------------------------------------- 4b
+    heading("4b", "...and the matched section is held, not guarded")
+
+    # The injector up to MATCH.52.I1 is a stretch this model decides for
+    # itself: the A1/AH1 voltages come from beam2rf, and five quadrupoles are
+    # re-matched at conversion time.  A control-room file answers the same
+    # questions about the real gun's beam, and answers differently.
+    print(f"matched supplies: {len(beamline.matched_supplies)} upstream of MATCH.52.I1")
+    print(f"  {', '.join(beamline.matched_supplies)}")
+    print(f'beamline["QI.1.I1"].matched_by  {beamline["QI.1.I1"].matched_by!r}')
+    print(f'beamline["QI.4.I1"].matched_by  {beamline["QI.4.I1"].matched_by!r}')
+
+    # Nothing stops you writing one: naming a magnet is choosing it.  The hold
+    # is about setpoints swept in wholesale -- see section 11.
+    beamline["QI.1.I1"].write(0.06)
+    print("\nQI.1.I1.write(0.06) -> fine, that write is correct; just not a default")
 
     # ---------------------------------------------------------------- 5
     heading(5, "Why the chicane guard exists")
@@ -256,27 +273,39 @@ def main() -> None:
     # Sascha is DESY's `NAME VALUE` format: one line per power supply, and
     # every bend sign flipped relative to OCELOT's convention.
     from_control_room = MachineSetpoints.from_sascha(SASCHA, cell)
-    print(f"\nBC2_TDS.txt -> {len(from_control_room.elements)} supplies")
+    print(
+        f"\nBC2_TDS.txt -> {len(from_control_room.elements)} supplies applied, "
+        f"{len(from_control_room.matching)} held"
+    )
+    print(f"  held: {', '.join(from_control_room.matching)}")
 
-    # Importing records what the file said, verbatim -- the chicanes are still
-    # plain `elements` entries.  The routing happens when it is *applied*, so
-    # the object stays a faithful copy of the file and only the lattice sees
-    # the drifts move.  `verbose=True` shows what got routed:
+    # Nobody chose those eight among the file's hundred-odd supplies -- an
+    # importer swept up the machine -- so they go to `matching` and stay there.
+    # Everything else records what the file said, verbatim: the chicanes are
+    # still plain `elements` entries and the routing happens when it is
+    # *applied*, so the object stays a faithful copy of the file and only the
+    # lattice sees the drifts move.  `verbose=True` shows what got routed:
     print()
-    from_control_room.build(cell, verbose=True)
-
-    # The laser heater is missing from that list on purpose: all three of its
-    # supplies are in the file at slightly different magnitudes (BL.3.I1 runs
-    # 1.75% weak), which is not a symmetric chicane, so its four dipoles are
-    # written individually and a warning says so.
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter("always")
-        from_control_room.build(cell)
+        from_control_room.build(cell, verbose=True)
     for warning in caught:
-        if "lh" in str(warning.message):
+        if "matched section" in str(warning.message):
             print(f"\n{warning.message}")
 
-    # It survives the whole way back out, byte for byte.
+    # Ask for them and you get them -- along with the laser-heater warning the
+    # hold was suppressing: the file runs BL.3.I1 about 1.75% weak against the
+    # other two, which is not a symmetric chicane, so its four dipoles are
+    # written individually rather than through the `lh` knob.
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        from_control_room.build(cell, matching=True)
+    for warning in caught:
+        if "symmetric chicane" in str(warning.message):
+            print(f"\n{warning.message}")
+
+    # It survives the whole way back out, byte for byte -- held values included,
+    # because holding is about what reaches a lattice, not what a file contains.
     exported = from_control_room.to_sascha(cell, keys=list(read_sascha(SASCHA)))
     print(f"\nre-exported identical to the original: {exported == open(SASCHA).read()}")
 

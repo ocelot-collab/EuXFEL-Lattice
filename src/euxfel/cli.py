@@ -123,7 +123,12 @@ def _cell_for(target: str):
 @argument("config", type=click.Path(exists=True, dir_okay=False))
 @option("--target", default="T4D", help="Which cathode-to-dump sequence to apply to")
 @option("--marker", multiple=True, help="Extra markers to report optics at")
-def setpoints_apply(config, target, marker):
+@option(
+    "--matching",
+    is_flag=True,
+    help="Also write the matched section, which is otherwise held at design",
+)
+def setpoints_apply(config, target, marker, matching):
     from ocelot.cpbd.magnetic_lattice import MagneticLattice
     from ocelot.cpbd.track import twiss
 
@@ -132,7 +137,9 @@ def setpoints_apply(config, target, marker):
     import polars as pl
 
     echo(f"Applying {config} to cathode_to_{target.lower()}")
-    cell = MachineSetpoints.from_yaml(config).build(_cell_for(target), verbose=True)
+    cell = MachineSetpoints.from_yaml(config).build(
+        _cell_for(target), verbose=True, matching=matching
+    )
     optics_df = twiss(
         MagneticLattice(cell), tws0=sequences.CATHODE_TWISS0, return_df=True
     )

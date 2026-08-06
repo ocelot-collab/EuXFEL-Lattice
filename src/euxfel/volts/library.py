@@ -21,12 +21,14 @@ __all__ = [
     "INJECTOR",
     "KNOB_NAMES",
     "LINACS",
+    "MATCHED_SECTIONS",
     "MODULES",
     "MODULE_PREFIX",
     "TDS",
     "ChicaneSpec",
     "InjectorSpec",
     "LinacSpec",
+    "MatchedSectionSpec",
     "RFModuleSpec",
     "TDSSpec",
     "spec_for",
@@ -115,7 +117,27 @@ class InjectorSpec(Spec):
     description: str = ""
 
 
-def _load(path=KNOBS_PATH) -> tuple[dict, dict, dict, InjectorSpec, int]:
+class MatchedSectionSpec(Spec):
+    """A stretch of machine this model decides for itself, up to ``marker``.
+
+    Its settings are outputs rather than inputs -- the answer to "what RF and
+    what quadrupoles put the design beam at ``marker``?" -- so a control-room
+    file's values for the same supplies are a different answer to a different
+    question, fitted to the real machine's beam.  Neither is wrong; they are
+    not interchangeable.
+
+    Note there is no ``supplies`` field.  The membership rule is *positional* --
+    everything with a ``ps_id`` upstream of ``marker`` -- so the supplies are
+    derived from the lattice by :class:`~euxfel.volts.beamline.Beamline`, which
+    has one, rather than listed here, where they could fall out of date.
+    """
+
+    name: str
+    marker: str
+    description: str = ""
+
+
+def _load(path=KNOBS_PATH) -> tuple[dict, dict, dict, InjectorSpec, dict, int]:
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
 
     chicanes = {}
@@ -140,10 +162,15 @@ def _load(path=KNOBS_PATH) -> tuple[dict, dict, dict, InjectorSpec, int]:
     # one injector RF system.  Named "i1" after the section it drives.
     injector = InjectorSpec(name="i1", **raw["i1"])
 
-    return chicanes, linacs, tds, injector, raw.get("version", 1)
+    matched = {
+        name: MatchedSectionSpec(name=name, **entry)
+        for name, entry in raw.get("matching", {}).items()
+    }
+
+    return chicanes, linacs, tds, injector, matched, raw.get("version", 1)
 
 
-CHICANES, LINACS, TDS, INJECTOR, LIBRARY_VERSION = _load()
+CHICANES, LINACS, TDS, INJECTOR, MATCHED_SECTIONS, LIBRARY_VERSION = _load()
 
 
 def _module_name(supply: str) -> str:

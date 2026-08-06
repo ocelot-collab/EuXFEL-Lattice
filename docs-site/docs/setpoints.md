@@ -55,6 +55,10 @@ elements:
   ps:QI.1.I1: -0.053430       # force the power supply reading
   id:BB.96.I1: -0.13          # force one magnet, splitting a shared supply
   QI.63.I1D: {k1: -2.9974}    # explicit OCELOT attributes
+
+matching:                     # held back, not applied — see below
+  Q.A1.1.I1: -0.309370
+  QI.1.I1: -0.053430
 ```
 
 Load with `MachineSetpoints.from_yaml(path)` or `euxfel.volts.load_setpoints(path)`.
@@ -153,6 +157,82 @@ kick[i]   = setpoint * factor[i]
 Opposite wiring is just `factor = -1`. Factors are captured from the pristine
 lattice when the index is built, so repeated application never compounds them,
 and applying a supply's design value is an exact no-op.
+
+## The matched section
+
+Some of the machine this model decides for itself. The injector up to
+`MATCH.52.I1` is the case that exists today: the A1 and AH1 voltages come from
+`beam2rf` given the beam parameters, and `Q.A1.1.I1`, `Q.AH1.1.I1` and
+`QI.1–3.I1` are re-matched *at conversion time* to restore the design optics at
+that marker with the laser-heater undulator closed. Those values are outputs of
+the model, not inputs to it.
+
+A control-room file answers the same questions about the real gun's beam, and
+the answers differ — `QI.1.I1` by a sign, `QI.2.I1` by a factor of three:
+
+| supply | design `k1·l` | file `k1·l` | ratio |
+| --- | --- | --- | --- |
+| `Q.A1.1.I1` | −0.311228 | −0.309370 | 0.994 |
+| `Q.AH1.1.I1` | 0.307795 | 0.310489 | 1.009 |
+| `QI.1.I1` | 0.049480 | −0.053430 | −1.080 |
+| `QI.2.I1` | 0.052617 | 0.164670 | 3.130 |
+| `QI.3.I1` | −0.165365 | −0.205530 | 1.243 |
+
+Applying them moves `beta_y` by 16 % through the injector while still arriving
+within `bmag` 1.03 at `MATCH.52.I1`. Same match point, different route — and the
+route is what an s2e run tracks through, under space charge.
+
+### Provenance decides
+
+The line is not file-versus-object; it is **swept in** versus **named**.
+
+`from_sascha` and `from_lattice` take the whole machine, so nobody chose the
+injector among the ~500 supplies they return. Those land in `matching` rather
+than `elements`, and are held:
+
+```python
+setpoints = MachineSetpoints.from_sascha("BC2_TDS.txt")
+beamline = setpoints.build(cell)        # injector left as the model solved it
+                                        # ...and a warning says which supplies
+```
+
+Setting one yourself is a choice, and is applied like anything else:
+
+```python
+setpoints["QI.1.I1"] = 0.06             # goes to `elements` -> written
+```
+
+Where both name the same supply, `elements` wins — the deliberate entry beats
+the incidental one.
+
+### Writing it anyway
+
+```python
+setpoints.write_matching_section(beamline)   # after the fact
+setpoints.build(cell, matching=True)         # or in one go
+euxfel setpoints apply optics.yaml --matching
+```
+
+!!! note "Holding is about lattices, not files"
+    A held value still exports. `to_sascha` and `resolve` serialise what the
+    setpoints *say*, so a control-room file imported and written back out is
+    unchanged, byte for byte, injector included.
+
+The membership rule is positional and derived from the lattice — every supply
+with a `ps_id` upstream of the marker — so a magnet added there is covered the
+day it is added. Nothing lists the supplies; `euxfel-knobs.yaml` names only the
+marker. A sequence that does not contain the marker has no matched section at
+all, which is the right answer for a subsequence starting downstream.
+
+That is also why the laser heater is in it. `BL.1.I1`, `BL.3.I1` and `BL.4.I1`
+sit upstream of `MATCH.52.I1`, so a control-room file's 1.75 % asymmetry on
+`BL.3.I1` is held too and the chicane stays symmetric. The asymmetry warning
+then fires only when you ask for the file's values.
+
+Unlike the [chicane guard](#a-knob-owns-the-geometry), this is not enforced on
+`Group.write()`. `beamline["QI.1.I1"].write(x)` is free: that write is *correct*,
+merely unwanted in bulk, and a single-quadrupole scan is a real thing to want.
+`Group.matched_by` tells you where you are without stopping you.
 
 ## Knobs
 
@@ -300,7 +380,7 @@ and tracks; it does not write magnet or RF values any more.
 
 ```python
 setpoints = load_setpoints("sase2_14gev.yaml")
-setpoints.apply_in_place(full_machine_cell())
+setpoints.apply_in_place(all_machine_elements())
 
 section_lat = SectionLattice(sequence=all_sections, tws0=tws0, data_dir=data_dir)
 

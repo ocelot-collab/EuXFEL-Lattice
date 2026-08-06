@@ -22,6 +22,9 @@ knob, beamline or kick layers knows that files exist.  A file looks like::
       id:BB.96.I1: -0.13             # force one magnet, splitting a shared supply
       QI.63.I1D: {k1: -2.9974}       # explicit OCELOT attributes
 
+    matching:                        # held back, not applied -- see `matching`
+      QI.1.I1: -0.053430
+
 Values under ``elements`` are generalised kicks (see :mod:`euxfel.volts.kicks`)
 unless given as a mapping, in which case they are OCELOT attributes verbatim.
 
@@ -30,6 +33,13 @@ Chicane dipoles route to their knob
     also rescaling the drifts between the dipoles leaves a chicane whose
     geometry no longer closes.  So an ``elements`` entry naming a supply a knob
     owns is converted into a knob setting rather than written directly.
+
+A matched section is held back
+    Some of the machine this model decides for itself -- the injector up to
+    ``MATCH.52.I1``.  Setpoints swept in by an importer land in ``matching``
+    rather than ``elements`` and are not applied unless asked for, because
+    nobody chose them among the file's several hundred supplies.  Naming one
+    yourself still sets it.
 """
 
 from __future__ import annotations
@@ -145,6 +155,18 @@ class MachineSetpoints(BaseModel):
     description: str | None = None
     knobs: Knobs = Field(default_factory=Knobs)
     elements: dict[str, float | dict[str, float]] = Field(default_factory=dict)
+    #: Setpoints for a matched section, held back rather than applied.
+    #:
+    #: The importers put a supply here instead of in ``elements`` when it sits
+    #: in a matched section -- a stretch of machine this model decides for
+    #: itself, see :data:`euxfel.volts.library.MATCHED_SECTIONS`.  Nothing else
+    #: writes here: setting ``setpoints["QI.1.I1"]`` yourself goes to
+    #: ``elements`` and is applied, because naming a magnet is choosing it.
+    #:
+    #: Held values still export, so a file imported and written back out is
+    #: unchanged.  Applying them takes :meth:`write_matching_section` or
+    #: ``matching=True``.
+    matching: dict[str, float] = Field(default_factory=dict)
     #: Optional snapshot of the fully resolved setpoints.  Knobs record intent,
     #: which resolves differently if the lattice changes underneath them; this
     #: records what they resolved to when the file was written.
@@ -260,19 +282,33 @@ class MachineSetpoints(BaseModel):
         Everything else is recorded verbatim, chicane supplies included, so the
         result stays a faithful copy of the file; the routing to chicane knobs
         that rescales the drifts happens later, in :meth:`apply`.
+
+        Supplies in a matched section go to :attr:`matching` rather than
+        :attr:`elements`: a file names every supply in the machine, so nobody
+        chose those among them.  They still export.
         """
         beamline = _beamline_for(cell)
         values = read_sascha(path)
 
         setpoints = cls(name=Path(path).stem, **fields)
+        matched = beamline.matched_supplies
         for key, value in values.items():
             group = beamline.resolve(key, namespace="ps")
-            setpoints.elements[key] = value * sascha_sign(group.elements[0])
+            value *= sascha_sign(group.elements[0])
+            if key in matched:
+                setpoints.matching[key] = value
+            else:
+                setpoints.elements[key] = value
         return setpoints
 
     @classmethod
     def from_lattice(cls, cell=None, **fields) -> MachineSetpoints:
-        """Read every knob and setpoint off a lattice."""
+        """Read every knob and setpoint off a lattice.
+
+        Like :meth:`from_sascha`, this sweeps up the whole machine, so a matched
+        section's supplies land in :attr:`matching` rather than
+        :attr:`elements`.
+        """
         beamline = _beamline_for(cell)
         setpoints = cls(**fields)
 
@@ -288,13 +324,15 @@ class MachineSetpoints(BaseModel):
                 )
 
         owners = cls._supply_owner()
+        matched = beamline.matched_supplies
         for supply in beamline.supplies:
             if supply in owners:
                 continue
             group = beamline.group(supply)
             if not all(is_sascha_representable(e) for e in group.elements):
                 continue
-            setpoints.elements[supply] = group.read()
+            where = setpoints.matching if supply in matched else setpoints.elements
+            where[supply] = group.read()
 
         return setpoints
 
@@ -312,6 +350,7 @@ class MachineSetpoints(BaseModel):
                 merged.knobs.replace(name, knob.model_copy(deep=True))
 
         merged.elements.update(child.elements)
+        merged.matching.update(child.matching)
 
         for field in ("name", "description", "lattice", "resolved"):
             value = getattr(child, field)
@@ -338,7 +377,24 @@ class MachineSetpoints(BaseModel):
             cls._SUPPLY_OWNER = owners
         return cls._SUPPLY_OWNER
 
-    def _inconsistent_chicanes(self) -> set[str]:
+    def _settings(self, *, matching: bool) -> dict:
+        """The setpoints to apply: ``elements``, plus ``matching`` if asked.
+
+        ``elements`` wins where the two name the same supply, and that is the
+        provenance rule rather than an ordering accident: an entry in
+        ``elements`` was put there by someone naming the supply, while one in
+        ``matching`` arrived because an importer swept up the machine.  The
+        deliberate one beats the incidental one.
+        """
+        if not matching:
+            return dict(self.elements)
+        return {**self.matching, **self.elements}
+
+    def _shadowed_matching(self) -> list[str]:
+        """Supplies ``elements`` overrides in ``matching``, for the verbose log."""
+        return sorted(key for key in self.matching if key in self.elements)
+
+    def _inconsistent_chicanes(self, settings: dict) -> set[str]:
         """Multi-supply chicanes whose supplies this file sets to different
         magnitudes, and which therefore cannot be routed through one angle.
 
@@ -353,10 +409,9 @@ class MachineSetpoints(BaseModel):
             if len(spec.supplies) < 2:
                 continue
             values = {
-                supply: self.elements[supply]
+                supply: settings[supply]
                 for supply in spec.supplies
-                if supply in self.elements
-                and isinstance(self.elements[supply], (int, float))
+                if supply in settings and isinstance(settings[supply], (int, float))
             }
             if len(values) < 2:
                 continue
@@ -375,8 +430,10 @@ class MachineSetpoints(BaseModel):
                 )
         return found
 
-    def _route(self, beamline: Beamline) -> tuple[Knobs, list[tuple], list[str]]:
-        """Split ``elements`` into knob settings and plain setpoints.
+    def _route(
+        self, beamline: Beamline, settings: dict
+    ) -> tuple[Knobs, list[tuple], list[str]]:
+        """Split ``settings`` into knob settings and plain setpoints.
 
         Returns the knobs to apply (a copy, with routed entries folded in), the
         plain settings as ``(key, namespace, value)``, and a human-readable log
@@ -386,10 +443,10 @@ class MachineSetpoints(BaseModel):
         plain: list[tuple] = []
         routed: list[str] = []
         owners = self._supply_owner()
-        inconsistent = self._inconsistent_chicanes()
+        inconsistent = self._inconsistent_chicanes(settings)
         routed_here: set[str] = set()
 
-        for raw_key, value in self.elements.items():
+        for raw_key, value in settings.items():
             key, namespace = _split_namespace(raw_key)
 
             # An explicit `id:` is a deliberate request for one magnet, so it
@@ -440,8 +497,14 @@ class MachineSetpoints(BaseModel):
 
         return knobs, plain, routed
 
-    def apply(self, beamline: Beamline, *, verbose: bool = False) -> Beamline:
-        """Apply these setpoints to an existing beamline, in place."""
+    def apply(
+        self, beamline: Beamline, *, verbose: bool = False, matching: bool = False
+    ) -> Beamline:
+        """Apply these setpoints to an existing beamline, in place.
+
+        :attr:`matching` is held back unless ``matching=True``, and a warning
+        says which supplies were held and how to write them.
+        """
         # Knobs tolerate partial states so they can be filled in field by field;
         # this is where a half-specified one has to be caught, since it would
         # otherwise be silently skipped.
@@ -460,11 +523,13 @@ class MachineSetpoints(BaseModel):
                 + "."
             )
 
-        knobs, plain, routed = self._route(beamline)
+        knobs, plain, routed = self._route(beamline, self._settings(matching=matching))
 
         if verbose:
             for line in routed:
                 print(line)
+            for key in self._shadowed_matching():
+                print(f"{key} set in `elements`, overriding the held `matching` value")
 
         claimed: dict[tuple[str, str], str] = {}
         for name, knob in knobs.set_items():
@@ -529,10 +594,47 @@ class MachineSetpoints(BaseModel):
                 stacklevel=3,
             )
 
-        self._check_resolved(beamline)
+        if not matching:
+            self._warn_held(beamline)
+        self._check_resolved(beamline, held=() if matching else self.matching)
         return beamline
 
-    def apply_in_place(self, cell=None, *, verbose: bool = False) -> Beamline:
+    def _warn_held(self, beamline: Beamline) -> None:
+        """Say what was held back, once, naming the way to write it."""
+        held = sorted(key for key in self.matching if key not in self.elements)
+        if not held:
+            return
+        sections = sorted({beamline.matched_supplies.get(key, "?") for key in held})
+        warnings.warn(
+            f"{len(held)} setpoints belong to matched section "
+            f"{', '.join(repr(s) for s in sections)} -- a stretch of machine "
+            f"this model decides for itself -- and were held at their design "
+            f"values rather than applied: {', '.join(held)}. To write them "
+            f"too:\n"
+            f"    setpoints.write_matching_section(beamline)\n"
+            f"or build with matching=True.",
+            stacklevel=4,
+        )
+
+    def write_matching_section(self, beamline: Beamline) -> Beamline:
+        """Write the held :attr:`matching` setpoints to ``beamline``.
+
+        The deliberate second step: :meth:`build` gives you a beamline with the
+        matched section left as this model solved it, and this overwrites it
+        with what the setpoints say.
+
+        Raises ``UnknownKeyError`` if a held supply is not in this sequence,
+        rather than skipping it -- being asked to write a setpoint and silently
+        not writing it is the failure this whole mechanism exists to avoid.
+        """
+        for key, value in self.matching.items():
+            group = beamline.resolve(key, namespace="ps")
+            group.write(float(value), ignore_knob=True)
+        return beamline
+
+    def apply_in_place(
+        self, cell=None, *, verbose: bool = False, matching: bool = False
+    ) -> Beamline:
         """Apply these setpoints to ``cell`` itself, mutating the caller's elements.
 
         ``cell`` defaults to the whole machine
@@ -559,10 +661,12 @@ class MachineSetpoints(BaseModel):
         a way to go on addressing them by name, not a copy to work in.
         """
         beamline = _beamline_for(cell, copy_elements=False)
-        self.apply(beamline, verbose=verbose)
+        self.apply(beamline, verbose=verbose, matching=matching)
         return beamline
 
-    def build(self, cell=None, *, verbose: bool = False) -> Beamline:
+    def build(
+        self, cell=None, *, verbose: bool = False, matching: bool = False
+    ) -> Beamline:
         """Apply these setpoints to a copy of ``cell`` and return the new sequence.
 
         The caller's elements are never touched: the generated cells are shared
@@ -581,15 +685,22 @@ class MachineSetpoints(BaseModel):
         default is a catalogue of every element and not a beam path.
         """
         beamline = _beamline_for(cell)
-        self.apply(beamline, verbose=verbose)
+        self.apply(beamline, verbose=verbose, matching=matching)
         return beamline
 
-    def _check_resolved(self, beamline: Beamline) -> None:
-        """Warn if the recorded snapshot disagrees with what we just applied."""
+    def _check_resolved(self, beamline: Beamline, held=()) -> None:
+        """Warn if the recorded snapshot disagrees with what we just applied.
+
+        ``held`` names supplies deliberately not applied, which would otherwise
+        all report as drifted -- a false alarm about the one thing we just chose
+        to do.
+        """
         if not self.resolved:
             return
         drifted = []
         for key, expected in self.resolved.items():
+            if key in held:
+                continue
             try:
                 actual = beamline.resolve(key).read()
             except Exception:
@@ -613,9 +724,14 @@ class MachineSetpoints(BaseModel):
     # ------------------------------------------------------------------ #
 
     def resolve(self, cell=None) -> dict[str, float]:
-        """Every supply setpoint these produce, as a flat mapping."""
+        """Every supply setpoint these produce, as a flat mapping.
+
+        ``matching=True``: this is a serialisation of what these setpoints
+        *say*, not a lattice to track, so a held value is still one of the
+        things they say.
+        """
         beamline = _beamline_for(cell)
-        self.apply(beamline)
+        self.apply(beamline, matching=True)
         return {
             supply: beamline.group(supply).read()
             for supply in beamline.supplies
@@ -648,7 +764,12 @@ class MachineSetpoints(BaseModel):
         return text
 
     def sascha_values(self, cell=None, *, keys=None) -> dict[str, float]:
-        """These setpoints as ``{supply: Sascha value}``, signs converted."""
+        """These setpoints as ``{supply: Sascha value}``, signs converted.
+
+        Held :attr:`matching` values are included, so a file imported and
+        written back out is unchanged.  Holding is about what reaches a
+        *lattice*, not about what these setpoints contain.
+        """
         beamline = _beamline_for(cell)
 
         # Check before applying: setpoints that cannot be exported should say so
@@ -668,7 +789,7 @@ class MachineSetpoints(BaseModel):
                 f"export."
             )
 
-        self.apply(beamline)
+        self.apply(beamline, matching=True)
 
         wanted = (
             list(keys)

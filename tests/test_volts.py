@@ -15,6 +15,7 @@ from ocelot.cpbd.elements import Drift, Quadrupole, SBend
 from ocelot.cpbd.magnetic_lattice import MagneticLattice
 
 from euxfel.volts import (
+    MATCHED_SECTIONS,
     AmbiguousKeyError,
     Beamline,
     ChicaneKnob,
@@ -1096,6 +1097,200 @@ def test_set_names_the_valid_parameters_when_one_is_misspelt():
     setpoints = MachineSetpoints()
     with pytest.raises(ValueError, match="no parameter 'chrip'"):
         setpoints.l2.set(sum_voltage=1.7, chrip=-9.3)
+
+
+# --------------------------------------------------------------------------- #
+# The matched section
+# --------------------------------------------------------------------------- #
+
+
+def test_the_matched_section_is_every_supply_upstream_of_the_marker(beamline):
+    """The membership rule, checked against the lattice rather than a list.
+
+    Positional, not "the quadrupoles the converter solved for": the A1/AH1
+    voltages and the laser heater are equally this model's own business.
+    """
+    spec = MATCHED_SECTIONS["i1"]
+    expected = {}
+    for element in beamline:
+        if element.id == spec.marker:
+            break
+        supply = getattr(element, "ps_id", None)
+        if supply:
+            expected.setdefault(supply, "i1")
+
+    assert beamline.matched_supplies == expected
+    assert set(expected) == {
+        "KIX.24.I1",
+        "KIY.24.I1",
+        "C.A1.I1",
+        "C3.AH1.I1",
+        "Q.A1.1.I1",
+        "Q.AH1.1.I1",
+        "QI.1.I1",
+        "QI.2.I1",
+        "QI.3.I1",
+        "BL.1.I1",
+        "BL.3.I1",
+        "BL.4.I1",
+    }
+
+
+def test_a_sequence_without_the_marker_has_no_matched_section():
+    """The bug the obvious loop has: no marker must mean nothing, not everything."""
+    from euxfel.subsequences import l1
+
+    assert Beamline.from_cell(l1.cell).matched_supplies == {}
+
+
+def test_matched_by_reaches_a_magnet_as_well_as_its_supply(beamline):
+    assert beamline["QI.1.I1"].matched_by == "i1"
+    assert beamline["QI.46.I1"].matched_by == "i1"
+    assert beamline["QI.4.I1"].matched_by is None
+
+
+def test_writing_a_matched_magnet_is_still_free(beamline, restores_the_lattice):
+    """Unlike the chicane guard: naming a magnet is choosing it."""
+    beamline["QI.1.I1"].write(0.06)
+    assert round(beamline["QI.1.I1"].read(), 6) == 0.06
+
+
+@pytest.mark.parametrize("path", SASCHA_FILES, ids=lambda p: p.name)
+def test_import_diverts_the_matched_section(path, cell):
+    setpoints = MachineSetpoints.from_sascha(path, cell)
+    assert set(setpoints.matching) == {
+        "Q.A1.1.I1",
+        "Q.AH1.1.I1",
+        "QI.1.I1",
+        "QI.2.I1",
+        "QI.3.I1",
+        "BL.1.I1",
+        "BL.3.I1",
+        "BL.4.I1",
+    }
+    assert not set(setpoints.matching) & set(setpoints.elements)
+
+
+def test_build_holds_the_matched_section_and_says_so(cell):
+    setpoints = MachineSetpoints.from_sascha(SASCHA_DIR / "BC2_TDS.txt", cell)
+    design = Beamline.from_cell(cell)
+
+    with pytest.warns(UserWarning, match="write_matching_section"):
+        beamline = setpoints.build(cell)
+
+    for supply in setpoints.matching:
+        assert beamline[supply].read() == pytest.approx(design[supply].read())
+    # ...while everything downstream of the marker did land.
+    assert beamline["QI.4.I1"].read() == pytest.approx(setpoints.elements["QI.4.I1"])
+
+
+@pytest.mark.parametrize("how", ["flag", "method"])
+def test_both_opt_ins_write_the_matched_section(how, cell):
+    setpoints = MachineSetpoints.from_sascha(SASCHA_DIR / "BC2_TDS.txt", cell)
+
+    if how == "flag":
+        beamline = setpoints.build(cell, matching=True)
+    else:
+        with pytest.warns(UserWarning, match="write_matching_section"):
+            beamline = setpoints.build(cell)
+        setpoints.write_matching_section(beamline)
+
+    for supply, value in setpoints.matching.items():
+        assert beamline[supply].read() == pytest.approx(value)
+
+
+def test_naming_a_matched_supply_yourself_applies_it(cell):
+    """Provenance: `elements` is what someone chose, `matching` is what was swept."""
+    setpoints = MachineSetpoints(elements={"QI.1.I1": 0.06})
+    beamline = setpoints.build(cell)
+    assert beamline["QI.1.I1"].read() == pytest.approx(0.06)
+
+
+def test_elements_beats_matching_for_the_same_supply(cell):
+    setpoints = MachineSetpoints.from_sascha(SASCHA_DIR / "BC2_TDS.txt", cell)
+    setpoints.elements["QI.1.I1"] = 0.06
+
+    beamline = setpoints.build(cell, matching=True)
+    assert beamline["QI.1.I1"].read() == pytest.approx(0.06)
+    # The rest of the section is unaffected by one supply being claimed.
+    assert beamline["QI.2.I1"].read() == pytest.approx(setpoints.matching["QI.2.I1"])
+
+
+def test_holding_the_laser_heater_leaves_it_a_symmetric_chicane(cell):
+    """The asymmetry warning is a property of the file, not of every load.
+
+    All three shipped files run BL.3.I1 about 1.75% weak, which is why the `lh`
+    knob refuses them.  Held, the chicane stays as this model built it.
+    """
+    setpoints = MachineSetpoints.from_sascha(SASCHA_DIR / "BC2_TDS.txt", cell)
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        beamline = setpoints.build(cell)
+
+    assert not any("not a symmetric chicane" in str(w.message) for w in caught)
+    magnitudes = {
+        round(abs(beamline[supply].read()), 9) for supply in ("BL.1.I1", "BL.3.I1")
+    }
+    assert len(magnitudes) == 1
+
+
+def test_the_matched_section_still_exports(cell):
+    """Holding is about what reaches a lattice, not about what a file contains."""
+    path = SASCHA_DIR / "BC2_TDS.txt"
+    setpoints = MachineSetpoints.from_sascha(path, cell)
+    exported = setpoints.to_sascha(cell, keys=list(read_sascha(path)))
+    assert exported == path.read_text()
+
+
+def test_a_held_supply_is_not_reported_as_drifted(cell):
+    """`resolved` records intent; holding is not the lattice changing underneath."""
+    setpoints = MachineSetpoints.from_sascha(SASCHA_DIR / "BC2_TDS.txt", cell)
+    setpoints.resolved = dict(setpoints.matching)
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        setpoints.build(cell)
+
+    assert not any("no longer resolve" in str(w.message) for w in caught)
+
+
+def test_holding_costs_beta_through_the_injector_but_not_at_the_marker(cell):
+    """Why this exists: same match point, different route.
+
+    Both sets of quadrupoles arrive at MATCH.52.I1 within bmag 1.03, so nothing
+    downstream notices -- but the beam takes a visibly different path through
+    the injector to get there, and that path is what an s2e run tracks.
+    """
+    from ocelot.cpbd.track import twiss
+
+    from euxfel import sequences
+    from euxfel.optics import bmag
+
+    # Only the held part: the rest of the file names BC2 and the B2 dump, which
+    # are genuinely not in this sequence.
+    imported = MachineSetpoints.from_sascha(SASCHA_DIR / "BC2_TDS.txt", cell)
+    setpoints = MachineSetpoints(matching=imported.matching)
+
+    def optics(**kwargs):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            beamline = setpoints.build(sequences.cathode_to_b1d, **kwargs)
+        return twiss(MagneticLattice(beamline), tws0=sequences.CATHODE_TWISS0)
+
+    held, written = optics(), optics(matching=True)
+
+    design, machine = (
+        next(t for t in run if t.id == "MATCH.52.I1") for run in (held, written)
+    )
+    mismatch = bmag(machine.beta_y, machine.alpha_y, design.beta_y, design.alpha_y)
+    assert mismatch == pytest.approx(1.03, abs=0.02)
+
+    worst = max(
+        abs(a.beta_y - b.beta_y) / a.beta_y
+        for a, b in zip(held, written)
+        if a.s < 29.2 and a.beta_y > 1e-6
+    )
+    assert worst > 0.15
 
 
 # --------------------------------------------------------------------------- #

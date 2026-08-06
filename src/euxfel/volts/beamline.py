@@ -196,6 +196,11 @@ class Group:
     split_from: str | None = None
     #: The other magnets on that supply, for the error message.
     siblings: tuple[str, ...] = ()
+    #: The matched section this sits in, if any -- informational, not a guard.
+    #: A stretch of machine whose settings this model decides for itself, so
+    #: setpoints swept in from a file hold it back.  Writing here is still free:
+    #: naming a magnet is choosing it.  See :data:`library.MATCHED_SECTIONS`.
+    matched_by: str | None = None
 
     def __len__(self) -> int:
         return len(self.elements)
@@ -293,6 +298,8 @@ class Beamline(Sequence):
             if supply:
                 self._by_supply.setdefault(supply, []).append(element)
 
+        self._matched: dict[str, str] = self._find_matched_supplies()
+
         # Design ratios must come from the pristine lattice, before anything is
         # applied, or repeated application would compound them.
         self._factors: dict[str, tuple[float, ...]] = {}
@@ -318,6 +325,41 @@ class Beamline(Sequence):
                 f"{', ...' if len(unpowered) > 5 else ''}.",
                 stacklevel=2,
             )
+
+    def _find_matched_supplies(self) -> dict[str, str]:
+        """Supply -> matched section, for every supply upstream of a marker.
+
+        Positional, and derived rather than listed, because that is what the
+        rule actually is: everything the model decides for itself sits *before*
+        the match point.  A magnet added upstream is covered the day it is
+        added, and a sequence that does not contain the marker -- a subsequence,
+        or a dump line that branches off earlier -- simply has no matched
+        section, which is the right answer for it.
+        """
+        found: dict[str, str] = {}
+        for spec in library.MATCHED_SECTIONS.values():
+            end = next(
+                (i for i, e in enumerate(self._cell) if e.id == spec.marker), None
+            )
+            # No marker, no section.  "Everything before a point that is not in
+            # this sequence" is not "everything in this sequence" -- reading it
+            # that way would hold back the whole of a subsequence that happens
+            # to start downstream of the injector.
+            if end is None:
+                continue
+            for element in self._cell[:end]:
+                supply = getattr(element, "ps_id", None)
+                if supply:
+                    found.setdefault(supply, spec.name)
+        return found
+
+    @property
+    def matched_supplies(self) -> dict[str, str]:
+        """Every supply a matched section covers, mapped to that section.
+
+        A copy: this is a fact about the lattice, not a knob to turn.
+        """
+        return dict(self._matched)
 
     @classmethod
     def from_cell(cls, cell, *, copy_elements: bool = True) -> Beamline:
@@ -428,6 +470,7 @@ class Beamline(Sequence):
             factors=self._factors.get(supply, (1.0,) * len(elements)),
             is_supply=True,
             owned_by=GEOMETRY_OWNERS.get(supply),
+            matched_by=self._matched.get(supply),
         )
 
     def resolve(self, key: str, *, namespace: str | None = None) -> Group:
@@ -497,6 +540,7 @@ class Beamline(Sequence):
             siblings=tuple(other.id for other in self.siblings(element))
             if ganged
             else (),
+            matched_by=self._matched.get(supply) if supply else None,
         )
 
     # ------------------------------------------------------------------ #

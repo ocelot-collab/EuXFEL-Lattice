@@ -22,6 +22,7 @@ from .beamline import (
     all_machine_elements,
 )
 from .config import ConflictError, Knobs, MachineSetpoints
+from .library import MATCHED_SECTIONS, MatchedSectionSpec
 from .kicks import KickError, read_kick, write_kick
 from .knobs import ChicaneError, ChicaneKnob, InjectorRFKnob, LinacKnob
 from .sascha import read_sascha, write_sascha
@@ -33,6 +34,7 @@ def load_setpoints(path):
 
 
 __all__ = [
+    "MATCHED_SECTIONS",
     "AmbiguousKeyError",
     "Beamline",
     "ChicaneError",
@@ -46,6 +48,7 @@ __all__ = [
     "Knobs",
     "LinacKnob",
     "MachineSetpoints",
+    "MatchedSectionSpec",
     "UnknownKeyError",
     "clear_design_factors",
     "all_machine_elements",

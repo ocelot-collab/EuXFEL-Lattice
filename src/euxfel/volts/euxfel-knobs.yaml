@@ -103,3 +103,26 @@ tds:
     supply: TDSB.B2
     frequency: 2.8e+09
     description: TDSB after BC2, two structures on one supply.
+
+# Stretches of machine whose settings this model decides for itself, rather than
+# taking from the tunnel.  Everything with a power supply upstream of `marker`
+# belongs to one -- the supplies are *derived* from the lattice, not listed here,
+# so a magnet added upstream is covered the day it is added.
+#
+# Setpoints swept in wholesale from a file hold these back; see
+# MachineSetpoints.matching.  Naming one deliberately still sets it.
+matching:
+  i1:
+    marker: MATCH.52.I1
+    description: >
+      The injector, up to the fixed match point in front of the TDS.  Its
+      settings are outputs of this model, not inputs: the A1/AH1 voltages come
+      from beam2rf given the beam parameters, and Q.A1.1.I1, Q.AH1.1.I1 and
+      QI.1-3.I1 are re-matched at conversion time to restore the design optics
+      at MATCH.52.I1 with the laser-heater undulator closed.
+
+      A control-room file answers the same questions about the real gun's beam,
+      and the answers differ: QI.1.I1 by a sign, QI.2.I1 by a factor of three.
+      Applying them moves beta by up to 16% through the injector while still
+      arriving within bmag 1.03 at the marker -- same match point, different
+      route.  The route is what an s2e run tracks through.

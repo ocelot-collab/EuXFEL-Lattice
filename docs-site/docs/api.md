@@ -42,9 +42,14 @@ setpoints = MachineSetpoints.from_lattice(cell)        # read back off a lattice
 |---|---|
 | `build(cell=None)` | Apply to a **copy**; returns a new sequence. Use this by default. |
 | `apply_in_place(cell=None)` | Apply to the caller's elements. Process-global; only for s2e scripts. |
+| `write_matching_section(beamline)` | Write the held `matching` setpoints too |
 | `merged_with(other)` | This, overridden by `other` |
 | `resolve(cell=None)` | Every supply setpoint as a flat mapping |
 | `to_yaml(path)` / `to_sascha(cell=None, path)` | Write it out |
+
+`build` and `apply_in_place` take `matching=True` to write the
+[matched section](setpoints.md#the-matched-section) — held back by default when
+the setpoints were swept in from a file rather than named by hand.
 
 Knobs are reached as attributes: `setpoints.bc2.r56`, `setpoints.l1.chirp`,
 `setpoints.i1.curvature`, `setpoints.b2_tds.voltage`. Individual magnets
