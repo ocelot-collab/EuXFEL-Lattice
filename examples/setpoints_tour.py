@@ -28,7 +28,7 @@ from euxfel.volts import (
     GangedMagnetError,
     KnobOwnedError,
     MachineSetpoints,
-    full_machine_cell,
+    all_machine_elements,
     read_sascha,
 )
 from euxfel.volts.knobs import RFModuleKnob, chicane_dipoles
@@ -46,7 +46,7 @@ def main() -> None:
     # but it is not what this script is about.
     warnings.filterwarnings("ignore", message=".*zero design kick.*")
 
-    cell = full_machine_cell()
+    cell = all_machine_elements()
 
     # ---------------------------------------------------------------- 1
     heading(1, "A Beamline is an ordinary sequence")

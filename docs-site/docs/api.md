@@ -16,9 +16,14 @@ sequences.TARGET_NAMES         # ("I1D", "B1D", "B2D", "TLD", "T4D", "T5D")
 The six targets share element objects; see [Layout](layout.md).
 
 ```python
-from euxfel.volts import full_machine_cell
-full_machine_cell()            # every element exactly once, across all branches
+from euxfel.volts import all_machine_elements
+all_machine_elements()            # every element exactly once, across all branches
 ```
+
+A catalogue to address and write to, **not a beam path**: the joins between
+branches are fictional, so tracking it returns nonsense. It is the default for
+every `cell` argument below, because a setpoints file is machine-wide and no
+single `cathode_to_*` is. Pass the one you mean when you intend to track.
 
 ## Machine setpoints
 
@@ -35,11 +40,11 @@ setpoints = MachineSetpoints.from_lattice(cell)        # read back off a lattice
 
 | Method | Does |
 |---|---|
-| `build(cell)` | Apply to a **copy**; returns a new sequence. Use this by default. |
-| `apply_in_place(cell)` | Apply to the caller's elements. Process-global; only for s2e scripts. |
+| `build(cell=None)` | Apply to a **copy**; returns a new sequence. Use this by default. |
+| `apply_in_place(cell=None)` | Apply to the caller's elements. Process-global; only for s2e scripts. |
 | `merged_with(other)` | This, overridden by `other` |
-| `resolve(cell)` | Every supply setpoint as a flat mapping |
-| `to_yaml(path)` / `to_sascha(cell, path)` | Write it out |
+| `resolve(cell=None)` | Every supply setpoint as a flat mapping |
+| `to_yaml(path)` / `to_sascha(cell=None, path)` | Write it out |
 
 Knobs are reached as attributes: `setpoints.bc2.r56`, `setpoints.l1.chirp`,
 `setpoints.i1.curvature`, `setpoints.b2_tds.voltage`. Individual magnets

@@ -43,7 +43,7 @@ setpoints = load_setpoints("setpoints/nominal_14gev.yaml")
 setpoints.i1.gun_energy = p_array_init.E
 
 # 3. Apply them to the lattice, before the sections are built.
-setpoints.apply_in_place(full_machine_cell(), verbose=True)
+setpoints.apply_in_place(all_machine_elements(), verbose=True)
 section_lat = SectionLattice(sequence=sections, tws0=tws0, data_dir=data_dir)
 
 # 4. Physics processes, and track.
@@ -185,7 +185,7 @@ one:
 ```python
 setpoints = setpoints.merged_with(
     MachineSetpoints.from_sascha("../special-optics-files/DX12_I1D.txt",
-                                 full_machine_cell())
+                                 all_machine_elements())
 )
 ```
 

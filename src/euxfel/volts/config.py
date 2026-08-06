@@ -271,7 +271,7 @@ class MachineSetpoints(BaseModel):
         return setpoints
 
     @classmethod
-    def from_lattice(cls, cell, **fields) -> MachineSetpoints:
+    def from_lattice(cls, cell=None, **fields) -> MachineSetpoints:
         """Read every knob and setpoint off a lattice."""
         beamline = _beamline_for(cell)
         setpoints = cls(**fields)
@@ -532,8 +532,13 @@ class MachineSetpoints(BaseModel):
         self._check_resolved(beamline)
         return beamline
 
-    def apply_in_place(self, cell, *, verbose: bool = False) -> Beamline:
+    def apply_in_place(self, cell=None, *, verbose: bool = False) -> Beamline:
         """Apply these setpoints to ``cell`` itself, mutating the caller's elements.
+
+        ``cell`` defaults to the whole machine
+        (:func:`~euxfel.volts.beamline.all_machine_elements`), which is almost
+        always what is meant here: the point of this method is to reach every
+        section, and a setpoints file is machine-wide.
 
         **This changes process-global state.** The generated cells are shared by
         every ``SectionTrack``, by ``sequences.cathode_to_*`` and by ``euxfel
@@ -553,11 +558,11 @@ class MachineSetpoints(BaseModel):
         The returned :class:`Beamline` wraps the caller's own elements, so it is
         a way to go on addressing them by name, not a copy to work in.
         """
-        beamline = Beamline.from_cell(cell, copy_elements=False)
+        beamline = _beamline_for(cell, copy_elements=False)
         self.apply(beamline, verbose=verbose)
         return beamline
 
-    def build(self, cell, *, verbose: bool = False) -> Beamline:
+    def build(self, cell=None, *, verbose: bool = False) -> Beamline:
         """Apply these setpoints to a copy of ``cell`` and return the new sequence.
 
         The caller's elements are never touched: the generated cells are shared
@@ -568,8 +573,14 @@ class MachineSetpoints(BaseModel):
         straight to ``MagneticLattice`` -- and is also still addressable by
         name, so the magnets can be read back or adjusted further.  Use
         ``.cell`` for a plain list to concatenate.
+
+        ``cell`` defaults to the whole machine
+        (:func:`~euxfel.volts.beamline.all_machine_elements`), which is what you
+        want when you are going to read setpoints back or export them.  **Pass
+        the ``cathode_to_*`` you mean if you are going to track**, because the
+        default is a catalogue of every element and not a beam path.
         """
-        beamline = Beamline.from_cell(cell)
+        beamline = _beamline_for(cell)
         self.apply(beamline, verbose=verbose)
         return beamline
 
@@ -601,9 +612,9 @@ class MachineSetpoints(BaseModel):
     # Writing
     # ------------------------------------------------------------------ #
 
-    def resolve(self, cell) -> dict[str, float]:
+    def resolve(self, cell=None) -> dict[str, float]:
         """Every supply setpoint these produce, as a flat mapping."""
-        beamline = Beamline.from_cell(cell)
+        beamline = _beamline_for(cell)
         self.apply(beamline)
         return {
             supply: beamline.group(supply).read()
@@ -636,9 +647,9 @@ class MachineSetpoints(BaseModel):
             Path(path).write_text(text, encoding="utf-8")
         return text
 
-    def sascha_values(self, cell, *, keys=None) -> dict[str, float]:
+    def sascha_values(self, cell=None, *, keys=None) -> dict[str, float]:
         """These setpoints as ``{supply: Sascha value}``, signs converted."""
-        beamline = Beamline.from_cell(cell)
+        beamline = _beamline_for(cell)
 
         # Check before applying: setpoints that cannot be exported should say so
         # rather than first doing all the work of building the lattice.
@@ -678,7 +689,7 @@ class MachineSetpoints(BaseModel):
         return values
 
     def to_sascha(
-        self, cell, path: str | os.PathLike | None = None, *, keys=None
+        self, cell=None, path: str | os.PathLike | None = None, *, keys=None
     ) -> str:
         """Export to the control-room format."""
         values = self.sascha_values(cell, keys=keys)
@@ -745,11 +756,19 @@ def _write_attributes(group, attributes: dict[str, float], key: str) -> None:
             setattr(element, attribute, value)
 
 
-def _beamline_for(cell) -> Beamline:
-    from .beamline import full_machine_cell
+def _beamline_for(cell, *, copy_elements: bool = True) -> Beamline:
+    """The beamline a ``cell=`` argument means.
 
-    if isinstance(cell, Beamline):
-        return cell
+    ``None`` means the whole machine -- see
+    :func:`~euxfel.volts.beamline.all_machine_elements`.  That is the right
+    default because a setpoints file is machine-wide and no single
+    ``cathode_to_*`` sequence is.  Pass the sequence you mean when you intend to
+    track the result, because the catalogue is not a beam path.
+    """
+    from .beamline import all_machine_elements
+
     if cell is None:
-        cell = full_machine_cell()
-    return Beamline.from_cell(cell)
+        cell = all_machine_elements()
+    if isinstance(cell, Beamline) and not copy_elements:
+        return cell
+    return Beamline.from_cell(cell, copy_elements=copy_elements)

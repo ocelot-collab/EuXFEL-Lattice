@@ -25,7 +25,7 @@ from euxfel.volts import (
     LinacKnob,
     MachineSetpoints,
     UnknownKeyError,
-    full_machine_cell,
+    all_machine_elements,
 )
 from euxfel.volts.config import valid_attributes
 from euxfel.volts.kicks import read_kick
@@ -54,7 +54,7 @@ pytestmark = pytest.mark.filterwarnings(
 @pytest.fixture(scope="module")
 def cell():
     """The whole machine, shared: building it copies ~8000 elements."""
-    return full_machine_cell()
+    return all_machine_elements()
 
 
 @pytest.fixture
@@ -807,7 +807,7 @@ def test_clearing_the_cache_makes_the_ratios_be_re_read(cell):
     finally:
         # Leave the cache populated from a pristine lattice for later tests.
         clear_design_factors()
-        Beamline.from_cell(full_machine_cell())
+        Beamline.from_cell(all_machine_elements())
 
 
 # --------------------------------------------------------------------------- #
@@ -1096,3 +1096,22 @@ def test_set_names_the_valid_parameters_when_one_is_misspelt():
     setpoints = MachineSetpoints()
     with pytest.raises(ValueError, match="no parameter 'chrip'"):
         setpoints.l2.set(sum_voltage=1.7, chrip=-9.3)
+
+
+# --------------------------------------------------------------------------- #
+# The default cell
+# --------------------------------------------------------------------------- #
+
+
+def test_build_with_no_cell_is_the_whole_machine(cell):
+    setpoints = MachineSetpoints(elements={"QI.4.I1": -0.08})
+    assert len(setpoints.build()) == len(setpoints.build(cell))
+
+
+def test_the_catalogue_holds_every_element_exactly_once(cell):
+    """What `all_machine_elements` is for: no cathode_to_* sequence is complete."""
+    from euxfel import sequences
+
+    assert len({id(element) for element in cell}) == len(cell)
+    longest = {id(element) for element in sequences.cathode_to_t5d}
+    assert len({id(element) for element in cell} - longest) > 2000

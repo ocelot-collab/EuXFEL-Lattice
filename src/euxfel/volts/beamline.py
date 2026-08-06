@@ -56,8 +56,8 @@ __all__ = [
     "Group",
     "KnobOwnedError",
     "UnknownKeyError",
+    "all_machine_elements",
     "clear_design_factors",
-    "full_machine_cell",
 ]
 
 #: Power supply -> the knob whose *geometry* it is part of.
@@ -72,16 +72,24 @@ GEOMETRY_OWNERS: dict[str, str] = {
 }
 
 
-def full_machine_cell() -> list:
-    """Every element of the machine, once, in a sliceable order.
+def all_machine_elements() -> list:
+    """Every element in the machine, exactly once. **Not a beam path.**
 
-    The EuXFEL branches, so no single ``cathode_to_*`` sequence contains
-    everything: the dump lines and the two SASE branches each have elements the
-    others do not.  This walks the targets longest-first and appends only what
-    has not been seen, giving a sequence in which every element appears exactly
-    once and adjacency is preserved within each branch.  The junction between
-    one branch's end and the next branch's tail is artificial, but nothing needs
-    to slice across it -- the bunch compressors all live in the shared prefix.
+    A setpoints file is machine-wide, but a lattice sequence is not: the EuXFEL
+    branches, so no single ``cathode_to_*`` contains everything.  Even
+    ``cathode_to_t5d``, the longest, is missing 2260 elements that live in the
+    other dump lines and the SASE2 branch.  There is nothing to hand a
+    whole-machine file that covers the whole machine, so this makes one.
+
+    It walks the six targets longest-first and keeps only what it has not seen,
+    which gives a list where every element appears once and adjacency survives
+    *within* each branch -- enough for the chicane knobs, whose dipoles and
+    shoulder drifts all sit in the shared prefix.  The joins *between* branches
+    are fictional: one branch's dump is followed by the next branch's tail.
+
+    So this is a catalogue to address and write to, not a line to track down.
+    ``MagneticLattice`` will happily accept it and ``twiss`` will happily return
+    a beta of 1e17.  When you mean to track, pass the ``cathode_to_*`` you mean.
     """
     from euxfel import sequences
 

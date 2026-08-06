@@ -34,8 +34,8 @@ Where you need every element exactly once — the control-room format spans the
 whole machine, and `BG.1.B2D` exists only in the B2D line — use:
 
 ```python
-from euxfel.volts import full_machine_cell
-cell = full_machine_cell()    # every element, once, in a sliceable order
+from euxfel.volts import all_machine_elements
+cell = all_machine_elements()    # every element, once, in a sliceable order
 ```
 
 ## Subsequences

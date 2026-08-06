@@ -112,10 +112,10 @@ def _cell_for(target: str):
     format needs: the EuXFEL branches, so no single cathode-to-dump sequence
     holds all of it (``BG.1.B2D`` is only in the B2D line, for instance).
     """
-    from euxfel.volts import full_machine_cell
+    from euxfel.volts import all_machine_elements
 
     if target.lower() == "full":
-        return full_machine_cell()
+        return all_machine_elements()
     return getattr(sequences, f"cathode_to_{target.lower()}")
 
 

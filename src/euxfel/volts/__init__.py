@@ -19,7 +19,7 @@ from .beamline import (
     KnobOwnedError,
     UnknownKeyError,
     clear_design_factors,
-    full_machine_cell,
+    all_machine_elements,
 )
 from .config import ConflictError, Knobs, MachineSetpoints
 from .kicks import KickError, read_kick, write_kick
@@ -48,7 +48,7 @@ __all__ = [
     "MachineSetpoints",
     "UnknownKeyError",
     "clear_design_factors",
-    "full_machine_cell",
+    "all_machine_elements",
     "load_setpoints",
     "read_kick",
     "read_sascha",
