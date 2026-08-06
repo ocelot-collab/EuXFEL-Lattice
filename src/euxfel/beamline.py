@@ -34,7 +34,7 @@ from __future__ import annotations
 import copy
 import difflib
 import warnings
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 
 from ocelot.cpbd.magnetic_lattice import flatten
@@ -57,7 +57,8 @@ __all__ = [
     "KnobOwnedError",
     "UnknownKeyError",
     "all_machine_elements",
-    "clear_design_factors",
+    "design_optics",
+    "set_design_optics",
 ]
 
 #: Power supply -> the knob whose *geometry* it is part of.
@@ -107,51 +108,93 @@ def all_machine_elements() -> list:
     return cell
 
 
-#: Per-supply design ratios, remembered for the life of the process.
+#: Supplies whose design *optics* has been replaced, and by what.
 #:
-#: They have to be remembered rather than re-read, because they describe the
-#: *design* lattice and `MachineSetpoints.apply_in_place` overwrites the very
-#: elements they are derived from.  A supply taken through zero would otherwise
-#: lose its wiring for good: QE.1.L3 is [+, -, +] by design, but once its
-#: magnets are all at zero there is nothing left to say so, and the next
-#: setpoint would come out [+, +, +].
-#:
-#: This is sound because the only way this package writes to the lattice is
-#: through a Beamline, so the first beamline built in a process necessarily
-#: sees pristine elements.  Mutating a generated element by hand before any
-#: beamline exists would defeat it.
-_DESIGN_FACTORS: dict[str, tuple[float, ...]] = {}
-
-#: The kick each supply's ratios are relative to, remembered for the same
-#: reason.  Ratios alone do not place a group against its neighbours: the laser
-#: heater chicane spans three supplies, and within each the ratios are (1, -1),
-#: (1,) and (1,), which says nothing about the [-, +, +, -] pattern the four
-#: dipoles form.  Multiplying by the reference recovers the design kicks, and
-#: those do.
-_DESIGN_REFERENCE: dict[str, float] = {}
+#: Empty means every supply is compared against what the generated modules say,
+#: which is the stamped :data:`~euxfel.kicks.DESIGN_KICK`.  Only the optics moves
+#: -- the wiring is derived from the stamps and is never overridden, because how
+#: magnets share a supply is a property of the cables and not of an optics.
+_DESIGN_OPTICS: dict[str, float] = {}
 
 
-def _remembered(supply: str, elements) -> tuple[tuple[float, ...], float]:
-    """The design ratios and reference for ``supply``, computed once."""
-    cached = _DESIGN_FACTORS.get(supply)
-    # The element count guards against a differently sized group -- a supply
-    # that gained or lost a magnet is a different supply, not a cache hit.
-    if cached is not None and len(cached) == len(elements):
-        return cached, _DESIGN_REFERENCE[supply]
-    factors = design_factors(elements)
-    reference = reference_kick(elements)
-    _DESIGN_FACTORS[supply] = factors
-    _DESIGN_REFERENCE[supply] = reference
-    return factors, reference
+def design_optics() -> dict[str, float]:
+    """The supplies whose design optics has been replaced, and by what.
 
-
-def clear_design_factors() -> None:
-    """Forget the remembered ratios, so the next beamline re-reads them.
-
-    For tests, and after regenerating the lattice within a live process.
+    A copy.  Empty is the normal state: everything compared against the
+    generated lattice.
     """
-    _DESIGN_FACTORS.clear()
-    _DESIGN_REFERENCE.clear()
+    return dict(_DESIGN_OPTICS)
+
+
+def set_design_optics(optics=None, cell=None) -> dict[str, float]:
+    """Replace what setpoints are compared against.  Returns the previous.
+
+    ``optics`` may be a Sascha file, a YAML setpoints file, a
+    :class:`~euxfel.volts.config.MachineSetpoints`, a :class:`Beamline`, or
+    ``None`` to go back to what ``subsequences/*.py`` says.
+
+    Process-wide and consulted at call time, so a beamline built before this
+    answers the new question rather than the one that was current when it was
+    made -- and so :meth:`MachineSetpoints.to_sascha`, which builds its own
+    beamline internally, can see it.
+
+    Two supplies are left alone whatever ``optics`` says:
+
+    Ones it does not name
+        A Sascha file names 111 of 505 supplies.  Rebasing the rest to nothing
+        would report every one of them as changed from nothing.
+
+    Ones it sets to zero
+        :meth:`Beamline.design_kicks` is also what tells a chicane which way its
+        dipoles bend, and a zero has no sign.  Those keep their stamped value,
+        and a warning names them.
+    """
+    global _DESIGN_OPTICS
+    previous = dict(_DESIGN_OPTICS)
+
+    if optics is None:
+        _DESIGN_OPTICS = {}
+        return previous
+
+    values = _resolve_optics(optics, cell)
+
+    zeroed = sorted(key for key, value in values.items() if value == 0.0)
+    if zeroed:
+        warnings.warn(
+            f"{len(zeroed)} supplies are zero in this optics, which gives them "
+            f"no sign, and the design kicks are what tell a chicane which way "
+            f"its dipoles bend. They keep their generated values: "
+            f"{', '.join(zeroed[:5])}{', ...' if len(zeroed) > 5 else ''}.",
+            stacklevel=2,
+        )
+
+    _DESIGN_OPTICS = {key: value for key, value in values.items() if value != 0.0}
+    return previous
+
+
+def _resolve_optics(optics, cell) -> dict[str, float]:
+    """``optics`` as ``{supply: generalised kick}``, whatever it arrived as."""
+    from .volts.config import MachineSetpoints
+
+    # A mapping is what this function *returns*, so it has to be accepted too:
+    # restoring what `set_design_optics` handed back is the whole point of it
+    # handing anything back.
+    if isinstance(optics, Mapping):
+        return dict(optics)
+    if isinstance(optics, Beamline):
+        return {
+            supply: optics.group(supply).read()
+            for supply in optics.supplies
+            if supply in optics._factors
+        }
+    if isinstance(optics, MachineSetpoints):
+        return optics.resolve(cell)
+    # A path: Sascha if it reads as one, YAML otherwise.  `from_sascha` handles
+    # the bend-sign flip, so neither branch needs to know about it here.
+    path = str(optics)
+    if path.endswith((".yaml", ".yml")):
+        return MachineSetpoints.from_yaml(optics).resolve(cell)
+    return MachineSetpoints.from_sascha(optics, cell).resolve(cell)
 
 
 class UnknownKeyError(KeyError):
@@ -300,8 +343,10 @@ class Beamline(Sequence):
 
         self._matched: dict[str, str] = self._find_matched_supplies()
 
-        # Design ratios must come from the pristine lattice, before anything is
-        # applied, or repeated application would compound them.
+        # Both come from the stamped design kicks, so they can be computed here
+        # and now regardless of what the elements have since been set to -- and
+        # for exactly the elements this beamline holds, so half a supply is not
+        # a special case.
         self._factors: dict[str, tuple[float, ...]] = {}
         self._references: dict[str, float] = {}
         self.partly_unpowered: tuple[str, ...] = ()
@@ -309,9 +354,8 @@ class Beamline(Sequence):
         for supply, elements in self._by_supply.items():
             if not all(is_kickable(element) for element in elements):
                 continue
-            self._factors[supply], self._references[supply] = _remembered(
-                supply, elements
-            )
+            self._factors[supply] = design_factors(elements)
+            self._references[supply] = reference_kick(elements)
             if partially_zero(elements):
                 unpowered.append(supply)
 
@@ -426,14 +470,25 @@ class Beamline(Sequence):
         """The power supply feeding ``element``, if it has one."""
         return getattr(element, "ps_id", None) or None
 
+    def design_reference(self, supply: str) -> float:
+        """The single value ``supply`` is compared against.
+
+        The design *optics*: what the generated modules say, unless
+        :func:`set_design_optics` has replaced it for this supply.
+        """
+        return _DESIGN_OPTICS.get(supply, self._references[supply])
+
     def design_kicks(self, supply: str) -> tuple[float, ...]:
-        """What each magnet on ``supply`` was set to in the design lattice.
+        """What each magnet on ``supply`` sits at in the design optics.
 
         Ratios are relative to their own supply, so they cannot be compared
         across supplies; these can.  A chicane spread over several supplies
         needs them to work out its polarity pattern.
+
+        The wiring is the beamline's own and never moves; only the reference it
+        is multiplied by can be replaced, by :func:`set_design_optics`.
         """
-        reference = self._references[supply]
+        reference = self.design_reference(supply)
         return tuple(factor * reference for factor in self._factors[supply])
 
     def position(self, element) -> int:

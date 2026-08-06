@@ -1,3 +1,5 @@
+from ocelot.cpbd.magnetic_lattice import flatten as _flatten
+
 from . import plot, subsequences
 from .beamline import (
     AmbiguousKeyError,
@@ -7,10 +9,24 @@ from .beamline import (
     KnobOwnedError,
     UnknownKeyError,
     all_machine_elements,
-    clear_design_factors,
+    design_optics,
+    set_design_optics,
 )
-from .kicks import KickError, read_kick, write_kick
+from .kicks import KickError, design_kick, read_kick, stamp_design_kicks, write_kick
 from .machine import MATCHED_SECTIONS
+
+# Record what the generated modules say, now, while they still say it.  Every
+# design value in the package is read from these stamps, so this has to happen
+# before anything can write to an element -- which here means before any user
+# code runs at all.  It costs ~12 ms.
+#
+# The walk lives here rather than in `subsequences/__init__.py` because that
+# file is a generated artefact; see CLAUDE.md.
+stamp_design_kicks(
+    element
+    for name in getattr(subsequences, "__all__", ())
+    for element in _flatten(getattr(subsequences, name).cell)
+)
 
 # The lattice model, which is here whether or not the generated subsequences
 # imported: none of it depends on them, so it should not go missing with them.
@@ -24,9 +40,12 @@ __all__ = [
     "KnobOwnedError",
     "UnknownKeyError",
     "all_machine_elements",
-    "clear_design_factors",
+    "design_kick",
+    "design_optics",
     "plot",
     "read_kick",
+    "set_design_optics",
+    "stamp_design_kicks",
     "subsequences",
     "write_kick",
 ]

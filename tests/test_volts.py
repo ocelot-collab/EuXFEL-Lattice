@@ -795,22 +795,19 @@ def test_design_ratios_survive_a_supply_passing_through_zero(cell):
     assert [round(read_kick(e), 9) for e in again.elements] == [0.2, -0.2, 0.2]
 
 
-def test_clearing_the_cache_makes_the_ratios_be_re_read(cell):
-    from euxfel import clear_design_factors
+def test_the_wiring_is_read_from_the_stamps_not_from_the_elements(cell):
+    """No cache to clear: the design kick travels on the element itself.
 
+    Zeroing a whole supply used to make its wiring unrecoverable from the
+    lattice, which is why the ratios were remembered.  Now they are stamped, so
+    a fresh beamline over the zeroed elements still knows how they are cabled.
+    """
     beamline = Beamline.from_cell(cell)
-    group = beamline.resolve("QE.1.L3")
-    group.write(0.0)
+    beamline.resolve("QE.1.L3").write(0.0)
 
-    clear_design_factors()
-    try:
-        stale = Beamline.from_cell(beamline, copy_elements=False)
-        # Re-read from an all-zero group, the ratios are genuinely unrecoverable.
-        assert stale.resolve("QE.1.L3").factors == (1.0, 1.0, 1.0)
-    finally:
-        # Leave the cache populated from a pristine lattice for later tests.
-        clear_design_factors()
-        Beamline.from_cell(all_machine_elements())
+    fresh = Beamline.from_cell(beamline, copy_elements=False)
+    assert fresh.resolve("QE.1.L3").factors == (1.0, -1.0, 1.0)
+    assert fresh.design_kicks("QE.1.L3") == beamline.design_kicks("QE.1.L3")
 
 
 # --------------------------------------------------------------------------- #
@@ -1312,3 +1309,127 @@ def test_the_catalogue_holds_every_element_exactly_once(cell):
     assert len({id(element) for element in cell}) == len(cell)
     longest = {id(element) for element in sequences.cathode_to_t5d}
     assert len({id(element) for element in cell} - longest) > 2000
+
+
+# --------------------------------------------------------------------------- #
+# The stamped design kicks
+# --------------------------------------------------------------------------- #
+
+
+def test_every_powered_element_carries_a_design_kick():
+    """Except the TDSs, whose TDCavity has no generalised kick at all."""
+    from ocelot.cpbd.magnetic_lattice import flatten
+
+    from euxfel import subsequences
+    from euxfel.kicks import DESIGN_KICK
+
+    unstamped = sorted(
+        {
+            element.id
+            for name in subsequences.__all__
+            for element in flatten(getattr(subsequences, name).cell)
+            if getattr(element, "ps_id", None) and not hasattr(element, DESIGN_KICK)
+        }
+    )
+    assert unstamped == ["TDSA.52.I1", "TDSB.208.B1", "TDSB.428.B2", "TDSB.430.B2"]
+
+
+def test_the_stamp_survives_copying_and_writing(beamline):
+    """Why it is an attribute and not a lookup table: deepcopy carries it."""
+    from euxfel.kicks import design_kick
+
+    element = beamline.resolve("QI.46.I1").elements[0]
+    before = design_kick(element)
+
+    beamline.resolve("QI.1.I1").write(0.9)
+    assert design_kick(element) == before
+    assert element.k1 * element.l == pytest.approx(0.9)
+
+
+def test_apply_in_place_does_not_disturb_the_design(cell, restores_the_lattice):
+    """The case the old cache existed for, now handled by the elements."""
+    from euxfel.kicks import design_kick
+
+    group = Beamline.from_cell(cell).group("QE.1.L3")
+    original = [design_kick(e) for e in group.elements]
+    MachineSetpoints(elements={"QE.1.L3": 0.9}).apply_in_place(cell)
+
+    after = Beamline.from_cell(cell)
+    assert [design_kick(e) for e in after.group("QE.1.L3").elements] == original
+    assert after.group("QE.1.L3").factors == (1.0, -1.0, 1.0)
+
+
+# --------------------------------------------------------------------------- #
+# A loadable design optics
+# --------------------------------------------------------------------------- #
+
+
+@pytest.fixture
+def restores_the_design_optics():
+    """`set_design_optics` is process-wide, so it has to be put back."""
+    from euxfel import set_design_optics
+
+    yield
+    set_design_optics(None)
+
+
+def test_loading_an_optics_moves_the_reference_but_not_the_wiring(
+    cell, restores_the_design_optics
+):
+    from euxfel import set_design_optics
+
+    beamline = Beamline.from_cell(cell)
+    stamped = beamline.design_reference("QI.1.I1")
+
+    set_design_optics(SASCHA_DIR / "BC2_TDS.txt", cell)
+
+    assert beamline.design_reference("QI.1.I1") != pytest.approx(stamped)
+    assert beamline.design_reference("QI.1.I1") == pytest.approx(-0.05343)
+    # ...while how the magnets are cabled is untouched.
+    assert beamline.group("QE.1.L3").factors == (1.0, -1.0, 1.0)
+
+
+def test_a_beamline_built_before_the_call_sees_the_new_optics(
+    cell, restores_the_design_optics
+):
+    """Dynamic, not snapshotted: it answers the question you are asking now."""
+    from euxfel import set_design_optics
+
+    beamline = Beamline.from_cell(cell)
+    set_design_optics(SASCHA_DIR / "BC2_TDS.txt", cell)
+    assert beamline.design_reference("QI.1.I1") == pytest.approx(-0.05343)
+
+    set_design_optics(None)
+    assert beamline.design_reference("QI.1.I1") == pytest.approx(0.04948, abs=1e-5)
+
+
+def test_supplies_the_optics_does_not_name_keep_their_stamps(
+    cell, restores_the_design_optics
+):
+    """A Sascha file names 111 of 505; the rest are not 'changed from nothing'."""
+    from euxfel import set_design_optics
+
+    beamline = Beamline.from_cell(cell)
+    untouched = beamline.design_reference("QF.4.T5")
+
+    set_design_optics(SASCHA_DIR / "BC2_TDS.txt", cell)
+    assert "QF.4.T5" not in read_sascha(SASCHA_DIR / "BC2_TDS.txt")
+    assert beamline.design_reference("QF.4.T5") == pytest.approx(untouched)
+
+
+def test_set_design_optics_returns_the_previous_mapping(
+    cell, restores_the_design_optics
+):
+    from euxfel import design_optics, set_design_optics
+
+    assert set_design_optics(SASCHA_DIR / "BC2_TDS.txt", cell) == {}
+    bc2 = design_optics()
+
+    previous = set_design_optics(SASCHA_DIR / "BEAM_B2D.txt", cell)
+    assert previous == bc2
+    assert design_optics() != bc2
+
+    # Handing back what it gave you must restore it -- that is what the return
+    # value is for.
+    set_design_optics(previous)
+    assert design_optics() == bc2

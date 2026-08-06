@@ -47,15 +47,26 @@ from ocelot.cpbd.elements import (
 )
 
 __all__ = [
+    "DESIGN_KICK",
     "KickError",
     "design_factors",
+    "design_kick",
     "is_kickable",
     "kick_attribute",
     "read_kick",
     "reference_kick",
+    "stamp_design_kicks",
     "write_group",
     "write_kick",
 ]
+
+#: Attribute each element carries its design kick on.
+#:
+#: Stamped once, when the generated modules import, so it records what is
+#: written in ``subsequences/*.py`` rather than whatever the element has been
+#: set to since.  An ordinary attribute, so ``copy.deepcopy`` carries it into
+#: every :class:`~euxfel.beamline.Beamline` and writing ``k1`` cannot lose it.
+DESIGN_KICK = "design_kick"
 
 
 class KickError(Exception):
@@ -160,14 +171,52 @@ def write_kick(element, kick: float) -> None:
     setattr(element, attribute, float(kick))
 
 
+def stamp_design_kicks(elements) -> int:
+    """Record each element's current kick on it as its design kick.
+
+    Called once, on the elements of the generated modules as they import, which
+    is the only moment they are guaranteed to hold what the files say.  Doing it
+    then rather than remembering it later is what lets everything downstream
+    stop worrying about whether it is looking at a pristine lattice.
+
+    Returns how many were stamped.  Elements with no generalised kick, and the
+    two zero-length XY-quadrupole slices whose kick is undefined, are skipped --
+    neither is addressable by power supply, so nothing asks them for a design.
+    """
+    stamped = 0
+    for element in elements:
+        if hasattr(element, DESIGN_KICK) or not is_kickable(element):
+            continue
+        try:
+            setattr(element, DESIGN_KICK, read_kick(element))
+        except KickError:
+            continue
+        stamped += 1
+    return stamped
+
+
+def design_kick(element) -> float:
+    """The kick ``element`` has in the generated lattice.
+
+    Falls back to its current value for elements that were never stamped -- a
+    hand-built cell, or one loaded from somewhere other than
+    :mod:`euxfel.subsequences`.  For those there is no better answer, and it is
+    the behaviour that held everywhere before stamping existed.
+    """
+    try:
+        return getattr(element, DESIGN_KICK)
+    except AttributeError:
+        return read_kick(element)
+
+
 def reference_kick(elements) -> float:
-    """The kick of largest magnitude among ``elements``, keeping its sign.
+    """The design kick of largest magnitude among ``elements``, keeping its sign.
 
     This is the value a power supply is taken to be set to, so that read-back
     of a group returns a number which -- fed back through :func:`write_group` --
     reproduces the group exactly.
     """
-    kicks = [read_kick(element) for element in elements]
+    kicks = [design_kick(element) for element in elements]
     return max(kicks, key=abs)
 
 
@@ -179,7 +228,7 @@ def partially_zero(elements) -> bool:
     that callers report it -- aggregated, since a machine has a few dozen
     correctors sitting at zero and one warning each would be noise.
     """
-    kicks = [read_kick(element) for element in elements]
+    kicks = [design_kick(element) for element in elements]
     if len(kicks) < 2 or max(kicks, key=abs) == 0.0:
         return False
     return any(kick == 0.0 for kick in kicks)
@@ -192,15 +241,18 @@ def design_factors(elements) -> tuple[float, ...]:
     gives element ``i`` a kick of ``S * factor[i]``.  Opposite wiring is simply
     a factor of ``-1``, and genuinely unequal magnets keep their design ratio.
 
-    Must be called on the *pristine* design lattice.  Recomputing factors from
-    an already-modified lattice would let repeated application compound them.
+    This is the machine's *wiring*, not its optics: it says how the magnets on a
+    supply are cabled, so it never moves.  Reading it from the stamped design
+    kicks rather than from the elements' current values is what makes that true
+    -- it can be computed at any time, on an already-modified lattice, and comes
+    out the same.
 
     Zero design kicks
         If every element is at zero the ratios are undefined and all factors
         are 1, so a setpoint distributes uniformly.  If only some are zero those
         get a factor of 0 and stay at zero; see :func:`partially_zero`.
     """
-    kicks = [read_kick(element) for element in elements]
+    kicks = [design_kick(element) for element in elements]
     reference = max(kicks, key=abs)
 
     if reference == 0.0:
